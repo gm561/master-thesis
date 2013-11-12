@@ -1,0 +1,46 @@
+\begin{definition} {\textbf{(Weakly verifiable puzzle.)}}
+A system for weakly verifiable puzzles consists of algorithms for generating random puzzles and for verifying solutions to these puzzles. The pair of algorithms $Z = (G,V)$ where
+\begin{itemize}
+\item
+  The puzzle generator algorithm $G$, on security parameter $k$, outputs a random puzzle $p$
+  along with some check information $c$, $(p,c) \leftarrow G(1^k)$
+
+\item
+  The puzzle verifier $V$ is a deterministic efficient algorithm that on input a puzzle $p$,
+  check information $c$, and answer  $a$, outputs either zero or one, $V(p,c,a) \in \{0,1\}$
+\end{itemize}
+
+A \textit{solver} for the above puzzle system is an efficient algorithm \textit{S} that gets a puzzle \textit{p} as input and outputs an answer \textit{a}, outputs either zero or one,
+$V(p,c,a) \in \{0,1\}$
+\end{definition}
+
+\begin{definition} {Dynamic weakly verifiable puzzle}
+A dynamic weakly verifiable puzzle consists of two algorithms \textit{P} and \textit{S}. Where \textit{S} is a problem solver and \textit{P} is a problem poser.
+The poser \textit{P} outputs circuits $\Gamma^{V}(q,r)$ and $\Gamma^{H}(q,r)$ where $q \in Q$ (for some well defined set $Q$). The circuit $\Gamma^{V}(q,r)$ is used to verify
+correctness of the solutions $r$. Additionally, $\Gamma^{H}(q)$ is a circuit that evaluates a hint function.
+A solver can make a number of verification and hint queries.
+A solver successfully solves a DWVP if it makes a successfully verification query for a $q$ when
+it has not previously asked for verification or hint query on $q$.
+%TODO should we not exclude verification queries?
+
+
+\end{definition}
+
+\begin{definition} {Interactive weakly verifiable puzzle}
+
+\end{definition}
+
+\begin{definition} {Dynamic interactive weakly verifiable puzzle}
+
+\end{definition}
+
+% \definition{}
+
+% \definition{}
+
+% \definition{weakly verifiable puzzle}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "master.tex"
+%%% End:
