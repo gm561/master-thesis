@@ -2,7 +2,7 @@
 % \documentclass[11commpt]{article}
 
 % %% We use the memoir class because it offers a many easy to use features.
-\documentclass[10pt,a4paper,article,oneside]{memoir}
+\documentclass[11pt,a4paper,article,oneside]{memoir}
 
 \counterwithout{section}{chapter}
 \usepackage[margin=1in]{geometry}
@@ -67,43 +67,73 @@
 \begin{document}
 
 \message{ !name(definition.tex) !offset(-69) }
-\begin{definition} {Weakly verifiable puzzle}
-
-A system for weakly verifiable puzzles consists of algorithms for generating random puzzles and for verifying solutions to these puzzles. The pair of algorithms $Z = (G,V)$ where
-\begin{itemize}
-  \item
-    The puzzle generator algorithm $G$, on security parameter $k$, outputs a ranodm puzzle p algon with some check information $c$, $(p,c) <- G(1^k)$
-\end{itemize}
-
+%TODO how many verification queries might be asked
+\begin{definition} {\textbf{(Dynamic weakly verifiable puzzle)}}
+  A dynamic weakly verifiable puzzle (DWVP) is defined by a protocol between probabilistic algorithms $(P,S)$.
+  The algorithm $P$ is a problem poser, and $S$ is a problem solver.
+  The problem poser $P$
+  %TODO after the interaction with S
+  \textit{P} outputs circuit $\Gamma_{V}$, which takes as input $q \in Q$ and a solution $r \in R$,
+  and a circuit $\Gamma_{H}$, which takes as input $q \in Q$.
+  The circuit $\Gamma_{V}(q,r)$ is used to verify correctness of the solution $r$ for $q$.
+  %TODO make it a bit more clean
+  %TODO what is the relation between $r$ and $q$
+  %TODO in which random experiment?
+  Additionally, $\Gamma_{H}(q)$ is a circuit that evaluates a hint function.
+  %TODO define the hint function
+  The solver $S$ has oracle access to both circuits $\Gamma_V$ and $\Gamma_H$.
+  The calls to the circuit $\Gamma_V$ are called verification queries, and the calls to the circuit $\Gamma_H$ are hint queries.
+  %TODO define verification and hint queries
+  The solver $S$ successfully solves a DWVP $\Pi$ if it makes a successfully verification query for a $q \in Q$ when
+  it has not previously asked for a hint query on this $q$.
+  % TODO runtime bound
 \end{definition}
+%
+% DONE should we not exclude verification queries
+Let $hash$ be a function $Q \rightarrow \{0, 2(h+v)-1 \}$ that partitions a query space $Q$ into two sets $P_{hash}$ and $Q \setminus P_{hash}$.
+The set $P_{hash}$ contains elements $q \in Q$ such that $hash(q) = 0$.
+The elements of $P_{hash}$ are called attacking queries.
+A \textit{canonical success} with respect to set $P_{hash}$ is a situation when the first successfully verification query is in $P_{hash}$
+and all previous hint or verification queries are not in $P_{hash}$.
+%
+% TODO make this version of the theorem non uniform i.e. assume a hash functio
+% TODO size of the circuit
+% TODO oracle calls ? non-rewinding?
+% TODO is GEN probabilitic?
+% TODO running time of Gen size of D
+% TODO hash function does it has to be pairwise independent?
+% TODO what is random in hash function
+% TODO move definitions slightly up
+% TODO describe hash function in more details
+% TODO most probably we have to lessen the theorem because of the hash function
+% TODO would it make more sense to consider situations when one have just a single verification query (if the proof works out also in this situation then it is a stronger result).
+\begin{theorem} {\textbf{(Security amplification for DWVP (non unifrom version)).}}
+  Let $g: \{0,1\}^k \rightarrow \{0,1\}$ be a monotone function, and $hash$ a function such that
+  the probability of a \textit{canonical success} of a problem solver $S$ with respect to $P_{hash}$ is at least $\frac{\varepsilon}{8\left(v + h\right)}$.
+  If there exists a circuit $C$ that makes at most $v$ verification queries and $h$ hint queries
+  and succeeds with probability
+  \begin{align}
+    \Pr_{}[\Gamma_{V}^{(g)}( \langle P^{(g)},C \rangle_C ) = 1] \geq \Pr_{\mu \leftarrow \mu_{\delta}^{k}}[g(u) = 1] + \varepsilon ,
+  \end{align}
+  where the probability is over random coins of $P$ and $C$,
+  then there exists a probabilistic algorithm $Gen(C, g, \varepsilon, \delta, n, hash)$ which takes as input a circuit $C$, a function $g$,
+  parameters $\varepsilon, \delta, n$ , a function $hash$, and
+  produce a circuit $D$ such that with hight probability
+  it satisfies
+  \begin{align}
+    \Pr_{}[\Gamma^{(1)} \left( \langle P^{1} ,D \rangle_D \right) = 1] \geq \frac{1}{8(h+v)} \left( \delta + \frac{\varepsilon}{6k} \right)
+  \end{align}
+  where the probability is taken over random coins of $D$ and uniformly chosen random input puzzle.
+\end{theorem}
 
 
-\begin{definition} {Interactive weakly verifiable puzzle}
-
-\end{definition}
-
-
-\begin{definition} {Dynamic weakly verifiable puzzle}
-
-\end{definition}
-
-
-\begin{definition} {Dynamic Interactive weakly verifiable puzzle}
-
-\end{definition}
-
-% \definition{}
-
-% \definition{}
-
-% \definition{weakly verifiable puzzle}
 
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "master.tex"
 %%% End:
 
-\message{ !name(master.tex) !offset(-33) }
+\message{ !name(master.tex) !offset(-63) }
 
 \end{document}
 
