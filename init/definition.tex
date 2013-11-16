@@ -9,6 +9,7 @@
   A dynamic weakly verifiable puzzle (DWVP) is defined by a protocol between probabilistic algorithms $(P,S)$.
   The algorithm $P$ is called a problem poser and $S$ a problem solver.
   The problem poser $P$ produces as output a circuit $\Gamma_{V}$ and a circuit $\Gamma_{H}$.
+  The problem solver does not produce any output.
   The circuit $\Gamma_{V}$ takes as its input $q \in Q$ and an answer $r \in R$.
   An answer $r$ is a correct solution for $q$ if and only if the circuit $\Gamma_V$ on input $(q,r)$ evaluates to true.
   The circuit $\Gamma_H$ on input $q$ provides a hint $r \in R$ such that $\Gamma_V(q,r) = 1$.
