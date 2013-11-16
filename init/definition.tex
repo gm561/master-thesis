@@ -8,29 +8,27 @@
 \begin{definition} {\textbf{(Dynamic weakly verifiable puzzle)}}
   A dynamic weakly verifiable puzzle (DWVP) is defined by a protocol between probabilistic algorithms $(P,S)$.
   The algorithm $P$ is called a problem poser and $S$ a problem solver.
-  The problem poser $P$ outputs a circuit $\Gamma_{V}$ and a circuit $\Gamma_{H}$.
+  The problem poser $P$ produces as output a circuit $\Gamma_{V}$ and a circuit $\Gamma_{H}$.
   The circuit $\Gamma_{V}$ takes as its input $q \in Q$ and an answer $r \in R$.
-  An answer $r$ is a correct solution for a puzzle $q$ if and only if the circuit $\Gamma_V$ on input $(q,r)$ evaluates to true.
-  The circuit $\Gamma_H(q)$ provides a hint $r \in R$ for a puzzle $q$ such that the circuit $\Gamma_V(q,r)$ evaluates to true.
+  An answer $r$ is a correct solution for $q$ if and only if the circuit $\Gamma_V$ on input $(q,r)$ evaluates to true.
+  The circuit $\Gamma_H$ on input $q$ provides a hint $r \in R$ such that $\Gamma_V(q,r) = 1$.
   The solver $S$ has oracle access to both circuits $\Gamma_V$ and $\Gamma_H$.
-  The calls to the circuit $\Gamma_V$ are called verification queries, and the calls to the circuit $\Gamma_H$ are hint queries.
-  The solver $S$ asks at most $h$ hint queries and $v$ verification queries, and successfully solves a DWVP $\Pi$ if and only if
-  makes a successfully verification query for $q$, when it has not previously asked for a hint query on this $q$.
+  The calls to the circuit $\Gamma_V$ are called verification queries. The calls to the circuit $\Gamma_H$ are hint queries.
+  The solver $S$ asks at most $h$ hint queries, $v$ verification queries, and successfully solves a DWVP $\Pi$ if and only if
+  it makes a verification query $(q,r)$ such that $\Gamma_V(q,r) = 1$, when it has not previously asked for a hint query on this $q$.
 \end{definition}
 %
 % DONE should we not exclude verification queries - it seems that no
 %
-%
 Suppose that $g: \{0,1\}^k \rightarrow \{0,1\}$ is a monotone function, and $\left( P^{(1)}, S^{(1)} \right)$ is a dynamic weakly verifiable puzzle.
-Then $(P^{(g)}, S^{(g)})$ is a new dynamic weakly verifiable puzzle $\Pi^{(g)}$, for which in the first phase the problem poser $P^{(g)}$ and solver $S^{(g)}$ sequentially create $k$ instances of
-a puzzle $\left( P^{(1)}, S^{(1)}\right)$. The problem poser $P^{(g)}$ outputs circuits $\Gamma_V^{(g)}$ and $\Gamma_H^{(g)}$,
-where the hint queries for a puzzle $\Pi^{(g)}$ are answered by a circuit $\Gamma_H^{(g)}(q) = \left( \Gamma_H^{(1)}(q), \dots, \Gamma_H^{(k)} \right)$
-and the verification queries by a circuit $\Gamma_V^{(g)}(q, r_1, \dots, r_k) = g \left( \Gamma_V^{1}(q, r_1), \dots, \Gamma_V^{k}(q, r_k) \right)$.
+Then $(P^{(g)}, S^{(g)})$ is a dynamic weakly verifiable puzzle $\Pi^{(g)}$, for which in the first phase the problem poser $P^{(g)}$ and solver $S^{(g)}$
+sequentially create $k$ instances of a puzzle $\left( P^{(1)}, S^{(1)}\right)$. The problem poser $P^{(g)}$ produces as it output circuits $\Gamma_V^{(g)}$ and $\Gamma_H^{(g)}$.
+The hint queries for a puzzle $\Pi^{(g)}$ are answered by a circuit $\Gamma_H^{(g)}(q) = \left( \Gamma_H^{(1)}(q), \dots, \Gamma_H^{(k)} \right)$, and the verification queries by a circuit $\Gamma_V^{(g)}(q, r_1, \dots, r_k) = g \left( \Gamma_V^{1}(q, r_1), \dots, \Gamma_V^{k}(q, r_k) \right)$.
 
 Let $hash : Q \rightarrow \{0, 2(h+v)-1 \}$ be a function and $P_{hash}$ a set that contains elements $q \in Q$ for which $hash(q) = 0$.
-A \textit{canonical success} with respect to a set $P_{hash}$ and
+A \textit{canonical success}, with respect to a set $P_{hash}$ in
 a random experiment defined by the protocol between $P^{(g)}$ and $S^{(g)}$,
-is a situation when a first successfully verification query is in $P_{hash}$,
+is a situation when a first successfully verification query made by $S^{(g)}$ is in $P_{hash}$,
 and all previous hint or verification queries are not in $P_{hash}$.
 %
 % TODO size of the circuit
@@ -42,21 +40,21 @@ and all previous hint or verification queries are not in $P_{hash}$.
 %
 \begin{theorem} {\textbf{(Security amplification for DWVP (non unifrom version)).}}
   Let $g: \{0,1\}^k \rightarrow \{0,1\}$ be a monotone function, and $hash:Q \rightarrow \{0,2(h+v)-1\}$ a function such that
-  the probability of a \textit{canonical success} for a problem solver $S$ with respect to $P_{hash}$ is at least $\frac{\varepsilon}{8\left(v + h\right)}$,
-  where the probability is taken over randomness of the problem poser $P^{(g)}$ and the solver $S^{(g)}$.
+  the probability of a \textit{canonical success}, with respect to $P_{hash}$, is at least $\frac{\varepsilon}{8\left(v + h\right)}$.
   If there exists a circuit $C$ that makes at most $v$ verification queries, $h$ hint queries,
   and succeeds with probability
   \begin{align}
     \Pr_{}[\Gamma_{V}^{(g)}( \langle P^{(g)},C \rangle_C ) = 1] \geq \Pr_{\mu \leftarrow \mu_{\delta}^{k}}[g(u) = 1] + \varepsilon ,
   \end{align}
-  where the probability is over random coins of $P^{(g)}$ and $C$,
-  then there exists a probabilistic algorithm $Gen(C, g, \varepsilon, \delta, n, hash)$ which takes as input a circuit $C$, a function $g$, a function $hash$,
+  where the probability is over randomness of $P^{(g)}$,
+  then there exists a probabilistic algorithm $Gen(C, g, \varepsilon, \delta, n, hash)$ which takes as input: a circuit $C$, a function $g$, a function $hash$,
   parameters $\varepsilon, \delta, n$, and produces a circuit $D$ of size at most $ size(C) \frac{6k}{\varepsilon} \log(\frac{6k}{\varepsilon}) $
   such that with high probability it satisfies
   \begin{align}
     \Pr_{}[\Gamma_V^{(1)} \left( \langle P^{(1)} ,D \rangle_D \right) = 1] \geq \frac{1}{8(h+v)} \left( \delta + \frac{\varepsilon}{6k} \right)
   \end{align}
   where the probability is taken over random coins of $P$.
+  Additionally, the circuit D and the algorithm $Gen$ only require oracle access to functions $g$ and $hash$.
 \end{theorem}
 % DONE would it make more sense to consider situations when one have just a single verification query (if the proof works out also in this situation then it is a stronger result).
 
