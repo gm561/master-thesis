@@ -158,11 +158,13 @@ $C$ in random experiment $E$ with respect to set $P_{Hash}$ is at least $\frac{\
 %
 %
 %
-\begin{theorem}
-  Fix a dynamic weakly verifiable puzzle $P^{(1)}$ and a function $Hash: Q \rightarrow \{0, \dots, 2(h+v)-1\}$.
-  There exists an algorithm $Gen(C, g, \varepsilon, \delta, n, v, h, Hash)$
-  outputting circuit $D$ such that following holds: \\
-  If
+\begin{lemma}
+  For a fixed dynamic weakly verifiable puzzle $P^{(1)}$ there exists an algorithm\\
+  $Gen(C, g, \varepsilon, \delta, n, v, h, Hash)$, which takes as input a circuit $C$, a monotone function $g$,
+  a function $Hash : Q \leftarrow \{0, 2(h+v)-1\}$, parameters $\varepsilon, \delta, n$,
+  number of verification $v$, and hint $h$ queries asked by $C$, and outputs a circuit $D$
+  such that following holds: \\
+  If $C$ is such that \\
   \begin{align*}
     \underset{(\pi_1, \dots, \pi_k)}{\Pr}[A^{P^{(g)}, C, Hash}(\pi_1, \dots, \pi_k)] \geq \underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon
   \end{align*}
@@ -171,9 +173,8 @@ $C$ in random experiment $E$ with respect to set $P_{Hash}$ is at least $\frac{\
     \underset{}{\Pr}[B^{P^{(1)},D, Hash}(\pi) = 1] \geq (\delta + \frac{\varepsilon}{6k})
   \end{align*}
   and $Size(D) \leq Size(C)\frac{6k}{\varepsilon}$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
-\end{theorem}
+\end{lemma}
 %
-Let us fix a random experiment $B$ such that
 \begin{codeblock}
   \textbf{Random experiment $B^{P^{(1)}, C, Hash}(\pi)$}
   \medskip
