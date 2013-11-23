@@ -1,4 +1,231 @@
-\subsection{Chapter 0}
+%General TODO:
+% Define Gen as a program
+%
+%
+%
+%TODO runtime bound
+%TODO class complexity bound
+%Def : (Dynamic weakly verifiable puzzle (non interactive version))
+\begin{definition} {\textbf{(Dynamic weakly verifiable puzzle (non interactive version))}}\\
+  A dynamic weakly verifiable puzzle (DWVP) is defined by a probabilistic algorithm $P(\pi)$,
+  called a problem poser, that takes as input chosen uniformly at random bitstring $\pi \in \{0,1\}^l$.
+  The algorithm $P(\pi)$ produces circuits $\Gamma_{V}$, $\Gamma_{H}$ and a puzzle $x \in \{0,1\}^{*}$.
+  The circuit $\Gamma_{V}$ takes as its input $q \in Q$ and an answer $y$.
+  An answer $y$ is a correct solution for $q$ if and only if $\Gamma_V(q,y) = 1$.
+  The circuit $\Gamma_H$ on input $q$ provides a hint such that $\Gamma_V(q,\Gamma_H(q)) = 1$.
+  The algorithm $S$, called a solver, has oracle access to $\Gamma_V$ and $\Gamma_H$.
+  The calls to $\Gamma_V$ are verification queries, the calls to $\Gamma_H$ are hint queries.
+  The solver $S$ can ask at most $h$ hint queries, $v$ verification queries, and successfully solves a DWVP if and only if
+  it makes a verification query $(q,r)$ such that $\Gamma_V(q,r) = 1$, when it has not previously asked for a hint query on this $q$.
+\end{definition}
+%
+%
+%
+\begin{codeblock}
+  \textbf{Experiment $B^{P^{(1)}, D}(\pi)$} \\
+  Solving a dynamic weakly verifiable puzzle
+  \medskip
+
+  \hrule
+
+  \medskip
+
+  \textbf{Oracle:} Problem poser for a single instance of DWVP $P^{(g)}$, a solver circuit $D$. \\
+  \textbf{Input:} A random bitstring $\pi \in \{0,1\}^{l}$.\\
+
+  \medskip\hrule\medskip
+
+  $(x, \Gamma_V, \Gamma_H) := P^{(1)}(\pi)$ \\
+  Run $D^{(.)(.)}(x)$ with oracle access to $\Gamma_V$ and $\Gamma_H$ \\
+  \IndI Let $(\widetilde{q},y)$ be the first verification query of $D^{\Gamma_H, \Gamma_V}(x)$ such that $\Gamma_V(\widetilde{q},y) = 1$ \\
+  \IndI Define $Q_{Hint} := \{q: \text{$D^{\Gamma_H, \Gamma_V}(x)$ asked a hint query on q} \}$\\
+  \textbf{If} $q \notin Q_{Hint}$\\
+  \IndI \textbf{return} $1$\\
+  \textbf{else}\\
+  \IndI \textbf{return} $0$\\
+\end{codeblock}
+%
+%
+%
+%Def: (k-wise direct product of dynamic weakly verifiable puzzles)
+\begin{definition}{\textbf{(k-wise direct product of dynamic weakly verifiable puzzles)}}\\
+Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ denote a monotone function, and $P^{(1)}$ an algorithm used to generate an instance of DWVP.
+A $k$-wise direct product of dynamic weakly verifiable puzzles is defined by an algorithm $P^{(g)}\left(\pi_1, \dots, \pi_k \right)$,
+where $(\pi_1, \dots, \pi_k) \in \{0,1\}^{kl}$ are chosen uniformly at random.
+The algorithm $P^{(g)}\left(\pi_1, \dots, \pi_k \right)$ sequentially generates $k$ independent instances of dynamic weakly verifiable puzzles,
+where in the $i$-th round $P^{(g)}$ runs $P^{(1)}(\pi_i)$ and obtains $(x_i, \Gamma_V^{(i)}, \Gamma_H^{(i)} )$.
+Finally, $P^{(g)}$ outputs a verification circuit
+\begin{align*}
+  \Gamma_V^{(g)} (q, r_1, \dots, r_k) := g(\Gamma_V^{(1)}(q, r_1), \dots, \Gamma_V^{(k)}(q, r_k)),
+\end{align*}
+a hint circuit
+\begin{align*}
+  \Gamma_H^{(g)} (q) := (\Gamma_H^{(1)}(q), \dots, \Gamma_H^{(k)}(q)),
+\end{align*}
+and a puzzle $x^{(k)} = (x_1, \dots, x_k)$.
+\end{definition}
+%TODO define a circuit C for problem poser + assumptions about C
+%
+\begin{codeblock}
+  \textbf{Experiment $A^{P^{(g)}, C^{(.) (.)}}(\pi^{(k)})$} \\
+  Solving k-wise direct product of dynamic weakly verifiable puzzles.
+  \medskip
+
+  \hrule
+
+  \medskip
+
+  \textbf{Oracle:} Problem poser for k-wise direct product $P^{(g)}$, a solver circuit $C^{(.)(.)}$ with oracle access to hint and verification circuits. \\
+  \textbf{Input:} Random bitstring $\pi^{(k)} \in \{0,1\}^{lk}$.\\
+
+  \medskip\hrule\medskip
+
+  $(x^{(k)}, \Gamma_V^{(g)}, \Gamma_H^{(g)}) := P^{(g)}(\pi^{(k)})$ \\
+  Run $C^{(.)(.)}(x)$ with oracle access to $\Gamma_V$ and $\Gamma_H$ \\
+  \IndI Let $(\widetilde{q},y)$ be the first verification query of $C^{\Gamma_V^{(g)}, \Gamma_H^{(g)}}(x)$ such that $\Gamma_V^{(g)}(\widetilde{q},y_1, \dots, y_k) = 1$ \\
+  \IndI Define $Q_{Hint} := \{q: \text{$D^{\Gamma_V^{(g)}, \Gamma_H^{(g)}}(x^{(k)})$ asked a hint query on q} \}$\\
+  \textbf{If} $q \notin Q_{Hint}$\\
+  \IndI \textbf{return} $1$\\
+  \textbf{else}\\
+  \IndI \textbf{return} $0$\\
+
+\end{codeblock}
+%
+%
+%
+%
+\begin{theorem}{\textbf{Security amplification of a dynamic weakly verifiable puzzle.}}\\
+  Fix a problem poser $P^{(1)}$.
+  There exists an algorithm $Gen(C, g, \varepsilon, \delta, n, v, h)$ which takes as input a circuit $C$, a monotone function $g$, parameters
+  $\varepsilon, \delta$, a security parameter $n$, number of verification $v$, and hint $h$ queries asked by $C$, and outputs a circuit $D$
+  such that following holds: \\
+  If $C$ is such that \\
+  \begin{align*}
+    \underset{(\pi_1, \dots, \pi_k) \in \{0,1\}^{lk}}{\Pr}[A^{P^{(g)}, C}(\pi_1, \dots, \pi_k) = 1] \geq \underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon
+  \end{align*}
+  then $D$ satisfies almost surely
+  \begin{align*}
+    \underset{\pi \in \{0,1\}^{l}}{\Pr}[B^{P^{(1)},D}(\pi) = 1] \geq (\delta + \frac{\varepsilon}{6k})
+  \end{align*}
+  and $Size(D) \leq Size(C)\frac{6k}{\varepsilon}$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
+\end{theorem}
+%
+%
+%
+% TODO define puzzle and probabilities using x^{(k)}
+%
+\begin{codeblock}
+  \textbf{Experiment $E^{P^{(g)}, C^{(.)(.)}, Hash}(\pi_1, \dots, \pi_k)$} \\
+  Solving $k$-wise direct product with respect to the set $P_{hash}$
+  \medskip
+
+  \hrule
+
+  \medskip
+  \textbf{Oracle:} Problem poser for k-wise direct product $P^{(g)}$ \\
+  \IndI Solver circuit $C^{(.)(.)}$ with oracle access to hint and verification circuits \\
+  \IndI Function $Hash: Q \leftarrow \{0, \dots, 2(h+v) - 1\}$\\
+  \textbf{Input:} Random bitstring $(\pi_1, \dots, \pi_k) \in \{0,1\}^{lk}$\\
+
+  \medskip\hrule\medskip
+
+  $\pi^{(k)} := \left(\pi_1, \dots, \pi_k \right)$\\
+  $(x^{k}, \Gamma_V^{(g)}, \Gamma_H^{(g)}) := P^{(g)}(\pi^{k})$\\
+  Run $C^{\Gamma_V^{(g)}, \Gamma_H^{(g)}} (x^{(k)})$ \\
+  \IndI Let $(q_j,y_j^{(k)})$ be the first successful verification query if $C^{\Gamma_V^{(g)}, \Gamma_H^{(g)}}$ succeeds or \\
+  \IndI an arbitrary verification query when it fails.\\
+
+  \textbf{If} $(\forall i < j :  Hash(q_i) \neq 0 )$ and $( Hash(q_j) = 1 \land \Gamma_V^{(g)}(q_j, y_j^{(k)}) = 1)$ \\
+  \IndI \textbf{return} 1\\
+  \textbf{else}\\
+  \IndI \textbf{return} 0\\
+\end{codeblock}
+% Then canonical success probability of $C$ in a random experiment $A^{P^{(g)}, C, Hash}(\pi_1, \dots, \pi_k)$ is \\
+% $\underset{(\pi_1, \dots, \pi_k)}{\Pr}[A^{P^{(g)}, C, Hash}(\pi_1, \dots, \pi_k)]$.
+%
+% TODO: circuits or algorithms
+% TODO: size of circuits?
+% TODO: need def. of canonical success and P_hash
+% TODO: number of calls to oracle circuit C
+%
+\begin{lemma}
+Fix $P^{(1)}$ and let $C$ be a circuit that succeeds in solving the $k$-wise direct product of DWVP produced by $P^{(1)}$
+with probability $\varepsilon$ making $h$ hint and $v$ verification queries.
+Then there exists a probabilistic algorithm, with oracle access to $C$, that runs in time $O((h+v)^4/\varepsilon^4)$
+and with high probability outputs a function $Hash: Q \leftarrow \{0, 2(h+v)-1\}$ such that success probability of
+$C$ in random experiment $E$ with respect to set $P_{Hash}$ is at least $\frac{\varepsilon}{8(h+v)}$.
+\end{lemma}
+%
+%
+%
+\begin{theorem}
+  Fix a dynamic weakly verifiable puzzle $P^{(1)}$ and a function $Hash: Q \rightarrow \{0, \dots, 2(h+v)-1\}$.
+  There exists an algorithm $Gen(C, g, \varepsilon, \delta, n, v, h, Hash)$
+  outputting circuit $D$ such that following holds: \\
+  If
+  \begin{align*}
+    \underset{(\pi_1, \dots, \pi_k)}{\Pr}[A^{P^{(g)}, C, Hash}(\pi_1, \dots, \pi_k)] \geq \underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon
+  \end{align*}
+  then $D$ satisfies almost surely
+  \begin{align*}
+    \underset{}{\Pr}[B^{P^{(1)},D, Hash}(\pi) = 1] \geq (\delta + \frac{\varepsilon}{6k})
+  \end{align*}
+  and $Size(D) \leq Size(C)\frac{6k}{\varepsilon}$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
+\end{theorem}
+%
+Let us fix a random experiment $B$ such that
+\begin{codeblock}
+  \textbf{Random experiment $B^{P^{(1)}, C, Hash}(\pi)$}
+  \medskip
+
+  \hrule
+
+  \medskip
+
+  \textbf{Oracle:} A circuit C, a function $Hash$ and a dynamic weakly verifiable puzzle $P^{(1)}$\\
+  \textbf{Input:} A random bitstring $\pi$ of length at most $Time ? $
+  %TODO length of the bitstring maybe it is fixed as it is input to P^{(1)} ? like l see the end of the paper by Imaginazzo.
+  \medskip\hrule\medskip
+
+  $(x, \Gamma_v, \Gamma_H) := P^{(1)}(\pi)$ \\
+  Run $D^{\Gamma_V, \Gamma_H}(x)$ \\
+  \IndI Let $(\widetilde{q_j},\widetilde{r_j})$ be the first successful verification query if $D^{\Gamma_V, \Gamma_H}(x)$ succeeds or \\
+  \IndI an arbitrary verification query when it fails.\\
+  \textbf{If} $(\forall i < j :  Hash(q_i) \neq 0 )$ and $Hash(q_j) = 1$ \\
+  \IndI \textbf{return} 1\\
+  \textbf{else}\\
+  \IndI \textbf{return} 0\\
+
+\end{codeblock}
+
+\begin{codeblock}
+  \textbf{Random experiment $F^{Hash}(\pi_1, \dots, \pi_k)$}
+  \medskip
+
+  \hrule
+
+  \medskip
+
+  \textbf{Oracle:} A function $Hash$ \\
+  \textbf{Input:} A random bitstring $\pi$ of length at most $Time ? $
+  %TODO length of the bitstring maybe it is fixed as it is input to P^{(1)} ? like l see the end of the paper by Imaginazzo.
+  \medskip\hrule\medskip
+  \textbf{For} $i=1$ to $k$ \\
+  \IndI $(x, \Gamma_V^{(i)}, \Gamma_H^{(i)}) = P^{(1)}(\pi_i)$
+  \textbf{End}
+  Let $\Gamma_V^{(g)} $ be a circuit computing $g(\Gamma_v^{(1)}(q, r_1), \dots, \Gamma_V^{(k)}(q, r_k))$ \\
+  Let $\Gamma_H^{(g)} $ be a circuit computing $(\Gamma_v^{(1)}(q, r_1), \dots, \Gamma_V^{(k)}(q, r_k))$ \\
+  $(q,\widetilde{r}) = \widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, Hash} (x_1, \dots, x_k)$ \\
+  \textbf{If} $(q, \widetilde{r}) = \bot$ then return $\bot$ \\
+  \textbf{For} $i = 1$ to $k$ \\
+  \IndI $c_i = \Gamma_V^{(i)}(q,r_i)$ \\
+  \textbf{End}\\
+  \textbf{Return} $(c_1, \dots, c_k)$
+
+\end{codeblock}
+
+
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "master.tex"

@@ -2,7 +2,7 @@
 % \documentclass[11commpt]{article}
 
 % %% We use the memoir class because it offers a many easy to use features.
-\documentclass[10pt,a4paper,article,oneside]{memoir}
+\documentclass[11pt,a4paper,article,oneside]{memoir}
 
 \counterwithout{section}{chapter}
 \usepackage[margin=1in]{geometry}
@@ -48,6 +48,17 @@
 %% afterwards; or at least NEVER use its underlining features.
 \usepackage{soul}
 
+%% For code snippets
+\usepackage{mdframed}
+\newenvironment{codeblock}%
+   {\medskip\begin{mdframed}\setlength{\parindent}{0cm}}%
+   {\end{mdframed}\medskip}
+\newcommand{\Ind}{\mbox{}}
+\newcommand{\IndI}{\mbox\qquad}
+\newcommand{\IndII}{\mbox\qquad\qquad}
+\newcommand{\IndIII}{\mbox\qquad\qquad\qquad}
+\newcommand{\IndIIII}{\mbox\qquad\qquad\qquad\qquad}
+
 %% Some more packages that you may want to use.  Have a look at the
 %% file, and consult the package docs for each.
 \input{extrapackages}
@@ -72,5 +83,6 @@
 
 \setcounter {myc}{1}
 \input{ch0}
+
 \end{document}
 
