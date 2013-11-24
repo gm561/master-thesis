@@ -11,10 +11,10 @@
   called a problem poser, that takes as input chosen uniformly at random bitstring $\pi \in \{0,1\}^l$.
   The algorithm $P(\pi)$ produces circuits $\Gamma_{V}$, $\Gamma_{H}$ and a puzzle $x \in \{0,1\}^{*}$.
   The circuit $\Gamma_{V}$ takes as its input $q \in Q$ and an answer $y$.
-  An answer $y$ is a correct solution for $q$ if and only if $\Gamma_V(q,y) = 1$.
+  If $\Gamma_V(q,y) = 1$ then $y$ is a correct solution of puzzle $x$ for $q$.
   The circuit $\Gamma_H$ on input $q$ provides a hint such that $\Gamma_V(q,\Gamma_H(q)) = 1$.
   The algorithm $S$, called a solver, has oracle access to $\Gamma_V$ and $\Gamma_H$.
-  The calls to $\Gamma_V$ are verification queries, the calls to $\Gamma_H$ are hint queries.
+  The calls of $S$ to $\Gamma_V$ are called verification queries and the calls to $\Gamma_H$ are hint queries.
   The solver $S$ can ask at most $h$ hint queries, $v$ verification queries, and successfully solves a DWVP if and only if
   it makes a verification query $(q,r)$ such that $\Gamma_V(q,r) = 1$, when it has not previously asked for a hint query on this $q$.
 \end{definition}
@@ -31,7 +31,7 @@
   \medskip
 
   \textbf{Oracle:} Problem poser for a single instance of DWVP $P^{(g)}$, a solver circuit $D$. \\
-  \textbf{Input:} A random bitstring $\pi \in \{0,1\}^{l}$.\\
+  \textbf{Input:}  Bitstring $\pi \in \{0,1\}^{l}$.\\
 
   \medskip\hrule\medskip
 
@@ -62,7 +62,7 @@ a hint circuit
 \begin{align*}
   \Gamma_H^{(g)} (q) := (\Gamma_H^{(1)}(q), \dots, \Gamma_H^{(k)}(q)),
 \end{align*}
-and a puzzle $x^{(k)} = (x_1, \dots, x_k)$.
+and a puzzle $x^{(k)} := (x_1, \dots, x_k)$.
 \end{definition}
 %TODO define a circuit C for problem poser + assumptions about C
 %
@@ -148,43 +148,44 @@ and a puzzle $x^{(k)} = (x_1, \dots, x_k)$.
 % TODO: need def. of canonical success and P_hash
 % TODO: number of calls to oracle circuit C
 %
-\begin{lemma}
+\begin{lemma} \textbf{Success probability with respect to hash function.} \\
 Fix $P^{(1)}$ and let $C$ be a circuit that succeeds in solving the $k$-wise direct product of DWVP produced by $P^{(1)}$
 with probability $\varepsilon$ making $h$ hint and $v$ verification queries.
 Then there exists a probabilistic algorithm, with oracle access to $C$, that runs in time $O((h+v)^4/\varepsilon^4)$
-and with high probability outputs a function $Hash: Q \leftarrow \{0, 2(h+v)-1\}$ such that success probability of
+and with high probability outputs a function $Hash: Q \rightarrow \{0, \dots, 2(h+v)-1\}$ such that success probability of
 $C$ in random experiment $E$ with respect to set $P_{Hash}$ is at least $\frac{\varepsilon}{8(h+v)}$.
 \end{lemma}
 %
 %
-%
-\begin{lemma}
+\begin{lemma}\textbf{Security amplification of a dynamic weakly verifiable puzzle with respect to set $P_{hash}$.} \\
   For a fixed dynamic weakly verifiable puzzle $P^{(1)}$ there exists an algorithm\\
   $Gen(C, g, \varepsilon, \delta, n, v, h, Hash)$, which takes as input a circuit $C$, a monotone function $g$,
-  a function $Hash : Q \leftarrow \{0, 2(h+v)-1\}$, parameters $\varepsilon, \delta, n$,
+  a function $Hash : Q \rightarrow \{0, \dots, 2(h+v)-1\}$, parameters $\varepsilon, \delta, n$,
   number of verification $v$, and hint $h$ queries asked by $C$, and outputs a circuit $D$
   such that following holds: \\
   If $C$ is such that \\
   \begin{align*}
-    \underset{(\pi_1, \dots, \pi_k)}{\Pr}[A^{P^{(g)}, C, Hash}(\pi_1, \dots, \pi_k)] \geq \underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon
+    \underset{(\pi_1, \dots, \pi_k)}{\Pr}[E^{P^{(g)}, C, Hash}(\pi_1, \dots, \pi_k)] \geq \underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon
   \end{align*}
   then $D$ satisfies almost surely
   \begin{align*}
-    \underset{}{\Pr}[B^{P^{(1)},D, Hash}(\pi) = 1] \geq (\delta + \frac{\varepsilon}{6k})
+    \underset{\pi}{\Pr}[F^{P^{(1)},D, Hash}(\pi) = 1] \geq (\delta + \frac{\varepsilon}{6k})
   \end{align*}
   and $Size(D) \leq Size(C)\frac{6k}{\varepsilon}$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
 \end{lemma}
 %
+%
 \begin{codeblock}
-  \textbf{Random experiment $B^{P^{(1)}, C, Hash}(\pi)$}
+  \textbf{Random experiment $F^{P^{(1)}, D, Hash}(\pi)$} \\
+  Solving a single DWVP with respect to the set $P_{hash}$
   \medskip
 
   \hrule
 
   \medskip
 
-  \textbf{Oracle:} A circuit C, a function $Hash$ and a dynamic weakly verifiable puzzle $P^{(1)}$\\
-  \textbf{Input:} A random bitstring $\pi$ of length at most $Time ? $
+  \textbf{Oracle:} A circuit D, a function $Hash$, a dynamic weakly verifiable puzzle $P^{(1)}$\\
+  \textbf{Input:} Random bitstring $\pi$
   %TODO length of the bitstring maybe it is fixed as it is input to P^{(1)} ? like l see the end of the paper by Imaginazzo.
   \medskip\hrule\medskip
 
@@ -198,34 +199,70 @@ $C$ in random experiment $E$ with respect to set $P_{Hash}$ is at least $\frac{\
   \IndI \textbf{return} 0\\
 
 \end{codeblock}
+%
+%
+% \begin{codeblock}
+%   \textbf{Random experiment $G^{Hash}(\pi_1, \dots, \pi_k)$}
+%   Random experiment F on the photos
+%   \medskip
+
+%   \hrule
+
+%   \medskip
+
+%   \textbf{Oracle:} A function $Hash$ \\
+%   \textbf{Input:} Random bitstring $\pi$
+%   %TODO length of the bitstring maybe it is fixed as it is input to P^{(1)} ? like l see the end of the paper by Imaginazzo.
+%   \medskip\hrule\medskip
+%   \textbf{For} $i=1$ to $k$ \\
+%   \IndI $(x, \Gamma_V^{(i)}, \Gamma_H^{(i)}) = P^{(1)}(\pi_i)$ \\
+%   Let $\Gamma_V^{(g)} $ be a circuit computing $g(\Gamma_v^{(1)}(q, r_1), \dots, \Gamma_V^{(k)}(q, r_k))$ \\
+%   Let $\Gamma_H^{(g)} $ be a circuit computing $(\Gamma_v^{(1)}(q, r_1), \dots, \Gamma_V^{(k)}(q, r_k))$ \\
+%   $(q,\widetilde{r}) = \widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, Hash} (x_1, \dots, x_k)$ \\
+%   \textbf{If} $(q, \widetilde{r}) = \bot$ then \textbf{return} $\bot$ \\
+%   \textbf{For} $i = 1$ to $k$ \\
+%   \IndI $c_i = \Gamma_V^{(i)}(q,r_i)$ \\
+%   \textbf{Return} $(c_1, \dots, c_k)$
+% \end{codeblock}
 
 \begin{codeblock}
-  \textbf{Random experiment $F^{Hash}(\pi_1, \dots, \pi_k)$}
+  \textbf{Circuit $\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, Hash} (x_1, \dots, x_k)$} \\
+  Circuit $\widetilde{C}$ has good canonical success probability.
   \medskip
 
   \hrule
 
   \medskip
 
-  \textbf{Oracle:} A function $Hash$ \\
-  \textbf{Input:} A random bitstring $\pi$ of length at most $Time ? $
-  %TODO length of the bitstring maybe it is fixed as it is input to P^{(1)} ? like l see the end of the paper by Imaginazzo.
-  \medskip\hrule\medskip
-  \textbf{For} $i=1$ to $k$ \\
-  \IndI $(x, \Gamma_V^{(i)}, \Gamma_H^{(i)}) = P^{(1)}(\pi_i)$
-  \textbf{End}
-  Let $\Gamma_V^{(g)} $ be a circuit computing $g(\Gamma_v^{(1)}(q, r_1), \dots, \Gamma_V^{(k)}(q, r_k))$ \\
-  Let $\Gamma_H^{(g)} $ be a circuit computing $(\Gamma_v^{(1)}(q, r_1), \dots, \Gamma_V^{(k)}(q, r_k))$ \\
-  $(q,\widetilde{r}) = \widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, Hash} (x_1, \dots, x_k)$ \\
-  \textbf{If} $(q, \widetilde{r}) = \bot$ then return $\bot$ \\
-  \textbf{For} $i = 1$ to $k$ \\
-  \IndI $c_i = \Gamma_V^{(i)}(q,r_i)$ \\
-  \textbf{End}\\
-  \textbf{Return} $(c_1, \dots, c_k)$
+  \textbf{Oracle:} $\Gamma_V^{(g)}, \Gamma_H^{(g)}, Hash$ \\
+  \textbf{Input:} k-wise direct product of puzzles $(x_1, \dots, x_k)$ \\
 
+  \medskip\hrule\medskip
+  Run $C^{(.), (.)}(x_1, \dots, x_k)$ \\
+  \IndI \textbf{If} $C$ asks hint query $q$ \textbf{then}\\
+  \IndII \textbf{If} $Hash(q) = 0$ \textbf{then}\\
+  \IndIII \textbf{return} $\bot$\\
+  \IndII \textbf{else}\\
+  \IndIII answer with $\Gamma_H^{(g)}(q)$\\
+  \\
+  \IndI \textbf{If} $C$ asks verification query $(q, y_1, \dots, y_k)$ \textbf{then} \\
+  \IndII \textbf{If} $hash(q) = 0$ \textbf{then} \\
+  \IndIII \textbf{return} $(q, y_1, \dots, y_k)$ \\
+  \IndII \textbf{else} \\
+  \IndIII answer verification query with 0
+  \textbf{return} $\bot$
 \end{codeblock}
 
 
+\begin{lemma}
+  \begin{align*}
+  \underset{(\pi_1, \dots, \pi_k)}{\Pr}[E^{P^{(g)}, C, Hash}(\pi_1, \dots, \pi_k) = 1] \leq \underset{(\pi_1, \dots, \pi_k)}{\Pr}[\Gamma_V^{(g)} (\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, Hash}(\pi_1, \dots, \pi_k)) = 1]
+  \end{align*}
+\end{lemma}
+
+\begin{proof}
+If $E^{P^{(g)}, C, Hash}(\pi_1, \dots, \pi_k) = 1$ then circuit $\Gamma_V^{(g)} (\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, Hash}(\pi_1, \dots, \pi_k)) = 1$.
+\end{proof}
 
 %%% Local Variables:
 %%% mode: latex
