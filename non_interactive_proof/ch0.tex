@@ -264,6 +264,90 @@ $C$ in random experiment $E$ with respect to set $P_{Hash}$ is at least $\frac{\
 If $E^{P^{(g)}, C, Hash}(\pi_1, \dots, \pi_k) = 1$ then circuit $\Gamma_V^{(g)} (\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, Hash}(\pi_1, \dots, \pi_k)) = 1$.
 \end{proof}
 
+\begin{codeblock}
+  \textbf{Algorithm $Gen(\widetilde{C},g,\epsilon,\delta,n)$}
+  \medskip
+
+  \hrule
+
+  \medskip
+
+  \textbf{Oracle:} $\widetilde{C}, g$ \\
+  \textbf{Input:}  $\epsilon, \delta, n$\\
+  \textbf{Output:} A circuit $D$
+
+  \medskip\hrule\medskip
+
+  \textbf{For} $i:=1$ to $\frac{6k}{\epsilon}\log(n)$ \\
+  \IndI $\pi* \leftarrow \{0,1\}^{l}$\\
+  \IndI $\widetilde{S}_{\pi^*,0} := EvaluateSurplus(\pi^*, 0)$\\
+  \IndI $\widetilde{S}_{\pi^*,1} := EvaluateSurplus(\pi^*, 1)$\\
+  \IndI \textbf{If} $\widetilde{S}_{\pi^*,0} \geq (1 - \frac{3}{4k}) \epsilon$ or $\widetilde{S}_{\pi^*,1} \geq (1 - \frac{3}{4k}) \epsilon$ \\
+  \IndII $\widetilde{C}' := \widetilde{C}$ with the first input fixed on $\pi^*$\\
+  \IndII\textbf{return} $Gen(\widetilde{C}', g, \epsilon, \delta, n)$ \\
+  // all estimates are lower than $(1-\frac{3}{4k})\varepsilon$\\
+  $SolvePuzzle(\pi, \widetilde{C})$ \\
+  \\
+  \textbf{EvaluateSurplus}($\pi^*, b$) \\
+  \IndI \textbf{For} $i:=1$ to $N_k$ \\
+  \IndII $\pi^{(k)} \leftarrow \{0,1\}^{lk}$\\
+  \IndII $(c_1, \dots, c_k) := EvalutePuzzles(\pi^*, \pi^{(k)})$\\
+  \IndII $\widetilde{S}_{\pi^*,b}^i := g(b, c_2, \dots, c_k) - \underset{(u_2, \dots, u_k)}{\Pr}[b, u_2, \dots, u_k] $\\
+  \IndI \textbf{return} $\frac{1}{N_k} \sum_{i=1}^{N_k} \widetilde{S}_{\pi^*,b}^i$\\
+  \\
+  \textbf{EvalutePuzzles}($\pi^*, \pi^{(k)}$)\\
+  \IndI $(x^{k}, \Gamma_V^{(g)}, \Gamma_H^{(g)}) := P^{(g)}(\pi^*, \pi_2, \dots, \pi_k)$ \\
+  \IndI \textbf{For} $i=2$ to $k$\\
+  \IndII $(x_1, \Gamma_v^{(i)}, \Gamma_H^{(i)}) := P^{(1)}(\pi_i)$\\
+  \IndI $(q,y^{k}) := \widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}}(x^*, x_2, \dots, x_k)$\\
+  \IndI \textbf{For} $i=1$ to $k$\\
+  \IndII $c_i := \Gamma_v^{i}(q, y_i)$\\
+  \IndI \textbf{return} $(c_1, \dots, c_k)$\\
+\end{codeblock}
+
+\begin{codeblock}
+  \textbf{Circuit $D^{\widetilde{C}}$}
+  \medskip
+
+  \hrule
+
+  \medskip
+
+  \textbf{Oracle:}  $\widetilde{C}, P^{(1)}$\\
+
+  \medskip\hrule\medskip
+  \textbf{For} $i:=1$ to $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$\\
+  \IndI $\pi^{k} \leftarrow \{0,1\}^{k}$\\
+  \IndI $(c_1, \dots, c_k) := EvaluatePuzzles(\pi, \pi^{(k)})$\\
+  \IndI \textbf{If} $g(1,c_2, \dots, c_k) = 1$ and $g(0,c_2, \dots, c_k) = 0$\\
+  \IndII $(q, y_1, \dots, y_k) := \widetilde{C}(\pi^*, \pi_2, \dots, \pi_k)$\\
+  \IndII \textbf{return} $y_1$\\
+  \textbf{return} $\bot$ \\
+
+\end{codeblock}
+
+% \begin{codeblock}
+%   \textbf{$\text{Estimates}_{\pi^*}$}
+%   \medskip
+
+%   \hrule
+
+%   \medskip
+
+%   \textbf{Oracle:}  \\
+%   \textbf{Input:}  \\
+
+%   \medskip\hrule\medskip
+%   \textbf{For} $i = 1$ to  $\frac{6k}{\varepsilon} \log(n)$\\
+%   \IndI $\pi_i^* := \{0,1\}^{l}$ \tab{ // $\pi_i^*$ is picked uniformly at random}\\
+%   \IndI \textbf{For} $j = 1$ to $K$ \\
+%   \IndII $\pi^{k} := \{0,1\}^{kl}$ \tab{// $\pi^{k}$ is picked uniformly at random}\\
+%   \IndII $(c_2, \dots, c_k) := H^{\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}}, P^{(1)}}(\pi_i^*, \pi_2, \dots, \pi_k)$\\
+%   \IndI $\widetilde{S}_{\pi_i^*,0}^j := g(0, c_2, \dots, c_k)$ \\
+%   \IndI $\widetilde{S}_{\pi_i^*,1}^j := g(1, c_2, \dots, c_k)$ \\
+
+% \end{codeblock}
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "master.tex"
