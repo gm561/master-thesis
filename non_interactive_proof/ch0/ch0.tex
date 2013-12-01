@@ -35,24 +35,22 @@ if and only if it asks a verification query $(q, y_1, \dots, y_k)$ such that $\G
 %
 %
 \begin{codeblock}
-  \textbf{Experiment $A^{P^{(1)}, D}(\pi)$} \\
-  Solving a dynamic weakly verifiable puzzle.
+  \textbf{Experiment $A^{P^{(\cdot)}, C^{(\cdot, \cdot)}}(\pi^{(\cdot)})$}
   \medskip
 
   \hrule
 
   \medskip
 
-  \textbf{Oracle:} A problem poser $P$ for DWVP. \\
-                   \IndII A solver circuit $D^{(\cdot,\cdot)}$ for DWVP. \\
-  \textbf{Input:}  A bitstring $\pi \in \{0,1\}^{l}$.\\
+  \textbf{Oracle:} A problem poser $P^{(\cdot)}$ and a solver circuit $D^{(\cdot,\cdot)}$.\\
+  \textbf{Input:}  A bitstring $\pi^{(\cdot)}$.
 
   \medskip\hrule\medskip
 
-  $(x, \Gamma_V, \Gamma_H) := P^{(1)}(\pi)$ \\
-  Run $D^{(\Gamma_V,\Gamma_H)}(x)$ \\
-  \IndI Let $Q_{Solved} := \{q: \text{$D^{\Gamma_H, \Gamma_V}(x)$ asked a verification query on $(q,y)$ and $\Gamma_V(q, y) = 1$} \}$\\
-  \IndI Let $Q_{Hint} := \{q: \text{$D^{\Gamma_H, \Gamma_V}(x)$ asked a hint query on q} \}$\\
+  $(x^{(\cdot)}, \Gamma_V^{(\cdot)}, \Gamma_H^{(\cdot)}) := P^{(\cdot)}(\pi^{(\cdot)})$ \\
+  Run $D^{(\Gamma_V^{(\cdot)},\Gamma_H^{(\cdot)})}(x^{(\cdot)})$ \\
+  \IndI $Q_{Solved} := \{q: \text{$D^{\Gamma_V^{(\cdot)}, \Gamma_V^{(\cdot)}}(x^{(\cdot)})$ asked a verification query $(q,y^{(\cdot)})$ and $\Gamma_V^{(\cdot)}(q, y^{(\cdot)}) = 1$} \}$\\
+  \IndI $Q_{Hint} := \{q: \text{$D^{\Gamma_V^{(\cdot)}, \Gamma_H^{(\cdot)}}(x^{(\cdot)})$ asked a hint query on q} \}$\\
   \textbf{If} $\exists q \in Q_{solved} : q \notin Q_{Hint}$\\
   \IndI \textbf{return} $1$\\
   \textbf{else}\\
@@ -60,56 +58,40 @@ if and only if it asks a verification query $(q, y_1, \dots, y_k)$ such that $\G
 \end{codeblock}
 %
 %
-\begin{codeblock}
-  \textbf{Experiment $B^{P^{(g)}, C^{(\cdot,\cdot)}}(\pi_1, \dots, \pi_k)$} \\
-  Solving k-wise direct product of dynamic weakly verifiable puzzles.
-  \medskip
-
-  \hrule
-
-  \medskip
-
-  \textbf{Oracle:} A problem poser for $k$-wise direct product $P^{(g)}$. \\
-                   \IndII A solver circuit for $k$-wise direct product $C^{(\cdot,\cdot)}$.\\
-  \textbf{Input:} Random bitstring $\{\pi_1, \dots, \pi_k\} \in \{0,1\}^{kl}$.
-
-  \medskip\hrule\medskip
-
-  $(x^{(k)}, \Gamma_V^{(g)}, \Gamma_H^{(g)}) := P^{(g)}(\pi^{(k)})$ \\
-  Run $C^{(\Gamma_V^{(g)}, \Gamma_H^{(k)})}(x^{(k)})$\\
-  \IndI Let $Q_{Solved} := \{q: \text{$D^{\Gamma_V^{(g)}, \Gamma_H^{(k)}}(x^{(k)})$ asked a verification query on $(q, y^{(k)})$ and $\Gamma_V(q, y^{(k)}) = 1$} \}$\\
-  \IndI Let $Q_{Hint} := \{q: \text{$D^{\Gamma_V^{(g)}, \Gamma_H^{(k)}}(x^{(k)})$ asked a hint query on q} \}$\\
-  \textbf{If} $q \notin Q_{Hint}$\\
-  \IndI \textbf{return} $1$\\
-  \textbf{else}\\
-  \IndI \textbf{return} $0$\\
-
-\end{codeblock}
-%
-%
+% TODO oracle access to P^{g} of Gen
 \begin{theorem}{\textbf{Security amplification of a dynamic weakly verifiable puzzle.}}\\
-  Fix a problem poser $P^{(1)}$.
-  There exists an algorithm $Gen(C, g, \varepsilon, \delta, n, v, h)$ which takes as input a circuit $C$, a monotone function $g$, parameters
-  $\varepsilon, \delta$, a security parameter $n$, number of verification $v$, and hint $h$ queries asked by $C$, and outputs a circuit $D$
+  For a fixed problem poser $P^{(1)}$ there exists an algorithm $Gen(C, g, \varepsilon, \delta, n, v, h)$ which takes as input a solver circuit $C$ for $k$-wise
+  direct product of DWVP, a monotone function $g$, parameters $\varepsilon, \delta,n$, the number of verification $v$, and hint $h$ queries asked by $C$, and outputs a circuit $D$
   such that following holds: \\
   If $C$ is such that \\
   \begin{align*}
-    \underset{(\pi_1, \dots, \pi_k) \in \{0,1\}^{lk}}{\Pr}[A^{P^{(g)}, C}(\pi_1, \dots, \pi_k) = 1] \geq \underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon
+    \underset{(\pi_1, \dots, \pi_k) \in \{0,1\}^{kl}}{\Pr}[A^{P^{(g)}, C}(\pi_1, \dots, \pi_k) = 1] \geq \underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon
   \end{align*}
   then $D$ satisfies almost surely
   \begin{align*}
-    \underset{\pi \in \{0,1\}^{l}}{\Pr}[B^{P^{(1)},D}(\pi) = 1] \geq (\delta + \frac{\varepsilon}{6k})
+    \underset{\pi \in \{0,1\}^{l}}{\Pr}[A^{P^{(1)},D}(\pi) = 1] \geq (\delta + \frac{\varepsilon}{6k})
   \end{align*}
-  and $Size(D) \leq Size(C)\frac{6k}{\varepsilon}$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
+  Additionally, $D$ and $Gen$ require only oracle access to $g$ and $C$. Furthermore, $D$ asks at most $h$ hint queries, $v$ verification queries and
+  $Size(D) \leq Size(C)\frac{6k}{\varepsilon}$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
 \end{theorem}
+% Then canonical success probability of $C$ in a random experiment $A^{P^{(g)}, C, Hash}(\pi_1, \dots, \pi_k)$ is \\
+% $\underset{(\pi_1, \dots, \pi_k)}{\Pr}[A^{P^{(g)}, C, Hash}(\pi_1, \dots, \pi_k)]$.
 %
+% TODO: circuits or algorithms
+% TODO: size of circuits?
+% TODO: need def. of canonical success and P_hash
+% TODO: number of calls to oracle circuit C
+%
+Let $hash:Q\rightarrow\{0,1,\dots, 2(h+v)-1\}$ and $P_{hash}$, defined with respect to $hash$, is a preimage of $0$ for function $hash$.
+% Proof of good probability success with respect to the hash function
+\input{ch0/hash_function}
 %
 %
 % TODO define puzzle and probabilities using x^{(k)}
 %
 \begin{codeblock}
   \textbf{Experiment $E^{P^{(g)}, C^{(.)(.)}, Hash}(\pi_1, \dots, \pi_k)$} \\
-  Solving $k$-wise direct product with respect to the set $P_{hash}$
+  Solving $k$-wise direct product of DWVP with respect to the set $P_{hash}$
   \medskip
 
   \hrule
@@ -133,122 +115,6 @@ if and only if it asks a verification query $(q, y_1, \dots, y_k)$ such that $\G
   \textbf{else}\\
   \IndI \textbf{return} 0\\
 \end{codeblock}
-% Then canonical success probability of $C$ in a random experiment $A^{P^{(g)}, C, Hash}(\pi_1, \dots, \pi_k)$ is \\
-% $\underset{(\pi_1, \dots, \pi_k)}{\Pr}[A^{P^{(g)}, C, Hash}(\pi_1, \dots, \pi_k)]$.
-%
-% TODO: circuits or algorithms
-% TODO: size of circuits?
-% TODO: need def. of canonical success and P_hash
-% TODO: number of calls to oracle circuit C
-%
-\begin{lemma} \textbf{Success probability with respect to hash function.} \\
-For a fixed $P^{(g)}$ let $C$ succeed in solving the $k$-wise direct product of DWVP produced by $P^{(g)}$
-with probability $\epsilon$ making $h$ hint and $v$ verification queries.
-There exists a probabilistic algorithm, with oracle access to $C$, that runs in time $O((h+v)^4/\varepsilon^4)$
-and with high probability outputs a function $Hash: Q \rightarrow \{0, \dots, 2(h+v)-1\}$ such that success probability of
-$C$ in random experiment $E$ with respect to the set $P_{Hash}$ is at least $\frac{\varepsilon}{8(h+v)}$.
-\end{lemma}
-%
-% Proof of existence of hash function with required properties
-%
-\begin{proof}
-Let $\cH$ be a family of pairwise independent hash functions $hash : Q \rightarrow \{0,1, \dots,2(h+v)-1\}$.
-By pairwise independence property of $\cH$ we know that for all $i \neq j \in \{1, \dots, (h+v)\}$ and $k,l \in \{0,1,\dots,2(h+v)-1\}$
-we have the following property
-\begin{align}
-  \label{eq:hash_pr}
- \forall q_i,q_j \in Q : \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = k \mid hash(q_j) = l] = \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = k] = \frac{1}{2(h+v)}
-\end{align}
-For a fixed $(\pi_1, \dots, \pi_k)$ we define an event, denoted by $X$, that $hash(q_j) = 0$ and for every query $q_i$ asked before $j$ $hash(q_i) \neq 0$.
-We have
-\begin{align*}
-  \underset{\textit{hash} \leftarrow \cH}{\Pr}[X] &= \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_j) = 0 \land \forall i < j : hash(q_i) \neq 0] \\
-  &=\underset{\textit{hash} \leftarrow \cH}{\Pr}[\forall i < j : hash(q_i) \neq 0 \mid hash(q_j) = 0] \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_j) = 0]\\
-\end{align*}
-Now we use (\ref{eq:hash_pr}) and obtain
-\begin{align*}
-\underset{\textit{hash} \leftarrow \cH}{\Pr}[X] =
-\frac{1}{2(h+v)}\left(1 -\underset{\textit{hash} \leftarrow \cH}{\Pr}[\exists i < j : hash(q_i) = 0 \mid hash(q_j) = 0] \right)
-\end{align*}
-Using once more the property (\ref{eq:hash_pr})
-\begin{align*}
-\underset{\textit{hash} \leftarrow \cH}{\Pr}[X] = \frac{1}{2(h+v)} \left( 1 -\underset{\textit{hash} \leftarrow \cH}{\Pr}[\exists i < j : hash(q_i) = 0] \right).
-\end{align*}
-Finally, we use union bound and the fact $j \leq (h+v)$ to get
-\begin{align*}
-\underset{\textit{hash} \leftarrow \cH}{\Pr}[X] \geq
-\frac{1}{2(h+v)} \left( 1 - \sum_{i < j} \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = 0] \right) \geq \frac{1}{4(h+v)}
-\end{align*}
-Let $G$ denote the set of all $(\pi_1, \dots, \pi_k)$ for which $C$ succeeds in the random experiment $A$.
-Then
-\begin{align*}
-\underset{\substack{\textit{hash} \leftarrow \cH \\ (\pi_1, \dots, \pi_k)}}{\Pr}[X] &=
-\sum_{(\pi_1, \dots, \pi_k) \in G} \underset{\textit{hash} \leftarrow \cH}{\Pr}[X \mid (\widetilde{\pi}_1, \dots, \widetilde{\pi}_k)] \cdot \underset{(\widetilde{\pi}_1, \dots, \widetilde{\pi}_k)}{\Pr}[(\widetilde{\pi}_1, \dots, \widetilde{\pi}_k) = (\pi_1, \dots, \pi_k)]\\
-&\geq \frac{1}{4(h+v)} \sum_{(\pi_1, \dots, \pi_k) \in G} \underset{(\widetilde{\pi}_1, \dots, \widetilde{\pi}_k)}{\Pr}[(\widetilde{\pi}_1, \dots, \widetilde{\pi}_k) = (\pi_1, \dots, \pi_k)] = \frac{\epsilon}{4(h+v)}
-\end{align*}
-
-\begin{codeblock}
-  \textbf{Algorithm: FindHash} \\
-  Pick a hash function with high canonical success probability
-  \medskip
-
-  \hrule
-
-  \medskip
-
-  %TODO define the circuit $C$ globally do not forget about limit on number of hint and verification queries
-  \textbf{Oracle:} A solver circuit for $k$-wise direct product of DWVP $C^{(.),(.)}$ with oracle access to hint and verification oracle.\\
-  %TODO better describe this hash functions
-  \textbf{Input:} $\cH$ a family of pairwise independent hash functions $hash: Q \rightarrow \{0,1,\dots, 2(h+v)-1\}$  \\
-  \medskip\hrule\medskip
-  \linenumber{1}For $i = 1$ to $64(h+v)^2/\epsilon^2$ \\
-  \linenumber{2}\IndI $hash \xleftarrow{\$} \cH$ \\
-  \linenumber{3}\IndI $count := 0$ \\
-  \linenumber{4}\IndI \For $j := 1$ to $64(h+v)^2/\epsilon^2$ \\
-  \linenumber{5}\IndII $(\pi_1, \dots, \pi_k) \xleftarrow{\$} \{0,1\}^{kl} $\\
-  \linenumber{6}\IndII $result := A^{P^{(g)},C^{(.), (.)}}(\pi_1, \dots, \pi_k)$\\
-  \linenumber{7}\IndII \If $result = 1$\\
-  \linenumber{8}\IndIII $count := count + 1$\\
-  \linenumber{9}\IndI \If $count \geq 4(h+v)/\epsilon$ \\
-  \linenumber{10}\IndII \return $hash$\\
-  \linenumber{11}\return $\bot$
-\end{codeblock}
-We now show that the algorithm \textbf{FindHash} chooses a hash function such
-that almost surly the success probability of $C$ in random experiment $E$
-with respect to set $P_{hash}$ is at least $\frac{\epsilon}{4(h+v)}$.
-From the fact that the random variable $X$ is binary distributed we have
-\begin{align*}
-  \underset{hash \leftarrow \cH}{\mathbb{E}}[X] \geq \frac{\epsilon}{4(h+v)}
-\end{align*}
-Let $\cH_{Good}$ denote the family of hash function for which $\underset{(\pi_1, \dots, \pi_k)}{\Pr}[X] \geq \frac{\epsilon}{4(h+v)}$.
-and $X_i$ be a binary random variable such that
-\begin{align*}
-  X_i =
-  \begin{cases}
-    1 & \text{if in $i$th iteration $A^{P^{(g)}, C^{(.)(.)}} = 1$}\\
-    0 & \text{otherwise .}
-  \end{cases}
-\end{align*}
-We first show that it is unlikely that the algorithm \textbf{FindHash} returns $hash \notin \cH_{Good}$.
-For $hash \notin \cH_{Good}$ we have $\mathbb{E}_{(\pi_1, \dots, \pi_k)}[X] < \frac{\epsilon}{4(h+v)}$.
-We use Chernoff inequality and obtain
-%FIXME write down the definition of $X_i$ correctly
-%FIXME write the number over which you sum correctly
-\begin{align*}
-  \underset{(\pi_1, \dots, \pi_k)}{\Pr} \left[\frac{1}{N_i} \sum_{i=1}^{N_i} X_i \geq (1 + \delta) \frac{\epsilon}{4(h+v)} \right] \leq
-  \underset{(\pi_1, \dots, \pi_k)}{\Pr}\left[\frac{1}{N_i} \sum_{i=1}^{N_i} X_i \geq (1 + \delta) \mathbb{E}[X]\right] \leq
-  e^{-{\frac{\epsilon}{4(h+v)}} N_i \delta^2 /3}
-\end{align*}
-%
-The probability that $hash \in \cH_{Good}$ is not returned by the algorithm is
-\begin{align*}
-  \underset{(\pi_1, \dots, \pi_k)}{\Pr}[\frac{1}{N_i} \sum_{i=1}^{N_i} X_i \leq (1 - \delta) \frac{\epsilon}{4(h+v)}] \leq
-  \underset{(\pi_1, \dots, \pi_k)}{\Pr}[\frac{1}{N_i} \sum_{i=1}^{N_i} X_i \leq (1 - \delta) \mathbb{E}[X]] \leq e^{-{\frac{\epsilon}{4(h+v)}} N_i \delta^2 /3}
-\end{align*}
-%
-Finally, we can similarly show that \textbf{FindHash} picks with high probability with one of its iteration a hash function that is in $\cH_{Good}$.
-%
-\end{proof}
 %
 %
 \begin{lemma}\textbf{Security amplification of a dynamic weakly verifiable puzzle with respect to set $P_{hash}$.} \\
@@ -446,3 +312,8 @@ If $E^{P^{(g)}, C, Hash}(\pi_1, \dots, \pi_k) = 1$ then circuit $\Gamma_V^{(g)} 
 %%% mode: latex
 %%% TeX-master: "master.tex"
 %%% End:
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../master"
+%%% End: 
