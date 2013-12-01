@@ -1,74 +1,67 @@
-%General TODO:
-% Define Gen as a program
-%
-%
-%
-%TODO runtime bound
-%TODO class complexity bound
-%Def : (Dynamic weakly verifiable puzzle (non interactive version))
-\begin{definition} {\textbf{(Dynamic weakly verifiable puzzle (non interactive version))}}\\
+\begin{definition} {\textbf{Dynamic weakly verifiable puzzle (non interactive version)}}\\
   A dynamic weakly verifiable puzzle (DWVP) is defined by a probabilistic algorithm $P(\pi)$,
-  called a problem poser, that takes as input chosen uniformly at random bitstring $\pi \in \{0,1\}^l$.
-  The algorithm $P(\pi)$ produces circuits $\Gamma_{V}$, $\Gamma_{H}$ and a puzzle $x \in \{0,1\}^{*}$.
+  called a problem poser, that takes as input chosen uniformly at random bitstring $\pi \in \{0,1\}^l$,
+  and produces circuits $\Gamma_{V}$, $\Gamma_{H}$ and a puzzle $x \in \{0,1\}^{*}$.
   The circuit $\Gamma_{V}$ takes as its input $q \in Q$ and an answer $y$.
   If $\Gamma_V(q,y) = 1$ then $y$ is a correct solution of puzzle $x$ for $q$.
   The circuit $\Gamma_H$ on input $q$ provides a hint such that $\Gamma_V(q,\Gamma_H(q)) = 1$.
   The algorithm $S$, called a solver, has oracle access to $\Gamma_V$ and $\Gamma_H$.
   The calls of $S$ to $\Gamma_V$ are called verification queries and the calls to $\Gamma_H$ are hint queries.
   The solver $S$ can ask at most $h$ hint queries, $v$ verification queries, and successfully solves a DWVP if and only if
-  it makes a verification query $(q,r)$ such that $\Gamma_V(q,r) = 1$, when it has not previously asked for a hint query on this $q$.
+  it makes a verification query $(q,y)$ such that $\Gamma_V(q,y) = 1$, when it has not previously asked for a hint query on this $q$.
 \end{definition}
 %
 %
+\begin{definition}{\textbf{$k$-wise direct product of dynamic weakly verifiable puzzles}}\\
+Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function, and $P^{(1)}$ a probabilistic algorithm used to generate an instance of DWVP.
+A $k$-wise direct product of dynamic weakly verifiable puzzles is defined by a probabilistic algorithm $P^{(g)}\left(\pi_1, \dots, \pi_k \right)$,
+where $(\pi_1, \dots, \pi_k) \in \{0,1\}^{k \cdot l}$ are chosen uniformly at random.
+$P^{(g)}\left(\pi_1, \dots, \pi_k \right)$ sequentially generates $k$ independent instances of dynamic weakly verifiable puzzles,
+where in the $i$-th round $P^{(g)}$ runs $P^{(1)}(\pi_i)$ and obtains $(x_i, \Gamma_V^{(i)}, \Gamma_H^{(i)} )$.
+Finally, $P^{(g)}$ outputs a verification circuit
+\begin{align*}
+  \Gamma_V^{(g)} (q, y_1, \dots, y_k) := g(\Gamma_V^{(1)}(q, y_1), \dots, \Gamma_V^{(k)}(q, y_k)),
+\end{align*}
+a hint circuit
+\begin{align*}
+  \Gamma_H^{(k)} (q) := (\Gamma_H^{(1)}(q), \dots, \Gamma_H^{(k)}(q)),
+\end{align*}
+and a puzzle $x^{(k)} := (x_1, \dots, x_k)$.
+\\
+The probabilistic algorithm $S$, called a solver, has oracle access to $\Gamma_V^{(g)}, \Gamma_H^{(k)}$.
+The solver $S$ can ask at most $v$ verification queries to $\Gamma_V^{(g)}$, $h$ hint queries to $\Gamma_H^{(k)}$ and successfully solves the puzzle $x^{(k)}$
+if and only if it asks a verification query $(q, y_1, \dots, y_k)$ such that $\Gamma_V^{(g)}(q, y_1, \dots, y_k) = 1$, and it has not previously asked for a hint query on this $q$.
+\end{definition}
+%
 %
 \begin{codeblock}
-  \textbf{Experiment $B^{P^{(1)}, D}(\pi)$} \\
-  Solving a dynamic weakly verifiable puzzle
+  \textbf{Experiment $A^{P^{(1)}, D}(\pi)$} \\
+  Solving a dynamic weakly verifiable puzzle.
   \medskip
 
   \hrule
 
   \medskip
 
-  \textbf{Oracle:} Problem poser $P$ for a single instance of DWVP. \\
-                   \IndII A solver circuit $D$ for a single instance of DWVP. \\
+  \textbf{Oracle:} A problem poser $P$ for DWVP. \\
+                   \IndII A solver circuit $D^{(\cdot,\cdot)}$ for DWVP. \\
   \textbf{Input:}  A bitstring $\pi \in \{0,1\}^{l}$.\\
 
   \medskip\hrule\medskip
 
   $(x, \Gamma_V, \Gamma_H) := P^{(1)}(\pi)$ \\
-  Run $D^{(.)(.)}(x)$ with oracle access to $\Gamma_V$ and $\Gamma_H$ \\
-  \IndI Let $(\widetilde{q},y)$ be the first verification query of $D^{\Gamma_H, \Gamma_V}(x)$ such that $\Gamma_V(\widetilde{q},y) = 1$ \\
+  Run $D^{(\Gamma_V,\Gamma_H)}(x)$ \\
+  \IndI Let $Q_{Solved} := \{q: \text{$D^{\Gamma_H, \Gamma_V}(x)$ asked a verification query on $(q,y)$ and $\Gamma_V(q, y) = 1$} \}$\\
   \IndI Let $Q_{Hint} := \{q: \text{$D^{\Gamma_H, \Gamma_V}(x)$ asked a hint query on q} \}$\\
-  \textbf{If} $q \notin Q_{Hint}$\\
+  \textbf{If} $\exists q \in Q_{solved} : q \notin Q_{Hint}$\\
   \IndI \textbf{return} $1$\\
   \textbf{else}\\
   \IndI \textbf{return} $0$\\
 \end{codeblock}
 %
 %
-%
-%Def: (k-wise direct product of dynamic weakly verifiable puzzles)
-\begin{definition}{\textbf{(k-wise direct product of dynamic weakly verifiable puzzles)}}\\
-Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ denote a monotone function, and $P^{(1)}$ an algorithm used to generate an instance of DWVP.
-A $k$-wise direct product of dynamic weakly verifiable puzzles is defined by an algorithm $P^{(g)}\left(\pi_1, \dots, \pi_k \right)$,
-where $(\pi_1, \dots, \pi_k) \in \{0,1\}^{kl}$ are chosen uniformly at random.
-The algorithm $P^{(g)}\left(\pi_1, \dots, \pi_k \right)$ sequentially generates $k$ independent instances of dynamic weakly verifiable puzzles,
-where in the $i$-th round $P^{(g)}$ runs $P^{(1)}(\pi_i)$ and obtains $(x_i, \Gamma_V^{(i)}, \Gamma_H^{(i)} )$.
-Finally, $P^{(g)}$ outputs a verification circuit
-\begin{align*}
-  \Gamma_V^{(g)} (q, r_1, \dots, r_k) := g(\Gamma_V^{(1)}(q, r_1), \dots, \Gamma_V^{(k)}(q, r_k)),
-\end{align*}
-a hint circuit
-\begin{align*}
-  \Gamma_H^{(g)} (q) := (\Gamma_H^{(1)}(q), \dots, \Gamma_H^{(k)}(q)),
-\end{align*}
-and a puzzle $x^{(k)} := (x_1, \dots, x_k)$.
-\end{definition}
-%TODO define a circuit C for problem poser + assumptions about C
-%
 \begin{codeblock}
-  \textbf{Experiment $A^{P^{(g)}, C^{(.) (.)}}(\pi^{(k)})$} \\
+  \textbf{Experiment $B^{P^{(g)}, C^{(\cdot,\cdot)}}(\pi_1, \dots, \pi_k)$} \\
   Solving k-wise direct product of dynamic weakly verifiable puzzles.
   \medskip
 
@@ -76,23 +69,22 @@ and a puzzle $x^{(k)} := (x_1, \dots, x_k)$.
 
   \medskip
 
-  \textbf{Oracle:} Problem poser for k-wise direct product $P^{(g)}$, a solver circuit $C^{(.)(.)}$ with oracle access to hint and verification circuits. \\
-  \textbf{Input:} Random bitstring $\pi^{(k)} \in \{0,1\}^{lk}$.\\
+  \textbf{Oracle:} A problem poser for $k$-wise direct product $P^{(g)}$. \\
+                   \IndII A solver circuit for $k$-wise direct product $C^{(\cdot,\cdot)}$.\\
+  \textbf{Input:} Random bitstring $\{\pi_1, \dots, \pi_k\} \in \{0,1\}^{kl}$.
 
   \medskip\hrule\medskip
 
   $(x^{(k)}, \Gamma_V^{(g)}, \Gamma_H^{(g)}) := P^{(g)}(\pi^{(k)})$ \\
-  Run $C^{(.)(.)}(x)$ with oracle access to $\Gamma_V$ and $\Gamma_H$ \\
-  \IndI Let $(\widetilde{q},y)$ be the first verification query of $C^{\Gamma_V^{(g)}, \Gamma_H^{(g)}}(x)$ such that $\Gamma_V^{(g)}(\widetilde{q},y_1, \dots, y_k) = 1$ \\
-  \IndI Define $Q_{Hint} := \{q: \text{$D^{\Gamma_V^{(g)}, \Gamma_H^{(g)}}(x^{(k)})$ asked a hint query on q} \}$\\
+  Run $C^{(\Gamma_V^{(g)}, \Gamma_H^{(k)})}(x^{(k)})$\\
+  \IndI Let $Q_{Solved} := \{q: \text{$D^{\Gamma_V^{(g)}, \Gamma_H^{(k)}}(x^{(k)})$ asked a verification query on $(q, y^{(k)})$ and $\Gamma_V(q, y^{(k)}) = 1$} \}$\\
+  \IndI Let $Q_{Hint} := \{q: \text{$D^{\Gamma_V^{(g)}, \Gamma_H^{(k)}}(x^{(k)})$ asked a hint query on q} \}$\\
   \textbf{If} $q \notin Q_{Hint}$\\
   \IndI \textbf{return} $1$\\
   \textbf{else}\\
   \IndI \textbf{return} $0$\\
 
 \end{codeblock}
-%
-%
 %
 %
 \begin{theorem}{\textbf{Security amplification of a dynamic weakly verifiable puzzle.}}\\
@@ -195,10 +187,6 @@ Then
 &\geq \frac{1}{4(h+v)} \sum_{(\pi_1, \dots, \pi_k) \in G} \underset{(\widetilde{\pi}_1, \dots, \widetilde{\pi}_k)}{\Pr}[(\widetilde{\pi}_1, \dots, \widetilde{\pi}_k) = (\pi_1, \dots, \pi_k)] = \frac{\epsilon}{4(h+v)}
 \end{align*}
 
-\begin{lemma}
-Algorithm \textbf{FindHash} chooses a hash function such that almost surly the success probability of $C$ in random experiment $E$
-with respect to set $P_{hash}$ is at least $\frac{\epsilon}{4(h+v)}$.
-\end{lemma}
 \begin{codeblock}
   \textbf{Algorithm: FindHash} \\
   Pick a hash function with high canonical success probability
@@ -212,43 +200,54 @@ with respect to set $P_{hash}$ is at least $\frac{\epsilon}{4(h+v)}$.
   \textbf{Oracle:} A solver circuit for $k$-wise direct product of DWVP $C^{(.),(.)}$ with oracle access to hint and verification oracle.\\
   %TODO better describe this hash functions
   \textbf{Input:} $\cH$ a family of pairwise independent hash functions $hash: Q \rightarrow \{0,1,\dots, 2(h+v)-1\}$  \\
-
   \medskip\hrule\medskip
-
-  \For $i = 1$ to $64(h+v)^2/\epsilon^2$ \\
-  \IndI $hash \xleftarrow{\$} \cH$ \\
-  \IndI $count := 0$ \\
-  \IndI \For $j := 1$ to $64(h+v)^2/\epsilon^2$ \\
-  \IndII $(\pi_1, \dots, \pi_k) \xleftarrow{\$} \{0,1\}^{kl} $\\
-  \IndII $result := A^{P^{(g)},C^{(.), (.)}}(\pi_1, \dots, \pi_k)$\\
-  \IndII \If $result = 1$\\
-  \IndIII $count := count + 1$\\
-  \IndI \If $count \geq 4(h+v)/\epsilon$ \\
-  \IndII \return $hash$\\
-  \return $\bot$
+  \linenumber{1}For $i = 1$ to $64(h+v)^2/\epsilon^2$ \\
+  \linenumber{2}\IndI $hash \xleftarrow{\$} \cH$ \\
+  \linenumber{3}\IndI $count := 0$ \\
+  \linenumber{4}\IndI \For $j := 1$ to $64(h+v)^2/\epsilon^2$ \\
+  \linenumber{5}\IndII $(\pi_1, \dots, \pi_k) \xleftarrow{\$} \{0,1\}^{kl} $\\
+  \linenumber{6}\IndII $result := A^{P^{(g)},C^{(.), (.)}}(\pi_1, \dots, \pi_k)$\\
+  \linenumber{7}\IndII \If $result = 1$\\
+  \linenumber{8}\IndIII $count := count + 1$\\
+  \linenumber{9}\IndI \If $count \geq 4(h+v)/\epsilon$ \\
+  \linenumber{10}\IndII \return $hash$\\
+  \linenumber{11}\return $\bot$
 \end{codeblock}
-\begin{proof}
+We now show that the algorithm \textbf{FindHash} chooses a hash function such
+that almost surly the success probability of $C$ in random experiment $E$
+with respect to set $P_{hash}$ is at least $\frac{\epsilon}{4(h+v)}$.
 From the fact that the random variable $X$ is binary distributed we have
 \begin{align*}
   \underset{hash \leftarrow \cH}{\mathbb{E}}[X] \geq \frac{\epsilon}{4(h+v)}
 \end{align*}
-Let $\cH_{Good}$ denote the set of hash function for which $\underset{(\pi_1, \dots, \pi_k)}{\Pr}[X] \geq \frac{\epsilon}{4(h+v)}$.
-We first show that it is unlikely that the algorithm \textbf{FindHash} return a hash function that is not in $\cH_{Good}$.
-Let $hash_{bad} \notin \cH_{Good}$ and $X_i$ denote a binary random variable.
+Let $\cH_{Good}$ denote the family of hash function for which $\underset{(\pi_1, \dots, \pi_k)}{\Pr}[X] \geq \frac{\epsilon}{4(h+v)}$.
+and $X_i$ be a binary random variable such that
+\begin{align*}
+  X_i =
+  \begin{cases}
+    1 & \text{if in $i$th iteration $A^{P^{(g)}, C^{(.)(.)}} = 1$}\\
+    0 & \text{otherwise .}
+  \end{cases}
+\end{align*}
+We first show that it is unlikely that the algorithm \textbf{FindHash} returns $hash \notin \cH_{Good}$.
+For $hash \notin \cH_{Good}$ we have $\mathbb{E}_{(\pi_1, \dots, \pi_k)}[X] < \frac{\epsilon}{4(h+v)}$.
+We use Chernoff inequality and obtain
 %FIXME write down the definition of $X_i$ correctly
 %FIXME write the number over which you sum correctly
 \begin{align*}
-  \underset{(\pi_1, \dots, \pi_k)}{\mathbb{E}} \left[\frac{1}{N_i} \sum_{i=1}^{N_i} X_i \geq (\delta + 1) \frac{\epsilon}{4(h+v)} \right]\leq
-  \underset{(\pi_1, \dots, \pi_k)}{\mathbb{E}}\left[\frac{1}{N_i} \sum_{i=1}^{N_i} X_i \geq (\delta + 1) \mathbb{E}[X]\right] \leq
-  e^{\textit{chernoff sth}}
+  \underset{(\pi_1, \dots, \pi_k)}{\Pr} \left[\frac{1}{N_i} \sum_{i=1}^{N_i} X_i \geq (1 + \delta) \frac{\epsilon}{4(h+v)} \right] \leq
+  \underset{(\pi_1, \dots, \pi_k)}{\Pr}\left[\frac{1}{N_i} \sum_{i=1}^{N_i} X_i \geq (1 + \delta) \mathbb{E}[X]\right] \leq
+  e^{-{\frac{\epsilon}{4(h+v)}} N_i \delta^2 /3}
 \end{align*}
 %
-Now we show that if $hash \in \cH_{Good}$ picked in line ? then it is returned almost surely.
+The probability that $hash \in \cH_{Good}$ is not returned by the algorithm is
+\begin{align*}
+  \underset{(\pi_1, \dots, \pi_k)}{\Pr}[\frac{1}{N_i} \sum_{i=1}^{N_i} X_i \leq (1 - \delta) \frac{\epsilon}{4(h+v)}] \leq
+  \underset{(\pi_1, \dots, \pi_k)}{\Pr}[\frac{1}{N_i} \sum_{i=1}^{N_i} X_i \leq (1 - \delta) \mathbb{E}[X]] \leq e^{-{\frac{\epsilon}{4(h+v)}} N_i \delta^2 /3}
+\end{align*}
 %
-Finally, we show that \textbf{FindHash} picks a hash function that is in $\cH_{Good}$ almost surely.
+Finally, we can similarly show that \textbf{FindHash} picks with high probability with one of its iteration a hash function that is in $\cH_{Good}$.
 %
-\end{proof}
-
 \end{proof}
 %
 %

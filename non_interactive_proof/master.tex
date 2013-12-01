@@ -49,7 +49,19 @@
 \usepackage{soul}
 
 %% For code snippets
-\usepackage{mdframed}
+\usepackage[framemethod=tikz]{mdframed}
+\newdimen\linenumbersep
+
+\newcommand{\linenumber}[1]{%
+  \linenumbersep 4pt%
+  \advance\linenumbersep\mdflength{innerleftmargin}%
+  \advance\linenumbersep\mdflength{innerlinewidth}%
+  \advance\linenumbersep\mdflength{middlelinewidth}%
+  \advance\linenumbersep\mdflength{outerlinewidth}%
+  \advance\linenumbersep\mdflength{linewidth}%
+  \makebox[0pt][r]{{\rmfamily\tiny#1}\hspace*{\linenumbersep}}}
+
+%\usepackage{mdframed}
 \newenvironment{codeblock}%
    {\medskip\begin{mdframed}\setlength{\parindent}{0cm}}%
    {\end{mdframed}\medskip}
