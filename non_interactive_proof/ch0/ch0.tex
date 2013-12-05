@@ -90,7 +90,7 @@ Let $hash:Q\rightarrow\{0,1,\dots, 2(h+v)-1\}$ and $P_{hash}$, defined with resp
 % TODO define puzzle and probabilities using x^{(k)}
 %
 \begin{codeblock}
-  \textbf{Experiment $E^{P^{(g)}, C^{(.)(.)}, Hash}(\pi_1, \dots, \pi_k)$} \\
+  \textbf{Experiment $E^{P^{(g)}, C^{(.)(.)}, hash}(\pi_1, \dots, \pi_k)$} \\
   Solving $k$-wise direct product of DWVP with respect to the set $P_{hash}$
   \medskip
 
@@ -98,29 +98,58 @@ Let $hash:Q\rightarrow\{0,1,\dots, 2(h+v)-1\}$ and $P_{hash}$, defined with resp
 
   \medskip
   \textbf{Oracle:} Problem poser for k-wise direct product $P^{(g)}$ \\
-  \IndI Solver circuit $C^{(.)(.)}$ with oracle access to hint and verification circuits \\
-  \IndI Function $Hash: Q \leftarrow \{0, \dots, 2(h+v) - 1\}$\\
-  \textbf{Input:} Random bitstring $(\pi_1, \dots, \pi_k) \in \{0,1\}^{lk}$\\
+  \IndI A solver circuit for $k$-wise direct product $C^{(\cdot, \cdot)}$ \\
+  \IndI A function $hash: Q \leftarrow \{0, \dots, 2(h+v) - 1\}$\\
+  \textbf{Input:} Random bitstring $(\pi_1, \dots, \pi_k) \in \{0,1\}^{kl}$\\
 
   \medskip\hrule\medskip
 
   $\pi^{(k)} := \left(\pi_1, \dots, \pi_k \right)$\\
-  $(x^{k}, \Gamma_V^{(g)}, \Gamma_H^{(g)}) := P^{(g)}(\pi^{k})$\\
-  Run $C^{\Gamma_V^{(g)}, \Gamma_H^{(g)}} (x^{(k)})$ \\
-  \IndI Let $(q_j,y_j^{(k)})$ be the first successful verification query if $C^{\Gamma_V^{(g)}, \Gamma_H^{(g)}}$ succeeds or \\
+  $(x^{k}, \Gamma_V^{(g)}, \Gamma_H^{(k)}) := P^{(g)}(\pi^{k})$\\
+  Run $C^{\Gamma_V^{(g)}, \Gamma_H^{(k)}} (x^{(k)})$ \\
+  \IndI Let $(q_j,y_j^{(k)})$ be the first successful verification query if $C^{\Gamma_V^{(g)}, \Gamma_H^{(k)}}$ succeeds or \\
   \IndI an arbitrary verification query when it fails.\\
-
-  \textbf{If} $(\forall i < j :  Hash(q_i) \neq 0 )$ and $( Hash(q_j) = 1 \land \Gamma_V^{(g)}(q_j, y_j^{(k)}) = 1)$ \\
+  \textbf{If} $(\forall i < j :  q_i \notin P_{hash} )$ and $q_j \in P_{hash}$ and $\Gamma_V^{(g)}(q_j, y_j^{(k)}) = 1$ \\
   \IndI \textbf{return} 1\\
   \textbf{else}\\
   \IndI \textbf{return} 0\\
 \end{codeblock}
 %
+A canonical success is a situation when a solver $C$ for fixed $hash$ and $P^{(1)}$ succeeds in a random experiment $E$.
+%
+\begin{codeblock}
+  \textbf{Random experiment $F^{P^{(1)}, D, hash}(\pi)$} \\
+  Solving a single DWVP with respect to the set $P_{hash}$
+  \medskip
+
+  \hrule
+
+  \medskip
+
+  \textbf{Oracle:}
+  A dynamic weakly verifiable puzzle $P^{(1)}$ \\
+  \IndI A solver circuit for a single DWVP $D$ \\
+  \IndI A function $hash: Q \rightarrow \{0,1,\dots, 2(h+v)-1\}$ \\ 
+  \textbf{Input:} Random bitstring $\pi \in \{0,1\}^l$
+  %TODO length of the bitstring maybe it is fixed as it is input to P^{(1)} ? like l see the end of the paper by Imaginazzo.
+  \medskip\hrule\medskip
+
+  $(x, \Gamma_v, \Gamma_H) := P^{(1)}(\pi)$ \\
+  Run $D^{\Gamma_V, \Gamma_H}(x)$ \\
+  \IndI Let $(\widetilde{q_j},\widetilde{r_j})$ be the first successful verification query if $D^{\Gamma_V, \Gamma_H}(x)$ succeeds or \\
+  \IndI an arbitrary verification query when it fails. \\
+  \If $(\forall i < j :  q_i \notin  P_{hash} )$ and $q_j \in P_{hash}$ and $\Gamma_V(q_j) = 1$ \then \\
+  \IndI \return 1 \\
+  \textbf{else}\\
+  \IndI \return 0\\
+
+\end{codeblock}
+%
 %
 \begin{lemma}\textbf{Security amplification of a dynamic weakly verifiable puzzle with respect to set $P_{hash}$.} \\
   For a fixed dynamic weakly verifiable puzzle $P^{(1)}$ there exists an algorithm\\
-  $Gen(C, g, \varepsilon, \delta, n, v, h, Hash)$, which takes as input a circuit $C$, a monotone function $g$,
-  a function $Hash : Q \rightarrow \{0, \dots, 2(h+v)-1\}$, parameters $\varepsilon, \delta, n$,
+  $Gen(C, g, \varepsilon, \delta, n, v, h, hash)$, which takes as input a circuit $C$, a monotone function $g$,
+  a function $hash : Q \rightarrow \{0, \dots, 2(h+v)-1\}$, parameters $\varepsilon, \delta, n$,
   number of verification $v$, and hint $h$ queries asked by $C$, and outputs a circuit $D$
   such that following holds: \\
   If $C$ is such that \\
@@ -135,30 +164,6 @@ Let $hash:Q\rightarrow\{0,1,\dots, 2(h+v)-1\}$ and $P_{hash}$, defined with resp
 \end{lemma}
 %
 %
-\begin{codeblock}
-  \textbf{Random experiment $F^{P^{(1)}, D, Hash}(\pi)$} \\
-  Solving a single DWVP with respect to the set $P_{hash}$
-  \medskip
-
-  \hrule
-
-  \medskip
-
-  \textbf{Oracle:} A circuit D, a function $Hash$, a dynamic weakly verifiable puzzle $P^{(1)}$\\
-  \textbf{Input:} Random bitstring $\pi$
-  %TODO length of the bitstring maybe it is fixed as it is input to P^{(1)} ? like l see the end of the paper by Imaginazzo.
-  \medskip\hrule\medskip
-
-  $(x, \Gamma_v, \Gamma_H) := P^{(1)}(\pi)$ \\
-  Run $D^{\Gamma_V, \Gamma_H}(x)$ \\
-  \IndI Let $(\widetilde{q_j},\widetilde{r_j})$ be the first successful verification query if $D^{\Gamma_V, \Gamma_H}(x)$ succeeds or \\
-  \IndI an arbitrary verification query when it fails.\\
-  \textbf{If} $(\forall i < j :  Hash(q_i) \neq 0 )$ and $Hash(q_j) = 1$ \\
-  \IndI \textbf{return} 1\\
-  \textbf{else}\\
-  \IndI \textbf{return} 0\\
-
-\end{codeblock}
 %
 %
 % \begin{codeblock}
@@ -186,7 +191,7 @@ Let $hash:Q\rightarrow\{0,1,\dots, 2(h+v)-1\}$ and $P_{hash}$, defined with resp
 % \end{codeblock}
 
 \begin{codeblock}
-  \textbf{Circuit $\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, Hash} (x_1, \dots, x_k)$} \\
+  \textbf{Circuit $\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, hash, C} (x_1, \dots, x_k)$} \\
   Circuit $\widetilde{C}$ has good canonical success probability.
   \medskip
 
@@ -194,34 +199,49 @@ Let $hash:Q\rightarrow\{0,1,\dots, 2(h+v)-1\}$ and $P_{hash}$, defined with resp
 
   \medskip
 
-  \textbf{Oracle:} $\Gamma_V^{(g)}, \Gamma_H^{(g)}, Hash$ \\
-  \textbf{Input:} k-wise direct product of puzzles $(x_1, \dots, x_k)$ \\
+  \textbf{Oracle:} $\Gamma_V^{(g)}, \Gamma_H^{(g)}, hash, C$ \\
+  \textbf{Input:} k-wise direct product of puzzles $(x_1, \dots, x_k)$
 
   \medskip\hrule\medskip
-  Run $C^{(.), (.)}(x_1, \dots, x_k)$ \\
-  \IndI \textbf{If} $C$ asks hint query $q$ \textbf{then}\\
-  \IndII \textbf{If} $Hash(q) = 0$ \textbf{then}\\
-  \IndIII \textbf{return} $\bot$\\
+  Run $C^{(\cdot,\cdot)}(x_1, \dots, x_k)$ \\
+  \IndI \If $C$ asks a hint query $q$ \then\\
+  \IndII \If $q \in P_{hash}$ \then\\
+  \IndIII \return $\bot$\\
   \IndII \textbf{else}\\
-  \IndIII answer with $\Gamma_H^{(g)}(q)$\\
+  \IndIII answer the hint query with $\Gamma_H^{(k)}(q)$\\
   \\
-  \IndI \textbf{If} $C$ asks verification query $(q, y_1, \dots, y_k)$ \textbf{then} \\
-  \IndII \textbf{If} $hash(q) = 0$ \textbf{then} \\
-  \IndIII \textbf{return} $(q, y_1, \dots, y_k)$ \\
+  \IndI \textbf{If} $C$ asks a verification query $(q, y_1, \dots, y_k)$ \textbf{then} \\
+  \IndII \textbf{If} $q \in P_{hash}$ \textbf{then} \\
+  \IndIII \text{ask the verification query} $(q, y_1, \dots, y_k)$ \\
+  \IndIII \textbf{stop the execution} \\
   \IndII \textbf{else} \\
-  \IndIII answer verification query with 0
+  \IndIII answer verification query with 0 \\
   \textbf{return} $\bot$
 \end{codeblock}
 
-
 \begin{lemma}
+  For fixed $P^{(g)}$ it is true that
   \begin{align*}
-  \underset{(\pi_1, \dots, \pi_k)}{\Pr}[E^{P^{(g)}, C, Hash}(\pi_1, \dots, \pi_k) = 1] \leq \underset{(\pi_1, \dots, \pi_k)}{\Pr}[\Gamma_V^{(g)} (\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, Hash}(\pi_1, \dots, \pi_k)) = 1]
+  \underset{(\pi_1, \dots, \pi_k)}{\Pr}[E^{P^{(g)}, C, Hash}(\pi_1, \dots, \pi_k) = 1] \leq \underset{(\pi_1, \dots, \pi_k)}{\Pr}[\Gamma_V^{(g)} (\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, Hash}(\pi_1, \dots, \pi_k)) = 1].
   \end{align*}
 \end{lemma}
 
 \begin{proof}
-If $E^{P^{(g)}, C, Hash}(\pi_1, \dots, \pi_k) = 1$ then circuit $\Gamma_V^{(g)} (\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, Hash}(\pi_1, \dots, \pi_k)) = 1$.
+We fix the randomness $(\pi_1, \dots, \pi_k)$ used in the random experiment $E$.
+Let $x^{(k)} = (x_1, \dots, x_k)$ be a set of puzzles generated in the random experiment $E$ for the randomness $(\pi_1, \dots, \pi_k)$.
+If $C$ succeeds canonically for the set of puzzles $x^{(k)}$, then also circuit $\widetilde{C}$ that runs $C$ on the same set of puzzles succeeds.
+Using the definition of conditional expectation, we conclude that
+\begin{align*}
+  \underset{}{\Pr}[E^{P^{(g)}, C, hash}(\pi^{(k)}) = 1] &=
+  \sum_{\pi^{(k)} \in \{0,1\}^{kl}}\underset{}{\Pr}[E^{P^{(g)}, C, hash}(\widetilde{\pi}^{(k)}) = 1 | \pi^{(k)} = \widetilde{\pi}^{(k)}] \underset{}{\Pr}[\pi^{(k)} = \widetilde{\pi}^{(k)}] \\
+  &\leq
+  \sum_{\pi^{(k)} \in \{0,1\}^{kl}}\underset{}{\Pr}[E^{P^{(g)}, \widetilde{C}, hash}(\widetilde{\pi}^{(k)}) = 1 | \pi^{(k)} = \widetilde{\pi}^{(k)}] \underset{}{\Pr}[\pi^{(k)} = \widetilde{\pi}^{(k)}] \\
+  &= \underset{}{\Pr}[E^{P^{(g)}, \widetilde{C}, hash}(\pi^{(k)}) = 1]
+\end{align*}
+
+% If the first successful verification query is in $P_{hash}$, all previous hint queries were not in $P_{hash}$,
+% and all previous verification queries were unsuccessful and are not in $P_{hash}$, then 
+%$\Gamma_V^{(g)} (\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, Hash}(\pi_1, \dots, \pi_k)) = 1$.
 \end{proof}
 
 \begin{codeblock}
