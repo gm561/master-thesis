@@ -1,0 +1,133 @@
+
+\begin{lemma}
+\label{lemma:hash_function_probability}
+\textbf{Success probability with respect to hash function.} \\
+For a fixed $P^{(g)}$ let $C$ succeed in solving the $k$-wise direct product of DWVP produced by $P^{(g)}$
+with probability $\gamma$ making $h$ hint and $v$ verification queries.
+There exists a probabilistic algorithm, with oracle access to $C$, that runs in time $O((h+v)^4/\gamma^4)$
+and with high probability outputs a function $hash: Q \rightarrow \{0, \dots, 2(h+v)-1\}$ such that success probability of
+$C$ in random experiment $E$ with respect to the set $P_{hash}$ is at least $\frac{\gamma}{8(h+v)}$.
+\end{lemma}
+%
+% Proof of existence of hash function with required properties
+%
+\begin{proof}
+Let $\cH$ be a family of pairwise independent hash functions $Q \rightarrow \{0,1, \dots,2(h+v)-1\}$.
+By a pairwise independence property of $\cH$ we know that for all $i \neq j \in \{1, \dots, (h+v)\}$ and $k,l \in \{0,1,\dots,2(h+v)-1\}$
+we have the following
+\begin{align}
+  \label{eq:hash_pr}
+ \forall q_i,q_j \in Q : \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = k \mid hash(q_j) = l] = \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = k] = \frac{1}{2(h+v)}.
+\end{align}
+For a fixed $P^{(g)}$ and $(\pi_1, \dots, \pi_k)$ in the random experiment $A$ we define a binary random variable $X$ for the event that $hash(q_j) = 0$, and for
+every query $q_i$ asked before $q_j$ $hash(q_i) \neq 0$.
+By definition of conditional probability
+\begin{align*}
+  \underset{\textit{hash} \leftarrow \cH}{\Pr}[X=1] &= \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_j) = 0 \land \forall i < j : hash(q_i) \neq 0] \\
+  &=\underset{\textit{hash} \leftarrow \cH}{\Pr}[\forall i < j : hash(q_i) \neq 0 \mid hash(q_j) = 0] \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_j) = 0].
+\end{align*}
+Now we use (\ref{eq:hash_pr}) and obtain
+\begin{align*}
+\underset{\textit{hash} \leftarrow \cH}{\Pr}[X=1] =
+\frac{1}{2(h+v)}\left(1 -\underset{\textit{hash} \leftarrow \cH}{\Pr}[\exists i < j : hash(q_i) = 0 \mid hash(q_j) = 0] \right)
+\end{align*}
+Using pairwise independence property we conclude
+\begin{align*}
+\underset{\textit{hash} \leftarrow \cH}{\Pr}[X=1] = \frac{1}{2(h+v)} \left( 1 -\underset{\textit{hash} \leftarrow \cH}{\Pr}[\exists i < j : hash(q_i) = 0] \right).
+\end{align*}
+Finally, we use union bound and the fact $j \leq (h+v)$ to get
+\begin{align*}
+\underset{\textit{hash} \leftarrow \cH}{\Pr}[X=1] \geq
+\frac{1}{2(h+v)} \left( 1 - \sum_{i < j} \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = 0] \right) \geq \frac{1}{4(h+v)}
+\end{align*}
+Let $G$ denote the set of all $(\pi_1, \dots, \pi_k)$ for which $C$ succeeds in the random experiment $A$.
+Then
+\begin{align*}
+\underset{\substack{\textit{hash} \leftarrow \cH \\ (\pi_1, \dots, \pi_k)}}{\Pr}[X=1] &=
+\sum_{(\pi_1, \dots, \pi_k) \in G} \underset{\textit{hash} \leftarrow \cH}{\Pr}[X=1 \mid (\pi_1, \dots, \pi_k)] \cdot \underset{(\widetilde{\pi}_1, \dots, \widetilde{\pi}_k)}{\Pr}[(\widetilde{\pi}_1, \dots, \widetilde{\pi}_k) = (\pi_1, \dots, \pi_k)]\\
+&\geq \frac{1}{4(h+v)} \sum_{(\pi_1, \dots, \pi_k) \in G} \underset{(\widetilde{\pi}_1, \dots, \widetilde{\pi}_k)}{\Pr}[(\widetilde{\pi}_1, \dots, \widetilde{\pi}_k) = (\pi_1, \dots, \pi_k)] = \frac{\gamma}{4(h+v)}
+\end{align*}
+
+\begin{codeblock}
+  \textbf{Algorithm: FindHash}
+
+  \medskip
+
+  \hrule
+
+  \medskip
+
+  %TODO define the circuit $C$ globally do not forget about limit on number of hint and verification queries
+  \textbf{Oracle:} A solver circuit for $k$-wise direct product of DWVP $C^{(\cdot, \cdot)}$ with oracle access to hint and verification oracle.\\
+  %TODO better describe this hash functions
+  \textbf{Input:} $\cH$ a family of pairwise independent hash functions $Q \rightarrow \{0,1,\dots, 2(h+v)-1\}$
+  \medskip\hrule\medskip
+  For $i = 1$ to $16(h+v)^2/\gamma^2$ \\
+  \IndI $hash \xleftarrow{\$} \cH$ \\
+  \IndI $count := 0$ \\
+  \IndI \For $j := 1$ to $16(h+v)^2/\gamma^2$ \\
+  \IndII $(\pi_1, \dots, \pi_k) \xleftarrow{\$} \{0,1\}^{kl} $\\
+  \IndII Run $A^{P^{(g)},C^{(\cdot,\cdot)}}(\pi_1, \dots, \pi_k)$\\
+  \IndIII Let $(\widetilde{q},y^{(k)})$ be the first successful verification query. \\
+  \IndIII Let $G$ be a set of all $q$ used in hint or verification queries asked before $(\widetilde{q},y^{(k)})$.\\
+  \IndII \If $\Gamma_V^{(g)}(\widetilde{q},y^{(k)}) = 1 \land G \subseteq P_{hash}$\\
+  \IndIII $count := count + 1$\\
+  \IndI \If $count \geq 4(h+v)/\gamma$ \\
+  \IndII \return $hash$\\
+  \return $\bot$
+\end{codeblock}
+We show that the algorithm \textbf{FindHash} chooses a hash function such
+that almost surly the success probability of $C$ in random experiment $E$
+with respect to set $P_{hash}$ is at least $\frac{\gamma}{4(h+v)}$.
+Let $\cH_{Good}$ denote the family of hash functions for which $\underset{(\pi_1, \dots, \pi_k)}{\Pr}[X] \geq \frac{\gamma}{4(h+v)}$
+and $X_1, \dots, X_i$ be binary random variables such that for a fixed hash function
+\begin{align*}
+  X_i =
+  \begin{cases}
+    1 & \text{if in $i$th iteration variable $count$ is increased}\\
+    0 & \text{otherwise .}
+  \end{cases}
+\end{align*}
+We first show that it is unlikely that the algorithm \textbf{FindHash} returns $hash \notin \cH_{Good}$.
+For $hash \notin \cH_{Good}$ we have $\mathbb{E}_{(\pi_1, \dots, \pi_k)}[X_i] < \frac{\gamma}{4(h+v)}$.
+We use Chernoff inequality and obtain
+%FIXME write down the definition of $X_i$ correctly
+%FIXME write the number over which you sum correctly
+\begin{align*}
+  \underset{(\pi_1, \dots, \pi_k)}{\Pr} \left[\frac{1}{N} \sum_{i=1}^{N} X_i \geq (1 + \delta) \frac{\gamma}{4(h+v)} \right] \leq
+  \underset{(\pi_1, \dots, \pi_k)}{\Pr}\left[\frac{1}{N} \sum_{i=1}^{N} X_i \geq (1 + \delta) \mathbb{E}[X_i]\right] \leq
+  e^{-{\frac{\gamma}{4(h+v)}} N \delta^2 /3}
+\end{align*}
+%
+The probability that $hash \in \cH_{Good}$ is not returned by the algorithm is
+\begin{align*}
+  \underset{(\pi_1, \dots, \pi_k)}{\Pr}[\frac{1}{N} \sum_{i=1}^{N} X_i \leq (1 - \delta) \frac{\gamma}{4(h+v)}] \leq
+  \underset{(\pi_1, \dots, \pi_k)}{\Pr}[\frac{1}{N} \sum_{i=1}^{N} X_i \leq (1 - \delta) \mathbb{E}[X_i]] \leq e^{-{\frac{\gamma}{4(h+v)}} N \delta^2 /3}
+\end{align*}
+%
+Finally, we show that almost surely \textbf{FindHash} picks in one of its iteration a hash function that is in $\cH_{Good}$.
+From the fact that the random variable $X$ is binary distributed we have
+\begin{align*}
+  \underset{\substack{\textit{hash} \leftarrow \cH \\ (\pi_1, \dots, \pi_k)}}{\mathbb{E}}[X] \geq \frac{\gamma}{4(h+v)}
+\end{align*}
+Let $Y_i$ be a binary random variable
+\begin{align*}
+  Y_i =
+  \begin{cases}
+    1 & \text{in $i$th iteration $hash \in \cH_{Good}$ is picked} \\
+    0 & \text{otherwise .}
+  \end{cases}
+\end{align*}
+We make use of the fact that if a function from $\cH_{Good}$ is picked, then it is returned almost surely. Therefore,
+$\mathbb{E}[Y_i] \geq \frac{\gamma}{4(h+v)}$ and we can use Chernoff bound to obtain
+\begin{align*}
+  \underset{hash \leftarrow \cH}{\Pr}\left[\frac{1}{K} \sum_{i=1}^{K} Y_i = 0\right] &\leq
+  \underset{hash \leftarrow \cH}{\Pr}\left[\frac{1}{K} \sum_{i=1}^{K} Y_i \leq (1-\delta) \frac{\gamma}{4(h+v)}\right] \\
+  &\leq \underset{hash \leftarrow \cH}{\Pr}\left[\frac{1}{K} \sum_{i=1}^{K} Y_i \leq (1-\delta) \mathbb{E}[Y_i] \right] \leq e^{-\delta^2K \mathbb{E}[Y_i]/2 }
+\end{align*}
+We see that the bound stated in the lemma \ref{lemma:hash_function_probability} is achieved for valid for $\delta = \frac{1}{2}$ and $K = N = 16(h+v)^2/\gamma^2$
+\end{proof}
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../master"
+%%% End: 
