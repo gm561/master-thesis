@@ -132,9 +132,6 @@ Using the definition of conditional expectation, we conclude that
   &= \underset{}{\Pr}[E^{P^{(g)}, \widetilde{C}, hash}(\pi^{(k)}) = 1]
 \end{align*}
 
-% If the first successful verification query is in $P_{hash}$, all previous hint queries were not in $P_{hash}$,
-% and all previous verification queries were unsuccessful and are not in $P_{hash}$, then
-%$\Gamma_V^{(g)} (\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, Hash}(\pi_1, \dots, \pi_k)) = 1$.
 \end{proof}
 
 \begin{codeblock}
@@ -164,17 +161,17 @@ Using the definition of conditional expectation, we conclude that
   \\
   \textbf{EvaluateSurplus}($\pi^*, b$) \\
   \IndI \textbf{For} $i:=1$ to $N_k$ \\
-  \IndII $\pi^{(k)} \leftarrow \{0,1\}^{lk}$\\
-  \IndII $(c_1, \dots, c_k) := EvalutePuzzles(\pi^*, \pi^{(k)})$\\
+  \IndII $(\pi_2, \dots, \pi_k) \xleftarrow{\$} \{0,1\}^{(k-1)l}$\\
+  \IndII $(c_1, \dots, c_k) := EvalutePuzzles(\pi^*, \pi_2, \dots, \pi_k)$\\
   \IndII $\widetilde{S}_{\pi^*,b}^i := g(b, c_2, \dots, c_k) - \underset{(u_2, \dots, u_k)}{\Pr}[g(b, u_2, \dots, u_k) = 1] $\\
   \IndI \textbf{return} $\frac{1}{N_k} \sum_{i=1}^{N_k} \widetilde{S}_{\pi^*,b}^i$\\
   \\
-  \textbf{EvalutePuzzles}($\pi^*, \pi^{(k)}$)\\
-  \IndI $(x^{k}, \Gamma_V^{(g)}, \Gamma_H^{(g)}) := P^{(g)}(\pi^*, \pi_2, \dots, \pi_k)$ \\
-  \IndI \textbf{For} $i=2$ to $k$\\
-  \IndII $(x_1, \Gamma_v^{(i)}, \Gamma_H^{(i)}) := P^{(1)}(\pi_i)$\\
-  \IndI $(q,y^{k}) := \widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}}(x^*, x_2, \dots, x_k)$\\
-  \IndI \textbf{For} $i=1$ to $k$\\
+  \textbf{EvalutePuzzles}($\pi^{(k)}$)\\
+  \IndI $(x^{(k)}, \Gamma_V^{(g)}, \Gamma_H^{(k)}) := P^{(g)}(\pi^{(k)})$ \\
+  \IndI \textbf{For} $i:=1$ to $k$\\
+  \IndII $(x_i, \Gamma_V^{i}, \Gamma_H^{i}) := P^{(1)}(\pi_i)$\\
+  \IndI $(q,y^{k}) := \widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(k)}}(x_1, x_2, \dots, x_k)$\\
+  \IndI \textbf{For} $i:=1$ to $k$\\
   \IndII $c_i := \Gamma_v^{i}(q, y_i)$\\
   \IndI \textbf{return} $(c_1, \dots, c_k)$\\
 \end{codeblock}
@@ -194,12 +191,12 @@ Using the definition of conditional expectation, we conclude that
   \medskip
 
   \textbf{Oracle:}  $\widetilde{C}, P^{(1)}$\\
-  \textbf{Input:}  puzzle $x^*$
+  \textbf{Input:}  puzzle $x^*$, a random bitstring $r \in \{0,1\}^{*}$
 
   \medskip\hrule\medskip
   \textbf{For} $i:=1$ to $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$\\
-  \IndI $\pi^{k} \leftarrow \{0,1\}^{k}$\\
-  \IndI $(c_1, \dots, c_k) := EvaluatePuzzles(\pi, \pi^{(k)})$\\
+  \IndI $\pi^{(k)} \leftarrow \{0,1\}^{kl}$ //read $k \cdot l$ bits from $r$  \\
+  \IndI $(c_1, \dots, c_k) := EvaluatePuzzles(\pi^{(k)})$\\
   \IndI \textbf{If} $g(1,c_2, \dots, c_k) = 1$ and $g(0,c_2, \dots, c_k) = 0$\\
   \IndII $(q, y_1, \dots, y_k) := \widetilde{C}(x^*, x_2, \dots, x_k)$\\
   \IndII \textbf{return} $y_1$\\
@@ -265,15 +262,112 @@ Let $G_{\mu^{(k)}}$ denote the event $g(1, \mu_2, \dots, \mu_k) = 1 \land g(0, \
 $G_{\pi^{(k)}} := g(1, \pi_2, \dots, \pi_k) = 1 \land g(0, \pi_2, \dots, \pi_k) = 0$.
 Then multiplying and dividing $\underset{}{\Pr}[\Gamma_v^{(g)}(D(x^*, \pi^{(k)})) = 1 \mid \pi_1 = \pi^*]$ by (\ref{eq:diff_s01_next}) we get
 \begin{align}
-  \underset{\pi^{k}}{\Pr}[\Gamma_V^{g}(D(x^*, \pi^{(k)})) \mid \pi_1 = \pi^*] &=
-  \frac{\underset{\pi^{k}}{\Pr}[\Gamma_V^{(g)}(D(x^*, \pi^{(k)})) \mid \pi_1 = \pi^*] \underset{\pi^{(k)}}{\Pr}[G_{\pi} \mid \pi_1 = \pi^*]} {\underset{\mu_{\delta}^{k}}{\Pr}[G_{\mu}]} \notag\\
-  & \IndI - \frac{\underset{\pi^{k}}{\Pr}[\Gamma_V^{(g)}(D(x^*, \pi^{(k)})) \mid \pi_1 = \pi^*](S_{\pi^*,1} - S_{\pi^*,0})}{\underset{\mu_{\delta}^{k}}{\Pr}[G_{\mu}]}
+\label{eq:pr_d_succ_0}
+  \underset{r}{\Pr}[\Gamma_V^{(g)}(D(x^*, r)) = 1 \mid \pi_1 = \pi^*] &=
+  \frac{\underset{r}{\Pr}[\Gamma_V^{(g)}(D(x^*, r)) = 1 \mid \pi_1 = \pi^*] \underset{\pi^{(k)}}{\Pr}[G_{\pi} \mid \pi_1 = \pi^*]} {\underset{\mu_{\delta}^{k}}{\Pr}[G_{\mu}]} \notag\\
+  & \IndI - \frac{\underset{r}{\Pr}[\Gamma_V^{(g)}(D(x^*, r)) = 1 \mid \pi_1 = \pi^*](S_{\pi^*,1} - S_{\pi^*,0})}{\underset{\mu_{\delta}^{k}}{\Pr}[G_{\mu}]}
 \end{align}
-\begin{todo}
-  \textbf{TODO:} Define $c_1, \dots, c_k$ correctly from the paper it is not known whether it is in the iteration or the final one
-\end{todo}
-
-
+%
+% \begin{todo}
+%   \textbf{TODO:} Define $c_1, \dots, c_k$ correctly from the paper it is not known whether it is in the iteration or the final one
+% \end{todo}
+If output of circuit $D(x^*,r) \neq \bot$ then we denote $c_i := \Gamma_V^{i}(q, y_i)$.
+We can write the first summand of (\ref{eq:pr_d_succ_0}) as
+\begin{align}
+  &\underset{r}{\Pr}[\Gamma_V^{(g)}(D(x^*,r)) = 1 \mid \pi_1 = \pi^*] \underset{\pi^{(k)}}{\Pr}[G_{\pi} \mid \pi_1 = \pi^*] = \notag\\
+  &\IndI \underset{r}{\Pr}[D(x^*,r) \neq \bot \mid \pi_1 = \pi^*]
+  \underset{\pi^{(k)}}{\Pr}[c_1 = 1 \mid G_{\pi}, \pi_1 = \pi^*]
+  \underset{\pi^{(k)}}{\Pr}[G_{\pi} \mid \pi_1 = \pi^*]
+\end{align}
+where we make use of the fact that the event $G_{\pi}$ implies $D(x^*, r) \neq \bot$.
+We consider two cases.
+If $\underset{\pi^{k}}{\Pr}[g(1, c_2, \dots, c_k) = 1 \land g(0, c_2, \dots,c_k ) = 0 \mid \pi_1 = \pi^*] \leq \frac{\epsilon}{6k}$ then also
+\begin{align}
+  \underset{\pi^{(k)}}{\Pr}[c_1 = 1 \mid G_{\pi}, \pi_1 = \pi^*] \underset{\pi^{(k)}}{\Pr}[G_{\pi} \mid \pi_1 = \pi^*] \leq \frac{\epsilon}{6k}
+\end{align}
+and in the case when $\underset{\pi^{k}}{\Pr}[g(1, c_2, \dots, c_k) = 1 \land g(0, c_2, \dots,c_k ) = 0] > \frac{\epsilon}{6k}$ then circuit $D$ outputs $\bot$
+only if it fails in all $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$ iterations to find $\pi^{(k)}$ such that $g(1, c_2, \dots, c_k) = 1 \land g(0, c_2, \dots, c_k) = 0$
+which happens with probability
+\begin{align}
+\underset{r}{\Pr}[D(x^*,r) = \bot \mid \pi_1 = \pi^*] \leq (1 - \frac{\epsilon}{6k})^{\frac{6k}{\epsilon}\log(\frac{\epsilon}{6k})} \leq \frac{\epsilon}{6k}.
+\end{align}
+We conclude that in both cases we have
+\begin{align}
+  &\underset{r}{\Pr}[D(x^*,r) \neq \bot \mid \pi_1 = \pi^*]
+  \underset{\pi^{(k)}}{\Pr}[c_1 = 1 \mid G_{\pi}, \pi_1 = \pi^*]
+  \underset{\pi^{(k)}}{\Pr}[G_{\pi} \mid \pi_1 = \pi^*] \notag\\
+  &\IndII \geq \underset{\pi^{(k)}}{\Pr}[c_1 = 1 \mid G_{\pi}, \pi_1 = \pi^*]\underset{\pi^{(k)}}{\Pr}[G_{\pi} \mid \pi_1 = \pi^*] - \frac{\epsilon}{6k}
+\end{align}
+Using definition of conditional probability we get
+\begin{align*}
+  &\underset{r}{\Pr}[D(x^*,r) \neq \bot \mid \pi_1 = \pi^*]
+  \underset{\pi^{(k)}}{\Pr}[c_1 = 1 \mid G_{\pi}, \pi_1 = \pi^*]
+  \underset{\pi^{(k)}}{\Pr}[G_{\pi} \mid \pi_1 = \pi^*] \notag\\
+  &\IndII = \underset{\pi^{(k)}}{\Pr}[c_1 = 1 \land g(1, c_2,\dots, c_k) = 1 \land g(0, c_2, \dots, c_k) = 0 \mid \pi_1 = \pi^*] - \frac{\epsilon}{6k} \\
+  &\IndII = \underset{\pi^{(k)}}{\Pr}[g(c_1, c_2,\dots, c_k) = 1 \land g(0, c_2, \dots, c_k) = 0 \mid \pi_1 = \pi^*] - \frac{\epsilon}{6k} \\
+  &\IndII = \underset{\pi^{(k)}}{\Pr}[g(c_1, c_2,\dots, c_k) = 1 \mid \pi_1 = \pi^*] -  \underset{\pi^{(k)}}{\Pr}[g(0, c_2, \dots, c_k) = 0 \mid \pi_1 = \pi^*] - \frac{\epsilon}{6k} \\
+\end{align*}
+and finally by (\ref{eq:s_pi_b})
+\begin{align}
+  &\underset{r}{\Pr}[D(x^*,r) \neq \bot \mid \pi_1 = \pi^*]
+  \underset{\pi^{(k)}}{\Pr}[c_1 = 1 \mid G_{\pi}, \pi_1 = \pi^*]
+  \underset{\pi^{(k)}}{\Pr}[G_{\pi} \mid \pi_1 = \pi^*] \notag\\
+  &\IndII = \underset{\pi^{(k)}}{\Pr}[g(c_1, c_2,\dots, c_k) = 1 \mid \pi_1 = \pi^*] -  \underset{\mu_{\delta}^{(k)}}{\Pr}[g(0, \mu_2, \dots, \mu_k) = 0 \mid \pi_1 = \pi^*]  - S_{\pi^*,0} - \frac{\epsilon}{6k}.
+\end{align}
+We insert this result into equation (\ref{eq:pr_d_succ_0}) to get
+\begin{align}
+\label{eq:pr_d_succ_1}
+  &\underset{r,\pi}{\Pr}[D(x,r) = 1] = \mathbb{E_{\pi}}[\underset{r}{\Pr}[D(x,r) = 1 \mid \pi_1 = \pi^*]] \notag\\
+&\IndI = \mathbb{E}_{\pi}\left[\frac{{\Pr}_{\pi^{(k)}}[g(c) = 1 \mid \pi_1 = \pi^*] -
+{\Pr}_{\mu_{\delta}^{(k)}}[g(0, \mu_2, \dots, \mu_k) = 0 \mid \pi_1 = \pi^*] - \frac{\epsilon}{6k}} {{\Pr}_{\mu_{\delta}^{k}}[G_{\mu}]}\right] \notag\\
+&\IndII - \mathbb{E}_{\pi}\left[\frac{
+  S_{\pi^*,0} + \Pr_r [\Gamma_V^{(g)}(D(x^*,r)) = 1 \mid \pi_1 = \pi^*](S_{\pi^*,1} - S_{\pi^*,0})}
+{{\Pr}_{\mu_{\delta}^{k}}[G_{\mu}]}\right]
+\end{align}
+For the second summand we want to show first that almost all estimates all low if we do not recurse.
+Let assume that
+\begin{align}
+\underset{\pi}{\Pr}\left[\left(S_{\pi,0} \leq (1 - \frac{1}{2k})\epsilon\right) \land \left( S_{\pi,1} \leq (1-\frac{1}{2k})\epsilon\right)\right] < 1 - \frac{\epsilon}{6k},
+\end{align}
+then the algorithm would recurse almost surely.
+Therefore, under the assumption that we do not recurse, we have almost surely
+\begin{align}
+\underset{\pi}{\Pr}\left[\left(S_{\pi,0} \leq (1 - \frac{1}{2k})\epsilon\right) \land \left( S_{\pi,1} \leq (1-\frac{1}{2k})\epsilon\right)\right] \geq 1 - \frac{\epsilon}{6k}.
+\end{align}
+Let us define a set
+\begin{align}
+  \X = \left\{ \pi :  \left(S_{\pi,0} \leq (1 - \frac{1}{2k})\epsilon\right) \land \left( S_{\pi,1} \leq (1-\frac{1}{2k})\epsilon \right) \right\}
+\end{align}
+and the complement of this set $\X^c$.
+We bound the second summand in (\ref{eq:pr_d_succ_1})
+\begin{align}
+&\mathbb{E}_{\pi}\left[ S_{\pi^*,0} + \Pr_r [\Gamma_V^{(g)}(D(x^*,r)) = 1 \mid \pi_1 = \pi^*](S_{\pi^*,1} - S_{\pi^*,0}) \right] \notag\\
+&\IndII = \mathbb{E}_{\pi \in \X^c}\left[ S_{\pi^*,0} + \Pr_r [\Gamma_V^{(g)}(D(x^*,r)) = 1 \mid \pi = \pi^*](S_{\pi^*,1} - S_{\pi^*,0}) \right] \notag\\
+&\IndIII +  \mathbb{E}_{\pi \in \X}\left[ S_{\pi^*,0} + \Pr_r [\Gamma_V^{(g)}(D(x^*,r)) = 1 \mid \pi = \pi^*](S_{\pi^*,1} - S_{\pi^*,0}) \right] \\
+&\IndII \leq \frac{\epsilon}{6k} + \mathbb{E}_{\pi \in \X^c}\left[ S_{\pi^*,0} + \Pr_r [\Gamma_V^{(g)}(D(x^*,r)) = 1 \mid \pi = \pi^*]((1 - \frac{1}{2k})\epsilon - S_{\pi^*,0}) \right] \\
+&\IndII \leq \frac{\epsilon}{6k} + 1 - \frac{\epsilon}{2k} = 1 - \frac{\epsilon}{3k}
+\end{align}
+Finally, we insert this result into equation (\ref{eq:pr_d_succ_1}) and make use of the fact
+\begin{align*}
+\underset{}{\Pr}[g(u) = 1] &= \underset{}{\Pr}[(g(0, \mu_2, \dots, \mu_k) = 1) \lor ( g(1,\mu_2, \dots, \mu_k) = 1 \land g(0, \mu_2, \dots, \mu_k) = 0 \land \mu_1 = 1)] \notag\\
+&= \Pr[g(0,\mu_2, \dots,\mu_k) = 1] + \Pr[g(1,\mu_2,\dots,\mu_k) = 1 \land g(0, \mu_2, \dots, \mu_k) = 0] \Pr[\mu_1 = 1]
+\end{align*}
+which yields
+\begin{align*}
+  \underset{r,\pi}{\Pr}[D(x,r) = 1]
+&\geq \mathbb{E}_{\pi}\left[\frac{{\Pr}_{\pi^{(k)}}[g(c) = 1 \mid \pi_1 = \pi^*] -
+{\Pr}_{\mu_{\delta}^{(k)}}[g(0, \mu_2, \dots, \mu_k) = 0] - (1 - \frac{1}{6k})\epsilon} {{\Pr}_{\mu_{\delta}^{k}}[G_{\mu}]}\right] \notag
+ \end{align*}
+ Using the assumptions of Lemma \ref{lemma:sec_amp_for_p_hash}, we get
+ \begin{align*}
+   \underset{r,\pi}{\Pr}[D(x,r) = 1]
+ &\geq \frac{ {\Pr}_{\mu_{\delta}^{(k)}}[g(\mu) = 1] + \epsilon +
+ \Pr_{\mu_{\delta}^{(k)}}[g(0, \mu_2, \dots, \mu_k) = 0] - (1 - \frac{1}{6k})\epsilon}
+ {\Pr_{\mu_{\delta}^{k}}[G_{\mu}]} \notag\\
+ &\geq \frac{\epsilon +
+\delta\Pr_{\mu_{\delta}^{(k)}}[G_{\mu}] - (1 - \frac{1}{6k})\epsilon}
+{\Pr_{\mu_{\delta}^{k}}[G_{\mu}]} \geq \delta + \frac{\epsilon}{6k}
+\end{align*}
 
 %%% Local Variables:
 %%% mode: latex
