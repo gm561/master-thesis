@@ -2,79 +2,83 @@
   A dynamic weakly verifiable puzzle (DWVP) is defined by a probabilistic algorithm $P(\pi)$,
   called a problem poser, that takes as input chosen uniformly at random bitstring $\pi \in \{0,1\}^l$,
   and produces circuits $\Gamma_{V}$, $\Gamma_{H}$ and a puzzle $x \in \{0,1\}^{*}$.
-  The circuit $\Gamma_{V}$ takes as its input $q \in Q$ and an answer $y$.
-  If $\Gamma_V(q,y) = 1$ then $y$ is a correct solution of puzzle $x$ for $q$.
+  The circuit $\Gamma_{V}$ takes as input $q \in Q$ and an answer $y \in \{0,1\}^*$.
+  If $\Gamma_V(q,y) = 1$ then $y$ is a correct solution of a puzzle $x$ for $q$.
   The circuit $\Gamma_H$ on input $q$ provides a hint such that $\Gamma_V(q,\Gamma_H(q)) = 1$.
-  The algorithm $S$, called a solver, has oracle access to $\Gamma_V$ and $\Gamma_H$.
-  The calls of $S$ to $\Gamma_V$ are called verification queries and the calls to $\Gamma_H$ are hint queries.
-  The solver $S$ can ask at most $h$ hint queries, $v$ verification queries, and successfully solves a DWVP if and only if
+  The probabilistic algorithm $S$, called a solver, has oracle access to $\Gamma_V$ and $\Gamma_H$.
+  The calls of $S$ to $\Gamma_V$ are verification queries and to $\Gamma_H$ are hint queries.
+  The solver $S$ can ask at most $h$ hint queries, $v$ verification queries, and successfully solves DWVP if and only if
   it makes a verification query $(q,y)$ such that $\Gamma_V(q,y) = 1$, when it has not previously asked for a hint query on this $q$.
 \end{definition}
 %
 %
 \begin{definition}{\textbf{$k$-wise direct product of dynamic weakly verifiable puzzles}}\\
-Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function, and $P^{(1)}$ a probabilistic algorithm used to generate an instance of DWVP.
-A $k$-wise direct product of dynamic weakly verifiable puzzles is defined by a probabilistic algorithm $P^{(g)}\left(\pi_1, \dots, \pi_k \right)$,
-where $(\pi_1, \dots, \pi_k) \in \{0,1\}^{k \cdot l}$ are chosen uniformly at random.
-$P^{(g)}\left(\pi_1, \dots, \pi_k \right)$ sequentially generates $k$ independent instances of dynamic weakly verifiable puzzles,
-where in the $i$-th round $P^{(g)}$ runs $P^{(1)}(\pi_i)$ and obtains $(x_i, \Gamma_V^{(i)}, \Gamma_H^{(i)} )$.
+Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function, and $P^{(1)}$ a problem poser used to generate an instance of DWVP.
+A $k$-wise direct product of dynamic weakly verifiable puzzles ($DWVP^k$) is defined by a probabilistic algorithm $P^{(g)}\left(\pi_1, \dots, \pi_k \right)$,
+where $(\pi_1, \dots, \pi_k) \in \{0,1\}^{k \cdot l}$ is chosen uniformly at random.
+The algorithm $P^{(g)}\left(\pi_1, \dots, \pi_k \right)$ generates $k$ independent instances of dynamic weakly verifiable puzzles,
+where the $i$-th instance $(x_i, \Gamma_V^{(i)}, \Gamma_H^{(i)} )$ is produced by executing $P^{(1)}(\pi_i)$.
 Finally, $P^{(g)}$ outputs a verification circuit
 \begin{align*}
-  \Gamma_V^{(g)} (q, y_1, \dots, y_k) := g(\Gamma_V^{(1)}(q, y_1), \dots, \Gamma_V^{(k)}(q, y_k)),
+  \Gamma_V^{(g)} (q, y_1, \dots, y_k) := g(\Gamma_V^{1}(q, y_1), \dots, \Gamma_V^{k}(q, y_k)),
 \end{align*}
 a hint circuit
 \begin{align*}
-  \Gamma_H^{(k)} (q) := (\Gamma_H^{(1)}(q), \dots, \Gamma_H^{(k)}(q)),
+  \Gamma_H^{(k)} (q) := (\Gamma_H^{1}(q), \dots, \Gamma_H^{k}(q)),
 \end{align*}
 and a puzzle $x^{(k)} := (x_1, \dots, x_k)$.
-\\
+
 The probabilistic algorithm $S$, called a solver, has oracle access to $\Gamma_V^{(g)}, \Gamma_H^{(k)}$.
 The solver $S$ can ask at most $v$ verification queries to $\Gamma_V^{(g)}$, $h$ hint queries to $\Gamma_H^{(k)}$ and successfully solves the puzzle $x^{(k)}$
-if and only if it asks a verification query $(q, y_1, \dots, y_k)$ such that $\Gamma_V^{(g)}(q, y_1, \dots, y_k) = 1$, and it has not previously asked for a hint query on this $q$.
+if and only if it asks a verification query $(q, y^{(k)}) := (q, y_1, \dots, y_k)$ such that $\Gamma_V^{(g)}(q, y_1, \dots, y_k) = 1$, and it has not previously asked for a hint query on this $q$.
 \end{definition}
 %
+A dynamic weakly verifiable puzzle is special case of $k$-wise direct product, when
+$k$ equals one and $g$ is identity function $g$.
+Therefore, we can consider following random experiment in which a $k$-wise direct product of DWVP (or for $k$ equal one a single DWVP) 
+defined by $P^{(k)}$ is solved by a circuit $C$ that takes as input puzzles and possibly a random bitstring.
 %
 \begin{codeblock}
   \textbf{Experiment $A^{P^{(\cdot)}, C^{(\cdot, \cdot)}}(\pi^{(\cdot)})$}
   \medskip
-
   \hrule
-
   \medskip
-
-  \textbf{Oracle:} A problem poser $P^{(\cdot)}$ and a solver circuit $D^{(\cdot,\cdot)}$.\\
-  \textbf{Input:}  A bitstring $\pi^{(\cdot)}$.
-
+  \textbf{Oracle:} A problem poser $P^{(\cdot)}$ and a solver circuit $C^{(\cdot,\cdot)}$.\\
+  \textbf{Input:}  Bitstrings $\pi^{(\cdot)}$ and $r$.
   \medskip\hrule\medskip
-
   $(x^{(\cdot)}, \Gamma_V^{(\cdot)}, \Gamma_H^{(\cdot)}) := P^{(\cdot)}(\pi^{(\cdot)})$ \\
-  Run $D^{(\Gamma_V^{(\cdot)},\Gamma_H^{(\cdot)})}(x^{(\cdot)})$ \\
-  \IndI $Q_{Solved} := \{q: \text{$D^{\Gamma_V^{(\cdot)}, \Gamma_V^{(\cdot)}}(x^{(\cdot)})$ asked a verification query $(q,y^{(\cdot)})$ and $\Gamma_V^{(\cdot)}(q, y^{(\cdot)}) = 1$} \}$\\
-  \IndI $Q_{Hint} := \{q: \text{$D^{\Gamma_V^{(\cdot)}, \Gamma_H^{(\cdot)}}(x^{(\cdot)})$ asked a hint query on q} \}$\\
-  \textbf{If} $\exists q \in Q_{solved} : q \notin Q_{Hint}$\\
+  Run $C^{\Gamma_V^{(\cdot)},\Gamma_H^{(\cdot)}}(x^{(\cdot)}, r)$ \\
+  \IndI Let $Q_{Solved} := \{q: \text{$C^{\Gamma_V^{(\cdot)}, \Gamma_V^{(\cdot)}}$ asked a verification query $(q,y^{(\cdot)})$ and $\Gamma_V^{(\cdot)}(q, y^{(\cdot)}) = 1$} \}$\\
+  \IndI Let $Q_{Hint} := \{q: \text{$C^{\Gamma_V^{(\cdot)}, \Gamma_H^{(\cdot)}}$ asked a hint query on q} \}$\\
+  \textbf{If} $\exists q \in Q_{solved} : q \notin Q_{Hint}$ \then \\
   \IndI \textbf{return} $1$\\
-  \textbf{else}\\
+  \textbf{else} \\
   \IndI \textbf{return} $0$\\
 \end{codeblock}
 %
+\begin{todo}
+  \textbf{TODO:} Bound size of a circuit $C$
+\end{todo}
 %
-% TODO oracle access to P^{g} of Gen
-\begin{theorem}{\textbf{Security amplification of a dynamic weakly verifiable puzzle.}}\\
+\begin{theorem}{\textbf{Security amplification for a dynamic weakly verifiable puzzle.}}\\
   For a fixed problem poser $P^{(1)}$ there exists an algorithm $Gen(C, g, \varepsilon, \delta, n, v, h)$ which takes as input a solver circuit $C$ for $k$-wise
   direct product of DWVP, a monotone function $g$, parameters $\varepsilon, \delta,n$, the number of verification $v$, and hint $h$ queries asked by $C$, and outputs a circuit $D$
   such that following holds: \\
   If $C$ is such that \\
   \begin{align*}
-    \underset{(\pi_1, \dots, \pi_k) \in \{0,1\}^{kl}}{\Pr}[A^{P^{(g)}, C}(\pi_1, \dots, \pi_k) = 1] \geq \underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon
+    \underset{(\pi_1, \dots, \pi_k) \in \{0,1\}^{kl}}{\Pr}[A^{P^{(g)}, C}(\pi_1, \dots, \pi_k, r) = 1]
+    \geq \frac{(h+v)}{8} \left(\underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon\right)
   \end{align*}
   then $D$ satisfies almost surely
   \begin{align*}
-    \underset{\pi \in \{0,1\}^{l}}{\Pr}[A^{P^{(1)},D}(\pi) = 1] \geq (\delta + \frac{\varepsilon}{6k})
+    \underset{\pi \in \{0,1\}^{l}}{\Pr}[A^{P^{(1)},D}(\pi, r) = 1] \geq (\delta + \frac{\varepsilon}{6k})
   \end{align*}
   Additionally, $D$ and $Gen$ require only oracle access to $g$ and $C$. Furthermore, $D$ asks at most $h$ hint queries, $v$ verification queries and
-  $Size(D) \leq Size(C)\frac{6k}{\varepsilon}$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
+  $Size(D) \leq Size(C) \cdot \Theta(\frac{6k}{\varepsilon})$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
 \end{theorem}
-%%% Local Variables: 
+Let $hash:Q\rightarrow\{0,1,\dots, 2(h+v)-1\}$, then a set $P_{hash} \subseteq Q$, defined with respect to $hash$, is a preimage of $0$ for function $hash$.
+
+%%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../master"
-%%% End: 
+%%% End:
