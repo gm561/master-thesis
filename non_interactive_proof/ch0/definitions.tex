@@ -56,11 +56,8 @@ defined by $P^{(k)}$ is solved by a circuit $C$ that takes as input puzzles and 
   \IndI \textbf{return} $0$\\
 \end{codeblock}
 %
-\begin{todo}
-  \textbf{TODO:} Bound size of a circuit $C$
-\end{todo}
-%
 \begin{theorem}{\textbf{Security amplification for a dynamic weakly verifiable puzzle.}}\\
+  \label{th:sec_amp_for_dwvp}
   For a fixed problem poser $P^{(1)}$ there exists an algorithm $Gen(C, g, \varepsilon, \delta, n, v, h)$ which takes as input a solver circuit $C$ for $k$-wise
   direct product of DWVP, a monotone function $g$, parameters $\varepsilon, \delta,n$, the number of verification $v$, and hint $h$ queries asked by $C$, and outputs a circuit $D$
   such that following holds: \\
@@ -76,8 +73,6 @@ defined by $P^{(k)}$ is solved by a circuit $C$ that takes as input puzzles and 
   Additionally, $D$ and $Gen$ require only oracle access to $g$ and $C$. Furthermore, $D$ asks at most $h$ hint queries, $v$ verification queries and
   $Size(D) \leq Size(C) \cdot \Theta(\frac{6k}{\varepsilon})$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
 \end{theorem}
-Let $hash:Q\rightarrow\{0,1,\dots, 2(h+v)-1\}$, then a set $P_{hash} \subseteq Q$, defined with respect to $hash$, is a preimage of $0$ for function $hash$.
-
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../master"
