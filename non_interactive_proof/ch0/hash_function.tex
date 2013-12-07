@@ -1,69 +1,56 @@
-From theorem (\ref{th:sec_amp_for_dwvp}) we conclude that if there is no good algorithm for a single DWVP
-then it is not possible to find a good algorithm for $k$-wise direct product of DWVP.
-
-The algorithm $Gen$ tries to find $k-1$ puzzles and a position for an input puzzle $x$, such that
-when $C$ runs with $k-1$ puzzles and $x$ placed on a right position, then $x$ is solved correctly often.
-To find a good position for $x$ and good remaining $k-1$ puzzles we need to run $C$ several times.
-It may happen that in one of this runs $C$ ask for a hint query on some index $q$, and
-in one of the later runs we find a set of puzzles and a position for $x$ such that $x$ is solved often.
-However, we need an additional requirement that this happens often for $q$ on which a hint query was not asked before.
-To satisfy this new requirement we split the set $Q$.
 
 Let $hash:Q\rightarrow\{0,1,\dots, 2(h+v)-1\}$, then a set $P_{hash} \subseteq Q$,
 defined with respect to $hash$, is a preimage of $0$ for function $hash$.
 The set $P_{hash}$ contains $q$ on which $C$ is not allowed to ask hint queries.
 Therefore, if $C$ makes a verification query on $q \in P_{hash}$ we know that no hint query is ever asked on this $q$.
-In the experiment $E$ a circuit $C$ succeeds if and only if it ask a verification query on $q \in P_{hash}$.
+In the experiment $E$ a circuit $C$ succeeds if and only if it ask a verification query on $q \in P_{hash}$ and no hint query is asked on $q \in P_{hash}$.
 %
 \begin{codeblock}
-  \textbf{Experiment $E^{P^{(g)}, C^{(.)(.)}, hash}(\pi_1, \dots, \pi_k, r)$} \\
-  Solving $k$-wise direct product of DWVP with respect to the set $P_{hash}$
+  \textbf{Experiment $E^{P^{(g)}, C^{(\cdot, \cdot)}, hash}(\pi_1, \dots, \pi_k, r)$}
   \medskip
 
   \hrule
 
   \medskip
-  \textbf{Oracle:} Problem poser for k-wise direct product $P^{(g)}$ \\
-  \IndI A solver circuit for $k$-wise direct product $C^{(\cdot, \cdot)}$ \\
-  \IndI A function $hash: Q \leftarrow \{0, \dots, 2(h+v) - 1\}$\\
-  \textbf{Input:} Random bitstrings: $(\pi_1, \dots, \pi_k) \in \{0,1\}^{kl}$ and $r$.\\
-
+  \textbf{Oracle:} A problem poser $P^{(g)}$ for a $k$-wise direct product. \\
+  \IndI A solver circuit $C^{(\cdot, \cdot)}$ for a $k$-wise direct product. \\
+  \IndI A function $hash: Q \leftarrow \{0, \dots, 2(h+v) - 1\}$.\\
+  \textbf{Input:} Random bitstrings: $(\pi_1, \dots, \pi_k) \in \{0,1\}^{kl}$, $r$.
   \medskip\hrule\medskip
-
-  $\pi^{(k)} := \left(\pi_1, \dots, \pi_k \right)$\\
   $(x^{k}, \Gamma_V^{(g)}, \Gamma_H^{(k)}) := P^{(g)}(\pi^{k})$\\
   Run $C^{\Gamma_V^{(g)}, \Gamma_H^{(k)}} (x^{(k)}, r)$ \\
   \IndI Let $(q_j,y_j^{(k)})$ be the first successful verification query if $C^{\Gamma_V^{(g)}, \Gamma_H^{(k)}}$ succeeds or \\
   \IndI an arbitrary verification query when it fails.\\
+  \\
   \textbf{If} $(\forall i < j :  q_i \notin P_{hash} )$ and $q_j \in P_{hash}$ and $\Gamma_V^{(g)}(q_j, y_j^{(k)}) = 1$ \\
   \IndI \textbf{return} 1\\
   \textbf{else}\\
-  \IndI \textbf{return} 0\\
+  \IndI \textbf{return} 0
 \end{codeblock}
 %
-For fixed $hash$ and $P^{(1)}$ a canonical success of $C$ is a situation when $E^{P^{(g)}, C^{(.)(.)}, hash}(\pi_1, \dots, \pi_k, r) = 1$.
-We show that if $C$ often solves successfully the $k$-wise direct product of DWVP, then it also often succeeds canonically.
+For fixed $hash$ and $P^{(1)}$ a canonical success of $C$ is a situation when $E^{P^{(g)}, C^{(\cdot, \cdot)}, hash}(\pi_1, \dots, \pi_k, r) = 1$.
+We show that if $C$ often solves successfully a $k$-wise direct product of DWVP in the random experiment $A$, then it also often succeeds canonically.
 %
 \begin{lemma}
 \label{lemma:hash_function_probability}
 \textbf{Success probability in solving a $k$-wise direct product of DWVP with respect to a function \textit{hash}.} \\
-For a fixed $P^{(g)}$ let $C$ succeed in solving a $k$-wise direct product of DWVP produced by $P^{(g)}$
+For fixed $P^{(g)}$ let $C$ succeed in solving a $k$-wise direct product of DWVP produced by $P^{(g)}$
 with probability $\gamma$, asking at most $h$ hint and $v$ verification queries.
 There exists a probabilistic algorithm, with oracle access to $C$, that runs in time $O((h+v)^4/\gamma^4)$
-and with high probability outputs a function $hash: Q \rightarrow \{0, \dots, 2(h+v)-1\}$ such that canonical success probability of
+and with high probability outputs a function $hash: Q \rightarrow \{0, \dots, 2(h+v)-1\}$ such that the canonical success probability of
 $C$ with respect to $P_{hash}$ is at least $\frac{\gamma}{8(h+v)}$.
 \end{lemma}
 %
 \begin{proof}
 Let $\cH$ be a family of pairwise independent hash functions $Q \rightarrow \{0,1, \dots,2(h+v)-1\}$.
-For all $i \neq j \in \{1, \dots, (h+v)\}$ and $k,l \in \{0,1,\dots,2(h+v)-1\}$ by pairwise independence property of $\cH$
-we have the following
+For all $i \neq j \in \{1, \dots, (h+v)\}$ and $k,l \in \{0,1,\dots,2(h+v)-1\}$ by pairwise independence property of $\cH$,
+we have
 \begin{align}
   \label{eq:hash_pr}
  \forall q_i,q_j \in Q : \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = k \mid hash(q_j) = l] = \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = k] = \frac{1}{2(h+v)}.
 \end{align}
-For a fixed $P^{(g)}, C$ and $(\pi_1, \dots, \pi_k)$ in the random experiment $E$ we define a binary random variable $X$ for the event that $hash(q_j) = 0$, and for
-every query $q_i$ asked before $q_j$ $hash(q_i) \neq 0$.
+Let $P^{(g)}, C, (\pi_1, \dots, \pi_k)$ be fixed. We consider the experiment $E$ and define a binary random variable $X$ for the event that $hash(q_j) = 0$, and for
+every query $q_i$ asked before $q_j : hash(q_i) \neq 0$.
 Conditioned on the event $hash(q_i) = 0$, we get
 \begin{align*}
   \underset{\textit{hash} \leftarrow \cH}{\Pr}[X=1] &= \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_j) = 0 \land \forall i < j : hash(q_i) \neq 0] \\
@@ -78,10 +65,10 @@ Now we use (\ref{eq:hash_pr}) twice and obtain
 Finally, we use union bound and $j \leq (h+v)$ to get
 \begin{align*}
 \underset{\textit{hash} \leftarrow \cH}{\Pr}[X=1] \geq
-\frac{1}{2(h+v)} \left( 1 - \sum_{i < j} \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = 0] \right) \geq \frac{1}{4(h+v)}
+\frac{1}{2(h+v)} \left( 1 - \sum_{i < j} \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = 0] \right) \geq \frac{1}{4(h+v)}.
 \end{align*}
-Let $G_A$ ($G_E$) denote the set of all $(\pi_1, \dots, \pi_k)$ for which $C$ succeeds in the random experiment $A$ ($E$).
-If for fixed $(\pi_1, \dots, \pi_k)$ $C$ succeeds in the random experiment $E$, then it also succeeds in the random experiment $A$.
+Let $G_A$ (correspondingly $G_E$) denote the set of all $(\pi_1, \dots, \pi_k)$ for which $C$ succeeds in the random experiment $A$ ($E$).
+For fixed $(\pi_1, \dots, \pi_k)$, if $C$ succeeds canonically, then it also succeeds in the random experiment $A$.
 Hence, $G_E \subseteq G_A$ and we get
 \begin{align}
   \label{ineq:hash_high_prob}
@@ -96,7 +83,7 @@ Hence, $G_E \subseteq G_A$ and we get
   \hrule
   \medskip
 
-  \textbf{Oracle:} A solver circuit for a $k$-wise direct product of DWVP $C^{(\cdot, \cdot)}$. \\
+  \textbf{Oracle:} A solver circuit $C^{(\cdot, \cdot)}$ for a $k$-wise direct product of DWVP. \\
   \textbf{Input:} A set $\cH$.
   \medskip\hrule\medskip
   For $i = 1$ to $32(h+v)^2/\gamma^2$ \\
@@ -110,18 +97,18 @@ Hence, $G_E \subseteq G_A$ and we get
   \IndII \return $hash$\\
   \return $\bot$
 \end{codeblock}
-We show that \textbf{FindHash} chooses a function $hash$ such
+We show that \textbf{FindHash} chooses $hash$ such
 that the canonical success probability of $C$
-with respect to set $P_{hash}$ is at least $\frac{\gamma}{4(h+v)}$ almost surely.
-Let $\cH_{Good}$ denote $hash \in \cH$ for which
+with respect to $P_{hash}$ is at least $\frac{\gamma}{4(h+v)}$ almost surely.
+Let $\cH_{Good}$ denote a family of functions $hash \in \cH$ for which
 \begin{align*}
 \underset{(\pi_1, \dots, \pi_k)}{\Pr}[E^{P^{(g)}, C^{(\cdot, \cdot)}, hash}(\pi_1, \dots, \pi_k) = 1] \geq \frac{\gamma}{4(h+v)},
 \end{align*}
-and $\cH_{Bad}$ be the family $hash \in \cH$ such that
+and $\cH_{Bad}$ be the family of functions $hash \in \cH$ such that
 \begin{align*}
 \underset{(\pi_1, \dots, \pi_k)}{\Pr}[E^{P^{(g)}, C^{(\cdot, \cdot)}, hash}(\pi_1, \dots, \pi_k) = 1] \leq \frac{\gamma}{8(h+v)}.
 \end{align*}
-Additionally, for a fixed $hash$, we define the binary random variables $X_1, \dots, X_i, \dots, X_N$ such that
+Additionally, for a fixed $hash$, we define binary random variables $X_1, \dots, X_i, \dots, X_N$ such that
 \begin{align*}
   X_i =
   \begin{cases}
@@ -138,13 +125,13 @@ Therefore, for any fixed $hash \in \cH_{Bad}$ using the Chernoff bound we get
   e^{-{\frac{\gamma}{4(h+v)}} N /27}.
 \end{align*}
 %
-The probability that $hash \in \cH_{Good}$, when picked, is not returned is
+The probability that $hash \in \cH_{Good}$, when picked, is not returned amounts
 \begin{align*}
   \underset{(\pi_1, \dots, \pi_k)}{\Pr}\left[\frac{1}{N} \sum_{i=1}^{N} X_i \leq \frac{\gamma}{6(h+v)}\right] \leq
   \underset{(\pi_1, \dots, \pi_k)}{\Pr}\left[\frac{1}{N} \sum_{i=1}^{N} X_i \leq (1 - \frac{1}{3})\mathbb{E}[X_i]\right] \leq e^{-{\frac{\gamma}{4(h+v)}} N /27}.
 \end{align*}
 %
-Finally, we show that \textbf{FindHash} picks in one of its iteration a hash function that is in $\cH_{Good}$ almost surely.
+Finally, we show that \textbf{FindHash} picks in one of its iteration $hash \in \cH_{Good}$ almost surely.
 % The random variable $X$ is binary distributed. Thus, we have
 % \begin{align*}
 %   \underset{\substack{\textit{hash} \leftarrow \cH \\ (\pi_1, \dots, \pi_k)}}{\mathbb{E}}[X] \geq \frac{\gamma}{4(h+v)}
@@ -168,34 +155,34 @@ Thus, we get
 %   \underset{hash \leftarrow \cH}{\Pr}\left[\frac{1}{K} \sum_{i=1}^{K} Y_i \leq (1-\delta) \frac{\gamma}{4(h+v)}\right] \\
 %   &\leq \underset{hash \leftarrow \cH}{\Pr}\left[\frac{1}{K} \sum_{i=1}^{K} Y_i \leq (1-\delta) \mathbb{E}[Y_i] \right] \leq e^{-\delta^2K \mathbb{E}[Y_i]/2 }
 % \end{align*}
-The bound stated in the Lemma \ref{lemma:hash_function_probability} is achieved for $\delta = \frac{1}{2}$ and $K = N = 32(h+v)^2/\gamma^2$.
+The bound stated in the Lemma \ref{lemma:hash_function_probability} is achieved for $\delta = \frac{1}{3}$ and $K = N = 32(h+v)^2/\gamma^2$.
 \end{proof}
 %
-\begin{codeblock}
-  \textbf{Random experiment $F^{P^{(1)}, D, hash}(\pi)$} \\
-  Solving a single DWVP with respect to the set $P_{hash}$
-  \medskip
+% \begin{codeblock}
+%   \textbf{Experiment $F^{P^{(1)}, D, hash}(\pi)$} \\
+%   Solving DWVP with respect to $P_{hash}$
+%   \medskip
 
-  \hrule
+%   \hrule
 
-  \medskip
+%   \medskip
 
-  \textbf{Oracle:}
-  A problem poser $P^{(1)}$ for DWVP. \\
-  \IndI A solver circuit $D$ for a single DWVP. \\
-  \IndI A function $hash: Q \rightarrow \{0,1,\dots, 2(h+v)-1\}$. \\
-  \textbf{Input:} A random bitstrings $\pi \in \{0,1\}^l$, $r \in \{0,1\}^{*}$.
-  \medskip\hrule\medskip
+%   \textbf{Oracle:}
+%   A problem poser $P^{(1)}$ for DWVP. \\
+%   \IndI A solver circuit $D$ for a single DWVP. \\
+%   \IndI A function $hash: Q \rightarrow \{0,1,\dots, 2(h+v)-1\}$. \\
+%   \textbf{Input:} A random bitstrings $\pi \in \{0,1\}^l$, $r \in \{0,1\}^{*}$.
+%   \medskip\hrule\medskip
 
-  $(x, \Gamma_v, \Gamma_H) := P^{(1)}(\pi)$ \\
-  Run $D^{\Gamma_V, \Gamma_H}(x,r)$ \\
-  \IndI Let $(\widetilde{q_j},\widetilde{r_j})$ be the first successful verification query if $D^{\Gamma_V, \Gamma_H}(x)$ succeeds or \\
-  \IndI an arbitrary verification query when it fails. \\
-  \If $(\forall i < j :  q_i \notin  P_{hash} ) \land q_j \in P_{hash} \land \Gamma_V(q_j) = 1$ \then \\
-  \IndI \return 1 \\
-  \textbf{else}\\
-  \IndI \return 0
-\end{codeblock}
+%   $(x, \Gamma_v, \Gamma_H) := P^{(1)}(\pi)$ \\
+%   Run $D^{\Gamma_V, \Gamma_H}(x,r)$ \\
+%   \IndI Let $(\widetilde{q_j},\widetilde{r_j})$ be the first successful verification query if $D^{\Gamma_V, \Gamma_H}(x)$ succeeds or \\
+%   \IndI an arbitrary verification query when it fails. \\
+%   \If $(\forall i < j :  q_i \notin  P_{hash} ) \land q_j \in P_{hash} \land \Gamma_V(q_j) = 1$ \then \\
+%   \IndI \return 1 \\
+%   \textbf{else}\\
+%   \IndI \return 0
+% \end{codeblock}a single
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../master"
