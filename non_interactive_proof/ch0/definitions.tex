@@ -5,7 +5,8 @@
   The circuit $\Gamma_{V}$ takes as input $q \in Q$ and an answer $y \in \{0,1\}^*$.
   If $\Gamma_V(q,y) = 1$ then $y$ is a correct solution of a puzzle $x$ for $q$.
   The circuit $\Gamma_H$ on input $q$ provides a hint such that $\Gamma_V(q,\Gamma_H(q)) = 1$.
-  The probabilistic algorithm $S$, called a solver, has oracle access to $\Gamma_V$ and $\Gamma_H$.
+  The probabilistic algorithm $S(x, \rho)$, called a solver, takes as input a puzzle $x$, a random bitstring $\rho$,
+  and has oracle access to $\Gamma_V$ and $\Gamma_H$.
   The calls of $S$ to $\Gamma_V$ are verification queries and to $\Gamma_H$ are hint queries.
   The solver $S$ can ask at most $h$ hint queries, $v$ verification queries, and successfully solves DWVP if and only if
   it makes a verification query $(q,y)$ such that $\Gamma_V(q,y) = 1$, when it has not previously asked for a hint query on this $q$.
@@ -13,10 +14,10 @@
 %
 %
 \begin{definition}{\textbf{$k$-wise direct product of dynamic weakly verifiable puzzles}}\\
-Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function and $P^{(1)}$ a problem poser used to generate an instance of DWVP.
-A $k$-wise direct product of dynamic weakly verifiable puzzles is defined by a probabilistic algorithm $P^{(g)}\left(\pi_1, \dots, \pi_k \right)$,
-where $(\pi_1, \dots, \pi_k) \in \{0,1\}^{kl}$ is chosen uniformly at random.
-The algorithm $P^{(g)}\left(\pi_1, \dots, \pi_k \right)$ generates $k$ independent instances of dynamic weakly verifiable puzzles,
+Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function and $P^{(1)}$ a problem poser used to generate DWVP.
+A $k$-wise direct product of dynamic weakly verifiable puzzles is defined by a probabilistic algorithm $P^{(g)}(\pi^{(k)})$,
+where $\pi^{(k)} := (\pi_1, \dots, \pi_k)$ and every $\pi_i \in \{0,1\}^{l}$ for $1 \leq i \leq k$ is chosen uniformly at random.
+The algorithm $P^{(g)}(\pi^{(k)})$ generates $k$ independent instances of dynamic weakly verifiable puzzles,
 where the $i$-th instance $(x_i, \Gamma_V^{i}, \Gamma_H^{i} )$ is produced by $P^{(1)}(\pi_i)$.
 Finally, $P^{(g)}$ outputs a verification circuit
 \begin{align*}
@@ -28,25 +29,25 @@ a hint circuit
 \end{align*}
 and a puzzle $x^{(k)} := (x_1, \dots, x_k)$.
 
-The probabilistic algorithm $S$, called a solver, has oracle access to $\Gamma_V^{(g)}, \Gamma_H^{(k)}$.
+The probabilistic algorithm $S$, called a solver, takes as input $x^{(k)}$, random bitstring $\rho$, and has oracle access to $\Gamma_V^{(g)}, \Gamma_H^{(k)}$.
 The solver $S$ can ask at most $v$ verification queries to $\Gamma_V^{(g)}$, $h$ hint queries to $\Gamma_H^{(k)}$, and successfully solves the puzzle $x^{(k)}$
-if and only if it asks a verification query $(q, y^{(k)}) := (q, y_1, \dots, y_k)$ such that $\Gamma_V^{(g)}(q, y_1, \dots, y_k) = 1$, and has not previously asked for a hint query on this $q$.
+if and only if it asks a verification query $(q, y^{(k)}) := (q, y_1, \dots, y_k)$ such that $\Gamma_V^{(g)}(q, y^{(k)}) = 1$, and has not previously asked for a hint query on this $q$.
 \end{definition}
 %
-A dynamic weakly verifiable puzzle is a special case of a $k$-wise direct product, when $k$ equals one and $g$ is the identity function.
-Therefore, we consider the following random experiment in which a $k$-wise direct product of DWVP (or for $k=1$ a single DWVP)
-defined by $P^{(k)}$ is solved by a circuit $C$ that takes as input $k$ puzzles and chosen uniformly at random bitstring $r$.
+% A dynamic weakly verifiable puzzle is a special case of a $k$-wise direct product, when $k$ equals one and $g$ is the identity function.
+We consider the following random experiment in which a $k$-wise direct product of DWVP defined by $P^{(k)}$ is solved by a circuit $C$.
+The circuit $C$, takes as input $x^{(k)}$, random bitstring $\rho$, and has oracle access to $\Gamma^{(g)}_V, \Gamma^{(k)}_H$
 %
 \begin{codeblock}
-  \textbf{Experiment $A^{P^{(k)}, C^{(\cdot, \cdot)}}(\pi^{(k)})$}
+  \textbf{Experiment $A^{P^{(k)}, C^{(\cdot, \cdot)}}(\pi^{(k)}, \rho)$}
   \medskip
   \hrule
   \medskip
   \textbf{Oracle:} A problem poser $P^{(k)}$, a solver circuit $C^{(\cdot,\cdot)}$.\\
-  \textbf{Input:}  Bitstrings $\pi^{(k)}$, $r$.
+  \textbf{Input:}  Bitstrings $\pi^{(k)}$, $\rho$.
   \medskip\hrule\medskip
   $(x^{(k)}, \Gamma_V^{(g)}, \Gamma_H^{(k)}) := P^{(k)}(\pi^{(k)})$ \\
-  Run $C^{\Gamma_V^{(g)},\Gamma_H^{(k)}}(x^{(k)}, r)$ \\
+  Run $C^{\Gamma_V^{(g)},\Gamma_H^{(k)}}(x^{(k)}, \rho)$ \\
   \IndI Let $Q_{Solved} := \{q: \text{$C^{\Gamma_V^{(g)}, \Gamma_H^{(k)}}$ asked a verification query $(q,y^{(k)})$ and $\Gamma_V^{(g)}(q, y^{(k)}) = 1$} \}$\\
   \IndI Let $Q_{Hint} := \{q: \text{$C^{\Gamma_V^{(g)}, \Gamma_H^{(k)}}$ asked a hint query on q} \}$\\
   \textbf{If} $\exists q \in Q_{solved} : q \notin Q_{Hint}$ \then \\
@@ -62,26 +63,30 @@ direct product of DWVP, a monotone function $g$, parameters $\varepsilon, \delta
 such that following holds: \\
 If $C$ is such that \\
   \begin{align*}
-    \underset{(\pi_1, \dots, \pi_k) \in \{0,1\}^{kl}}{\Pr}[A^{P^{(g)}, C}(\pi_1, \dots, \pi_k, r) = 1]
+    \underset{\pi^{(k)}, \rho}{\Pr}[A^{P^{(g)}, C}(\pi^{(k)}, \rho) = 1]
     \geq \frac{(h+v)}{8} \left(\underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon\right)
   \end{align*}
 then $D$ satisfies almost surely
   \begin{align*}
-    \underset{\pi \in \{0,1\}^{l}}{\Pr}[A^{P^{(1)},D}(\pi, r) = 1] \geq (\delta + \frac{\varepsilon}{6k})
+    \underset{\pi, \rho}{\Pr}[A^{P^{(1)},D}(\pi, \rho) = 1] \geq (\delta + \frac{\varepsilon}{6k}).
   \end{align*}
-Additionally, $D$ and $Gen$ require only oracle access to $g$ and $C$. Furthermore, $D$ asks at most $h$ hint queries, $v$ verification queries an
+Additionally, $D$ and $Gen$ require only oracle access to $g$ and $C$. Furthermore, $D$ asks at most $h$ hint queries, $v$ verification queries and
 $Size(D) \leq Size(C) \cdot \Theta(\frac{6k}{\varepsilon})$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
 \end{theorem}
 %
-The Theorem \ref{th:sec_amp_for_dwvp} implies that if there is no good algorithm that solves DWVP,
-then a good algorithm for a $k$-wise direct product of DWVP does not exist.
-
+% \begin{todo}
+%   \textbf{TODO:} Is that entirely true? It also depends on the number of $(h+v)$ queries and its validity depends on the function, and function g(...) it may happen
+%   that g is a constant then this theorem does not mean what was written here
+% \end{todo}
+% The Theorem \ref{th:sec_amp_for_dwvp} implies that if there is no good algorithm that solves DWVP,
+% then a good algorithm for a $k$-wise direct product of DWVP does not exist.
+%
 Intuitively, the algorithm $Gen$ tries to find $k-1$ puzzles and a position for an input puzzle $x$, such that
-when $C$ runs with $k-1$ puzzles and $x$ placed on a right position, then $x$ is often solved correctly.
+when $C$ runs with the $k-1$ puzzles and $x$ placed on this position, then $x$ is often solved correctly.
 To find a good position for $x$ and these $k-1$ puzzles $Gen$ needs to run $C$ several times.
 In these runs $C$ asks a hint queries.
-Let assume that after some trials and errors $Gen$ finally finds a set of puzzles and a position for $x$ such that $x$ is often solved.
-However, it may still not be a valid solution, as an additional requirement is needed that this happens often for $q$
+Let us assume that after some trials and errors $Gen$ finally finds a set of puzzles and a position for $x$ such that $x$ is often solved.
+However, it may still not constitute a valid solution, as an additional requirement is needed that this happens often for $q$
 on which a hint query was not asked before. To satisfy this requirement we split $Q$.
 %%% Local Variables:
 %%% mode: latex
