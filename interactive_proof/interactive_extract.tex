@@ -2,22 +2,26 @@
   A dynamic weakly verifiable puzzle (DWVP) is defined by a protocol between probabilistic algorithms $P(\pi)$ and $S(\rho)$.
   The algorithm $P$, called a problem poser, takes as input chosen uniformly at random bitstring $\pi$.
   The problem solver $S$ takes as input a uniform random bitstring $\rho$.
-  As the result of the protocols execution between $P$ and $S$,
+  As the result of the protocol execution between $P$ and $S$,
   $P$ produces circuits $\Gamma_{V}$, $\Gamma_{H}$ and a puzzle $x \in \{0,1\}^{*}$, $S$ produces no output.
   The circuit $\Gamma_{V}$ takes as input $q \in Q$ and an answer $y \in \{0,1\}^*$.
   If $\Gamma_V(q,y) = 1$ then $y$ is a correct solution of a puzzle $x$ for $q$.
   The circuit $\Gamma_H$ on input $q$ provides a hint such that $\Gamma_V(q,\Gamma_H(q)) = 1$.
-  The solver $S$ has oracle access to $\Gamma_V$ and $\Gamma_H$.
+  The solver $S$ receives a puzzle $x$, and has oracle access to $\Gamma_V$ and $\Gamma_H$.
   The calls of $S$ to $\Gamma_V$ are verification queries and to $\Gamma_H$ are hint queries.
   The solver $S$ can ask at most $h$ hint queries, $v$ verification queries, and successfully solves DWVP if and only if
   it makes a verification query $(q,y)$ such that $\Gamma_V(q,y) = 1$, when it has not previously asked for a hint query on this $q$.
 \end{definition}
 %
+\begin{todo}
+  \textbf{TODO:} Requirements on g (we calculate $\Pr(g(b_1, \dots, b_k) = 1)$).
+\end{todo}
+%
 \begin{definition}{\textbf{$k$-wise direct product of dynamic weakly verifiable puzzles}}\\
 Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function and $P^{(1)}$ a problem poser used to generate an instance of DWVP.
-A $k$-wise direct product of dynamic weakly verifiable puzzles is defined by a protocol between a probabilistic algorithms $P^{(g)}\left(\pi^{(k)})$ and
-$S(\rho)$, where $\pi^{(k)} := (\pi_1, \dots, \pi_k) \in \{0,1\}^{kl}$ and $\rho$ are chosen uniformly at random.
-The protocol execution $\left\langle P^{(g)}\left(\pi^{(k)}\right), S(\rho^{(k)}) \right\rangle$ generates sequentially $k$ independent instances of dynamic weakly verifiable puzzles,
+A $k$-wise direct product of dynamic weakly verifiable puzzles is defined by a protocol between a probabilistic algorithms $P^{(g)}(\pi^{(k)})$ and
+$S(\rho)$, where $\pi^{(k)} := (\pi_1, \dots, \pi_k)$ and every $\pi_i \in \{0,1\}^{l}$ for $1 \leq i \leq k$ and $\rho$ are chosen uniformly at random.
+The protocol execution generates sequentially $k$ independent instances of DWVP,
 where the $i$-th instance $(x_i, \Gamma_V^{i}, \Gamma_H^{i} )$ is produced by $S(\rho)$ interacting with $P^{(1)}(\pi_i)$.
 Finally, $P^{(g)}$ outputs a verification circuit
 \begin{align*}
@@ -29,14 +33,13 @@ a hint circuit
 \end{align*}
 and a puzzle $x^{(k)} := (x_1, \dots, x_k)$.
 
-The solver $S$, has oracle access to $\Gamma_V^{(g)}, \Gamma_H^{(k)}$, and
+The solver $S$ receives puzzles $(x_1, \dots, x_k)$, has oracle access to $\Gamma_V^{(g)}, \Gamma_H^{(k)}$, and
 can ask at most $v$ verification queries to $\Gamma_V^{(g)}$, $h$ hint queries to $\Gamma_H^{(k)}$, and successfully solves the puzzle $x^{(k)}$
 if and only if it asks a verification query $(q, y^{(k)}) := (q, y_1, \dots, y_k)$ such that $\Gamma_V^{(g)}(q, y^{(k)}) = 1$, and has not previously asked for a hint query on this $q$.
 \end{definition}
 %
 \begin{todo}
-  \textbf{TODO:} We abuse notation slightly, by denoting (in the execution of the protocol between) the input of $C$ as $C(\rho)$,
-  in the second phase the $C$ gets as input $C(x^{(k)}, \rho)$
+  \textbf{TODO:} We abuse the notation using, when the protocol is executed $C(\rho)$, and in the second phase when the puzzles are solved $C^{\Gamma_V^{(g)}, \Gamma_H^{(k)}}(x^{(k)}, \rho)$.
 \end{todo}
 %
 \begin{codeblock}
@@ -48,7 +51,7 @@ if and only if it asks a verification query $(q, y^{(k)}) := (q, y_1, \dots, y_k
   \textbf{Oracle:} A problem poser $P^{(k)}$, a solver circuit $C^{(\cdot,\cdot)}$.\\
   \textbf{Input:}  Bitstrings $\pi^{(k)}$, $\rho$.
   \medskip\hrule\medskip
-  $(x^{(k)}, \Gamma_V^{(g)}, \Gamma_H^{(k)}) := \langle P^{(k)}(\pi^{(k)}), C(\rho)} \rangle$ \\
+  $(x^{(k)}, \Gamma_V^{(g)}, \Gamma_H^{(k)}) := \langle P^{(k)}(\pi^{(k)}), C(\rho) \rangle_{P^{(k)}}$ \\
   Run $C^{\Gamma_V^{(g)},\Gamma_H^{(k)}}(x^{(k)}, \rho)$ \\
   \IndI Let $Q_{Solved} := \{q: \text{$C^{\Gamma_V^{(g)}, \Gamma_H^{(k)}}$ asked a verification query $(q,y^{(k)})$ and $\Gamma_V^{(g)}(q, y^{(k)}) = 1$} \}$\\
   \IndI Let $Q_{Hint} := \{q: \text{$C^{\Gamma_V^{(g)}, \Gamma_H^{(k)}}$ asked a hint query on q} \}$\\
@@ -66,7 +69,7 @@ such that following holds: \\
 If $C$ is such that \\
   \begin{align*}
     \underset{\pi^{(k)}, \rho }{\Pr}[A^{P^{(g)}, C}(\pi^{(k)}, \rho) = 1]
-    \geq \frac{(h+v)}{8} \left(\underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon\right)
+    \geq 8(h+v) \left(\underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon\right)
   \end{align*}
 then $D$ satisfies almost surely
   \begin{align*}
@@ -86,7 +89,7 @@ $Size(D) \leq Size(C) \cdot \Theta(\frac{6k}{\varepsilon})$ and $Time(Gen) = pol
   \medskip
   \textbf{Oracle:} A problem poser $P^{(g)}$ for a $k$-wise direct product. \\
   \IndI A solver circuit $C^{(\cdot, \cdot)}$ for a $k$-wise direct product. \\
-  \IndI A function $hash: Q \leftarrow \{0, \dots, 2(h+v) - 1\}$.\\
+  \IndI A function $hash: Q \rightarrow \{0, \dots, 2(h+v) - 1\}$.\\
   \textbf{Input:} Random bitstrings: $\pi^{(k)}$, $\rho$.
   \medskip\hrule\medskip
   $(x^{(k)}, \Gamma_V^{(g)}, \Gamma_H^{(k)}) := \left\langle P^{(g)}(\pi^{(k)}), C(\rho) \right\rangle$\\
@@ -120,6 +123,35 @@ $Size(D) \leq Size(C) \cdot \Theta(\frac{6k}{\varepsilon})$ and $Time(Gen) = pol
   \IndIII $count := count + 1$\\
   \IndI \If $\frac{\gamma^2}{32(h+v)^2} count \geq \frac{\gamma}{6(h+v)}$ \\
   \IndII \return $hash$\\
+  \return $\bot$
+\end{codeblock}
+%
+%
+\begin{codeblock}
+  \textbf{Circuit $\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, hash, C} (x_1, \dots, x_k)$} \\
+  Circuit $\widetilde{C}$ has good canonical success probability.
+  \medskip
+
+  \hrule
+
+  \medskip
+
+  \textbf{Oracle:} $\Gamma_V^{(g)}, \Gamma_H^{(k)}, hash, C$ \\
+  \textbf{Input:} k-wise direct product of puzzles $(x_1, \dots, x_k)$
+
+  \medskip\hrule\medskip
+  Run $C^{(\cdot,\cdot)}(x_1, \dots, x_k, \rho)$ \\
+  \IndI \If $C$ asks a hint query $q$ \then\\
+  \IndII \If $q \in P_{hash}$ \then\\
+  \IndIII \return $\bot$\\
+  \IndII \textbf{else}\\
+  \IndIII return $\Gamma_H^{(k)}(q)$ to $C$\\
+  \\
+  \IndI \If $C$ asks a verification query on $(q, y_1, \dots, y_k)$ \then \\
+  \IndII \If $q \in P_{hash}$ \textbf{then} \\
+  \IndIII \return $(q, y_1, \dots, y_k)$ \\
+  \IndII \textbf{else} \\
+  \IndIII answer the verification query with 0 \\
   \return $\bot$
 \end{codeblock}
 %
@@ -165,8 +197,6 @@ $Size(D) \leq Size(C) \cdot \Theta(\frac{6k}{\varepsilon})$ and $Time(Gen) = pol
   \IndII $c_i := \Gamma_v^{i}(q, y_i)$\\
   \IndI \textbf{return} $(c_1, \dots, c_k)$\\
 \end{codeblock}
-%
-%
 %
 % \begin{todo}
 %   \textbf{TODO:} Circuit $\widetilde{C}$ gets as input puzzle find a nice way to genereate the puzzles as it is used in many places in the code.
