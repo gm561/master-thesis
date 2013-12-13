@@ -2,8 +2,7 @@
 \begin{definition}[Dynamic weakly verifiable puzzle.]
   \label{def:dwvp}
   A dynamic weakly verifiable puzzle (DWVP) is defined by a probabilistic algorithm $P$
-  called a problem poser.
-  We denote by $P(\pi)$ the execution of $P$ with the randomness $\pi$.
+  called a problem poser. We write $P(\pi)$ to denote the algorithm $P$ with the randomness $\pi$.
   The algorithm $P$ outputs circuits $\Gamma_{V}$, $\Gamma_{H}$ and a puzzle $x \in \{0,1\}^{*}$.
   The circuit $\Gamma_{V}$ takes as input $q \in Q$, an answer $y \in \{0,1\}^*$,
   and outputs $1$ if $y$ is a correct solution of $x$ for $q$ and $0$ otherwise.
@@ -32,23 +31,21 @@ a hint circuit
   \Gamma_H^{(k)} (q) := (\Gamma_H^{1}(q), \dots, \Gamma_H^{k}(q)),
 \end{align*}
 and a puzzle $x^{(k)} := (x_1, \dots, x_k)$, where the $i$-th instance $(x_i, \Gamma_V^{i}, \Gamma_H^{i} ) := P^{(1)}(\pi_i)$.
-
-% The probabilistic algorithm $S$, called a solver, takes as input $x^{(k)}$, random bitstring $\rho$, and has oracle access to $\Gamma_V^{(g)}, \Gamma_H^{(k)}$.
-% The solver $S$ can ask at most $v$ verification queries to $\Gamma_V^{(g)}$, $h$ hint queries to $\Gamma_H^{(k)}$, and successfully solves the puzzle $x^{(k)}$
-% if and only if it asks a verification query $(q, y^{(k)}) := (q, y_1, \dots, y_k)$ such that $\Gamma_V^{(g)}(q, y^{(k)}) = 1$, and has not previously asked for a hint query on this $q$.
 \end{definition}
 %
 % A dynamic weakly verifiable puzzle is a special case of a $k$-wise direct product, when $k$ equals one and $g$ is the identity function.
-We consider the following random experiment in which a $k$-wise direct product of DWVP defined by $P^{(k)}$ is solved by a circuit $C$.
-The circuit $C$, takes as input $x^{(k)}$, random bitstring $\rho$, and has oracle access to $\Gamma^{(g)}_V, \Gamma^{(k)}_H$
+% We consider the following random experiment in which a $k$-wise direct product of DWVP defined by $P^{(k)}$ is solved by a circuit $C$.
+% The circuit $C$, takes as input $x^{(k)}$, random bitstring $\rho$, and has oracle access to $\Gamma^{(g)}_V, \Gamma^{(k)}_H$
 %
+We consider the following random experiment in which a DWVP, defined by $P$, is solved by a random circuit $C$.
 \begin{codeblock}
-  \textbf{Experiment $A^{P^{(k)}, C^{(\cdot, \cdot)}}(\pi^{(k)}, \rho)$}
+  \textbf{Experiment $Success^{P, C^{(\cdot, \cdot)}}(\pi^{(k)}, \rho)$}
   \medskip
   \hrule
   \medskip
   \textbf{Oracle:} A problem poser $P^{(k)}$, a solver circuit $C^{(\cdot,\cdot)}$.\\
-  \textbf{Input:}  Bitstrings $\pi^{(k)}$, $\rho$.
+  \textbf{Input:}  Bitstrings $\pi^{(k)}$, $\rho$.\\
+  \textbf{Output:} A bit $b \in \{0,1\}$.
   \medskip\hrule\medskip
   $(x^{(k)}, \Gamma_V^{(g)}, \Gamma_H^{(k)}) := P^{(k)}(\pi^{(k)})$ \\
   Run $C^{\Gamma_V^{(g)},\Gamma_H^{(k)}}(x^{(k)}, \rho)$ \\
@@ -60,10 +57,19 @@ The circuit $C$, takes as input $x^{(k)}$, random bitstring $\rho$, and has orac
   \IndI \textbf{return} $0$\\
 \end{codeblock}
 %
+\begin{todo}
+  \textbf{TODO:} Do we have to fix $P$ here?
+\end{todo}
+\begin{todo}
+  \textbf{TODO:} Define $\mu_{\delta}^{(k)}$
+\end{todo}
+%
 \begin{theorem}{\textbf{Security amplification for a dynamic weakly verifiable puzzle.}}
 \label{th:sec_amp_for_dwvp}\\
-For a fixed problem poser $P^{(1)}$ there exists an algorithm $Gen(C, g, \varepsilon, \delta, n, v, h)$ which takes as input a solver circuit $C$ for a $k$-wise
-direct product of DWVP, a monotone function $g$, parameters $\varepsilon, \delta,n$, the number of verification $v$, and hint $h$ queries asked by $C$, and outputs a circuit $D$
+Let $P^{(1)}$ be a fixed problem poser as in Definition \ref{def:dwvp}. There exists a probabilistic
+algorithm $Gen(C, g, \varepsilon, \delta, n, v, h)$ which takes as input a solver circuit $C$ for a $k$-wise
+direct product of $P^{(1)}$, a monotone function $g:\{0,1\}^k \rightarrow \{0,1\}$, parameters $\varepsilon, \delta,n$,
+the number of verification queries $v$, and hint queries $h$ asked by $C$, and outputs a circuit $D$
 such that following holds: \\
 If $C$ is such that \\
   \begin{align*}
