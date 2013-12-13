@@ -1,25 +1,29 @@
-\begin{definition} {\textbf{Dynamic weakly verifiable puzzle (non interactive version)}}\\
-  A dynamic weakly verifiable puzzle (DWVP) is defined by a probabilistic algorithm $P(\pi)$,
-  called a problem poser, that takes as input chosen uniformly at random bitstring $\pi \in \{0,1\}^l$,
-  and produces circuits $\Gamma_{V}$, $\Gamma_{H}$ and a puzzle $x \in \{0,1\}^{*}$.
-  The circuit $\Gamma_{V}$ takes as input $q \in Q$ and an answer $y \in \{0,1\}^*$.
-  If $\Gamma_V(q,y) = 1$ then $y$ is a correct solution of a puzzle $x$ for $q$.
-  The circuit $\Gamma_H$ on input $q$ provides a hint such that $\Gamma_V(q,\Gamma_H(q)) = 1$.
-  The probabilistic algorithm $S(x, \rho)$, called a solver, takes as input a puzzle $x$, a random bitstring $\rho$,
+%FIXME is x a puzzle?
+\begin{definition}[Dynamic weakly verifiable puzzle.]
+  \label{def:dwvp}
+  A dynamic weakly verifiable puzzle (DWVP) is defined by a probabilistic algorithm $P$
+  called a problem poser.
+  We denote by $P(\pi)$ the execution of $P$ with the randomness $\pi$.
+  The algorithm $P$ outputs circuits $\Gamma_{V}$, $\Gamma_{H}$ and a puzzle $x \in \{0,1\}^{*}$.
+  The circuit $\Gamma_{V}$ takes as input $q \in Q$, an answer $y \in \{0,1\}^*$,
+  and outputs $1$ if $y$ is a correct solution of $x$ for $q$ and $0$ otherwise.
+  The circuit $\Gamma_H$ on input $q \in Q$ outputs a hint such that $\Gamma_V(q,\Gamma_H(q)) = 1$.
+
+  A problem solver $S$ is a probabilistic algorithm that takes as input a puzzle $x$,
   and has oracle access to $\Gamma_V$ and $\Gamma_H$.
-  The calls of $S$ to $\Gamma_V$ are verification queries and to $\Gamma_H$ are hint queries.
-  The solver $S$ can ask at most $h$ hint queries, $v$ verification queries, and successfully solves DWVP if and only if
-  it makes a verification query $(q,y)$ such that $\Gamma_V(q,y) = 1$, when it has not previously asked for a hint query on this $q$.
+  The randomness used by $S$ is denoted by $\rho$. The execution of $S$ with the input $x$ and the randomness $\rho$
+  is denoted by $S(x, \rho)$. The queries of $S$ to $\Gamma_V$ are called verification queries, and to $\Gamma_H$ hint queries.
+  The solver $S$ can ask at most $h$ hint queries, $v$ verification queries, and successfully solves the puzzle if and only if
+  it makes a verification query $(q,y)$ such that $\Gamma_V(q,y) = 1$, when it has not previously asked for a hint query on $q$.
 \end{definition}
 %
 %
-\begin{definition}{\textbf{$k$-wise direct product of dynamic weakly verifiable puzzles}}\\
-Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function and $P^{(1)}$ a problem poser used to generate DWVP.
-A $k$-wise direct product of dynamic weakly verifiable puzzles is defined by a probabilistic algorithm $P^{(g)}(\pi^{(k)})$,
-where $\pi^{(k)} := (\pi_1, \dots, \pi_k)$ and every $\pi_i \in \{0,1\}^{l}$ for $1 \leq i \leq k$ is chosen uniformly at random.
-The algorithm $P^{(g)}(\pi^{(k)})$ generates $k$ independent instances of dynamic weakly verifiable puzzles,
-where the $i$-th instance $(x_i, \Gamma_V^{i}, \Gamma_H^{i} )$ is produced by $P^{(1)}(\pi_i)$.
-Finally, $P^{(g)}$ outputs a verification circuit
+\begin{definition}[$k$-wise direct-product of DWVPs.]
+Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function and $P^{(1)}$ a problem poser as in Definition \ref{def:dwvp}.
+The $k$-wise direct product of $P^{(1)}$ is a DWVP defined by a probabilistic algorithm $P^{(g)}$.
+Let $\pi^{(k)} := (\pi_1, \dots, \pi_k)$ be the randomness used by $P^{(g)}$, and $P^{(g)}(\pi^{(k)})$ denote the execution of $P^{(g)}$ with the randomness $\pi^{(k)}$.
+The poser $P^{(g)}$ outputs:
+a verification circuit
 \begin{align*}
   \Gamma_V^{(g)} (q, y_1, \dots, y_k) := g(\Gamma_V^{1}(q, y_1), \dots, \Gamma_V^{k}(q, y_k)),
 \end{align*}
@@ -27,11 +31,11 @@ a hint circuit
 \begin{align*}
   \Gamma_H^{(k)} (q) := (\Gamma_H^{1}(q), \dots, \Gamma_H^{k}(q)),
 \end{align*}
-and a puzzle $x^{(k)} := (x_1, \dots, x_k)$.
+and a puzzle $x^{(k)} := (x_1, \dots, x_k)$, where the $i$-th instance $(x_i, \Gamma_V^{i}, \Gamma_H^{i} ) := P^{(1)}(\pi_i)$.
 
-The probabilistic algorithm $S$, called a solver, takes as input $x^{(k)}$, random bitstring $\rho$, and has oracle access to $\Gamma_V^{(g)}, \Gamma_H^{(k)}$.
-The solver $S$ can ask at most $v$ verification queries to $\Gamma_V^{(g)}$, $h$ hint queries to $\Gamma_H^{(k)}$, and successfully solves the puzzle $x^{(k)}$
-if and only if it asks a verification query $(q, y^{(k)}) := (q, y_1, \dots, y_k)$ such that $\Gamma_V^{(g)}(q, y^{(k)}) = 1$, and has not previously asked for a hint query on this $q$.
+% The probabilistic algorithm $S$, called a solver, takes as input $x^{(k)}$, random bitstring $\rho$, and has oracle access to $\Gamma_V^{(g)}, \Gamma_H^{(k)}$.
+% The solver $S$ can ask at most $v$ verification queries to $\Gamma_V^{(g)}$, $h$ hint queries to $\Gamma_H^{(k)}$, and successfully solves the puzzle $x^{(k)}$
+% if and only if it asks a verification query $(q, y^{(k)}) := (q, y_1, \dots, y_k)$ such that $\Gamma_V^{(g)}(q, y^{(k)}) = 1$, and has not previously asked for a hint query on this $q$.
 \end{definition}
 %
 % A dynamic weakly verifiable puzzle is a special case of a $k$-wise direct product, when $k$ equals one and $g$ is the identity function.
