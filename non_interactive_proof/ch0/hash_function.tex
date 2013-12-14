@@ -58,7 +58,7 @@ we have
   \label{eq:hash_pr}
  \forall q_i,q_j \in Q : \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = k \mid hash(q_j) = l] = \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = k] = \frac{1}{2(h+v)}.
 \end{align}
-Let $P^{(g)}, C, (\pi_1, \dots, \pi_k)$ be fixed. We consider the experiment $E$ and define a binary random variable $X$ for the event that $hash(q_j) = 0$, and for
+Let $P^{(g)}, C, (\pi_1, \dots, \pi_k)$ be fixed. We consider the experiment $CanonicalSuccess$ and define a binary random variable $X$ for the event that $hash(q_j) = 0$, and for
 every query $q_i$ asked before $q_j : hash(q_i) \neq 0$.
 Conditioned on the event $hash(q_i) = 0$, we get
 \begin{align*}
@@ -76,13 +76,13 @@ Finally, we use union bound and $j \leq (h+v)$ to get
 \underset{\textit{hash} \leftarrow \cH}{\Pr}[X=1] \geq
 \frac{1}{2(h+v)} \left( 1 - \sum_{i < j} \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = 0] \right) \geq \frac{1}{4(h+v)}.
 \end{align*}
-Let $G_A$ (correspondingly $G_E$) denote the set of all $(\pi_1, \dots, \pi_k)$ for which $C$ succeeds in the random experiment $A$ ($E$).
-For fixed $(\pi_1, \dots, \pi_k)$, if $C$ succeeds canonically, then it also succeeds in the random experiment $A$.
+Let $G_A$ (correspondingly $G_E$) denote the set of all $(\pi_1, \dots, \pi_k)$ for which $C$ succeeds in the random experiment $Success$ ($CanonicalSuccess$).
+For fixed $\pi^{(k)}$, if $C$ succeeds canonically, then it also succeeds in the experiment $Success$.
 Hence, $G_E \subseteq G_A$ and we get
 \begin{align}
   \label{ineq:hash_high_prob}
-\underset{\substack{\textit{hash} \leftarrow \cH \\ (\pi_1, \dots, \pi_k)}}{\Pr}[E^{P^{(g)}, C^{(\cdot, \cdot)}, hash}(\pi_1, \dots, \pi_k) = 1] =
-\mathbb{E}_{(\pi_1, \dots, \pi_k) \in G_A}\left[\underset{\substack{\textit{hash} \leftarrow \cH}}{\Pr}[X = 1]\right]
+\underset{\substack{\textit{hash} \leftarrow \cH \\ \pi^{(k)}}}{\Pr}[CanonicalSuccess^{P^{(g)}, C^{(\cdot, \cdot)}, hash}(\pi^{(k)}) = 1] =
+\mathbb{E}_{\pi^{(k)} \in G_A}\left[\underset{\substack{\textit{hash} \leftarrow \cH}}{\Pr}[X = 1]\right]
 \geq \frac{\gamma}{4(h+v)}.
 \end{align}
 %
@@ -142,10 +142,6 @@ The probability that $hash \in \cH_{Good}$, when picked, is not returned amounts
 \end{align*}
 %
 Finally, we show that \textbf{FindHash} picks in one of its iteration $hash \in \cH_{Good}$ almost surely.
-% The random variable $X$ is binary distributed. Thus, we have
-% \begin{align*}
-%   \underset{\substack{\textit{hash} \leftarrow \cH \\ (\pi_1, \dots, \pi_k)}}{\mathbb{E}}[X] \geq \frac{\gamma}{4(h+v)}
-% \end{align*}
 Let $Y_i$ be a binary random variable such that
 \begin{align*}
   Y_i =

@@ -64,17 +64,17 @@ We fix $(\pi_1, \dots, \pi_k)$, $hash$. If $C$ succeeds canonically then
 \end{align*}
 Using this observation, we conclude that
 \begin{align*}
-  \underset{(\pi_1, \dots, \pi_k)}{\Pr}[E^{P^{(g)}, C, hash}(\pi^{(k)}) = 1] &=
-  \sum_{\pi^{(k)} \in \{0,1\}^{kl}}\underset{}{\Pr}[E^{P^{(g)}, C, hash}(\widetilde{\pi}^{(k)}) = 1 | \pi^{(k)} = \widetilde{\pi}^{(k)}] \underset{}{\Pr}[\pi^{(k)} = \widetilde{\pi}^{(k)}] \\
+  \underset{\pi^{(k)}, \rho}{\Pr}[CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho) = 1] &=
+  \sum_{\pi^{(k)} \in \{0,1\}^{kl}}\underset{}{\Pr}[CanonicalSuccess^{P^{(g)}, C, hash}(\widetilde{\pi}^{(k)}) = 1 | \pi^{(k)} = \widetilde{\pi}^{(k)}] \underset{}{\Pr}[\pi^{(k)} = \widetilde{\pi}^{(k)}] \\
   &\leq
   \sum_{\pi^{(k)} \in \{0,1\}^{kl}}\underset{}{\Pr}[\Gamma_V^{(g)} (\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, hash}(\widetilde{\pi}^{(k)})) = 1 \mid \pi^{(k)} = \widetilde{\pi}^{(k)}]
-  \underset{}{\Pr}[\pi^{(k)} = \widetilde{\pi}^{(k)}] \\
-  &= \underset{}{\Pr}[E^{P^{(g)}, \widetilde{C}, hash}(\pi^{(k)}) = 1]
+  \underset{\pi^{(k)}, \rho}{\Pr}[\pi^{(k)} = \widetilde{\pi}^{(k)}] \\
+  &= \underset{\pi^{(k)}, \rho}{\Pr}[CanonicalSuccess^{P^{(g)}, \widetilde{C}, hash}(\pi^{(k)}, \rho) = 1]
 \end{align*}
 \end{proof}
 %
 \begin{codeblock}
-  \textbf{Algorithm $Gen(\widetilde{C},g,\epsilon,\delta,n)$}
+  \textbf{Algorithm $Gen(C, g, \epsilon, \delta, n, v, h, hash)$}
   \medskip
 
   \hrule
