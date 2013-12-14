@@ -1,30 +1,7 @@
-\begin{lemma}
-  \label{lemma:sec_amp_for_p_hash}
-  \textbf{Security amplification of a dynamic weakly verifiable puzzle with respect to $P_{hash}$.} \\
-  For fixed $P^{(1)}$ there exists an algorithm $Gen(C, g, \varepsilon, \delta, n, v, h, hash)$,
-  which takes as input a solver circuit $C$, a monotone function $g$,
-  a function $hash : Q \rightarrow \{0, \dots, 2(h+v)-1\}$, parameters $\varepsilon, \delta, n$,
-  number of verification $v$, and hint $h$ queries asked by $C$, and outputs a circuit $D$
-  such that following holds: \\
-  If $C$ is such that \\
-  \begin{align*}
-    \underset{(\pi_1, \dots, \pi_k)}{\Pr}[E^{P^{(g)}, C, Hash}(\pi_1, \dots, \pi_k)=1] \geq \underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon,
-  \end{align*}
-  then $D$ satisfies almost surely
-  \begin{align*}
-    \underset{\pi}{\Pr}[\Gamma_V^{(g)}(D^{P^{(1)},\widetilde{C},hash}(\pi)) = 1] \geq (\delta + \frac{\varepsilon}{6k}).
-  \end{align*}
-  Furthermore, $Size(D) \leq Size(C)\frac{6k}{\varepsilon}$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
-\end{lemma}
 %
-% \begin{todo}
-%   \textbf{TODO:} Write sth about correspondents between $\pi \leftarrow x$
-% \end{todo}
-%
-We define a following solver circuit $\widetilde{C}$ :
+We define the following solver circuit $\widetilde{C}$ :
 \begin{codeblock}
-  \textbf{Circuit $\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, hash, C} (x_1, \dots, x_k)$} \\
-  Circuit $\widetilde{C}$ has good canonical success probability.
+  \textbf{Circuit $\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, hash, C} (x^{(k)}, \rho)$}
   \medskip
 
   \hrule
@@ -32,10 +9,10 @@ We define a following solver circuit $\widetilde{C}$ :
   \medskip
 
   \textbf{Oracle:} $\Gamma_V^{(g)}, \Gamma_H^{(k)}, hash, C$ \\
-  \textbf{Input:} k-wise direct product of puzzles $(x_1, \dots, x_k)$
-
+  \textbf{Input:} $x^{(k)}$\\
+  \textbf{Output:} A bit $b \in \{0,1\}$
   \medskip\hrule\medskip
-  Run $C^{(\cdot,\cdot)}(x_1, \dots, x_k)$ \\
+  Run $C^{(\cdot,\cdot)}(x^{(k)}, \rho)$ \\
   \IndI \If $C$ asks a hint query $q$ \then\\
   \IndII \If $q \in P_{hash}$ \then\\
   \IndIII \return $\bot$\\
@@ -50,11 +27,29 @@ We define a following solver circuit $\widetilde{C}$ :
   \return $\bot$
 \end{codeblock}
 %
+\begin{lemma}\textbf{(Security amplification of a dynamic weakly verifiable puzzle with respect to $P_{hash}$.)}
+  \label{lemma:sec_amp_for_p_hash}
+  For fixed $P^{(1)}$ there exists an algorithm $Gen(C, g, \varepsilon, \delta, n, v, h, hash)$,
+  which takes as input a solver circuit $C$ for $P^{(g)}$, a monotone function $g:\{0,1\}^{(k)} \rightarrow \{0,1\}$,
+  a function $hash : Q \rightarrow \{0, \dots, 2(h+v)-1\}$, parameters $\varepsilon, \delta, n$,
+  number of verification queries $v$, and hint queries $h$ asked by $C$, and outputs a circuit $D$
+  such that the following holds: \\
+  If $C$ is such that \\
+  \begin{align*}
+    \underset{\pi^{(k)}, \rho}{\Pr}[CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho)=1] \geq \underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon,
+  \end{align*}
+  then $D$ satisfies almost surely
+  \begin{align*}
+    \underset{\pi, \rho}{\Pr}[\Gamma_V^{(g)}(D^{P^{(1)},\widetilde{C},hash}(\pi, \rho)) = 1] \geq (\delta + \frac{\varepsilon}{6k}).
+  \end{align*}
+  Furthermore, $Size(D) \leq Size(C)\frac{6k}{\varepsilon}$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
+\end{lemma}
+%
 \begin{lemma}
   For fixed $P^{(g)}, hash$ the following statement is true
   \begin{align*}
-  \underset{(\pi_1, \dots, \pi_k)}{\Pr}[E^{P^{(g)}, C, hash}(\pi_1, \dots, \pi_k) = 1]
-  \leq \underset{(\pi_1, \dots, \pi_k)}{\Pr}[\Gamma_V^{(g)} (\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, hash}(\pi_1, \dots, \pi_k)) = 1].
+    \underset{\pi^{(k)}, \rho}{\Pr}[CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho) = 1]
+    \leq \underset{(\pi_1, \dots, \pi_k)}{\Pr}[\Gamma_V^{(g)} (\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, hash}(\pi_1, \dots, \pi_k)) = 1].
   \end{align*}
 \end{lemma}
 %
@@ -63,8 +58,7 @@ We define a following solver circuit $\widetilde{C}$ :
 % \end{todo}
 %
 \begin{proof}
-We fix the a random bitstring $(\pi_1, \dots, \pi_k)$, $hash$.
-If $C$ succeeds canonically then
+We fix $(\pi_1, \dots, \pi_k)$, $hash$. If $C$ succeeds canonically then
 \begin{align*}
 \Gamma_V^{(g)} (\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, hash}(\pi_1, \dots, \pi_k)) = 1.
 \end{align*}
