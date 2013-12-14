@@ -39,65 +39,68 @@ and a puzzle $x^{(k)} := (x_1, \dots, x_k)$, where the $i$-th instance $(x_i, \G
 %
 We consider the following random experiment in which a DWVP, defined by $P$, is solved by a random circuit $C$.
 \begin{codeblock}
-  \textbf{Experiment $Success^{P, C^{(\cdot, \cdot)}}(\pi^{(k)}, \rho)$}
+  \textbf{Experiment $Success^{P, C^{(\cdot, \cdot)}}(\pi, \rho) $}
   \medskip
   \hrule
   \medskip
-  \textbf{Oracle:} A problem poser $P^{(k)}$, a solver circuit $C^{(\cdot,\cdot)}$.\\
-  \textbf{Input:}  Bitstrings $\pi^{(k)}$, $\rho$.\\
+  \textbf{Oracle:} A problem poser $P$, a solver circuit $C^{(\cdot,\cdot)}$.\\
+  \textbf{Input:}  Bitstrings $\pi$, $\rho$.\\
   \textbf{Output:} A bit $b \in \{0,1\}$.
   \medskip\hrule\medskip
-  $(x^{(k)}, \Gamma_V^{(g)}, \Gamma_H^{(k)}) := P^{(k)}(\pi^{(k)})$ \\
-  Run $C^{\Gamma_V^{(g)},\Gamma_H^{(k)}}(x^{(k)}, \rho)$ \\
-  \IndI Let $Q_{Solved} := \{q: \text{$C^{\Gamma_V^{(g)}, \Gamma_H^{(k)}}$ asked a verification query $(q,y^{(k)})$ and $\Gamma_V^{(g)}(q, y^{(k)}) = 1$} \}$\\
-  \IndI Let $Q_{Hint} := \{q: \text{$C^{\Gamma_V^{(g)}, \Gamma_H^{(k)}}$ asked a hint query on q} \}$\\
+  $(x, \Gamma_V, \Gamma_H) := P(\pi)$ \\
+  Run $C^{\Gamma_V,\Gamma_H}(x, \rho)$ \\
+  \IndI Let $Q_{Solved} := \{q: \text{ $C^{\Gamma_V, \Gamma_H}$ asked a verification query $(q,y)$ and $\Gamma_V(q, y) = 1$} \}$\\
+  \IndI Let $Q_{Hint} := \{q: \text{$C^{\Gamma_V, \Gamma_H}$ asked a hint query on q} \}$\\
   \textbf{If} $\exists q \in Q_{solved} : q \notin Q_{Hint}$ \then \\
   \IndI \textbf{return} $1$\\
   \textbf{else} \\
   \IndI \textbf{return} $0$\\
 \end{codeblock}
 %
+The success probability of $C$ in solving DWVP posed by $P$ is
+\begin{align}
+ \underset{\pi, \rho}{\Pr}[Success^{P,C^{(\cdot, \cdot)}}(\pi, \rho) = 1].
+\end{align}
+%
 \begin{todo}
   \textbf{TODO:} Do we have to fix $P$ here?
-\end{todo}
-\begin{todo}
+  \textbf{TODO:} Do the circuit bound is well defined?
+  \textbf{TODO:} What happens when $8(h+v) \left(\underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon\right) \geq 1$ then the formula does not work
   \textbf{TODO:} Define $\mu_{\delta}^{(k)}$
 \end{todo}
 %
 \begin{theorem}{\textbf{Security amplification for a dynamic weakly verifiable puzzle.}}
 \label{th:sec_amp_for_dwvp}\\
 Let $P^{(1)}$ be a fixed problem poser as in Definition \ref{def:dwvp}. There exists a probabilistic
-algorithm $Gen(C, g, \varepsilon, \delta, n, v, h)$ which takes as input a solver circuit $C$ for a $k$-wise
+algorithm $Gen(C, g, \varepsilon, \delta, n, v, h)$ which takes as input a solver circuit $C$ for the $k$-wise
 direct product of $P^{(1)}$, a monotone function $g:\{0,1\}^k \rightarrow \{0,1\}$, parameters $\varepsilon, \delta,n$,
 the number of verification queries $v$, and hint queries $h$ asked by $C$, and outputs a circuit $D$
-such that following holds: \\
+such that the following holds: \\
 If $C$ is such that \\
   \begin{align*}
-    \underset{\pi^{(k)}, \rho}{\Pr}[A^{P^{(g)}, C}(\pi^{(k)}, \rho) = 1]
-    \geq \frac{(h+v)}{8} \left(\underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon\right)
+    \underset{\pi^{(k)}, \rho}{\Pr}[Success^{P^{(g)}, C}(\pi^{(k)}, \rho) = 1] \geq 8(h+v) \left(\underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon\right)
   \end{align*}
 then $D$ satisfies almost surely
   \begin{align*}
-    \underset{\pi, \rho}{\Pr}[A^{P^{(1)},D}(\pi, \rho) = 1] \geq (\delta + \frac{\varepsilon}{6k}).
+    \underset{\pi, \rho}{\Pr}[Success^{P^{(1)},D}(\pi, \rho) = 1] \geq (\delta + \frac{\varepsilon}{6k}).
   \end{align*}
 Additionally, $D$ and $Gen$ require only oracle access to $g$ and $C$. Furthermore, $D$ asks at most $h$ hint queries, $v$ verification queries and
 $Size(D) \leq Size(C) \cdot \Theta(\frac{6k}{\varepsilon})$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
 \end{theorem}
 %
-% \begin{todo}
-%   \textbf{TODO:} Is that entirely true? It also depends on the number of $(h+v)$ queries and its validity depends on the function, and function g(...) it may happen
-%   that g is a constant then this theorem does not mean what was written here
-% \end{todo}
-% The Theorem \ref{th:sec_amp_for_dwvp} implies that if there is no good algorithm that solves DWVP,
-% then a good algorithm for a $k$-wise direct product of DWVP does not exist.
 %
-Intuitively, the algorithm $Gen$ tries to find $k-1$ puzzles and a position for an input puzzle $x$, such that
-when $C$ runs with the $k-1$ puzzles and $x$ placed on this position, then $x$ is often solved correctly.
-To find a good position for $x$ and these $k-1$ puzzles $Gen$ needs to run $C$ several times.
-In these runs $C$ asks a hint queries.
-Let us assume that after some trials and errors $Gen$ finally finds a set of puzzles and a position for $x$ such that $x$ is often solved.
-However, it may still not constitute a valid solution, as an additional requirement is needed that this happens often for $q$
+The Theorem \ref{th:sec_amp_for_dwvp} implies that if there is no good solver for $P^{(1)}$, then a good solver for $P^{(k)}$ does not exist.
+
+The idea of the algorithm $Gen$ is to find $k-1$ puzzles and a position for an input puzzle $x$, such that
+when $C$ runs with these $k-1$ puzzles, and $x$ placed on the right position, then $x$ is often successfully solved.
+\begin{todo}
+  \textbf{TODO:} Write it more clearly
+\end{todo}
+To find such a position for $x$ and $k-1$ puzzles $Gen$ runs $C$ repeatedly on different $k-1$ tuples of puzzles.
+Even if $Gen$ finds a set of puzzles and a position for $x$, such that $x$ is often solved it may still not
+constitute a valid solution, as an additional requirement is needed that this happens often for $q$
 on which a hint query was not asked before. To satisfy this requirement we split $Q$.
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../master"
