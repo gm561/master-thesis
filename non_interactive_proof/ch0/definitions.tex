@@ -63,14 +63,14 @@ The success probability of $C$ in solving DWVP posed by $P$ is
 \end{align}
 %
 \begin{todo}
-  \textbf{TODO:} Do we have to fix $P$ here?
-  \textbf{TODO:} Do the circuit bound is well defined?
-  \textbf{TODO:} What happens when $8(h+v) \left(\underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon\right) \geq 1$ then the formula does not work
-  \textbf{TODO:} Define $\mu_{\delta}^{(k)}$
+  \textbf{TODO:} Do we have to fix $P$ here?\\
+  \textbf{TODO:} Do the circuit bound is well defined?\\
+  \textbf{TODO:} What happens when $8(h+v) \left(\underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon\right) \geq 1$ then the formula does not work\\
+  \textbf{TODO:} Define $\mu_{\delta}^{(k)}$ \\
 \end{todo}
 %
-\begin{theorem}{\textbf{Security amplification for a dynamic weakly verifiable puzzle.}}
-\label{th:sec_amp_for_dwvp}\\
+\begin{theorem}[Security amplification for a dynamic weakly verifiable puzzle.]
+\label{th:sec_amp_for_dwvp}
 Let $P^{(1)}$ be a fixed problem poser as in Definition \ref{def:dwvp}. There exists a probabilistic
 algorithm $Gen(C, g, \varepsilon, \delta, n, v, h)$ which takes as input a solver circuit $C$ for the $k$-wise
 direct product of $P^{(1)}$, a monotone function $g:\{0,1\}^k \rightarrow \{0,1\}$, parameters $\varepsilon, \delta,n$,
@@ -100,7 +100,6 @@ To find such a position for $x$ and $k-1$ puzzles $Gen$ runs $C$ repeatedly on d
 Even if $Gen$ finds a set of puzzles and a position for $x$, such that $x$ is often solved it may still not
 constitute a valid solution, as an additional requirement is needed that this happens often for $q$
 on which a hint query was not asked before. To satisfy this requirement we split $Q$.
-
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../master"
