@@ -1,5 +1,5 @@
 %
-We define the following solver circuit $\widetilde{C}$ :
+We define the following solver circuit $\widetilde{C}$ for $P^{(g)}$:
 \begin{codeblock}
   \textbf{Circuit $\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, hash, C} (x^{(k)}, \rho)$}
   \medskip
@@ -9,17 +9,17 @@ We define the following solver circuit $\widetilde{C}$ :
   \medskip
 
   \textbf{Oracle:} $\Gamma_V^{(g)}, \Gamma_H^{(k)}, hash, C$ \\
-  \textbf{Input:} $x^{(k)}$\\
+  \textbf{Input:} puzzles $x^{(k)}$, bitstring $\rho$\\
   \textbf{Output:} A bit $b \in \{0,1\}$
   \medskip\hrule\medskip
-  Run $C^{(\cdot,\cdot)}(x^{(k)}, \rho)$ \\
-  \IndI \If $C$ asks a hint query $q$ \then\\
+  Run $C^{\Gamma_V,\Gamma_H}(x^{(k)}, \rho)$ \\
+  \IndI \If $C$ asks a hint query on $q$ \then\\
   \IndII \If $q \in P_{hash}$ \then\\
   \IndIII \return $\bot$\\
   \IndII \textbf{else}\\
-  \IndIII return $\Gamma_H^{(k)}(q)$ to $C$\\
+  \IndIII answer the query using $\Gamma_H^{(k)}(q)$\\
   \\
-  \IndI \If $C$ asks a verification query on $(q, y_1, \dots, y_k)$ \then \\
+  \IndI \If $C$ asks a verification query $(q, y_1, \dots, y_k)$ \then \\
   \IndII \If $q \in P_{hash}$ \textbf{then} \\
   \IndIII \return $(q, y_1, \dots, y_k)$ \\
   \IndII \textbf{else} \\
@@ -27,122 +27,139 @@ We define the following solver circuit $\widetilde{C}$ :
   \return $\bot$
 \end{codeblock}
 %
-\begin{lemma}\textbf{(Security amplification of a dynamic weakly verifiable puzzle with respect to $P_{hash}$.)}
-  \label{lemma:sec_amp_for_p_hash}
-  For fixed $P^{(1)}$ there exists an algorithm $Gen(C, g, \varepsilon, \delta, n, v, h, hash)$,
-  which takes as input a solver circuit $C$ for $P^{(g)}$, a monotone function $g:\{0,1\}^{(k)} \rightarrow \{0,1\}$,
-  a function $hash : Q \rightarrow \{0, \dots, 2(h+v)-1\}$, parameters $\varepsilon, \delta, n$,
-  number of verification queries $v$, and hint queries $h$ asked by $C$, and outputs a circuit $D$
-  such that the following holds: \\
-  If $C$ is such that \\
-  \begin{align*}
-    \underset{\pi^{(k)}, \rho}{\Pr}[CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho)=1] \geq \underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon,
-  \end{align*}
-  then $D$ satisfies almost surely
-  \begin{align*}
-    \underset{\pi, \rho}{\Pr}[\Gamma_V^{(g)}(D^{P^{(1)},\widetilde{C},hash}(\pi, \rho)) = 1] \geq (\delta + \frac{\varepsilon}{6k}).
-  \end{align*}
-  Furthermore, $Size(D) \leq Size(C)\frac{6k}{\varepsilon}$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
-\end{lemma}
-%
 \begin{lemma}
-  For fixed $P^{(g)}, hash$ the following statement is true
+  For fixed $P^{(1)}$ and $hash$ the following statement is true
   \begin{align*}
     \underset{\pi^{(k)}, \rho}{\Pr}[CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho) = 1]
-    \leq \underset{(\pi_1, \dots, \pi_k)}{\Pr}[\Gamma_V^{(g)} (\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, hash}(\pi_1, \dots, \pi_k)) = 1].
+    \leq \underset{\substack{ \pi^{(k)}, \rho \\(x^{(k)}, \Gamma_V^{(g)}, \Gamma_H^{(k)}) := P^{(g)}(\pi^{(k)})}}{\Pr}[\Gamma_V^{(g)} (\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(k)}, hash}(x^{(k)}, \rho)) = 1].
   \end{align*}
 \end{lemma}
 %
-% \begin{todo}
-%   \textbf{TODO:} Write this using expectations to make it shorter
-% \end{todo}
-%
 \begin{proof}
-We fix $(\pi_1, \dots, \pi_k)$, $hash$. If $C$ succeeds canonically then
+We observe that for fixed $\pi^{(k)}, \rho$ if $C$ succeeds canonically, then for $(x^{(k)}, \Gamma_V^{(g)}, \Gamma_H^{(g)} := P^{(g)}(\pi^{(k)}))$ we have
 \begin{align*}
 \Gamma_V^{(g)} (\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, hash}(\pi_1, \dots, \pi_k)) = 1.
 \end{align*}
 Using this observation, we conclude that
 \begin{align*}
-  \underset{\pi^{(k)}, \rho}{\Pr}[CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho) = 1] &=
-  \sum_{\pi^{(k)} \in \{0,1\}^{kl}}\underset{}{\Pr}[CanonicalSuccess^{P^{(g)}, C, hash}(\widetilde{\pi}^{(k)}) = 1 | \pi^{(k)} = \widetilde{\pi}^{(k)}] \underset{}{\Pr}[\pi^{(k)} = \widetilde{\pi}^{(k)}] \\
-  &\leq
-  \sum_{\pi^{(k)} \in \{0,1\}^{kl}}\underset{}{\Pr}[\Gamma_V^{(g)} (\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, hash}(\widetilde{\pi}^{(k)})) = 1 \mid \pi^{(k)} = \widetilde{\pi}^{(k)}]
-  \underset{\pi^{(k)}, \rho}{\Pr}[\pi^{(k)} = \widetilde{\pi}^{(k)}] \\
-  &= \underset{\pi^{(k)}, \rho}{\Pr}[CanonicalSuccess^{P^{(g)}, \widetilde{C}, hash}(\pi^{(k)}, \rho) = 1]
+  &\underset{\pi^{(k)}, \rho}{\Pr}\left[CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho) = 1\right] \\
+  &\IndII = \underset{\pi^{(k)}, \rho}{\mathbb{E}}\left[\underset{}{\Pr}\left[CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho) = 1\right]\right] \\
+  &\IndII \leq \underset{\pi^{(k)}, \rho}{\mathbb{E}}\left[\underset{}{\Pr}\left[CanonicalSuccess^{P^{(g)}, \widetilde{C}, hash}(\pi^{(k)}, \rho) = 1\right]\right] \\
+  &\IndII = \underset{\substack{\pi^{(k)}, \rho \\ \left(x^{(k)}, \Gamma_V^{(g)}, \Gamma_H^{(k)}\right) := P^{(g)}(\pi^{(k)})}}{\Pr}[\Gamma_V^{(g)} (\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(k)}, hash}(x^{(k)}, \rho)) = 1].
 \end{align*}
+% hack to have square at the end of the proof
+\\\text{  }
 \end{proof}
+%
+Therefore, from a circuit $C$ we can build a circuit $\widetilde{C}$ that outputs $\bot$ or $(q, y_1, \dots, y_k)$ such that $q \in P_{hash}$.
+Furthermore, the circuit $\widetilde{C}$ asks no verification queries, and every hint query on $q$ is such that $q \notin P_{hash}$.
+%
+%
+\begin{lemma}\textbf{(Security amplification of a dynamic weakly verifiable puzzle with respect to $P_{hash}$.)}
+  \label{lemma:sec_amp_for_p_hash}
+  For fixed $P^{(1)}$ there exists an algorithm $Gen(C, g, \varepsilon, \delta, n, v, h, hash)$,
+  which takes as input a solver circuit $C$ for $P^{(g)}$, a monotone function $g:\{0,1\}^{(k)} \rightarrow \{0,1\}$,
+  a function $hash : Q \rightarrow \{0, \dots, 2(h+v)-1\}$, parameters $\varepsilon, \delta, n$,
+  number of verification queries $v$ and hint queries $h$ asked by $C$, and outputs a circuit $D$
+  such that the following holds: \\
+  If $C$ is such that \\
+  \begin{align*}
+    \underset{\pi^{(k)}, \rho}{\Pr}\left[CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho)=1\right] \geq \underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon,
+  \end{align*}
+  then $D$ satisfies almost surely
+  \begin{align*}
+    \underset{\substack{\pi, \sigma \\ (x,\Gamma_V,\Gamma_H) := P^{(1)}(\pi)}}{\Pr}\left[\Gamma_V(D^{P^{(1)},C,\Gamma_V, \Gamma_H, hash}(x, \sigma)) = 1\right] \geq (\delta + \frac{\varepsilon}{6k}).
+  \end{align*}
+  Additionally, $Gen$ requires only oracle access to $g$, $P^{(1)}$ and $C$.
+  Furthermore, $Size(D) \leq Size(C)\frac{6k}{\varepsilon}$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
+\end{lemma}
+%
+\begin{proof}
+First we define helper procedures \textbf{EvalutePuzzles} and \textbf{EvaluateSurplus}.
+%
+\begin{codeblock}
+  $\textbf{EvaluatePuzzles}^{P^{(1)}, C, hash}(\pi^{(k)}, k)$
+  \medskip \hrule \medskip
+  \textbf{Oracle:}  A circuit $C$, an algorithm $P^{(1)}$, a function $hash$.\\
+  \textbf{Input:} Bitstrings $\pi^{(k)}$, $\rho$, an integer $k$.\\
+  \textbf{Output}: A tuple $(c_1, \dots, c_k)$.
+  %
+  \medskip\hrule\medskip
+  $(x^{(k)}, \Gamma_V^{(g)}, \Gamma_H^{(k)}) := P^{(g)}(\pi^{(k)})$ \\
+  $(q,y^{(k)}) := \widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(k)}, hash, C}(x^{(k)}, \rho)$\\
+  %
+  \For $i:=1$ to $k$ \Do \\
+  \IndI $(x_i, \Gamma_V^{i}, \Gamma_H^{i}) := P^{(1)}(\pi_i)$\\
+  \For $i:=1$ to $k$ \Do \\
+  \IndI $c_i := \Gamma_v^{i}(q, y_i)$\\
+  \return $(c_1, \dots, c_k)$\\
+\end{codeblock}
+%
+\begin{todo}
+  \textbf{TODO:} Figure out $N_K$\\
+  \textbf{TODO:} Get a sample for $\Pr[g(b,\dots,b) = 1]$
+\end{todo}
+%
+\begin{codeblock}
+  $\textbf{EvaluateSurplus}(\pi^*, b, k)$
+  \medskip
+  \hrule
+  \medskip
+  \textbf{Oracle:} A circuits $C$, an algorithm $P^{(1)}$, a function $hash$.\\
+  \textbf{Input:} A bistring $\pi^*$, a bit $b$, an integer $k$.\\
+  \textbf{Output:} A circuit $D$.
+  \medskip\hrule\medskip
+  \textbf{For} $i:=1$ to $N_k$ \\
+  \IndI $(\pi_2, \dots, \pi_k) \xleftarrow{\$} \{0,1\}^{(k-1)l}$\\
+  \IndI $\rho \xleftarrow{\$} \{0,1\}^{*}$\\
+  \IndI $(c_1, \dots, c_k) := \textbf{EvalutePuzzles}^{P^{(1)}, C, hash}(\pi^*, \pi_2, \dots, \pi_k, k)$\\
+  \IndI $\widetilde{S}_{\pi^*,b}^i := g(b, c_2, \dots, c_k) - \underset{(u_2, \dots, u_k)}{\Pr}[g(b, u_2, \dots, u_k) = 1] $\\
+  \textbf{return} $\frac{1}{N_k} \sum_{i=1}^{N_k} \widetilde{S}_{\pi^*,b}^i$\\
+\end{codeblock}
+%
+\begin{codeblock}
+  \textbf{Circuit $D^{C, P^{(1)}}(x^*, \sigma)$}
+  \medskip \hrule \medskip
+  \textbf{Oracle:} A circuit $C$, a poser $P^{(1)}$, a function $hash$.\\
+  \textbf{Input:} A puzzle $x^*$, a bitstring $\sigma \in \{0,1\}^{*}$.\\
+  \textbf{Output}: A circuit $D$.
+  \medskip\hrule\medskip
+  Let $k$ be the number of puzzles takes as input by $C$.\\
+  \For $i:=1$ to $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$ \Do \\
+  \IndI $\pi^{(k)} \leftarrow$ read $k\cdot l$ bits from $\sigma$ \\
+  \IndI $(c_1, \dots, c_{k}) := \textbf{EvaluatePuzzles}^{P^{(1)}, C, hash}(\pi^{(k)}, k)$\\
+  \IndI \If $g(1,c_2, \dots, c_k) =1 \land g(0,c_2, \dots, c_k) = 0$ \then \\
+  \IndII \For $i:=1$ to $k$ \Do \\
+  \IndIII $(x_i, \Gamma_V^{i}, \Gamma_H^{i}) := P^{(1)}(\pi_i)$\\
+  \IndII $(q, y_1, \dots, y_{k}) := \widetilde{C}(x^*, x_2, \dots, x_{k})$\\
+  \IndII \return $(q, y_1)$\\
+  \return $\bot$ \\
+
+\end{codeblock}
+%
 %
 \begin{codeblock}
   \textbf{Algorithm $Gen(C, g, \epsilon, \delta, n, v, h, hash)$}
   \medskip
-
   \hrule
-
   \medskip
-
-  \textbf{Oracle:} $\widetilde{C}, g$ \\
-  \textbf{Input:}  $\epsilon, \delta, n$\\
+  \textbf{Oracle:} $C, g, hash$ \\
+  \textbf{Input:}  $\epsilon, \delta, n, v, h$\\
   \textbf{Output:} A circuit $D$
-
   \medskip\hrule\medskip
-  \If \text{the number of puzzles to solve equals one} \then \\
+  Let $k$ be the number of puzzles takes as input by $C$.\\
+  \If $k = 1$ \then \\
   \IndI \return $\widetilde{C}$ \\ \\
   \textbf{For} $i:=1$ to $\frac{6k}{\epsilon}\log(n)$ \\
   \IndI $\pi^* \leftarrow \{0,1\}^{l}$\\
-  \IndI $\widetilde{S}_{\pi^*,0} := EvaluateSurplus(\pi^*, 0)$\\
-  \IndI $\widetilde{S}_{\pi^*,1} := EvaluateSurplus(\pi^*, 1)$\\
+  \IndI $\widetilde{S}_{\pi^*,0} := \textbf{EvaluateSurplus}^{P^{(1)}, C, hash}(\pi^*, 0, k)$\\
+  \IndI $\widetilde{S}_{\pi^*,1} := \textbf{EvaluateSurplus}^{P^{(1)}, C, hash}(\pi^*, 1, k)$\\
   \IndI \textbf{If} $\widetilde{S}_{\pi^*,0} \geq (1 - \frac{3}{4k}) \epsilon$ or $\widetilde{S}_{\pi^*,1} \geq (1 - \frac{3}{4k}) \epsilon$ \\
-  \IndII $\widetilde{C}' := \widetilde{C}$ with the first input fixed on $\pi^*$\\
-  \IndII\textbf{return} $Gen(\widetilde{C}', g, \epsilon, \delta, n)$ \\
+  \IndII $C' := C$ with the first input fixed on $\x^*$\\
+  \IndII $g'(b_2, \dots, b_k) := g(c_1, b_2, \dots, b_k)$\\
+  \IndII\textbf{return} $Gen(\widetilde{C}', g', \epsilon, \delta, n, v, h, hash)$ \\
   // all estimates are lower than $(1-\frac{3}{4k})\varepsilon$\\
-  \return $D^{\widetilde{C}}$ \\
-  \\
-  \textbf{EvaluateSurplus}($\pi^*, b$) \\
-  \IndI \textbf{For} $i:=1$ to $N_k$ \\
-  \IndII $(\pi_2, \dots, \pi_k) \xleftarrow{\$} \{0,1\}^{(k-1)l}$\\
-  \IndII $(c_1, \dots, c_k) := EvalutePuzzles(\pi^*, \pi_2, \dots, \pi_k)$\\
-  \IndII $\widetilde{S}_{\pi^*,b}^i := g(b, c_2, \dots, c_k) - \underset{(u_2, \dots, u_k)}{\Pr}[g(b, u_2, \dots, u_k) = 1] $\\
-  \IndI \textbf{return} $\frac{1}{N_k} \sum_{i=1}^{N_k} \widetilde{S}_{\pi^*,b}^i$\\
-  \\
-  \textbf{EvalutePuzzles}($\pi^{(k)}$)\\
-  \IndI $(x^{(k)}, \Gamma_V^{(g)}, \Gamma_H^{(k)}) := P^{(g)}(\pi^{(k)})$ \\
-  \IndI \textbf{For} $i:=1$ to $k$\\
-  \IndII $(x_i, \Gamma_V^{i}, \Gamma_H^{i}) := P^{(1)}(\pi_i)$\\
-  \IndI $(q,y^{k}) := \widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(k)}}(x_1, x_2, \dots, x_k)$\\
-  \IndI \textbf{For} $i:=1$ to $k$\\
-  \IndII $c_i := \Gamma_v^{i}(q, y_i)$\\
-  \IndI \textbf{return} $(c_1, \dots, c_k)$\\
-\end{codeblock}
-%
-%
-%
-% \begin{todo}
-%   \textbf{TODO:} Circuit $\widetilde{C}$ gets as input puzzle find a nice way to genereate the puzzles as it is used in many places in the code.
-%    Also make EvalutePuzzles more general maybe it should take $\widetilde{C}$ as input?
-% \end{todo}
-\begin{codeblock}
-  \textbf{Circuit $D^{\widetilde{C}, P^{(1)}}$}
-  \medskip
-
-  \hrule
-
-  \medskip
-
-  \textbf{Oracle:} A circuit $\widetilde{C}$ with the first $n$ puzzles fixed, $P^{(1)}$\\
-  \textbf{Input:} A puzzle $x^*$, a random bitstring $r \in \{0,1\}^{*}$
-
-  \medskip\hrule\medskip
-  \textbf{For} $i:=1$ to $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$\\
-  \IndI $\pi^{(k)} \leftarrow \{0,1\}^{(k-n-1)l}$ //read bits from $r$  \\
-  \IndI $(c_1, \dots, c_{k-n-1}) := EvaluatePuzzles(\pi^{(k-n-1)})$\\
-  \IndI \textbf{If} $g(1,c_2, \dots, c_k) =1 \land g(0,c_2, \dots, c_k) = 0$\\
-  \IndII \textbf{For} $i:=1$ to $k-n-1$\\
-  \IndIII $(x_i, \Gamma_V^{i}, \Gamma_H^{i}) := P^{(1)}(\pi_i)$\\
-  \IndII $(q, y_1, \dots, y_{k-n-1}) := \widetilde{C}(x^*, x_2, \dots, x_{k-n-1})$\\
-  \IndII \textbf{return} $y_1$\\
-  \textbf{return} $\bot$ \\
-
+  \return $D^{\widetilde{C}}$
 \end{codeblock}
 %
 % The algorithm $Gen$ recursively builds the circuit that have high success probability in solving a dynamic weakly verifiable puzzle.
@@ -306,6 +323,7 @@ which yields
 {\Pr_{\mu_{\delta}^{k}}[G_{\mu}]} \geq \delta + \frac{\epsilon}{6k}
 \end{align*}
 
+\end{proof}
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../master"

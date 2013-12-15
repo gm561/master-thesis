@@ -1,27 +1,30 @@
-%FIXME is x a puzzle?
+%Define high probability
+We write $u \leftarrow \mu_{\delta}^k$ to denote a tuple $u$ of length $k$ which each element
+is independently drawn from the Bernoulli distribution with parameter $\delta$.
+%
 \begin{definition}[Dynamic weakly verifiable puzzle.]
   \label{def:dwvp}
   A dynamic weakly verifiable puzzle (DWVP) is defined by a probabilistic algorithm $P$
-  called a problem poser. We write $P(\pi)$ to denote the algorithm $P$ with the randomness $\pi$.
+  called a problem poser.
+  We write $P(\pi)$ to denote the execution of the algorithm $P$ with the randomness fixed to $\pi$.
   The algorithm $P$ outputs circuits $\Gamma_{V}$, $\Gamma_{H}$ and a puzzle $x \in \{0,1\}^{*}$.
   The circuit $\Gamma_{V}$ takes as input $q \in Q$, an answer $y \in \{0,1\}^*$,
-  and outputs $1$ if $y$ is a correct solution of $x$ for $q$ and $0$ otherwise.
+  and outputs a bit. An answer $y$ is a correct solution of $x$ for $q$ if and only if $\Gamma_V(q,y) = 1$.
   The circuit $\Gamma_H$ on input $q \in Q$ outputs a hint such that $\Gamma_V(q,\Gamma_H(q)) = 1$.
-
   A problem solver $S$ is a probabilistic algorithm that takes as input a puzzle $x$,
   and has oracle access to $\Gamma_V$ and $\Gamma_H$.
-  The randomness used by $S$ is denoted by $\rho$. The execution of $S$ with the input $x$ and the randomness $\rho$
+
+  The execution of $S$ with the input $x$ and the randomness fixed to $\rho$
   is denoted by $S(x, \rho)$. The queries of $S$ to $\Gamma_V$ are called verification queries, and to $\Gamma_H$ hint queries.
-  The solver $S$ can ask at most $h$ hint queries, $v$ verification queries, and successfully solves the puzzle if and only if
-  it makes a verification query $(q,y)$ such that $\Gamma_V(q,y) = 1$, when it has not previously asked for a hint query on $q$.
+  The solver $S$ can ask at most $h$ hint queries, $v$ verification queries, and succeeds if and only if
+  it makes a verification query $(q,y)$ such that $\Gamma_V(q,y) = 1$, and it has not previously asked for a hint query on $q$.
 \end{definition}
-%
 %
 \begin{definition}[$k$-wise direct-product of DWVPs.]
 Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function and $P^{(1)}$ a problem poser as in Definition \ref{def:dwvp}.
 The $k$-wise direct product of $P^{(1)}$ is a DWVP defined by a probabilistic algorithm $P^{(g)}$.
-Let $\pi^{(k)} := (\pi_1, \dots, \pi_k)$ be the randomness used by $P^{(g)}$, and $P^{(g)}(\pi^{(k)})$ denote the execution of $P^{(g)}$ with the randomness $\pi^{(k)}$.
-The poser $P^{(g)}$ outputs:
+We write $P^{(g)}(\pi^{(k)})$ to denote the execution of $P^{(g)}$ with the randomness fixed to $\pi^{(k)} := (\pi_1, \dots, \pi_k)$.
+The algorithm $P^{(g)}(\pi^{(k)})$ outputs:
 a verification circuit
 \begin{align*}
   \Gamma_V^{(g)} (q, y_1, \dots, y_k) := g(\Gamma_V^{1}(q, y_1), \dots, \Gamma_V^{k}(q, y_k)),
@@ -30,14 +33,14 @@ a hint circuit
 \begin{align*}
   \Gamma_H^{(k)} (q) := (\Gamma_H^{1}(q), \dots, \Gamma_H^{k}(q)),
 \end{align*}
-and a puzzle $x^{(k)} := (x_1, \dots, x_k)$, where the $i$-th instance $(x_i, \Gamma_V^{i}, \Gamma_H^{i} ) := P^{(1)}(\pi_i)$.
+and a puzzle $x^{(k)} := (x_1, \dots, x_k)$, where $(x_i, \Gamma_V^{i}, \Gamma_H^{i} ) := P^{(1)}(\pi_i)$.
 \end{definition}
 %
 % A dynamic weakly verifiable puzzle is a special case of a $k$-wise direct product, when $k$ equals one and $g$ is the identity function.
 % We consider the following random experiment in which a $k$-wise direct product of DWVP defined by $P^{(k)}$ is solved by a circuit $C$.
 % The circuit $C$, takes as input $x^{(k)}$, random bitstring $\rho$, and has oracle access to $\Gamma^{(g)}_V, \Gamma^{(k)}_H$
 %
-We consider the following random experiment in which a DWVP, defined by $P$, is solved by a random circuit $C$.
+%We consider the following random experiment in which a DWVP, defined by $P$, is solved by a random circuit $C$.
 \begin{codeblock}
   \textbf{Experiment $Success^{P, C^{(\cdot, \cdot)}}(\pi, \rho) $}
   \medskip
@@ -63,39 +66,43 @@ The success probability of $C$ in solving DWVP posed by $P$ is
 \end{align}
 %
 \begin{todo}
-  \textbf{TODO:} Do we have to fix $P$ here?\\
   \textbf{TODO:} Do the circuit bound is well defined?\\
   \textbf{TODO:} What happens when $8(h+v) \left(\underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon\right) \geq 1$ then the formula does not work\\
-  \textbf{TODO:} Define $\mu_{\delta}^{(k)}$ \\
 \end{todo}
 %
 \begin{theorem}[Security amplification for a dynamic weakly verifiable puzzle.]
 \label{th:sec_amp_for_dwvp}
 Let $P^{(1)}$ be a fixed problem poser as in Definition \ref{def:dwvp}. There exists a probabilistic
-algorithm $Gen(C, g, \varepsilon, \delta, n, v, h)$ which takes as input a solver circuit $C$ for the $k$-wise
+algorithm $Gen(C, g, \varepsilon, \delta, n, v, h)$ which takes as input: a solver circuit $C$ for the $k$-wise
 direct product of $P^{(1)}$, a monotone function $g:\{0,1\}^k \rightarrow \{0,1\}$, parameters $\varepsilon, \delta,n$,
-the number of verification queries $v$, and hint queries $h$ asked by $C$, and outputs a circuit $D$
+the number of verification queries $v$, and hint queries $h$ asked by $C$, and outputs a random circuit $D$
 such that the following holds: \\
 If $C$ is such that \\
   \begin{align*}
-    \underset{\pi^{(k)}, \rho}{\Pr}[Success^{P^{(g)}, C}(\pi^{(k)}, \rho) = 1] \geq 8(h+v) \left(\underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon\right)
+    \underset{\pi^{(k)}, \rho}{\Pr}[Success^{P^{(g)}, C}(\pi^{(k)}, \rho) = 1] \geq \underset{u \leftarrow \mu_\delta^k}{\Pr}[g(u) = 1] + \varepsilon
   \end{align*}
 then $D$ satisfies almost surely
   \begin{align*}
-    \underset{\pi, \rho}{\Pr}[Success^{P^{(1)},D}(\pi, \rho) = 1] \geq (\delta + \frac{\varepsilon}{6k}).
+    \underset{\pi, \rho}{\Pr}[Success^{P^{(1)},D}(\pi, \rho) = 1] \geq \frac{1}{8(h+v)}(\delta + \frac{\varepsilon}{6k}).
   \end{align*}
-Additionally, $D$ and $Gen$ require only oracle access to $g$ and $C$. Furthermore, $D$ asks at most $h$ hint queries, $v$ verification queries and
+Additionally, $D$ and $Gen$ require only oracle access to $g$, $P^{(1)}$ and $C$. Furthermore, $D$ asks at most $h$ hint queries, $v$ verification queries and
 $Size(D) \leq Size(C) \cdot \Theta(\frac{6k}{\varepsilon})$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
 \end{theorem}
 %
 %
 The Theorem \ref{th:sec_amp_for_dwvp} implies that if there is no good solver for $P^{(1)}$, then a good solver for $P^{(k)}$ does not exist.
 
+A verification query on $q \in Q$, for which a hint query has been asked before, can not be a successfully verification query.
+Therefore, without loss of generality we make an assumption that $C$ does not ask verification queries on $q \in Q$,
+for which a hint query has been asked before.
+
+\begin{todo}
+  \textbf{TODO:} Write it more clearly, give more intuition about the function g() and then why we can approach the problem in this way.
+\end{todo}
+%We know that the circuit $C$ performs better than an algorithm that would solve independently each of $k$ puzzles defined by $P^{(1)}$ with probability $\delta$.
+
 The idea of the algorithm $Gen$ is to find $k-1$ puzzles and a position for an input puzzle $x$, such that
 when $C$ runs with these $k-1$ puzzles, and $x$ placed on the right position, then $x$ is often successfully solved.
-\begin{todo}
-  \textbf{TODO:} Write it more clearly
-\end{todo}
 To find such a position for $x$ and $k-1$ puzzles $Gen$ runs $C$ repeatedly on different $k-1$ tuples of puzzles.
 Even if $Gen$ finds a set of puzzles and a position for $x$, such that $x$ is often solved it may still not
 constitute a valid solution, as an additional requirement is needed that this happens often for $q$
