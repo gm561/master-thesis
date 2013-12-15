@@ -155,7 +155,7 @@ First we define helper procedures \textbf{EvalutePuzzles} and \textbf{EvaluateSu
   \IndI $\widetilde{S}_{\pi^*,0} := \textbf{EvaluateSurplus}^{P^{(1)}, C, hash}(\pi^*, 0, k)$\\
   \IndI $\widetilde{S}_{\pi^*,1} := \textbf{EvaluateSurplus}^{P^{(1)}, C, hash}(\pi^*, 1, k)$\\
   \IndI \textbf{If} $\widetilde{S}_{\pi^*,0} \geq (1 - \frac{3}{4k}) \epsilon$ or $\widetilde{S}_{\pi^*,1} \geq (1 - \frac{3}{4k}) \epsilon$ \\
-  \IndII $C' := C$ with the first input fixed on $\x^*$\\
+  \IndII $C' := C$ with the first input fixed on $x^*$\\
   \IndII $g'(b_2, \dots, b_k) := g(c_1, b_2, \dots, b_k)$\\
   \IndII\textbf{return} $Gen(\widetilde{C}', g', \epsilon, \delta, n, v, h, hash)$ \\
   // all estimates are lower than $(1-\frac{3}{4k})\varepsilon$\\
@@ -166,36 +166,48 @@ First we define helper procedures \textbf{EvalutePuzzles} and \textbf{EvaluateSu
 % When algorithm recurses it fixes a puzzle on the first position on the input of circuit $\widetilde{C}$ which yields a new circuit $\widetilde{C}'$.
 % It happens only in the situation when for some fixed $\pi^*$ circuit $\widetilde{C}$ performs good on the remaining $k-1$ puzzles.
 %
-For $k=1$ the function $g: \{0,1\} \rightarrow \{0,1\}$ is either an identity or a constant function.
-If $g$ is identity then the success probability of $\widetilde{C}$ is as least $\delta + \epsilon$
-and $\widetilde{C}$ can be directly used to solve a puzzle. In case when $g$ is a constant function the statement is vacuously true.
+For $k=1$ the function $g: \{0,1\} \rightarrow \{0,1\}$ is either the identity or a constant function.
+If $g$ is the identity function then the success probability of $C$ in the random experiment $CanonicalSuccess$ is as least $\delta + \epsilon$,
+and $C$ can be directly used to solve a puzzle. In case $g$ is a constant function the statement is vacuously true.
 
-Let $(q, y_1, \dots, y_k)$ denote the output of $\widetilde{C}$ and $c_i := \Gamma_V(q, y_i)$.
-We define a surplus:
+For fixed $\pi^{(k)}, \rho$ let $(x^{(k)}, \Gamma_V^{(g)}, \Gamma_H^{(k)}) := P^{(g)}(\pi^{(k)})$.
+Additionally, for any $i$ such that $1 \leq i \leq k$ let us the denote $(x_i, \Gamma_V^{i}, \Gamma_H^{i}) := P^{(1)}(\pi_i)$.
+For $(q,y_1, \dots, y_k) := \widetilde{C}(x^{(k)}, \rho)$ we denote $c_i := \Gamma_V^i(q,y_i)$.
+We define the surplus:
 \begin{align}
   \label{eq:s_pi_b}
-S_{\pi^*, b} = \underset{\pi^{(k)}}{\Pr}[g(b, c_2, \dots, c_k) = 1] - \underset{\mu^{(k)}}{\Pr}[g(b, u_2, \dots, u_k) = 1]
+S_{\pi^*, b} = \underset{\pi^{(k)}}{\Pr}\left[g(b, c_2, \dots, c_k) = 1\right] - \underset{\mu^{(k)}}{\Pr}\left[g(b, u_2, \dots, u_k) = 1\right]
 \end{align}
-The surplus $S_{\pi^*, b}$ tells us how good $\widetilde{C}$ performs when the first puzzle is fixed, and instead $c_1$ the value $b$ is used.
-The procedure \textbf{EvaluateSurplus} returns the estimate for $\widetilde{S}_{\pi^*, b}$.
-All puzzles used during obtaining the estimate are generated internally.
-Therefore, it is possible to provide answers for all hint and verification queries.
-The returned estimate $\widetilde{S}_{\pi^*,b}$ differs from $S_{\pi^*, b}$ by at most $\frac{\epsilon}{4k}$ almost surely.
-Therefore, if $\widetilde{S}_{\pi^*,b} \geq (1-\frac{3}{4k})\epsilon$ then $S_{\pi^*,b} \geq (1-\frac{1}{k})\epsilon$ almost surely, and
-we fix the first bit of $g'(b_2, \dots, b_k) := g(b, b_2, \dots, b_k)$, and the first puzzle of $\widetilde{C}$ for the one generated from $\pi^*$ which yields a new circuit $\widetilde{C}'$.
-The circuit $\widetilde{C}'$ satisfies the conditions of Lemma \ref{lemma:sec_amp_for_p_hash}
-and we recurse using $\widetilde{C}'$ and the monotone function $g'$.
+%
+The surplus $S_{\pi^*, b}$ tells us how good $\widetilde{C}$ performs when the first puzzle is fixed,
+and the fact whether $\widetilde{C}$ succeeds in solving the puzzle posed by $P^{(1)}(\pi_1)$ is disregarded.
+Instead, the bit $b$ is used as the first input to $g$.
 
-If all estimates are less than $(1-\frac{3}{4k})\epsilon$, then intuitively $\widetilde{C}$
+The procedure \textbf{EvaluateSurplus} returns the estimate $\widetilde{S}_{\pi^*, b}$ for $S_{\pi^*, b}$.
+All puzzles used during obtaining the estimate are generated internally.
+Therefore, it is possible to answer all hint and verification queries, without calls to the verification oracles.
+%
+\begin{lemma}
+  \label{lemma:surplus_estimate}
+The estimate $\widetilde{S}_{\pi^*,b}$ returned by $EvaluteEstimate$ differs from $S_{\pi^*, b}$ by at most $\frac{\epsilon}{4k}$ almost surely.
+\end{lemma}
+\begin{todo}
+  \textbf{TODO:} Chernoff for the estimate
+\end{todo}
+%
+From Lemma \ref{lemma:surplus_estimate} we conclude that if $\widetilde{S}_{\pi^*,b} \geq (1-\frac{3}{4k})\epsilon$, then $S_{\pi^*,b} \geq (1-\frac{1}{k})\epsilon$ almost surely.
+
+Let us assume that $Gen$ manages to find an estimate that satisfies $\widetilde{S}_{\pi^*,b} \geq (1-\frac{3}{4k})\epsilon$.
+In this case we define a new monotone function $g'(b_2, \dots, b_k) := g(b, b_2, \dots, b_k)$,
+and a circuit $C'$ which is by fixing the first input of $C$ to $x^*$, where $(x^*, \Gamma_V^*, \Gamma_H^*) := P^{(1)}(\pi^*)$.
+The circuit $\widetilde{C}'$ satisfies the conditions of Lemma \ref{lemma:sec_amp_for_p_hash} and we recurse using $C'$ and $g'$.
+
+If all estimates are less than $(1-\frac{3}{4k})\epsilon$, then intuitively $C$
 does not perform much better on the remaining $k-1$ puzzles than an algorithm that solves each puzzle independent with probability $\delta$.
 However, from the assumption we know that on all $k$ puzzles $\widetilde{C}$ has higher success probability.
 Therefore, it is likely that the first puzzle is correctly solved with probability higher than $\delta$.
 %
-% \begin{todo}
-%   \textbf{TODO:} Explain the intuition why it may happen that we still can fail in the case of circuit $\widetilde{D}$.
-% \end{todo}
-%
-We now show that this intuition is indeed correct. For a fixed puzzle $x^*$ using (\ref{eq:s_pi_b}), we get
+We now show that this intuition is indeed correct. For a fixed $\pi^*$ using (\ref{eq:s_pi_b}), we get
 \begin{align}
 \label{eq:diff_s01}
   &\underset{u \leftarrow \mu_{\delta}^k}{\Pr}[g(1, u_2, \dots, u_k)=1] - \underset{u \leftarrow \mu_{\delta}^k}{\Pr}[g(0, u_2, \dots, u_k)=1] = \notag\\
@@ -205,27 +217,27 @@ We now show that this intuition is indeed correct. For a fixed puzzle $x^*$ usin
 %   \textbf{TODO:} Better explain why we can write $\Pr(g() = 1 \land g() = 0)$ as the equivalence for the difference.
 % \end{todo}
 From the monotonicity of $g$ we know that for any set of tuples $(b_1, \dots, b_k)$
-and sets $G_0 = \{ (b_1, b_2, \dots, b_k): g(0, b_2, \dots, b_k) = 1\}$, $ G_1 = \{(b_1, b_2, \dots, b_k) : g(1, b_2, \dots, b_k) = 1 \}$
+and sets $\cB_0 = \{ (b_1, b_2, \dots, b_k): g(0, b_2, \dots, b_k) = 1\}$, $ \cB_1 = \{(b_1, b_2, \dots, b_k) : g(1, b_2, \dots, b_k) = 1 \}$
 we have $G_0 \subseteq G_1$. Hence, we can write (\ref{eq:diff_s01}):
 \begin{align}
   \label{eq:diff_s01_next}
-  &\underset{\mu_{\delta}^k}{\Pr}[g(1, \mu_2, \dots, \mu_k) = 1 \land g(0, \mu_2, \dots, \mu_k) = 0] = \notag\\
+  &\underset{u \leftarrow \mu_{\delta}^k}{\Pr}[g(1, u_2, \dots, u_k) = 1 \land g(0, u_2, \dots, u_k) = 0] = \notag\\
 &\IndI  \underset{\pi^{(k)}}{\Pr}[g(1, c_2, \dots, c_k) = 1 \land g(0, c_2, \dots, c_k) = 0 \mid \pi_1 = \pi^*] - (S_{\pi^*,1} - S_{\pi^*,0}).
 \end{align}
-Let $G_{\mu^{(k)}}$ denote the event $g(1, u_2, \dots, u_k) = 1 \land g(0, u_2, \dots, u_k) = 0$, and correspondingly
-$G_{\pi^{(k)}} := g(1, c_2, \dots, c_k) = 1 \land g(0, c_2, \dots, c_k) = 0$.
-Then multiplying and dividing $\underset{}{\Pr}[\Gamma_V^{(g)}(D(x^*, \pi^{(k)})) = 1 \mid \pi_1 = \pi^*]$ by (\ref{eq:diff_s01_next}) we get
+Let $G_{u^{(k)}}$ denote the event $g(1, u_2, \dots, u_k) = 1 \land g(0, u_2, \dots, u_k) = 0$, and correspondingly
+$G_{\pi^{(k)}} := g(1, c_2, \dots, c_k) = 1) \land (g(0, c_2, \dots, c_k) = 0$.
+From (\ref{eq:diff_s01_next}) we obtain
 \begin{align}
 \label{eq:pr_d_succ_0}
-  \underset{r}{\Pr}[\Gamma_V^{(g)}(D(x^*, r)) = 1 \mid \pi_1 = \pi^*] &=
-  \frac{\underset{r}{\Pr}[\Gamma_V^{(g)}(D(x^*, r)) = 1 \mid \pi_1 = \pi^*] \underset{\pi^{(k)}}{\Pr}[G_{\pi} \mid \pi_1 = \pi^*]} {\underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[G_{\mu}]} \notag\\
-  & \IndI - \frac{\underset{r}{\Pr}[\Gamma_V^{(g)}(D(x^*, r)) = 1 \mid \pi_1 = \pi^*](S_{\pi^*,1} - S_{\pi^*,0})}{\underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[G_{\mu}]}
+  \underset{r}{\Pr}[\Gamma_V(D(x^*, r)) = 1 \mid \pi_1 = \pi^*] &=
+  \frac{\underset{r}{\Pr}[\Gamma_V(D(x^*, r)) = 1 \mid \pi_1 = \pi^*] \underset{\pi^{(k)}}{\Pr}[G_{\pi} \mid \pi_1 = \pi^*]} {\underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[G_{\mu}]} \notag\\
+  & \IndI - \frac{\underset{r}{\Pr}[\Gamma_V(D(x^*, r)) = 1 \mid \pi_1 = \pi^*](S_{\pi^*,1} - S_{\pi^*,0})}{\underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[G_{\mu}]}
 \end{align}
 %
 % \begin{todo}
 %   \textbf{TODO:} Define $c_1, \dots, c_k$ correctly from the paper it is not known whether it is in the iteration or the final one
 % \end{todo}
-If output of $D(x^*,r) \neq \bot$ then we denote $c_i := \Gamma_V^{i}(q, y_i)$.
+If $D(x^*,r) \neq \bot$ then we denote $c_i := \Gamma_V^{i}(q, y_i)$.
 We can write the first summand of (\ref{eq:pr_d_succ_0}) as
 \begin{align}
   &\underset{r}{\Pr}[\Gamma_V^{(g)}(D(x^*,r)) = 1 \mid \pi_1 = \pi^*] \underset{\pi^{(k)}}{\Pr}[G_{\pi} \mid \pi_1 = \pi^*] = \notag\\
@@ -271,7 +283,7 @@ and finally by (\ref{eq:s_pi_b})
 Inserting this result into the equation (\ref{eq:pr_d_succ_0}) yields
 \begin{align}
 \label{eq:pr_d_succ_1}
-  &\underset{r,\pi}{\Pr}[D(x,r) = 1] = \mathbb{E_{\pi}}\left[\underset{r}{\Pr}[D(x,r) = 1 \mid \pi_1 = \pi^*]\right] \notag\\
+  &\underset{r,\pi}{\Pr}[\Gamma_V(D(x,r)) = 1] = \mathbb{E_{\pi}}\left[\underset{r}{\Pr}[D(x,r) = 1 \mid \pi_1 = \pi^*]\right] \notag\\
 &\IndI = \mathbb{E}_{\pi}\left[\frac{{\Pr}_{\pi^{(k)}}[g(c) = 1 \mid \pi_1 = \pi^*] -
 {\Pr}_{\mu_{\delta}^{(k)}}[g(0, \mu_2, \dots, \mu_k) = 0 \mid \pi_1 = \pi^*] - \frac{\epsilon}{6k}} {{\Pr}_{\mu_{\delta}^{k}}[G_{\mu}]}\right] \notag\\
 &\IndII - \mathbb{E}_{\pi}\left[\frac{
@@ -314,7 +326,7 @@ which yields
  \end{align*}
  Using the assumptions of Lemma \ref{lemma:sec_amp_for_p_hash}, we get
  \begin{align*}
-   \underset{r,\pi}{\Pr}[D(x,r) = 1]
+   \underset{r,\pi}{\Pr}[\Gamma_V(D(x,r)) = 1]
  &\geq \frac{ {\Pr}_{\mu_{\delta}^{(k)}}[g(\mu) = 1] + \epsilon +
  \Pr_{\mu_{\delta}^{(k)}}[g(0, \mu_2, \dots, \mu_k) = 0] - (1 - \frac{1}{6k})\epsilon}
  {\Pr_{\mu_{\delta}^{k}}[G_{\mu}]} \notag\\
