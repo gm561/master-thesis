@@ -1,5 +1,5 @@
 %
-We define the following solver circuit $\widetilde{C}$ for $P^{(g)}$:
+We define the following solver circuit $\widetilde{C}$ for a $k$-wise direct product of $P^{(1)}$.
 \begin{codeblock}
   \textbf{Circuit $\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, hash, C} (x^{(k)}, \rho)$}
   \medskip
@@ -10,9 +10,9 @@ We define the following solver circuit $\widetilde{C}$ for $P^{(g)}$:
 
   \textbf{Oracle:} $\Gamma_V^{(g)}, \Gamma_H^{(k)}, hash, C$ \\
   \textbf{Input:} puzzles $x^{(k)}$, bitstring $\rho$\\
-  \textbf{Output:} A bit $b \in \{0,1\}$
+  \textbf{Output:} A tuple $(q, y_1, \dots, y_k)$ or $\bot$.
   \medskip\hrule\medskip
-  Run $C^{\Gamma_V,\Gamma_H}(x^{(k)}, \rho)$ \\
+  Run $C^{\Gamma_V^{(g)},\Gamma_H^{(k)}}(x^{(k)}, \rho)$ \\
   \IndI \If $C$ asks a hint query on $q$ \then\\
   \IndII \If $q \in P_{hash}$ \then\\
   \IndIII \return $\bot$\\
@@ -54,6 +54,9 @@ Using this observation, we conclude that
 Therefore, from a circuit $C$ we can build a circuit $\widetilde{C}$ that outputs $\bot$ or $(q, y_1, \dots, y_k)$ such that $q \in P_{hash}$.
 Furthermore, the circuit $\widetilde{C}$ asks no verification queries, and every hint query on $q$ is such that $q \notin P_{hash}$.
 %
+\begin{todo}
+  \textbf{TODO:} Hash function is taken from Lemma 1.5
+\end{todo}
 %
 \begin{lemma}\textbf{(Security amplification of a dynamic weakly verifiable puzzle with respect to $P_{hash}$.)}
   \label{lemma:sec_amp_for_p_hash}
@@ -92,7 +95,7 @@ First we define helper procedures \textbf{EvalutePuzzles} and \textbf{EvaluateSu
   \IndI $(x_i, \Gamma_V^{i}, \Gamma_H^{i}) := P^{(1)}(\pi_i)$\\
   \For $i:=1$ to $k$ \Do \\
   \IndI $c_i := \Gamma_v^{i}(q, y_i)$\\
-  \return $(c_1, \dots, c_k)$\\
+  \return $(c_1, \dots, c_k)$
 \end{codeblock}
 %
 \begin{todo}
@@ -101,16 +104,16 @@ First we define helper procedures \textbf{EvalutePuzzles} and \textbf{EvaluateSu
 \end{todo}
 %
 \begin{codeblock}
-  $\textbf{EvaluateSurplus}(\pi^*, b, k)$
+  $\textbf{EvaluateSurplus}^{P^((1)), C, hash}(\pi^*, b, k)$
   \medskip
   \hrule
   \medskip
-  \textbf{Oracle:} A circuits $C$, an algorithm $P^{(1)}$, a function $hash$.\\
+  \textbf{Oracle:} An algorithm $P^{(1)}$, a circuit $C$, a function $hash$.\\
   \textbf{Input:} A bistring $\pi^*$, a bit $b$, an integer $k$.\\
   \textbf{Output:} A circuit $D$.
   \medskip\hrule\medskip
   \textbf{For} $i:=1$ to $N_k$ \\
-  \IndI $(\pi_2, \dots, \pi_k) \xleftarrow{\$} \{0,1\}^{(k-1)l}$\\
+  \IndI $(\pi_2, \dots, \pi_k) \xleftarrow{\$} \{0,1\}^{(k-1)n}$\\
   \IndI $\rho \xleftarrow{\$} \{0,1\}^{*}$\\
   \IndI $(c_1, \dots, c_k) := \textbf{EvalutePuzzles}^{P^{(1)}, C, hash}(\pi^*, \pi_2, \dots, \pi_k, k)$\\
   \IndI $\widetilde{S}_{\pi^*,b}^i := g(b, c_2, \dots, c_k) - \underset{(u_2, \dots, u_k)}{\Pr}[g(b, u_2, \dots, u_k) = 1] $\\
@@ -124,9 +127,9 @@ First we define helper procedures \textbf{EvalutePuzzles} and \textbf{EvaluateSu
   \textbf{Input:} A puzzle $x^*$, a bitstring $\sigma \in \{0,1\}^{*}$.\\
   \textbf{Output}: A circuit $D$.
   \medskip\hrule\medskip
-  Let $k$ be the number of puzzles takes as input by $C$.\\
+  Let $k$ be the number of input puzzles taken by $C$.\\
   \For $i:=1$ to $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$ \Do \\
-  \IndI $\pi^{(k)} \leftarrow$ read $k\cdot l$ bits from $\sigma$ \\
+  \IndI $\pi^{(k)} \leftarrow$ read $k\cdot n$ bits from $\sigma$ \\
   \IndI $(c_1, \dots, c_{k}) := \textbf{EvaluatePuzzles}^{P^{(1)}, C, hash}(\pi^{(k)}, k)$\\
   \IndI \If $g(1,c_2, \dots, c_k) =1 \land g(0,c_2, \dots, c_k) = 0$ \then \\
   \IndII \For $i:=1$ to $k$ \Do \\
@@ -147,11 +150,11 @@ First we define helper procedures \textbf{EvalutePuzzles} and \textbf{EvaluateSu
   \textbf{Input:}  $\epsilon, \delta, n, v, h$\\
   \textbf{Output:} A circuit $D$
   \medskip\hrule\medskip
-  Let $k$ be the number of puzzles takes as input by $C$.\\
+  Let $k$ be the number of input puzzles taken by $C$.\\
   \If $k = 1$ \then \\
-  \IndI \return $\widetilde{C}$ \\ \\
+  \IndI \return $C$ \\ \\
   \textbf{For} $i:=1$ to $\frac{6k}{\epsilon}\log(n)$ \\
-  \IndI $\pi^* \leftarrow \{0,1\}^{l}$\\
+  \IndI $\pi^* \leftarrow \{0,1\}^{n}$\\
   \IndI $\widetilde{S}_{\pi^*,0} := \textbf{EvaluateSurplus}^{P^{(1)}, C, hash}(\pi^*, 0, k)$\\
   \IndI $\widetilde{S}_{\pi^*,1} := \textbf{EvaluateSurplus}^{P^{(1)}, C, hash}(\pi^*, 1, k)$\\
   \IndI \textbf{If} $\widetilde{S}_{\pi^*,0} \geq (1 - \frac{3}{4k}) \epsilon$ or $\widetilde{S}_{\pi^*,1} \geq (1 - \frac{3}{4k}) \epsilon$ \\

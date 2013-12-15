@@ -1,14 +1,18 @@
 
 Let $hash:Q\rightarrow\{0,1,\dots, 2(h+v)-1\}$, then a set $P_{hash} \subseteq Q$,
-defined with respect to $hash$, is the set of preimages of $0$ for function $hash$.
-The idea is that the set $P_{hash}$ contains $q \in Q$ on which $C$ is not allowed to ask hint queries.
+defined with respect to $hash$, is the set of preimages of $0$ for $hash$.
+The idea is that $P_{hash}$ contains $q \in Q$ on which $C$ is not allowed to ask hint queries and $q$ on which the
+first successful verification query is asked is in $P_{hash}$.
 Therefore, if $C$ makes a verification query on $q \in P_{hash}$ we know that no hint query is ever asked on this $q$.
 In the experiment $CanonicalSuccess$ a circuit $C$ succeeds if and only if it ask a verification query on $q \in P_{hash}$
 and no hint query is asked on $q \in P_{hash}$.
+Finally, Lemma \ref{lemma:hash_function_probability} states that
+it is possible to find $hash$ such that success probability of $C$ in the experiment $CanonicalSuccess$ is
+not much worser than in the experiment $Success$.
 
 % If the $i$th query of $C$ is a hint query, then we denote it by $q_i$.
 % If it is a verification query, then it is denoted by $(q_i, y_i)$
-We denote the $i$th query of $C$ as $q_i$ if it is a hint query, and as $(q_i, y_i)$ if it is a verification query.
+In the experiment $CanonicalSuccess$ we denote the $i$th query of $C$ as $q_i$ if it is a hint query, and as $(q_i, y_i)$ if it is a verification query.
 %
 \begin{codeblock}
   \textbf{Experiment $CanonicalSuccess^{P, C^{(\cdot, \cdot)}, hash}(\pi, \rho)$}
@@ -34,11 +38,18 @@ We denote the $i$th query of $C$ as $q_i$ if it is a hint query, and as $(q_i, y
   \IndI \textbf{return} 0
 \end{codeblock}
 %
+Similarly as for the experiment $Success$, we define the success probability of $C$ with respect to a function $hash$
+in the experiment $CanonicalSuccess$ in solving a puzzle defined by $P$ as
+%
+\begin{align}
+ \underset{\pi, \rho}{\Pr}[CanonicalSuccess^{P,C^{(\cdot, \cdot)},hash}(\pi, \rho) = 1].
+\end{align}
+%
 For fixed $hash$ and $P^{(1)}$ a canonical success of $C$ for $\pi^{(k )}, \rho$ is a situation when \\ $CanonicalSuccess^{P^{(g)}, C^{(\cdot, \cdot)}, hash}(\pi^{(k)}, \rho) = 1$.
 We show that if for a fixed $P^{(1)}$ a solver circuit $C$ often succeeds in the experiment $Success$ for $P^{(g)}$,
 then it also often successful in the experiment $CanonicalSuccess$ for $P^{(g)}$.
 %
-\begin{lemma}\textbf{(Success probability in solving a $k$-wise direct product of DWVP with respect to a function $hash$.)}
+\begin{lemma}\textbf{(Success probability in solving a $k$-wise direct product of $P^{(1)}$ with respect to a function $hash$.)}
 \label{lemma:hash_function_probability}
 For fixed $P^{(1)}$ let $C$ succeed in the experiment $Success$ for $P^{(g)}$ with probability $\gamma$,
 asking at most $h$ hint queries and $v$ verification queries.
@@ -48,7 +59,7 @@ such that success probability of $C$ with respect to $P_{hash}$ in the experimen
 \end{lemma}
 %
 \begin{proof}
-We fix $P^{(1)}, C$ for the whole proof.
+We fix $P^{(1)}$ and $C$ in the whole proof.
 Let $\cH$ be a family of pairwise independent hash functions $Q \rightarrow \{0,1, \dots,2(h+v)-1\}$.
 For all $i \neq j \in \{1, \dots, (h+v)\}$ and $k,l \in \{0,1,\dots,2(h+v)-1\}$ by pairwise independence property of $\cH$,
 we have
@@ -74,16 +85,15 @@ Finally, we use union bound and the fact that $j \leq (h+v)$ to get
 \underset{\textit{hash} \leftarrow \cH}{\Pr}[X=1] \geq
 \frac{1}{2(h+v)} \left( 1 - \sum_{i < j} \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = 0] \right) \geq \frac{1}{4(h+v)}.
 \end{align*}
-Let $\cG_{Success}$ be the set of all $(\pi^{(k)},\rho)$ for which $C$ succeeds in the random experiment $Success$ for $P^{(g)}$. Furthermore,
-we denote the set of those $(\pi^{(k)},\rho)$ for which $CanonicalSuccess^{P^{(g)}, C(\dot, \dot), hash}(\pi^{(k)}) = 1$ by $\cG_{Canonical}$.
-
+Let $\cP_{Success}$ be the set of all $(\pi^{(k)},\rho)$ for which $C$ succeeds in the random experiment $Success$ for $P^{(g)}$. Furthermore,
+we denote the set of those $(\pi^{(k)},\rho)$ for which $CanonicalSuccess^{P^{(g)}, C(\dot, \dot), hash}(\pi^{(k)}) = 1$ by $\cP_{Canonical}$.
 For fixed $\pi^{(k)}, \rho$, if $C$ succeeds canonically, then it also succeeds in the experiment $Success$ for $P^{(g)}$.
-Hence, $G_{Canonical} \subseteq G_{Success}$ and we have
+Hence, $\cP_{Canonical} \subseteq \cP_{Success}$, and we have
 \begin{align}
   \label{ineq:hash_high_prob}
-\underset{\substack{\textit{hash} \leftarrow \cH \\ \pi^{(k)}, \rho}}{\Pr}\left[CanonicalSuccess^{P^{(g)}, C^{(\cdot, \cdot)}, hash}(\pi^{(k)}, \rho1) = 1\right] =
-\underset{{(\pi^{(k)},\rho) \in G_{Success}}}{\mathbb{E}}\left[\underset{\substack{\textit{hash} \leftarrow \cH}}{\Pr}[X = 1]\right]
-\geq \frac{\gamma}{4(h+v)}.
+\underset{\substack{\textit{hash} \leftarrow \cH \\ \pi^{(k)}, \rho}}{\Pr}\left[CanonicalSuccess^{P^{(g)}, C^{(\cdot, \cdot)}, hash}(\pi^{(k)}, \rho) = 1\right] &=
+\underset{{(\pi^{(k)},\rho) \in \cP_{Success}}}{\mathbb{E}}\left[\underset{\substack{\textit{hash} \leftarrow \cH}}{\Pr}[X = 1]\right] \notag\\
+&\geq \frac{\gamma}{4(h+v)}.
 \end{align}
 %
 \begin{codeblock}
