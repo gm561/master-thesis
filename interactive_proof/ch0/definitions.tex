@@ -4,7 +4,6 @@
 \noindent
 We write $u \leftarrow \mu_{\delta}^k$ to denote a tuple $u$ of length $k$ which each element
 is independently drawn from the Bernoulli distribution with parameter $\delta$.
-
 We denote the protocol execution between probabilistic algorithms $A$ and $B$ by $\langle A, B \rangle$.
 Additionally, the output of $A$ in such a protocol execution is denoted by $\langle A, B \rangle_A$.
 %
@@ -14,17 +13,17 @@ Additionally, the output of $A$ in such a protocol execution is denoted by $\lan
   A dynamic weakly verifiable puzzle (DWVP) is defined by a probabilistic algorithm $P$
   called a problem poser.
   A problem solver $S = (S_1, S_2)$ for $P$ is a probabilistic two phase algorithm.
-  We write $P(\pi)$ to denote the execution of $P$ with the randomness fixed to $\pi$, and $S_1(\rho)$
-  to denote that in the execution of the first phase the randomness of $S$ is fixed to $\rho$.
-  The poser $P(\pi)$ and the solver $S_1(\rho)$ interacts.
-  As the result of the interaction $P(\pi)$ outputs circuits $\Gamma_{V}$, $\Gamma_{H}$, and $x \in \{0,1\}^{*}$.
+  We write $P(\pi)$ to denote the execution of $P$ with the randomness fixed to $\pi \in \{0,1\}^n$, and $S_1(\rho)$
+  to denote that the execution of the first phase of $S$ with the randomness fixed to $\rho \in \{0,1\}^{*}$.
+  The poser $P(\pi)$ and the solver $S_1(\rho)$ interact.
+  As the result of the interaction $P(\pi)$ outputs circuits $\Gamma_{V}$, $\Gamma_{H}$, and a bitstring $x \in \{0,1\}^{*}$.
   The algorithm $S_1(\rho)$ produces no output.
   The circuit $\Gamma_{V}$ takes as input $q \in Q$, an answer $y \in \{0,1\}^*$,
   and outputs a bit. An answer $(q,y)$ is a correct solution if and only if $\Gamma_V(q,y) = 1$.
   The circuit $\Gamma_H$ on input $q \in Q$ outputs a hint such that $\Gamma_V(q,\Gamma_H(q)) = 1$.
 
   In the second phase $S_2$ takes as input $x$, and has oracle access to $\Gamma_V$ and $\Gamma_H$.
-  The execution of $S_2$ with the input $x$ and the randomness fixed to $\rho$
+  The execution of $S_2$ with $x$ and the randomness fixed to $\rho$
   is denoted by $S_2(x, \rho)$. The queries of $S_2$ to $\Gamma_V$ are called verification queries, and to $\Gamma_H$ hint queries.
   The algorithm $S_2$ can ask at most $h$ hint queries, $v$ verification queries, and succeeds if and only if
   it makes a verification query $(q,y)$ such that $\Gamma_V(q,y) = 1$, and it has not previously asked for a hint query on $q$.
@@ -54,9 +53,8 @@ Let $C$ be a random circuit that corresponds to a solver $S$ in Definition \ref{
 Similarly as for two phase algorithm, we write $C := (C_1, C_2)$ to denote that $C$ in the first phase uses $C_1$,
 and in the second phase $C_2$.
 %
-Let $C$ be any solver for $P^{(1)}$ defined as in Definition \ref{def:dwvp}.
 A verification query $(q,y)$ of $C$ for which a hint query on this $q$ has been asked before can not be a successfully verification query.
-Therefore, without loss of generality we make an assumption that $C$ does not ask verification queries on $q \in Q$,
+Therefore, without loss of generality, we make an assumption that $C$ does not ask verification queries on $q \in Q$,
 for which a hint query has been asked before.
 
 %
@@ -106,11 +104,11 @@ then $D$ satisfies almost surely
   \begin{align*}
     \underset{\pi, \rho}{\Pr}[Success^{P^{(1)},D}(\pi, \rho) = 1] \geq (\delta + \frac{\varepsilon}{6k}).
   \end{align*}
-Additionally, $D$ and $Gen$ require only oracle access to $g$, $P^{(1)}$,$C$, verification and hint oracle.
-Furthermore, $D$ asks at most $h$ hint queries and $v$ verification queries.
+Additionally, $Gen$ and $D$ require oracle access to $g$, $P^{(1)}$,$C$.
+Furthermore, $D$ require also oracle access to hint and verification circuits of $P^{(g)}$,
+and asks at most $h$ hint queries and $v$ verification queries.
 Finally, $Size(D) \leq Size(C) \cdot \Theta(\frac{6k}{\varepsilon})$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
 \end{theorem}
-%
 %
 The Theorem \ref{th:sec_amp_for_dwvp} implies that if there is no good solver for a puzzle defined by $P^{(1)}$, then a good solver for
 a $k$-wise direct product of $P^{(1)}$ does not exist.
