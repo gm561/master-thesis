@@ -1,15 +1,15 @@
 
 Let $hash:Q\rightarrow\{0,1,\dots, 2(h+v)-1\}$, then a set $P_{hash} \subseteq Q$,
 defined with respect to $hash$, is the set of preimages of $0$ for $hash$.
-The idea is that $P_{hash}$ contains $q \in Q$ on which $C$ is not allowed to ask hint queries.
-Additionally, the first successful verification query $(q,y)$ of $C$ is such that $q \in P_{hash}$.
-Therefore, if $C$ makes a verification query on $q \in P_{hash}$ we know that no hint query is ever asked on this $q$.
-In the experiment $CanonicalSuccess$ a circuit $C$ succeeds if and only if it ask a successful verification query $(q,y)$ such that $q \in P_{hash}$
+The idea is that $P_{hash}$ contains $q \in Q$ on which $C$ is not allowed to ask hint queries,
+and the first successful verification query $(q,y)$ of $C$ is such that $q \in P_{hash}$.
+Therefore, if $C$ makes a verification query $(q,y)$ such that $q \in P_{hash}$, then we know that no hint query is ever asked on this $q$.
+In the experiment $CanonicalSuccess$ a circuit $C$ succeeds if and only if it asks a successful verification query $(q,y)$ such that $q \in P_{hash}$,
 and no hint query is asked on $q \in P_{hash}$.
-Finally, Lemma \ref{lemma:hash_function_probability} states that it is possible to find $hash$ such that success probability of $C$ in the experiment $CanonicalSuccess$ is
-not much worser than in the experiment $Success$.
+% Finally, Lemma \ref{lemma:hash_function_probability} states that it is possible to find $hash$ such that success probability of $C$ in the experiment $CanonicalSuccess$ is
+% not much worser than in the experiment $Success$.
 
-In the experiment $CanonicalSuccess$ we denote the $i$th query of $C$ by $q_i$ if it is a hint query, and by $(q_i, y_i)$
+In the following experiment $CanonicalSuccess$ we denote the $i$-th query of $C$ by $q_i$ if it is a hint query, and by $(q_i, y_i)$
 if it is a verification query.
 %
 \begin{codeblock}
@@ -19,18 +19,18 @@ if it is a verification query.
   \hrule
 
   \medskip
-  \textbf{Oracle:} A problem poser $P$. A solver circuit $C^{(\cdot, \cdot)}$.\\
-  \IndII A function $hash: Q \leftarrow \{0, \dots, 2(h+v) - 1\}$.\\
+  \textbf{Oracle:} A problem poser $P$, a solver circuit $C^{(\cdot, \cdot)}$ for $P$.\\
+  \IndII A function $hash: Q \rightarrow \{0, \dots, 2(h+v) - 1\}$.\\
   \textbf{Input:}  Bitstrings: $\pi$, $\rho$. \\
   \textbf{Output:} A bit $b \in \{0,1\}$.
 
   \medskip\hrule\medskip
   Run $\langle P(\pi), C_1(\rho) \rangle$ \\
   \IndI Let $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$. \\
-  \IndI Let $x$ be the transcript of $\langle P(\pi), C_1(\rho) \rangle$. \\ \\
+  \IndI Let $x := \langle P(\pi), C_1(\rho) \rangle_{\text{trans}}$. \\ \\
   Run $C^{\Gamma_V, \Gamma_H} (x, \rho)$ \\
-  \IndI Let $(q_j,y_j)$ be the first verification query such that $C^{\Gamma_V, \Gamma_H}(q_j, y_j) = 1$, or an arbitrary\\ \IndI
-  verification query if $C$ does not succeed.\\
+  \IndI Let $(q_j,y_j)$ be the first verification query such that $C_2^{\Gamma_V, \Gamma_H}(q_j, y_j) = 1$, or an arbitrary\\
+  \IndI verification query if $C_2$ does not succeed.\\
   \\
   \textbf{If} $(\forall i < j :  q_i \notin P_{hash} )$ \And $q_j \in P_{hash}$ \And $\Gamma_V(q_j, y_j) = 1$ \then \\
   \IndI \textbf{return} 1\\
@@ -59,7 +59,7 @@ such that success probability of $C$ with respect to $P_{hash}$ in the experimen
 \end{lemma}
 %
 \begin{proof}
-We fix $P^{(1)}$ and $C$ in the whole proof.
+We fix $P^{(1)}$ and $C$ in the whole proof of Lemma \ref{lemma:hash_function_probability}.
 Let $\cH$ be a family of pairwise independent hash functions $Q \rightarrow \{0,1, \dots,2(h+v)-1\}$.
 For all $i \neq j \in \{1, \dots, (h+v)\}$ and $k,l \in \{0,1,\dots,2(h+v)-1\}$ by pairwise independence property of $\cH$,
 we have
@@ -67,7 +67,7 @@ we have
   \label{eq:hash_pr}
  \forall q_i,q_j \in Q : \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = k \mid hash(q_j) = l] = \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = k] = \frac{1}{2(h+v)}.
 \end{align}
-Let $\pi^{(k)}, \rho$ be fixed. We consider the experiment $CanonicalSuccess$ for $P^{(g)}$.
+Let $\pi^{(k)}, \rho$ be fixed. We consider the experiment $CanonicalSuccess$ for $P^{(g)}$
 in which we define a binary random variable $X$ for the event that $hash(q_j) = 0$, and for every query $q_i$ asked before $q_j$ we have $hash(q_i) \neq 0$.
 Conditioned on the event $hash(q_i) = 0$, we get
 \begin{align*}
@@ -87,7 +87,7 @@ Finally, we use union bound and the fact that $j \leq (h+v)$ to get
 \end{align*}
 Let $\cP_{Success}$ be the set of all $(\pi^{(k)},\rho)$ for which $C$ succeeds in the random experiment $Success$ for $P^{(g)}$. Furthermore,
 we denote the set of those $(\pi^{(k)},\rho)$ for which $CanonicalSuccess^{P^{(g)}, C(\cdot, \cdot), hash}(\pi^{(k)}) = 1$ by $\cP_{Canonical}$.
-For fixed $\pi^{(k)}, \rho$, if $C$ succeeds canonically, then it also succeeds in the experiment $Success$ for $P^{(g)}$.
+For fixed $\pi^{(k)}$ and $\rho$ if $C$ succeeds canonically, then it also succeeds in the experiment $Success$ for $P^{(g)}$.
 Hence, $\cP_{Canonical} \subseteq \cP_{Success}$, and we have
 \begin{align}
   \label{ineq:hash_high_prob}
@@ -105,7 +105,7 @@ Hence, $\cP_{Canonical} \subseteq \cP_{Success}$, and we have
   \textbf{Input:} A set $\cH$.\\
   \textbf{Output:} A function $hash \in \cH$.
   \medskip\hrule\medskip
-  For $i = 1$ to $32(h+v)^2/\gamma^2$ \\
+  \For $i = 1$ \To $32(h+v)^2/\gamma^2$ \\
   \IndI $hash \xleftarrow{\$} \cH$ \\
   \IndI $count := 0$ \\
   \IndI \For $j := 1$ to $32(h+v)^2/\gamma^2$ \\

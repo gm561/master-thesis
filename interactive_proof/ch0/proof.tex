@@ -4,7 +4,7 @@ We define the following solver circuit $\widetilde{C}$.
   \textbf{Circuit $\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, C, hash} (x, \rho)$}
   \medskip \hrule \medskip
   \textbf{Oracle:} $\Gamma_V^{(g)}, \Gamma_H^{(k)}, hash, C$ \\
-  \textbf{Input:} A protocol execution transcript $x$, a bitstring $\rho$. \\
+  \textbf{Input:} A transcript $x$, a bitstring $\rho$. \\
   \textbf{Output:} A tuple $(q, y_1, \dots, y_k)$ or $\bot$.
   \medskip\hrule\medskip
   Run $C_2^{\Gamma_V^{(g)},\Gamma_H^{(k)}}(x, \rho)$ \\
@@ -23,7 +23,8 @@ We define the following solver circuit $\widetilde{C}$.
 \end{codeblock}
 %
 \begin{lemma}
-  For fixed $P^{(1)}$ and $hash$ the following statement is true
+  \label{lemma:ctilda_c}
+  For fixed $P^{(g)}, C$ and $hash$ the following statement is true
   \begin{align*}
     &\underset{\pi^{(k)}, \rho}{\Pr}[CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho) = 1] \\
     &\IndII \leq \underset{\substack{ \pi^{(k)}, \rho \\
@@ -34,18 +35,18 @@ We define the following solver circuit $\widetilde{C}$.
 \end{lemma}
 %
 \begin{proof}
-We observe that for fixed $\pi^{(k)}, \rho$ if $C$ succeeds canonically, then for $(\Gamma_V^{(g)}, \Gamma_H^{(g)}) := \langle P^{(g)}(\pi^{(k)}), S_1(\rho) \rangle_{P^{(g)}}$, and
-$x := \langle P^{(g)}(\pi^{(k)}), S_1(\rho) \rangle_{\text{trans}}$ we have
+We fix $\pi^{(k)}, \rho$. Then for $(\Gamma_V^{(g)}, \Gamma_H^{(g)}) := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}}$ and
+$x := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{\text{trans}}$, $C(\rho)$ succeeds canonically, if and only if
 \begin{align*}
-\Gamma_V^{(g)} (\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, hash}(x, \rho)) = 1.
+\Gamma_V^{(g)} (\widetilde{C_2}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, hash}(x, \rho)) = 1.
 \end{align*}
 Using this observation, we conclude that
 \begin{align*}
   &\underset{\pi^{(k)}, \rho}{\Pr}\left[CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho) = 1\right] \\
   &\IndII = \underset{\pi^{(k)}, \rho}{\mathbb{E}}\left[\underset{}{\Pr}\left[CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho) = 1\right]\right] \\
-  &\IndII \leq \underset{\substack{\pi^{(k)}, \rho \\
-      \left(\Gamma_V^{(g)}, \Gamma_H^{(k)}\right) := \langle P^{(g)}(\pi^{(k)}), S(\rho) \rangle_{P^{(g)}} \\
-      x := \langle P^{(g)}(\pi^{(k)}), S(\rho) \rangle_{\text{trans}}}}
+  &\IndII = \underset{\substack{\pi^{(k)}, \rho \\
+      \left(\Gamma_V^{(g)}, \Gamma_H^{(k)}\right) := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}} \\
+      x := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{\text{trans}}}}
   {\Pr}[\Gamma_V^{(g)} (\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(k)}, hash}(x, \rho)) = 1].
 \end{align*}
 % hack to have square at the end of the proof
@@ -73,12 +74,42 @@ Furthermore, the circuit $\widetilde{C}$ asks no verification queries, and every
   \end{align*}
   Additionally, $Gen$ and $D$ requires oracle access to $g$, $P^{(1)}$ and $C$.
   Furthermore, $D$ requires also oracle access to $\Gamma_V$ and $\Gamma_H$,
-  and ask at most $h$ hint queries and $v$ verification queries.
+  and ask at most $h$ hint queries and no verification queries.
   Finally, $Size(D) \leq Size(C)\frac{6k}{\varepsilon}$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
 \end{lemma}
 %
 \begin{proof}
-First we define helper procedures \textbf{EvalutePuzzles} and \textbf{EvaluateSurplus}.
+%
+  The following procedure estimates the function $g$ with the first bit set to $b \in \{0,1\}$.
+%
+\begin{codeblock}
+  $\textbf{EvaluateFunctionProbability}^{g}(b, \epsilon, \delta)$
+  \medskip
+  \hrule
+  \medskip
+  \textbf{Oracle:} A function $g$.\\
+  \textbf{Input:} A bit $b \in \{0,1\}$, an integer $k$, $\epsilon$ \\
+  \textbf{Output:} A number $\widetilde{g} \in \left[0,1\right]$.
+  \medskip\hrule\medskip
+  \textbf{For} $i:=1$ to $N_k$ \Do \\
+  \IndI $(b_2, \dots, b_k) \xleftarrow{\$} \{0,1\}^{k}$ //BUG different probability distribution \\
+  \IndI $\widetilde{g}_i := g(b,b_2, \dots, b_k)$ \then \\
+  \textbf{return} $\frac{1}{N_k} \sum_{i=1}^{N_k} g_i$
+\end{codeblock}
+%
+\begin{lemma}[Estimate of function $g$.]
+  The procedure \textbf{EvaluteFunctionProbability} outputs an estimate $\widetilde{g}$ for the function $g: \{0,1\}^{n} \rightarrow \{0,1\}$ with the first bit fixed to $b \in \{0,1\}$
+  such that $\left| \widetilde{g} - \underset{(u_2,\dots,u_k) \leftarrow \mu_{\delta}^{k}}{\Pr}\left[g(b,u_2, \dots, u_k) = 1\right] \right| \leq \frac{\epsilon}{4k}$.
+\end{lemma}
+%
+\begin{proof}
+By Chernoff bound we have ...
+\begin{align*}
+  \underset{}{\Pr}\left[\left|\frac{1}{N} \sum_{i=1}^{N} X_i - \mathbb{E}[X]\right| \geq \epsilon \mathbb{E}[X] \right]
+\end{align*}
+\end{proof}
+%
+We define helper procedures \textbf{EvalutePuzzles} and \textbf{EvaluateSurplus}.
 %
 \begin{codeblock}
   $\textbf{EvaluatePuzzles}^{P^{(1)}, C, hash}(\pi^{(k)}, \rho)$
@@ -104,7 +135,6 @@ First we define helper procedures \textbf{EvalutePuzzles} and \textbf{EvaluateSu
 %
 \begin{todo}
   \textbf{TODO:} Figure out $N_K$\\
-  \textbf{TODO:} Get a sample for $\Pr[g(b,\dots,b) = 1]$
 \end{todo}
 %
 \begin{codeblock}
@@ -116,11 +146,12 @@ First we define helper procedures \textbf{EvalutePuzzles} and \textbf{EvaluateSu
   \textbf{Input:} A bistring $\pi^*$, a bit $b$, an integer $k$.\\
   \textbf{Output:} A circuit $D$.
   \medskip\hrule\medskip
+  $\widetilde{g}_b := \textbf{EvaluteFunctionProbability}^{g}(b, \epsilon, \delta)$ \\
   \textbf{For} $i:=1$ to $N_k$ \Do \\
   \IndI $(\pi_{m+1}, \dots, \pi_k) \xleftarrow{\$} \{0,1\}^{(k-m-1)n}$\\
   \IndI $\rho \xleftarrow{\$} \{0,1\}^{*}$\\
   \IndI $(c_1, \dots, c_k) := \textbf{EvalutePuzzles}^{P^{(1)}, C, hash}(\pi_1, \dots, \pi_{m}, \pi^*, \dots, \pi_k, \rho)$\\
-  \IndI $\widetilde{S}_{\pi^*,b}^i := g(b, c_2, \dots, c_k) - \underset{(u_2, \dots, u_k)}{\Pr}[g(b, u_2, \dots, u_k) = 1] $\\
+  \IndI $\widetilde{S}_{\pi^*,b}^i := g(b, c_2, \dots, c_k) - \widetilde{g}_b $\\
   \textbf{return} $\frac{1}{N_k} \sum_{i=1}^{N_k} \widetilde{S}_{\pi^*,b}^i$\\
 \end{codeblock}
 %
@@ -355,7 +386,8 @@ which yields
 {\Pr}_{\mu_{\delta}^{(k)}}[g(0, \mu_2, \dots, \mu_k) = 0] - (1 - \frac{1}{6k})\epsilon} {{\Pr}_{\mu_{\delta}^{k}}[G_{\mu}]}\right] \notag
  \end{align*}
  Using the assumptions of Lemma \ref{lemma:sec_amp_for_p_hash}, we get
- \begin{align*}
+ \begin{align}
+   \label{eq:proof_final}
    \underset{r,\pi}{\Pr}[\Gamma_V(D(x,r)) = 1]
  &\geq \frac{ {\Pr}_{\mu_{\delta}^{(k)}}[g(\mu) = 1] + \epsilon +
  \Pr_{\mu_{\delta}^{(k)}}[g(0, \mu_2, \dots, \mu_k) = 0] - (1 - \frac{1}{6k})\epsilon}
@@ -363,9 +395,57 @@ which yields
  &\geq \frac{\epsilon +
 \delta\Pr_{\mu_{\delta}^{(k)}}[G_{\mu}] - (1 - \frac{1}{6k})\epsilon}
 {\Pr_{\mu_{\delta}^{k}}[G_{\mu}]} \geq \delta + \frac{\epsilon}{6k}
-\end{align*}
-
+\end{align}
+% Finally, by Lemma \ref{lemma:ctilda_c} and (\ref{eq:proof_final}) we get,
+% \begin{align*}
+%    \underset{\rho,\pi}{\Pr}[\Gamma_V(D(x,r)) = 1] \leq  \delta + \frac{\epsilon}{6k}
+% \end{align*}
 \end{proof}
+Now, we can show that the Theorem \ref{def:dwvp} follows by Lemma \ref{lemma:hash_function_probability} and Lemma \ref{lemma:sec_amp_for_p_hash}.
+First we define the following circuit:
+\begin{codeblock}
+  \textbf{E}
+  \medskip
+  \hrule
+  \medskip
+  \textbf{Oracle:} Circuit $D$ from Lemma \ref{lemma:sec_amp_for_p_hash}  \\
+  \textbf{Input:} A bitstring $\rho \in \{0,1\}^{*}$
+  \medskip\hrule\medskip
+  Run circuit $(q,y) = D(\rho)$ \\
+  \If $(q,y) \neq \bot$ \then \\
+  \IndI make a verification query $(q,y)$
+\end{codeblock}
+%
+The circuit $E$ is output by the following algorithm $Gen$.
+\begin{codeblock}
+  \textbf{Gen}
+  \medskip
+  \hrule
+  \medskip
+  \textbf{Oracle:}  $C, P^{(1)}, g$\\
+  \textbf{Input:} $\epsilon, \delta, n, h, v$
+  \medskip\hrule\medskip
+  Let $\cH$ be a set of pairwise independent hash functions $Q \rightarrow \{0, 1, \dots, 2(h+v)-1\}$ \\
+  $hash := \textbf{FindHash}(\cH,h+v)$ \\
+  $D := Gen(C, g, \epsilon, \delta, n, h, v, hash)$ \\
+  \return $D^{P^{1}, C, hash}(\rho)$
+\end{codeblock}
+From the assumptions of Theorem \ref{th:sec_amp_for_dwvp} we know that success probability of $C$ is at least
+\begin{align*}
+8(h+v)\left(\underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon\right),
+\end{align*}
+then by Lemma \ref{lemma:hash_function_probability}, the canonical success
+probability of $\widetilde{C}$ with respect to function $hash$ is at least
+\begin{align*}
+\left(\underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon\right).
+\end{align*}
+Then we apply Lemma \ref{lemma:sec_amp_for_p_hash} with respect to $\widetilde{C}$ and $hash$ which yields a circuit $D$ that
+outputs $(q, y)$ such that
+\begin{align*}
+    \underset{\substack{\pi, \sigma \\ (\Gamma_V,\Gamma_H) := \langle P^{(1)}(\pi), D(\rho) \rangle_{P^{(1)}} \\ x := \langle P^{(1)}(\pi), D(\rho) \rangle_{\text{trans}}}}
+    {\Pr}\left[\Gamma_V(D^{P^{(1)},C,\Gamma_V, \Gamma_H, hash}(x, \sigma)) = 1\right] \geq (\delta + \frac{\varepsilon}{6k}).
+\end{align*}
+Hence, the probability that the verification query made by $E$ is successful is at least $(\delta + \frac{\varepsilon}{6k})$.
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../master"

@@ -1,6 +1,6 @@
 %
 % Define high probability
-% Two phase algorithm
+% Define a two phase algorithm
 %
 \noindent
 We write $u \leftarrow \mu_{\delta}^k$ to denote a tuple $u$ of length $k$ which each element
@@ -18,14 +18,15 @@ of the communication by $\langle A, B \rangle_{\text{trans}}$.
   We write $P(\pi)$ to denote the execution of $P$ with the randomness fixed to $\pi \in \{0,1\}^n$, and $(S_1,S_2)(\rho)$
   to denote the execution of $S$ with the randomness fixed to $\rho \in \{0,1\}^{*}$.
   The poser $P(\pi)$ and the solver $S_1(\rho)$ interact.
-  As the result of the interaction $P(\pi)$ outputs circuits $\Gamma_{V}$, $\Gamma_{H}$.
-  We denote by $x$ the transcript of the interaction. The algorithm $S_1(\rho)$ produces no output.
+  We denote by $x$ the transcript of the interaction.
+  As the result of the interaction $P(\pi)$ outputs a verification circuit $\Gamma_{V}$ and a hint circuit $\Gamma_{H}$.
+  The algorithm $S_1(\rho)$ produces no output.
   The circuit $\Gamma_{V}$ takes as input $q \in Q$, an answer $y \in \{0,1\}^*$,
   and outputs a bit. An answer $(q,y)$ is a correct solution if and only if $\Gamma_V(q,y) = 1$.
   The circuit $\Gamma_H$ on input $q \in Q$ outputs a hint such that $\Gamma_V(q,\Gamma_H(q)) = 1$.
 
   In the second phase $S_2$ takes as input $x$, and has oracle access to $\Gamma_V$ and $\Gamma_H$.
-  The execution of $S_2$ with $x$ and the randomness fixed to $\rho$
+  The execution of $S_2$ with the input $x$ and the randomness fixed to $\rho$
   is denoted by $S_2(x, \rho)$. The queries of $S_2$ to $\Gamma_V$ are called verification queries, and to $\Gamma_H$ hint queries.
   The algorithm $S_2$ can ask at most $h$ hint queries, $v$ verification queries, and succeeds if and only if
   it makes a verification query $(q,y)$ such that $\Gamma_V(q,y) = 1$, and it has not previously asked for a hint query on $q$.
@@ -35,9 +36,9 @@ of the communication by $\langle A, B \rangle_{\text{trans}}$.
 Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function and $P^{(1)}$ a problem poser as in Definition \ref{def:dwvp}.
 The $k$-wise direct product of $P^{(1)}$ is a DWVP defined by a probabilistic algorithm $P^{(g)}$.
 We write $P^{(g)}(\pi^{(k)})$ to denote the execution of $P^{(g)}$ with the randomness fixed to $\pi^{(k)} := (\pi_1, \dots, \pi_k)$.
-Let $S := (S_1, S_2)$ be a solver for $P^{(g)}$ as in Definition \ref{def:dwvp}.
+Let $(S_1, S_2)(\rho)$ be a solver for $P^{(g)}$ as in Definition \ref{def:dwvp}.
 The algorithm $P^{(g)}$ sequentially interacts in $k$ rounds with $S_1$.
-In the $i$ th round $S_1(\rho)$ interacts with $P^{(1)}(\pi_i)$,
+In the $i$-th round $S_1(\rho)$ interacts with $P^{(1)}(\pi_i)$,
 and as the result $P^{(g)}$ generates circuits $\Gamma_V^i, \Gamma_H^i$.
 Finally, $P^{(g)}$ outputs a verification circuit
 \begin{align*}
@@ -49,7 +50,7 @@ and a hint circuit
 \end{align*}
 \end{definition}
 %
-Let $C$ be a random circuit that corresponds to a solver $S$ in Definition \ref{def:dwvp}.
+Let $C$ be a random circuit that corresponds to a solver $S$ as in Definition \ref{def:dwvp}.
 Similarly as for two phase algorithm, we write $C := (C_1, C_2)$ to denote that $C$ in the first phase uses $C_1$,
 and in the second phase $C_2$.
 %
@@ -62,15 +63,15 @@ for which a hint query has been asked before.
   \medskip
   \hrule
   \medskip
-  \textbf{Oracle:} A problem poser $P$, a solver circuit $C^{(\cdot,\cdot)}$.\\
+  \textbf{Oracle:} A problem poser $P$, a solver circuit $C^{(\cdot,\cdot)}$ for $P$.\\
   \textbf{Input:}  Bitstrings $\pi$, $\rho$.\\
   \textbf{Output:} A bit $b \in \{0,1\}$.
   \medskip\hrule\medskip
   Run $\langle P(\pi), C_1(\rho) \rangle$ \\
   \IndI Let $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$ \\
-  \IndI Let $x$ be the transcript of $\langle P(\pi), C_1(\rho) \rangle$. \\ \\
+  \IndI $x := \langle P(\pi), C_1(\rho) \rangle_{\text{trans}}$. \\ \\
   Run $C_2^{\Gamma_V,\Gamma_H}(x, \rho)$ \\
-  \IndI \If $C_2^{\Gamma_V, \Gamma_H}$ asks a verification query $(q, y)$ \And $\Gamma_V(q, y) = 1$ \then \\
+  \IndI \If $C_2^{\Gamma_V, \Gamma_H}$ asks a verification query $(q, y)$ such that $\Gamma_V(q, y) = 1$ \then \\
   \IndII \return $1$ \\
 %  \IndI Let $Q_{V} := \{q_i: \text{  asked a verification query $(q_i,y_i)$ and $\Gamma_V(q_i, y_i) = 1$} \}$\\
 %  \IndI Let $Q_{Hint} := \{q_i: \text{$C^{\Gamma_V, \Gamma_H}$ asked a hint query on $q_i$} \}$\\
