@@ -1,17 +1,14 @@
 
 Let $hash:Q\rightarrow\{0,1,\dots, 2(h+v)-1\}$, then a set $P_{hash} \subseteq Q$,
 defined with respect to $hash$, is the set of preimages of $0$ for $hash$.
-The idea is that $P_{hash}$ contains $q \in Q$ on which $C$ is not allowed to ask hint queries and $q$ on which the
-first successful verification query is asked is in $P_{hash}$.
+The idea is that $P_{hash}$ contains $q \in Q$ on which $C$ is not allowed to ask hint queries.
+Additionally, the first successful verification query $(q,y)$ of $C$ is such that $q \in P_{hash}$.
 Therefore, if $C$ makes a verification query on $q \in P_{hash}$ we know that no hint query is ever asked on this $q$.
-In the experiment $CanonicalSuccess$ a circuit $C$ succeeds if and only if it ask a verification query on $q \in P_{hash}$
+In the experiment $CanonicalSuccess$ a circuit $C$ succeeds if and only if it ask a successful verification query $(q,y)$ such that $q \in P_{hash}$
 and no hint query is asked on $q \in P_{hash}$.
-Finally, Lemma \ref{lemma:hash_function_probability} states that
-it is possible to find $hash$ such that success probability of $C$ in the experiment $CanonicalSuccess$ is
+Finally, Lemma \ref{lemma:hash_function_probability} states that it is possible to find $hash$ such that success probability of $C$ in the experiment $CanonicalSuccess$ is
 not much worser than in the experiment $Success$.
-%
-% If the $i$th query of $C$ is a hint query, then we denote it by $q_i$.
-% If it is a verification query, then it is denoted by $(q_i, y_i)$
+
 In the experiment $CanonicalSuccess$ we denote the $i$th query of $C$ by $q_i$ if it is a hint query, and by $(q_i, y_i)$
 if it is a verification query.
 %
@@ -28,25 +25,27 @@ if it is a verification query.
   \textbf{Output:} A bit $b \in \{0,1\}$.
 
   \medskip\hrule\medskip
-  $(x, \Gamma_V, \Gamma_H) := P(\pi)$\\
+  Run $\langle P(\pi), C_1(\rho) \rangle$ \\
+  \IndI Let $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$. \\
+  \IndI Let $x$ be the transcript of $\langle P(\pi), C_1(\rho) \rangle$. \\ \\
   Run $C^{\Gamma_V, \Gamma_H} (x, \rho)$ \\
   \IndI Let $(q_j,y_j)$ be the first verification query such that $C^{\Gamma_V, \Gamma_H}(q_j, y_j) = 1$, or an arbitrary\\ \IndI
   verification query if $C$ does not succeed.\\
   \\
-  \textbf{If} $(\forall i < j :  q_i \notin P_{hash} )$ and $q_j \in P_{hash}$ and $\Gamma_V(q_j, y_j) = 1$ \\
+  \textbf{If} $(\forall i < j :  q_i \notin P_{hash} )$ \And $q_j \in P_{hash}$ \And $\Gamma_V(q_j, y_j) = 1$ \then \\
   \IndI \textbf{return} 1\\
   \textbf{else}\\
   \IndI \textbf{return} 0
 \end{codeblock}
 %
-Similarly as for the experiment $Success$, we define the success probability of $C$ with respect to a function $hash$
-in the experiment $CanonicalSuccess$ in solving a puzzle defined by $P$ as
+Similarly as for the experiment $Success$, we define the success probability of a solver $C$ for $P$ with respect to a function $hash$
+in the experiment $CanonicalSuccess$ as
 %
 \begin{align}
  \underset{\pi, \rho}{\Pr}[CanonicalSuccess^{P,C^{(\cdot, \cdot)},hash}(\pi, \rho) = 1].
 \end{align}
 %
-For fixed $hash$ and $P^{(1)}$ a canonical success of $C$ for $\pi^{(k )}, \rho$ is a situation when \\ $CanonicalSuccess^{P^{(g)}, C^{(\cdot, \cdot)}, hash}(\pi^{(k)}, \rho) = 1$.
+For fixed $hash$ and $P^{(g)}$ a canonical success of $C$ for $\pi^{(k )}, \rho$ is a situation when \\ $CanonicalSuccess^{P^{(g)}, C^{(\cdot, \cdot)}, hash}(\pi^{(k)}, \rho) = 1$.
 We show that if for a fixed $P^{(1)}$ a solver circuit $C$ often succeeds in the experiment $Success$ for $P^{(g)}$,
 then it also often successful in the experiment $CanonicalSuccess$ for $P^{(g)}$.
 %
@@ -69,10 +68,10 @@ we have
  \forall q_i,q_j \in Q : \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = k \mid hash(q_j) = l] = \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = k] = \frac{1}{2(h+v)}.
 \end{align}
 Let $\pi^{(k)}, \rho$ be fixed. We consider the experiment $CanonicalSuccess$ for $P^{(g)}$.
-in which we define a binary random variable $X$ for the event that $hash(q_j) = 0$, and for every query $q_i$ asked before $q_j : hash(q_i) \neq 0$.
+in which we define a binary random variable $X$ for the event that $hash(q_j) = 0$, and for every query $q_i$ asked before $q_j$ we have $hash(q_i) \neq 0$.
 Conditioned on the event $hash(q_i) = 0$, we get
 \begin{align*}
-  \underset{\textit{hash} \leftarrow \cH}{\Pr}[X=1] &= \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_j) = 0 \land \forall i < j : hash(q_i) \neq 0] \\
+  \underset{\textit{hash} \leftarrow \cH}{\Pr}[X=1] &= \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_j) = 0 \land (\forall i < j : hash(q_i) \neq 0)] \\
   &=\underset{\textit{hash} \leftarrow \cH}{\Pr}[\forall i < j : hash(q_i) \neq 0 \mid hash(q_j) = 0] \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_j) = 0].
 \end{align*}
 Now we use (\ref{eq:hash_pr}) twice and obtain
@@ -87,7 +86,7 @@ Finally, we use union bound and the fact that $j \leq (h+v)$ to get
 \frac{1}{2(h+v)} \left( 1 - \sum_{i < j} \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = 0] \right) \geq \frac{1}{4(h+v)}.
 \end{align*}
 Let $\cP_{Success}$ be the set of all $(\pi^{(k)},\rho)$ for which $C$ succeeds in the random experiment $Success$ for $P^{(g)}$. Furthermore,
-we denote the set of those $(\pi^{(k)},\rho)$ for which $CanonicalSuccess^{P^{(g)}, C(\dot, \dot), hash}(\pi^{(k)}) = 1$ by $\cP_{Canonical}$.
+we denote the set of those $(\pi^{(k)},\rho)$ for which $CanonicalSuccess^{P^{(g)}, C(\cdot, \cdot), hash}(\pi^{(k)}) = 1$ by $\cP_{Canonical}$.
 For fixed $\pi^{(k)}, \rho$, if $C$ succeeds canonically, then it also succeeds in the experiment $Success$ for $P^{(g)}$.
 Hence, $\cP_{Canonical} \subseteq \cP_{Success}$, and we have
 \begin{align}
@@ -102,8 +101,7 @@ Hence, $\cP_{Canonical} \subseteq \cP_{Success}$, and we have
   \medskip
   \hrule
   \medskip
-
-  \textbf{Oracle:} A solver circuit $C^{(\cdot, \cdot)}$ for a $k$-wise direct product of DWVP. \\
+  \textbf{Oracle:} A solver circuit $C^{(\cdot, \cdot)}$ for the $k$-wise direct product of $P^{(1)}$. \\
   \textbf{Input:} A set $\cH$.\\
   \textbf{Output:} A function $hash \in \cH$.
   \medskip\hrule\medskip

@@ -1,23 +1,25 @@
 %
-%Define high probability
+% Define high probability
+% Two phase algorithm
 %
 \noindent
 We write $u \leftarrow \mu_{\delta}^k$ to denote a tuple $u$ of length $k$ which each element
 is independently drawn from the Bernoulli distribution with parameter $\delta$.
 We denote the protocol execution between probabilistic algorithms $A$ and $B$ by $\langle A, B \rangle$.
-Additionally, the output of $A$ in such a protocol execution is denoted by $\langle A, B \rangle_A$.
+Additionally, the output of $A$ in such a protocol execution is denoted by $\langle A, B \rangle_A$, and the transcript
+of the communication by $\langle A, B \rangle_{\text{trans}}$.
 %
 %FIXME is x a puzzle?
 \begin{definition}[Dynamic weakly verifiable puzzle.]
   \label{def:dwvp}
   A dynamic weakly verifiable puzzle (DWVP) is defined by a probabilistic algorithm $P$
   called a problem poser.
-  A problem solver $S = (S_1, S_2)$ for $P$ is a probabilistic two phase algorithm.
-  We write $P(\pi)$ to denote the execution of $P$ with the randomness fixed to $\pi \in \{0,1\}^n$, and $S_1(\rho)$
-  to denote that the execution of the first phase of $S$ with the randomness fixed to $\rho \in \{0,1\}^{*}$.
+  A problem solver $S := (S_1, S_2)$ for $P$ is a probabilistic two phase algorithm.
+  We write $P(\pi)$ to denote the execution of $P$ with the randomness fixed to $\pi \in \{0,1\}^n$, and $(S_1,S_2)(\rho)$
+  to denote the execution of $S$ with the randomness fixed to $\rho \in \{0,1\}^{*}$.
   The poser $P(\pi)$ and the solver $S_1(\rho)$ interact.
-  As the result of the interaction $P(\pi)$ outputs circuits $\Gamma_{V}$, $\Gamma_{H}$, and a bitstring $x \in \{0,1\}^{*}$.
-  The algorithm $S_1(\rho)$ produces no output.
+  As the result of the interaction $P(\pi)$ outputs circuits $\Gamma_{V}$, $\Gamma_{H}$.
+  We denote by $x$ the transcript of the interaction. The algorithm $S_1(\rho)$ produces no output.
   The circuit $\Gamma_{V}$ takes as input $q \in Q$, an answer $y \in \{0,1\}^*$,
   and outputs a bit. An answer $(q,y)$ is a correct solution if and only if $\Gamma_V(q,y) = 1$.
   The circuit $\Gamma_H$ on input $q \in Q$ outputs a hint such that $\Gamma_V(q,\Gamma_H(q)) = 1$.
@@ -34,19 +36,17 @@ Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function and $P^{(1)}$ a 
 The $k$-wise direct product of $P^{(1)}$ is a DWVP defined by a probabilistic algorithm $P^{(g)}$.
 We write $P^{(g)}(\pi^{(k)})$ to denote the execution of $P^{(g)}$ with the randomness fixed to $\pi^{(k)} := (\pi_1, \dots, \pi_k)$.
 Let $S := (S_1, S_2)$ be a solver for $P^{(g)}$ as in Definition \ref{def:dwvp}.
-The algorithm $P^{(g)}$ sequentially interacts in $k$ rounds with $S_1$ such that
-in the $i$th round $(x_i, \Gamma_V^{i}, \Gamma_H^{i} ) := \left\langle P^{(1)}(\pi_i), S_1(\rho) \right\rangle_{P^{(g)}}$.
-Finally, $P^{(g)}$ outputs:
-a verification circuit
+The algorithm $P^{(g)}$ sequentially interacts in $k$ rounds with $S_1$.
+In the $i$ th round $S_1(\rho)$ interacts with $P^{(1)}(\pi_i)$,
+and as the result $P^{(g)}$ generates circuits $\Gamma_V^i, \Gamma_H^i$.
+Finally, $P^{(g)}$ outputs a verification circuit
 \begin{align*}
-  \Gamma_V^{(g)} (q, y_1, \dots, y_k) := g(\Gamma_V^{1}(q, y_1), \dots, \Gamma_V^{k}(q, y_k)),
+  \Gamma_V^{(g)} (q, y_1, \dots, y_k) := g(\Gamma_V^{1}(q, y_1), \dots, \Gamma_V^{k}(q, y_k))
 \end{align*}
-a hint circuit
+and a hint circuit
 \begin{align*}
-  \Gamma_H^{(k)} (q) := (\Gamma_H^{1}(q), \dots, \Gamma_H^{k}(q)),
+  \Gamma_H^{(k)} (q) := (\Gamma_H^{1}(q), \dots, \Gamma_H^{k}(q)).
 \end{align*}
-and a puzzle $x^{(k)} := (x_1, \dots, x_k)$.
-
 \end{definition}
 %
 Let $C$ be a random circuit that corresponds to a solver $S$ in Definition \ref{def:dwvp}.
@@ -56,7 +56,6 @@ and in the second phase $C_2$.
 A verification query $(q,y)$ of $C$ for which a hint query on this $q$ has been asked before can not be a successfully verification query.
 Therefore, without loss of generality, we make an assumption that $C$ does not ask verification queries on $q \in Q$,
 for which a hint query has been asked before.
-
 %
 \begin{codeblock}
   \textbf{Experiment $Success^{P, C^{(\cdot, \cdot)}}(\pi, \rho) $}
@@ -67,9 +66,11 @@ for which a hint query has been asked before.
   \textbf{Input:}  Bitstrings $\pi$, $\rho$.\\
   \textbf{Output:} A bit $b \in \{0,1\}$.
   \medskip\hrule\medskip
-  $(x, \Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$ \\
+  Run $\langle P(\pi), C_1(\rho) \rangle$ \\
+  \IndI Let $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$ \\
+  \IndI Let $x$ be the transcript of $\langle P(\pi), C_1(\rho) \rangle$. \\ \\
   Run $C_2^{\Gamma_V,\Gamma_H}(x, \rho)$ \\
-  \IndI \If $C_2^{\Gamma_V, \Gamma_H}$ asks a verification query $(q, y)$ and $\Gamma_V(q, y) = 1$ \then \\
+  \IndI \If $C_2^{\Gamma_V, \Gamma_H}$ asks a verification query $(q, y)$ \And $\Gamma_V(q, y) = 1$ \then \\
   \IndII \return $1$ \\
 %  \IndI Let $Q_{V} := \{q_i: \text{  asked a verification query $(q_i,y_i)$ and $\Gamma_V(q_i, y_i) = 1$} \}$\\
 %  \IndI Let $Q_{Hint} := \{q_i: \text{$C^{\Gamma_V, \Gamma_H}$ asked a hint query on $q_i$} \}$\\
@@ -84,28 +85,23 @@ The success probability of $C$ in solving a puzzle defined by $P$ in the experim
  \underset{\pi, \rho}{\Pr}[Success^{P,C^{(\cdot, \cdot)}}(\pi, \rho) = 1].
 \end{align}
 %
-\begin{todo}
-  % \textbf{TODO:} Is the circuit bound well defined?\\
-  \textbf{TODO:} What happens when $8(h+v) \left(\underset{\mu \leftarrow \mu_\delta^k}{\Pr}[g(\mu) = 1] + \varepsilon\right) \geq 1$. The formula does not work then.\\
-\end{todo}
-%
 \begin{theorem}[Security amplification for a dynamic weakly verifiable puzzle.]
 \label{th:sec_amp_for_dwvp}
 Let $P^{(1)}$ be a fixed problem poser as in Definition \ref{def:dwvp}, and $P^{(g)}$ be the poser for the $k$-wise direct product of $P^{(1)}$.
-There exists a probabilistic algorithm $Gen(C, g, \varepsilon, \delta, n, v, h)$ which takes as input: a solver circuit $C$ for the puzzle posed by $P^{(g)}$,
+There exists a probabilistic algorithm $Gen(C, g, \varepsilon, \delta, n, v, h)$ which takes as input: a solver circuit $C$ for $P^{(g)}$,
 a monotone function $g:\{0,1\}^k \rightarrow \{0,1\}$, parameters $\varepsilon, \delta,n$,
 the number of verification queries $v$, and hint queries $h$ asked by $C$, and outputs a random circuit $D$
 such that the following holds: \\
 If $C$ is such that \\
   \begin{align*}
-    \underset{\pi^{(k)}, \rho}{\Pr}[Success^{P^{(g)}, C}(\pi^{(k)}, \rho) = 1] \geq 8(h+v)\left(\underset{u \leftarrow \mu_\delta^k}{\Pr}[g(u) = 1] + \varepsilon\right)
+    \underset{\pi^{(k)}, \rho}{\Pr}\left[Success^{P^{(g)}, C}(\pi^{(k)}, \rho) = 1\right] \geq 8(h+v)\left(\underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon\right)
   \end{align*}
 then $D$ satisfies almost surely
   \begin{align*}
-    \underset{\pi, \rho}{\Pr}[Success^{P^{(1)},D}(\pi, \rho) = 1] \geq (\delta + \frac{\varepsilon}{6k}).
+    \underset{\pi, \rho}{\Pr}\left[Success^{P^{(1)},D}(\pi, \rho) = 1\right] \geq (\delta + \frac{\varepsilon}{6k}).
   \end{align*}
 Additionally, $Gen$ and $D$ require oracle access to $g$, $P^{(1)}$,$C$.
-Furthermore, $D$ requires also oracle access to $\Gamma_V^{(g)}$ and $\Gamma_H^{(g)}$,
+Furthermore, $D$ requires also oracle access to $\Gamma_V$ and $\Gamma_H$,
 and asks at most $h$ hint queries and $v$ verification queries.
 Finally, $Size(D) \leq Size(C) \cdot \frac{6k}{\varepsilon}$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
 \end{theorem}
@@ -122,11 +118,14 @@ The idea of the algorithm $Gen$ is to output a circuit $D$ that solves the input
 We know that $C$ has good success probability for a $k$-wise product of $P^{(1)}$.
 The algorithm $Gen$ tries to find a puzzle such that when $C$ runs with this puzzle fixed
 on the first position, and disregards whether this puzzle is correctly solved
-then the assumptions of Theorem \ref{th:sec_amp_for_dwvp} are true but for a $k-1$-wise direct product.
-If it is possible to find such a puzzle then $Gen$ recurses.
+then the assumptions of Theorem \ref{th:sec_amp_for_dwvp} are true for a $k-1$-wise direct product.
+If it is possible to find such a puzzle then $Gen$ could recurse and solve a smaller problem.
+In the optimistic case we can reach $k=1$, which means that we found a good circuit for solving a single
+puzzle by just fixing the initial puzzles of $C$.
+
 Otherwise, when the first position is disregarded then the success probability of $C$ is not substantially better.
-As we know that $C$ performs good for $k$-wise product, it means that the first position is important, in the sense that
-it is solved unusually often.
+This is remarkable, as we know that $C$ performs good for $k$-wise product, it means that the first position is important,
+in the sense that $C$ solves the puzzle on that position unusually often.
 Therefore, it is reasonable to construct the circuit $D$ using $C$ by placing the input puzzle of $D$ on that position, and then
 finding remaining $k-1$ puzzles. These $k-1$ remaining puzzles are generated by the circuit $D$, hence it is possible to check
 whether they are correctly solved by the circuit $C$. We know that circuit $C$ has good success probability, and the puzzle on the first
