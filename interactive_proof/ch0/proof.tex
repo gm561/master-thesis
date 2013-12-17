@@ -57,7 +57,7 @@ Furthermore, the circuit $\widetilde{C}$ asks no verification queries, and every
 %
 \begin{lemma}\textbf{(Security amplification of a dynamic weakly verifiable puzzle with respect to $P_{hash}$.)}
   \label{lemma:sec_amp_for_p_hash}
-  For fixed $P^{(1)}$ there exists an algorithm $Gen(C, g, \varepsilon, \delta, n, v, h, hash)$,
+  For fixed $P^{(1)}$ there exists an algorithm $Gen$,
   which takes as input a solver circuit $C$ for $P^{(g)}$, a monotone function $g:\{0,1\}^{(k)} \rightarrow \{0,1\}$,
   a function $hash : Q \rightarrow \{0, \dots, 2(h+v)-1\}$, parameters $\varepsilon, \delta, n$,
   number of verification queries $v$ and hint queries $h$ asked by $C$, and outputs a circuit $D$
@@ -81,10 +81,10 @@ Furthermore, the circuit $\widetilde{C}$ asks no verification queries, and every
 First we define helper procedures \textbf{EvalutePuzzles} and \textbf{EvaluateSurplus}.
 %
 \begin{codeblock}
-  $\textbf{EvaluatePuzzles}^{P^{(1)}, C, hash}(\pi^{(k)}, k)$
+  $\textbf{EvaluatePuzzles}^{P^{(1)}, C, hash}(\pi^{(k)}, \rho)$
   \medskip \hrule \medskip
   \textbf{Oracle:}  A circuit $C$, an algorithm $P^{(1)}$, a function $hash$.\\
-  \textbf{Input:} Bitstrings $\pi^{(k)}$, $\rho$, an integer $k$.\\
+  \textbf{Input:} Bitstrings $\pi^{(k)}$, $\rho$.\\
   \textbf{Output}: A tuple $(c_1, \dots, c_k)$.
   %
   \medskip\hrule\medskip
@@ -108,7 +108,7 @@ First we define helper procedures \textbf{EvalutePuzzles} and \textbf{EvaluateSu
 \end{todo}
 %
 \begin{codeblock}
-  $\textbf{EvaluateSurplus}^{P^{(1)}, C, hash}(\pi^*, b, k)$
+  $\textbf{EvaluateSurplus}^{P^{(1)}, C, hash}(\pi^*, b)$
   \medskip
   \hrule
   \medskip
@@ -117,33 +117,56 @@ First we define helper procedures \textbf{EvalutePuzzles} and \textbf{EvaluateSu
   \textbf{Output:} A circuit $D$.
   \medskip\hrule\medskip
   \textbf{For} $i:=1$ to $N_k$ \Do \\
-  \IndI $(\pi_2, \dots, \pi_k) \xleftarrow{\$} \{0,1\}^{(k-1)n}$\\
+  \IndI $(\pi_{m+1}, \dots, \pi_k) \xleftarrow{\$} \{0,1\}^{(k-m-1)n}$\\
   \IndI $\rho \xleftarrow{\$} \{0,1\}^{*}$\\
-  \IndI $(c_1, \dots, c_k) := \textbf{EvalutePuzzles}^{P^{(1)}, C, hash}(\pi^*, \pi_2, \dots, \pi_k, k)$\\
+  \IndI $(c_1, \dots, c_k) := \textbf{EvalutePuzzles}^{P^{(1)}, C, hash}(\pi_1, \dots, \pi_{m}, \pi^*, \dots, \pi_k, \rho)$\\
   \IndI $\widetilde{S}_{\pi^*,b}^i := g(b, c_2, \dots, c_k) - \underset{(u_2, \dots, u_k)}{\Pr}[g(b, u_2, \dots, u_k) = 1] $\\
   \textbf{return} $\frac{1}{N_k} \sum_{i=1}^{N_k} \widetilde{S}_{\pi^*,b}^i$\\
 \end{codeblock}
 %
 \begin{codeblock}
-  \textbf{Circuit $D^{P^{(1)}, C}(x^*, \sigma)$}
+  \textbf{Circuit $D = (D_1, D_2) (\sigma)$}
+  \medskip \hrule \medskip
+  \textbf{Phase I $D_1^{P^{(1)}, C}(\sigma)$}
   \medskip \hrule \medskip
   \textbf{Oracle:} A poser $P^{(1)}$, a circuit $C$, a function $hash$.\\
-  \textbf{Input:} A puzzle $x^*$, a bitstring $\sigma \in \{0,1\}^{*}$.\\
-  \textbf{Output}: A circuit $D$.
+  \textbf{Input:} A bitstring $\sigma \in \{0,1\}^{*}$.\\
+  \textbf{Hard coded:} Bitstrings $\pi_1, \dots, \pi_{m-1}$. \\
+  \textbf{Output}: Transcripts $x_1, \dots, x_{m-1}, x^*$.
   \medskip\hrule\medskip
-  Let $k$ be the number of input puzzles taken by $C$.\\
-  \For $i:=1$ to $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$ \Do \\
-  \IndI $\pi^{(k)} \leftarrow$ read $k\cdot n$ bits from $\sigma$ \\
-  \IndI $(c_1, \dots, c_{k}) := \textbf{EvaluatePuzzles}^{P^{(1)}, C, hash}(\pi^{(k)}, k)$\\
-  \IndI \If $g(1,c_2, \dots, c_k) =1 \land g(0,c_2, \dots, c_k) = 0$ \then \\
-  \IndII \For $i:=1$ to $k$ \Do \\
-  \IndIII $(x_i, \Gamma_V^{i}, \Gamma_H^{i}) := P^{(1)}(\pi_i)$\\
-  \IndII $(q, y_1, \dots, y_{k}) := \widetilde{C}(x^*, x_2, \dots, x_{k})$\\
-  \IndII \return $(q, y_1)$\\
-  \return $\bot$ \\
 
-\end{codeblock}
+  \For $i:=1$ to $m-1$ \Do \\
+  \IndI Simulate $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle$ \\
+  \IndI Let $ x_i := \langle P^{(1)}(\pi_i), C_1(\rho)\rangle_{\text{trans}}$ \\ \\
+  Interact with the problem poser using $C_1(\rho)$. \\
+  \IndI Let $x^*$ be the transcript of the interaction \\
+  \IndI Let $\Gamma_V^*, \Gamma_H^*$ be the verification and hint oracles output by the problem poser. \\
+  \\
+  Let $\Gamma_V^{(m-1)} := (\Gamma_V^{1}, \dots, \Gamma_V^{m-1})$ \\
+  Let $\Gamma_H^{(m-1)} := (\Gamma_H^{1}, \dots, \Gamma_H^{m-1})$ \\
+  Let $x^{(m-1)} := (x_1, \dots, x_{m-1})$ \\
+  \return $\left(x^{(m-1)}, \Gamma_V^{(m-1)}, \Gamma_H^{(m-1)}\right)$
+  \medskip \hrule \medskip
+  \textbf{Phase II $D_2^{P^{(1)}, C}(x_1, \dots, x_{k-1}, x^*, \sigma)$}
+  \medskip \hrule \medskip
+  \textbf{Oracle:} A poser $P^{(1)}$, a circuit $C$, a function $hash$, circuits $\Gamma_V^{*}$ and $\Gamma_H^{*}$. \\
+  \textbf{Input:} Transcripts $(x_1, \dots, x_{m-1}, x^*)$, a bitstring $\sigma \in \{0,1\}^{*}$.\\
+  \textbf{Output}: A circuit $D$.
+  \medskip \hrule \medskip
+  \For at most $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$ iterations \Do \\
+  \IndI $\pi^{(k)} \leftarrow$ read $k\cdot n$ bits from $\sigma$ \\
+  \IndI \For $i:=1$ to $m-1$ \Do \IndII // finish remaining simulation of puzzles\\
+  \IndII Simulate $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle$ \\
+  \IndII Let $ x_i := \langle P^{(1)}(\pi_i), C_1(\rho)\rangle_{\text{trans}}$ \\
+  \IndI Let $\Gamma_V^{(g)} := g(\Gamma_V^{1}, \dots, \Gamma_V^{m-1}, \Gamma_V^{*}, \Gamma_V^{m+1}, \dots, \Gamma_V^{k})$  \\
+  \IndI Let $\Gamma_H^{(k)} := (\Gamma_H^{1}, \dots, \Gamma_H^{m-1}, \Gamma_H^{*}, \Gamma_H^{m+1}, \dots, \Gamma_H^{k})$ \\
+  \IndI $(q,y_1, \dots, y_{m-1}, y^*, \dots, y_k) := \widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(k)}, C, hash}((x_1, \dots, x_{m-1}, x^*, \dots, x_k), \rho)$\\
+%  \IndI $(c_1, \dots, c_{k}) := \textbf{EvaluatePuzzles}^{P^{(1)}, C, hash}(\pi^{(k)}, k)$\\
+  \IndI \If $g(1,c_{m+1}, \dots, c_k) =1 \land g(0,c_{m+1}, \dots, c_k) = 0$ \then \\
+  \IndII \return $(q, y^*)$ \\
+  \return $\bot$
 %
+\end{codeblock}
 %
 \begin{codeblock}
   \textbf{Algorithm $Gen(C, g, \epsilon, \delta, n, v, h, hash)$}
@@ -154,18 +177,18 @@ First we define helper procedures \textbf{EvalutePuzzles} and \textbf{EvaluateSu
   \textbf{Input:}  $\epsilon, \delta, n, v, h$\\
   \textbf{Output:} A circuit $D$
   \medskip\hrule\medskip
-  Let $k$ be the number of input puzzles taken by $C$.\\
-  \If $k = 1$ \then \\
-  \IndI \return $C$ \\ \\
-  \textbf{For} $i:=1$ to $\frac{6k}{\epsilon}\log(n)$ \\
+  Let $m$ be the recursion depth of $Gen$.\\
+  \For $i:=1$ to $\frac{6k}{\epsilon}\log(n)$ \\
   \IndI $\pi^* \leftarrow \{0,1\}^{n}$\\
-  \IndI $\widetilde{S}_{\pi^*,0} := \textbf{EvaluateSurplus}^{P^{(1)}, C, hash}(\pi^*, 0, k)$\\
-  \IndI $\widetilde{S}_{\pi^*,1} := \textbf{EvaluateSurplus}^{P^{(1)}, C, hash}(\pi^*, 1, k)$\\
-  \IndI \textbf{If} $\widetilde{S}_{\pi^*,0} \geq (1 - \frac{3}{4k}) \epsilon$ or $\widetilde{S}_{\pi^*,1} \geq (1 - \frac{3}{4k}) \epsilon$ \\
-  \IndII $C' := C$ with the first input fixed on $x^*$\\
-  \IndII $g'(b_2, \dots, b_k) := g(c_1, b_2, \dots, b_k)$\\
-  \IndII\textbf{return} $Gen(\widetilde{C}', g', \epsilon, \delta, n, v, h, hash)$ \\
+  \IndI $\widetilde{S}_{\pi^*,0} := \textbf{EvaluateSurplus}^{P^{(1)}, C, hash}(\pi^*, 0)$\\
+  \IndI $\widetilde{S}_{\pi^*,1} := \textbf{EvaluateSurplus}^{P^{(1)}, C, hash}(\pi^*, 1)$\\
+  \IndI \If $ \exists b \in \{0,1\}: \widetilde{S}_{\pi^*,b} \geq (1 - \frac{3}{4k}) \epsilon$ \\
+  \IndII Fixed $\pi_m := \pi^*$ \\
+  \IndII $g'(b_2, \dots, b_k) := g(b, b_2, \dots, b_k)$\\
+  \IndII\return $Gen(\widetilde{C}, g', \epsilon, \delta, n, v, h, hash)$ \\
+
   // all estimates are lower than $(1-\frac{3}{4k})\varepsilon$\\
+  Hard code $\pi_1, \dots, \pi_{m-1}$ into the circuit $D$. \\
   \return $D^{\widetilde{C}}$
 \end{codeblock}
 %
