@@ -26,8 +26,8 @@ if it is a verification query.
 
   \medskip\hrule\medskip
   Run $\langle P(\pi), C_1(\rho) \rangle$ \\
-  \IndI Let $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$. \\
-  \IndI Let $x := \langle P(\pi), C_1(\rho) \rangle_{\text{trans}}$. \\ \\
+  \IndI Let $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$ \\
+  \IndI Let $x := \langle P(\pi), C_1(\rho) \rangle_{\text{trans}}$ \\ \\
   Run $C^{\Gamma_V, \Gamma_H} (x, \rho)$ \\
   \IndI Let $(q_j,y_j)$ be the first verification query such that $C_2^{\Gamma_V, \Gamma_H}(q_j, y_j) = 1$, or an arbitrary\\
   \IndI verification query if $C_2$ does not succeed.\\
@@ -51,15 +51,18 @@ then it also often successful in the experiment $CanonicalSuccess$ for $P^{(g)}$
 %
 \begin{lemma}\textbf{(Success probability in solving a $k$-wise direct product of $P^{(1)}$ with respect to a function $hash$.)}
 \label{lemma:hash_function_probability}
-For fixed $P^{(1)}$ let $C$ succeed in the experiment $Success$ for $P^{(g)}$ with probability $\gamma$,
+For fixed $P^{(g)}$ let $C$ succeed in the experiment $Success$ for $P^{(g)}$ with probability $\gamma$,
 asking at most $h$ hint queries and $v$ verification queries.
-There exists a probabilistic algorithm, with oracle access to $C$ and $P^{(g)}$, that runs in time $O((h+v)^4/\gamma^4)$,
-and with high probability outputs a function $hash: Q \rightarrow \{0, \dots, 2(h+v)-1\}$
+There exists a probabilistic algorithm \textbf{FindHash} that takes as input: a set $\cH$ of pairwise
+independent hash functions $Q \rightarrow \{0,1,\dots, 2(h+v)-1\}$, parameters $\gamma, n$,
+the number of verification queries $v$ and hint queries $h$, and has
+oracle access to $C$ and $P^{(g)}$. Furthermore, \textbf{FindHash} runs in time $O((h+v)^4/\gamma^4)$,
+and with high probability outputs a function $hash \in \cH$
 such that success probability of $C$ with respect to $P_{hash}$ in the experiment $CanonicalSuccess$ is at least $\frac{\gamma}{8(h+v)}$.
 \end{lemma}
 %
 \begin{proof}
-We fix $P^{(1)}$ and $C$ in the whole proof of Lemma \ref{lemma:hash_function_probability}.
+We fix $P^{(g)}$ and a solver $C$ for $P^{(h)}$ in the whole proof of Lemma \ref{lemma:hash_function_probability}.
 Let $\cH$ be a family of pairwise independent hash functions $Q \rightarrow \{0,1, \dots,2(h+v)-1\}$.
 For all $i \neq j \in \{1, \dots, (h+v)\}$ and $k,l \in \{0,1,\dots,2(h+v)-1\}$ by pairwise independence property of $\cH$,
 we have
@@ -67,7 +70,7 @@ we have
   \label{eq:hash_pr}
  \forall q_i,q_j \in Q : \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = k \mid hash(q_j) = l] = \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = k] = \frac{1}{2(h+v)}.
 \end{align}
-Let $\pi^{(k)}, \rho$ be fixed. We consider the experiment $CanonicalSuccess$ for $P^{(g)}$
+Let $\pi^{(k)}, \rho$ be fixed. We consider the experiment $CanonicalSuccess$ for $P^{(g)}$ and $C$
 in which we define a binary random variable $X$ for the event that $hash(q_j) = 0$, and for every query $q_i$ asked before $q_j$ we have $hash(q_i) \neq 0$.
 Conditioned on the event $hash(q_i) = 0$, we get
 \begin{align*}
@@ -88,7 +91,7 @@ Finally, we use union bound and the fact that $j \leq (h+v)$ to get
 Let $\cP_{Success}$ be the set of all $(\pi^{(k)},\rho)$ for which $C$ succeeds in the random experiment $Success$ for $P^{(g)}$. Furthermore,
 we denote the set of those $(\pi^{(k)},\rho)$ for which $CanonicalSuccess^{P^{(g)}, C(\cdot, \cdot), hash}(\pi^{(k)}) = 1$ by $\cP_{Canonical}$.
 For fixed $\pi^{(k)}$ and $\rho$ if $C$ succeeds canonically, then it also succeeds in the experiment $Success$ for $P^{(g)}$.
-Hence, $\cP_{Canonical} \subseteq \cP_{Success}$, and we have
+Hence, $\cP_{Canonical} \subseteq \cP_{Success}$, and we conclude
 \begin{align}
   \label{ineq:hash_high_prob}
 \underset{\substack{\textit{hash} \leftarrow \cH \\ \pi^{(k)}, \rho}}{\Pr}\left[CanonicalSuccess^{P^{(g)}, C^{(\cdot, \cdot)}, hash}(\pi^{(k)}, \rho) = 1\right] &=
@@ -97,19 +100,19 @@ Hence, $\cP_{Canonical} \subseteq \cP_{Success}$, and we have
 \end{align}
 %
 \begin{codeblock}
-  \textbf{Algorithm: FindHash}
+  \textbf{Algorithm: FindHash}$(\cH, h, v, \gamma, n)$
   \medskip
   \hrule
   \medskip
   \textbf{Oracle:} A solver circuit $C^{(\cdot, \cdot)}$ for the $k$-wise direct product of $P^{(1)}$. \\
-  \textbf{Input:} A set $\cH$.\\
+  \textbf{Input:} A set $\cH$, $parameters h,v,\gamma,n$\\
   \textbf{Output:} A function $hash \in \cH$.
   \medskip\hrule\medskip
   \For $i = 1$ \To $32(h+v)^2/\gamma^2$ \\
   \IndI $hash \xleftarrow{\$} \cH$ \\
   \IndI $count := 0$ \\
   \IndI \For $j := 1$ to $32(h+v)^2/\gamma^2$ \\
-  \IndII $\pi^{(k)} \xleftarrow{\$} \{0,1\}^{kl} $\\
+  \IndII $\pi^{(k)} \xleftarrow{\$} \{0,1\}^{kn} $\\
   \IndII \If $CanonicalSuccess^{P^{(g)}, C^{(\cdot, \cdot)}, hash}(\pi^{(k)}) = 1$ \then \\
   \IndIII $count := count + 1$\\
   \IndI \If $\frac{\gamma^2}{32(h+v)^2} count \geq \frac{\gamma}{6(h+v)}$ \\
@@ -131,7 +134,7 @@ Additionally, for a fixed $hash$, we define binary random variables $X_1, \dots,
 \begin{align*}
   X_i =
   \begin{cases}
-    1 & \text{if in $i$th iteration variable $count$ is increased}\\
+    1 & \text{if in the $i$-th iteration variable $count$ is increased}\\
     0 & \text{otherwise .}
   \end{cases}
 \end{align*}
@@ -155,7 +158,7 @@ Let $Y_i$ be a binary random variable such that
 \begin{align*}
   Y_i =
   \begin{cases}
-    1 & \text{if in $i$th iteration $hash \in \cH_{Good}$ is picked} \\
+    1 & \text{if in the $i$-th iteration $hash \in \cH_{Good}$ is picked} \\
     0 & \text{otherwise .}
   \end{cases}
 \end{align*}
