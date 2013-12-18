@@ -1,4 +1,4 @@
-% \newcommand{\prGx}{\underset{\substack{\pi, \sigma \\ (\Gamma_V,\Gamma_H) := \langle P^{(1)}(\pi), D(\rho) \rangle_{P^{(1)}} \\ x := \langle P^{(1)}(\pi), D(\rho) \rangle_{\text{trans}}}}}
+ %\newcommand{\prGx}{\underset{\substack{\pi, \sigma \\ (\Gamma_V,\Gamma_H) := \langle P^{(1)}(\pi), D(\rho) \rangle_{P^{(1)}} \\ x := \langle P^{(1)}(\pi), D(\rho) \rangle_{\text{trans}}}}}
 %
 \newcommand{\prGx}{(\Gamma_V,\Gamma_H) := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{P^{(1)}} \\ x^* := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}}
 %
@@ -201,7 +201,6 @@ We define helper procedures \textbf{EvalutePuzzles} and \textbf{EvaluateSurplus}
 %
 \end{codeblock}
 %
-Let $m$ be the global variable with the initial value $0$.
 \begin{codeblock}
   \textbf{Algorithm $Gen(C, g, \epsilon, \delta, n, v, h, hash)$}
   \medskip
@@ -217,7 +216,8 @@ Let $m$ be the global variable with the initial value $0$.
   \IndI $\widetilde{S}_{\pi^*,0} := \textbf{EvaluateSurplus}^{P^{(1)}, C, hash}(\pi^*, 0)$\\
   \IndI $\widetilde{S}_{\pi^*,1} := \textbf{EvaluateSurplus}^{P^{(1)}, C, hash}(\pi^*, 1)$\\
   \IndI \If $ \exists b \in \{0,1\}: \widetilde{S}_{\pi^*,b} \geq (1 - \frac{3}{4k}) \epsilon$ \\
-  \IndII Fix $\pi_m := \pi^*$ \\
+  \IndII Let $\widetilde{C}'$ be a circuit that first simulates interaction with $P^{(1)}, C_1$ \\
+  \IndII Fix $\pi_1 := \pi^*$ \\
   \IndII $g'(b_2, \dots, b_k) := g(b, b_2, \dots, b_k)$\\
   \IndII $m := m + 1$\\
   \IndII\return $Gen(\widetilde{C}, g', \epsilon, \delta, n, v, h, hash)$ \\

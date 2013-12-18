@@ -102,8 +102,8 @@ then $D$ satisfies almost surely
     \underset{\pi, \rho}{\Pr}\left[Success^{P^{(1)},D}(\pi, \rho) = 1\right] \geq (\delta + \frac{\varepsilon}{6k}).
   \end{align*}
 Additionally, $Gen$ and $D$ require oracle access to $g$, $P^{(1)}$,$C$.
-Furthermore, $D$ requires also oracle access to $\Gamma_V$ and $\Gamma_H$,
-and asks at most $h$ hint queries and $v$ verification queries.
+Furthermore, $D$ requires also oracle access to $\Gamma_V$ $\Gamma_H$,
+and asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hint queries and one verification queries.
 Finally, $Size(D) \leq Size(C) \cdot \frac{6k}{\varepsilon}$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
 \end{theorem}
 %
