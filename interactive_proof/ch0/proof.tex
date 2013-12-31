@@ -2,7 +2,7 @@
 %
 \newcommand{\prGx}{(\Gamma_V,\Gamma_H) := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{P^{(1)}} \\ x^* := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}}
 %
-We define the following solver circuit $\widetilde{C}$.
+We define the following solver circuit $\widetilde{C}$:
 \begin{codeblock}
   \textbf{Circuit $\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, C, hash} (x, \rho)$}
   \medskip \hrule \medskip
@@ -38,10 +38,10 @@ We define the following solver circuit $\widetilde{C}$.
 \end{lemma}
 %
 \begin{proof}
-We fix $\pi^{(k)}, \rho$. Then for $(\Gamma_V^{(g)}, \Gamma_H^{(g)}) := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}}$ and
+We fix $\pi^{(k)}, \rho$. For $(\Gamma_V^{(g)}, \Gamma_H^{(g)}) := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}}$ and
 $x := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{\text{trans}}$, $C(\rho)$ succeeds canonically, if and only if
 \begin{align*}
-\Gamma_V^{(g)} (\widetilde{C_2}^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, hash}(x, \rho)) = 1.
+\Gamma_V^{(g)} (\widetilde{C}_2^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, hash}(x, \rho)) = 1.
 \end{align*}
 Using this observation, we conclude that
 \begin{align*}

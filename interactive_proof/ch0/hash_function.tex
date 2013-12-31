@@ -19,17 +19,17 @@ if it is a verification query.
   \hrule
 
   \medskip
-  \textbf{Oracle:} A problem poser $P$, a solver circuit $C^{(\cdot, \cdot)}$ for $P$.\\
+  \textbf{Oracle:} A problem poser $P$, a solver circuit $C^{(\cdot, \cdot)}$.\\
   \IndII A function $hash: Q \rightarrow \{0, \dots, 2(h+v) - 1\}$.\\
   \textbf{Input:}  Bitstrings: $\pi$, $\rho$. \\
   \textbf{Output:} A bit $b \in \{0,1\}$.
 
   \medskip\hrule\medskip
   Run $\langle P(\pi), C_1(\rho) \rangle$ \\
-  \IndI Let $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$ \\
-  \IndI Let $x := \langle P(\pi), C_1(\rho) \rangle_{\text{trans}}$ \\ \\
+  \IndI $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$ \\
+  \IndI $x := \langle P(\pi), C_1(\rho) \rangle_{\text{trans}}$ \\ \\
   Run $C^{\Gamma_V, \Gamma_H} (x, \rho)$ \\
-  \IndI Let $(q_j,y_j)$ be the first verification query such that $C_2^{\Gamma_V, \Gamma_H}(q_j, y_j) = 1$, or an arbitrary\\
+  \IndI $(q_j,y_j)$ be the first verification query such that $C_2^{\Gamma_V, \Gamma_H}(q_j, y_j) = 1$, or an arbitrary\\
   \IndI verification query if $C_2$ does not succeed.\\
   \\
   \textbf{If} $(\forall i < j :  q_i \notin P_{hash} )$ \And $q_j \in P_{hash}$ \And $\Gamma_V(q_j, y_j) = 1$ \then \\
@@ -46,6 +46,7 @@ in the experiment $CanonicalSuccess$ as
 \end{align}
 %
 For fixed $hash$ and $P^{(g)}$ a canonical success of $C$ for $\pi^{(k )}, \rho$ is a situation when \\ $CanonicalSuccess^{P^{(g)}, C^{(\cdot, \cdot)}, hash}(\pi^{(k)}, \rho) = 1$.
+
 We show that if for a fixed $P^{(1)}$ a solver circuit $C$ often succeeds in the experiment $Success$ for $P^{(g)}$,
 then it also often successful in the experiment $CanonicalSuccess$ for $P^{(g)}$.
 %
@@ -53,9 +54,8 @@ then it also often successful in the experiment $CanonicalSuccess$ for $P^{(g)}$
 \label{lemma:hash_function_probability}
 For fixed $P^{(g)}$ let $C$ succeed in the experiment $Success$ for $P^{(g)}$ with probability $\gamma$,
 asking at most $h$ hint queries and $v$ verification queries.
-There exists a probabilistic algorithm \textbf{FindHash} that takes as input: a set $\cH$ of pairwise
-independent hash functions $Q \rightarrow \{0,1,\dots, 2(h+v)-1\}$, parameters $\gamma, n$,
-the number of verification queries $v$ and hint queries $h$, and has
+There exists a probabilistic algorithm \textbf{FindHash} that takes as input:
+parameters $\gamma, n$, the number of verification queries $v$ and hint queries $h$, and has
 oracle access to $C$ and $P^{(g)}$. Furthermore, \textbf{FindHash} runs in time $O((h+v)^4/\gamma^4)$,
 and with high probability outputs a function $hash \in \cH$
 such that success probability of $C$ with respect to $P_{hash}$ in the experiment $CanonicalSuccess$ is at least $\frac{\gamma}{8(h+v)}$.
@@ -99,23 +99,25 @@ Hence, $\cP_{Canonical} \subseteq \cP_{Success}$, and we conclude
 &\geq \frac{\gamma}{4(h+v)}.
 \end{align}
 %
+%TODO write number of iterations in better form when done with the proof.
 \begin{codeblock}
-  \textbf{Algorithm: FindHash}$(\cH, h, v, \gamma, n)$
+  \textbf{Algorithm: FindHash}$(h, v, \gamma, n)$
   \medskip
   \hrule
   \medskip
   \textbf{Oracle:} A solver circuit $C^{(\cdot, \cdot)}$ for the $k$-wise direct product of $P^{(1)}$. \\
-  \textbf{Input:} A set $\cH$, $parameters h,v,\gamma,n$\\
-  \textbf{Output:} A function $hash \in \cH$.
+  \textbf{Input:} Parameters $ h,v,\gamma,n$\\
+  \textbf{Output:} A function $hash:Q \rightarrow \{0,1, \dots, 2(h+v)-1 \}$.
   \medskip\hrule\medskip
-  \For $i = 1$ \To $32(h+v)^2/\gamma^2$ \\
+  Let $\cH$ be a family of pairwise independent hash functions $Q \rightarrow \{0,1,\dots, 2(h+v)-1\}$\\
+  \For $i = 1$ \To $32(h+v)^2/\gamma^2$ \Do \\
   \IndI $hash \xleftarrow{\$} \cH$ \\
   \IndI $count := 0$ \\
-  \IndI \For $j := 1$ to $32(h+v)^2/\gamma^2$ \\
+  \IndI \For $j := 1$ to $32(h+v)^2/\gamma^2$ \Do \\
   \IndII $\pi^{(k)} \xleftarrow{\$} \{0,1\}^{kn} $\\
   \IndII \If $CanonicalSuccess^{P^{(g)}, C^{(\cdot, \cdot)}, hash}(\pi^{(k)}) = 1$ \then \\
   \IndIII $count := count + 1$\\
-  \IndI \If $\frac{\gamma^2}{32(h+v)^2} count \geq \frac{\gamma}{6(h+v)}$ \\
+  \IndI \If $\frac{\gamma^2}{32(h+v)^2} count \geq \frac{\gamma}{6(h+v)}$ \then \\
   \IndII \return $hash$\\
   \return $\bot$
 \end{codeblock}
