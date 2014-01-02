@@ -46,7 +46,7 @@ $x := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{\text{trans}}$, $C(\rho)$ s
 Using this observation, we conclude that
 \begin{align*}
   &\underset{\pi^{(k)}, \rho}{\Pr}\left[CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho) = 1\right] \\
-  &\IndII = \underset{\pi^{(k)}, \rho}{\mathbb{E}}\left[\underset{}{\Pr}\left[CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho) = 1\right]\right] \\
+  &\IndII = \underset{\pi^{(k)}, \rho}{\mathbb{E}}\left[CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho) = 1 \right] \\
   &\IndII = \underset{\substack{\pi^{(k)}, \rho \\
       \left(\Gamma_V^{(g)}, \Gamma_H^{(k)}\right) := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}} \\
       x := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{\text{trans}}}}
@@ -58,6 +58,8 @@ Using this observation, we conclude that
 %
 Therefore, from a circuit $C$ we can build a circuit $\widetilde{C}$ that outputs $\bot$ or $(q, y_1, \dots, y_k)$ such that $q \in P_{hash}$.
 Furthermore, the circuit $\widetilde{C}$ asks no verification queries, and every hint query on $q$ is such that $q \notin P_{hash}$.
+%
+% TODO give justification why we need circuit \widetitle{C}
 %
 \begin{lemma}\textbf{(Security amplification of a dynamic weakly verifiable puzzle with respect to $P_{hash}$.)}
   \label{lemma:sec_amp_for_p_hash}
@@ -92,7 +94,7 @@ Furthermore, the circuit $\widetilde{C}$ asks no verification queries, and every
   \medskip
   \textbf{Oracle:} A function $g$.\\
   \textbf{Input:} A bit $b \in \{0,1\}$, an integer $k$, $\epsilon$ \\
-  \textbf{Output:} A number $\widetilde{g} \in \left[0,1\right]$.
+  \textbf{Output:} An estimate $\widetilde{g} \in \left[0,1\right]$.
   \medskip\hrule\medskip
   \textbf{For} $i:=1$ to $\frac{16k^2}{\epsilon^2}\log(n)$ \Do \\
   \IndI $(b_2, \dots, b_k) \leftarrow \mu_{\delta}^{(k-1)}$ \\
@@ -100,7 +102,7 @@ Furthermore, the circuit $\widetilde{C}$ asks no verification queries, and every
   \textbf{return} $\frac{\epsilon^2}{16k^2\log(n)} \sum_{i=1}^{\frac{16k^2}{\epsilon^2}\log(n)} g_i$
 \end{codeblock}
 %
-\begin{lemma}[Estimate of function $g$.]
+\begin{lemma}[Estimate of the function $g$.]
   \label{lemma:estimate_of_g}
   The procedure \textbf{EvaluteFunctionProbability} outputs an estimate $\widetilde{g}$ for the function $g: \{0,1\}^{n} \rightarrow \{0,1\}$ with the first bit fixed to $b \in \{0,1\}$
   such that $| \widetilde{g} - \underset{(u_2,\dots,u_k) \leftarrow \mu_{\delta}^{k}}{\Pr}\left[g(b,u_2, \dots, u_k) = 1\right] | \leq \frac{\epsilon}{4k}$ almost surely.
@@ -110,7 +112,7 @@ Furthermore, the circuit $\widetilde{C}$ asks no verification queries, and every
 We define binary random variable $K_i$ for the event that $g_i = 1$ and set $N = \frac{\epsilon}{4k}\log(n)$.
 By Chernoff bound we get
 \begin{align*}
-  \underset{}{\Pr}\left[\left|\frac{1}{N} \sum_{i=1}^{N} \widetilde{g}_i - \mathbb{E}[X]\right| \geq \frac{\epsilon}{4k}  \right] \leq 2e^{\log(n)/3}.
+  \underset{}{\Pr}\left[\left|\frac{1}{N} \sum_{i=1}^{N} \widetilde{g}_i - \mathbb{E}[K_i]\right| \geq \frac{\epsilon}{4k}  \right] \leq 2e^{\log(n)/3}.
 \end{align*}
 \end{proof}
 %
