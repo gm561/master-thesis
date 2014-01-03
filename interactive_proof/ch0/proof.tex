@@ -179,41 +179,35 @@ Therefore, it is possible to answer all hint and verification queries, without c
   \medskip \hrule \medskip
   \textbf{Phase I $D_1^{P^{(1)}, C}(\sigma)$}
   \medskip \hrule \medskip
-  \textbf{Oracle:} A poser $P^{(1)}$, a circuit $C$, a function $hash$.\\
-  \textbf{Input:} A bitstring $\sigma \in \{0,1\}^{*}$.\\
-  \textbf{Hard coded:} Bitstrings $\pi_1, \dots, \pi_{m-1}$. \\
-  \textbf{Output}: Transcripts $x_1, \dots, x_{m-1}, x^*$.
+  \textbf{Oracle:} A circuit $C$.\\
+  \textbf{Input:} A bitstring $\sigma \in \{0,1\}^{*}$.
+%  \textbf{Hard coded:} Bitstrings $\pi_1, \dots, \pi_{m-1}$. \\
+%  \textbf{Output}:
   \medskip\hrule\medskip
 
-  \For $i:=1$ to $m-1$ \Do \\
-  \IndI Simulate $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle$ \\
-  \IndI Let $ x_i := \langle P^{(1)}(\pi_i), C_1(\rho)\rangle_{\text{trans}}$ \\
-  \IndI Let $(\Gamma_V^i, \Gamma_H^i) := \langle P^{(1)}(\pi_i), C_1(\rho) \rangle_{P^{(1)}}$ \\ \\
   Interact with the problem poser using $C_1(\rho)$. \\
-  \IndI Let $x^*$ be the transcript of the interaction \\
-  \IndI Let $\Gamma_V^*, \Gamma_H^*$ be the verification and hint oracles output by the problem poser. \\
-  \\
-  Let $\Gamma_V^{(m-1)} := (\Gamma_V^{1}, \dots, \Gamma_V^{m-1})$ \\
-  Let $\Gamma_H^{(m-1)} := (\Gamma_H^{1}, \dots, \Gamma_H^{m-1})$ \\
-  Let $x^{(m-1)} := (x_1, \dots, x_{m-1})$ \\
-%  \return $\left(x^{(m-1)}, \Gamma_V^{(m-1)}, \Gamma_H^{(m-1)}\right)$
+  \IndI Let $x^*$ be the transcript of the simulations and the interaction with the problem poser.\\
+  \IndI Let $\Gamma_V^*, \Gamma_H^*$ be the verification and hint circuits output by the problem poser.
+
   \medskip \hrule \medskip
   \textbf{Phase II $D_2^{P^{(1)}, C}(x^*, \sigma)$}
   \medskip \hrule \medskip
-  \textbf{Oracle:} A poser $P^{(1)}$, a circuit $C$, a function $hash$, circuits $\Gamma_V^{*}$ and $\Gamma_H^{*}$. \\
+  \textbf{Oracle:} $P^{(1)}$, $C$, $hash$, $g$, $\Gamma_V^{*}$, $\Gamma_H^{*}$. \\
   \textbf{Input:} A transcript $x^*$, a bitstring $\sigma \in \{0,1\}^{*}$.\\
-  \textbf{Output}: A circuit $D$.
+  \textbf{Output}: A verification query $(q, y*)$.
   \medskip \hrule \medskip
-  Let $\Gamma_V^{(m-1)}, \Gamma_H^{(m-1)}$ and $x_1, \dots, x_{k-1}$ be the same as in the \textbf{Phase I}.\\
   \For at most $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$ iterations \Do \\
-  \IndI $\pi^{(k)} \leftarrow$ read $k\cdot n$ bits from $\sigma$ \\
-  \IndI \For $i:=1$ to $m-1$ \Do \IndII // finish remaining simulation of puzzles\\
+  \IndI $\pi^{(k-1)} \leftarrow$ read $(k-1)\cdot n$ bits from $\sigma$ \\
+  \IndI \For $i:=2$ to $k$ \Do \\
   \IndII Simulate $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle$ \\
-  \IndII Let $ x_i := \langle P^{(1)}(\pi_i), C_1(\rho)\rangle_{\text{trans}}$ \\
-  \IndI Let $\Gamma_V^{(g)} := g(\Gamma_V^{1}, \dots, \Gamma_V^{m-1}, \Gamma_V^{*}, \Gamma_V^{m+1}, \dots, \Gamma_V^{k})$  \\
-  \IndI Let $\Gamma_H^{(k)} := (\Gamma_H^{1}, \dots, \Gamma_H^{m-1}, \Gamma_H^{*}, \Gamma_H^{m+1}, \dots, \Gamma_H^{k})$ \\
-  \IndI $(q,y_1, \dots, y_{m-1}, y^*, \dots, y_k) := \widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(k)}, C, hash}((x_1, \dots, x_{m-1}, x^*, \dots, x_k), \rho)$\\
-  \IndI \If $g(1,c_{m+1}, \dots, c_k) =1 \land g(0,c_{m+1}, \dots, c_k) = 0$ \then \\
+  \IndIII $ x_i := \langle P^{(1)}(\pi_i), C_1(\rho)\rangle_{\text{trans}}$ \\
+  \IndIII $(\Gamma_V^{i}, \Gamma_H^{i}) := \langle P^{(1)}(\pi_i), C_1(\rho) \rangle_{P^{(1)}}$ \\
+  \IndI $\Gamma_V^{(g)} := g(\Gamma_V^{*}, \Gamma_V^{2}, \dots, \Gamma_V^{k})$  \\
+  \IndI  $\Gamma_H^{(k)} := (\Gamma_H^{*}, \Gamma_H^{2}, \dots, \Gamma_H^{k})$ \\
+  \IndI $(q, y^*, y_2, \dots, y_k) := \widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(k)}, C, hash}((x^*, x_2, \dots, x_k), \rho)$\\
+  \IndI $(c^*, c_2, \dots, c_k) := (\Gamma_V^*(q, y^*), \Gamma_V^2(q, y_2), \dots, \Gamma_V^{k}(q, y_k))$ \\
+  \IndI \If $g(1, c_{2}, \dots, c_k) = 1 \land g(0,c_{2}, \dots, c_k) = 0$ \then \\
+  \IndII Make a verification query $(q, y^*)$ \\
   \IndII \return $(q, y^*)$ \\
   \return $\bot$
 %
@@ -235,7 +229,8 @@ Therefore, it is possible to answer all hint and verification queries, without c
   \IndI \If $ \exists b \in \{0,1\}: \widetilde{S}_{\pi^*,b} \geq (1 - \frac{3}{4k}) \epsilon$ \then \\
   \IndII Let $C_1'$ simulate first round of interaction between $C_1$ and $P^{(g)}$ using $P^{(1)}(\pi^*)$, \\
   \IndII then use $C_1$ for remaining $k-1$ rounds. \\
-  \IndII $C' := (C_1,', C_2)$ \\
+  \IndII Let $C_2'$ be $C_2$ with the solution for the first puzzle discarded. \\
+  \IndII $C' := (C_1', C_2')$ \\
   \IndII $g'(b_2, \dots, b_k) := g(b, b_2, \dots, b_k)$\\
   \IndII\return $Gen^{C', P^{(1)}, g', hash}(\epsilon, \delta, n, v, h, k-1)$ \\
   // all estimates are lower than $(1-\frac{3}{4k})\varepsilon$\\
