@@ -33,32 +33,16 @@ that in the first phase uses the circuit $C_1$ and in the second phase the circu
   \begin{align*}
     \underset{\pi^{(k)}, \rho}{\Pr}[CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho) = 1]
     \leq \underset{\pi^{(k)}, \rho}{\Pr}[CanonicalSuccess^{P^{(g)}, \widetilde{C}, hash}(\pi^{(k)}, \rho) = 1]
-    % \underset{\substack{ \pi^{(k)}, \rho \\
-    %     (\Gamma_V^{(g)}, \Gamma_H^{(k)}) := \langle P^{(g)}(\pi^{(k)}), S(\rho) \rangle_{P^{(g)}} \\
-    %     x:= \langle P^{(g)}(\pi^{(k)}), S(\rho) \rangle_{\text{trans}}}}
-    % {\Pr}\left[\Gamma_V^{(g)} (\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(k)}, hash}(x, \rho)) = 1\right].
   \end{align*}
 \end{lemma}
 %
 \begin{proof}
-We fix $\pi^{(k)}, \rho$.
-If $C$ succeeds canonically then also $\widetilde{C}$ succeeds canonically.
-% as in the first phase both
-% circuits uses $C_1$, and in the second phase if $C_2$ succeeds canonically, then also $\widetilde{C}_2$ succeeds canonically.
-% For $(\Gamma_V^{(g)}, \Gamma_H^{(g)}) := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}}$ and
-% $x := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{\text{trans}}$, $C(\rho)$ succeeds canonically, if and only if
-% \begin{align*}
-% \Gamma_V^{(g)} (\widetilde{C}_2^{\Gamma_V^{(g)}, \Gamma_H^{(g)}, hash}(x, \rho)) = 1.
-% \end{align*}
+For some $\pi^{(k)}, \rho$ if $C$ succeeds canonically then also $\widetilde{C}$ succeeds canonically.
 Using this observation, we conclude that
 \begin{align*}
   &\underset{\pi^{(k)}, \rho}{\Pr}\left[CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho) = 1\right] \\
   &\IndII = \underset{\pi^{(k)}, \rho}{\mathbb{E}}\left[CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho) = 1 \right] \\
   &\IndII \leq \underset{\pi^{(k)}, \rho}{\Pr}\left[CanonicalSuccess^{P^{(g)}, \widetilde{C}, hash}(\pi^{(k)}, \rho) = 1\right]
-  % &\IndII = \underset{\substack{\pi^{(k)}, \rho \\
-  %     \left(\Gamma_V^{(g)}, \Gamma_H^{(k)}\right) := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}} \\
-  %     x := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{\text{trans}}}}
-  % {\Pr}[\Gamma_V^{(g)} (\widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(k)}, hash}(x, \rho)) = 1].
 \end{align*}
 % hack to have a square at the end of the proof
 \\\text{  }
@@ -87,7 +71,7 @@ If $\widetilde{C}_2$ does not ask a verification query we write $\bot := \wideti
   \end{align*}
   then $D$ satisfies almost surely
   \begin{align*}
-    \underset{\pi, \rho}{\Pr}\left[CanonicalSuccess^{P^{(1)}, D, hash}(\pi, \rho)=1\right] \geq (\delta + \frac{\varepsilon}{6k})
+    \underset{\pi, \rho}{\Pr}\left[CanonicalSuccess^{P^{(1)}, D, hash}(\pi, \rho)=1\right] \geq (\delta + \frac{\varepsilon}{6k}).
   \end{align*}
   Additionally, $D$ requires oracle access to $g$, $P^{(1)}$, $C$,
   Furthermore, $D$ asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hint queries and at most one verification query.
@@ -96,10 +80,11 @@ If $\widetilde{C}_2$ does not ask a verification query we write $\bot := \wideti
 %
 \begin{proof}
 %
-First we define the following procedure that returns an estimate for the function $g$ with the first bit set to $b \in \{0,1\}$.
+First we define the following procedure that takes as input $b \in \{0,1\}$, and returns
+an estimate for $\underset{(u_2, \dots, u_k) \leftarrow \mu_{\delta}^{k-1}}{\Pr}[g(b,u_2, \dots, u_k )]$.
 %
 \begin{codeblock}
-  $\textbf{EvaluateFunctionProbability}^{g}(b, \epsilon, \delta)$
+  $\textbf{EstimateFunctionProbability}^{g}(b, \epsilon, \delta)$
   \medskip
   \hrule
   \medskip
@@ -108,32 +93,34 @@ First we define the following procedure that returns an estimate for the functio
   \textbf{Output:} An estimate $\widetilde{g} \in \left[0,1\right]$.
   \medskip\hrule\medskip
   \textbf{For} $i:=1$ to $\frac{16k^2}{\epsilon^2}\log(n)$ \Do \\
-  \IndI $(b_2, \dots, b_k) \leftarrow \mu_{\delta}^{(k-1)}$ \\
-  \IndI $g_i := g(b,b_2, \dots, b_k)$ \then \\
+  \IndI $(u_2, \dots, u_k) \leftarrow \mu_{\delta}^{(k-1)}$ \\
+  \IndI $g_i := g(b, u_2, \dots, u_k)$ \then \\
   \textbf{return} $\frac{\epsilon^2}{16k^2\log(n)} \sum_{i=1}^{\frac{16k^2}{\epsilon^2}\log(n)} g_i$
 \end{codeblock}
 %
-\begin{lemma}[Estimate of the function $g$.]
+\begin{lemma}[Estimate for the function $g$.]
   \label{lemma:estimate_of_g}
-  The procedure \textbf{EvaluteFunctionProbability} outputs an estimate $\widetilde{g}$ for the function $g: \{0,1\}^{n} \rightarrow \{0,1\}$ with the first bit fixed to $b \in \{0,1\}$
+  The procedure $\textbf{EstimateFunctionProbability}^g(b)$ outputs an estimate $\widetilde{g}$
+  for the function $g: \{0,1\}^{n} \rightarrow \{0,1\}$ with the first bit fixed to $b \in \{0,1\}$
   such that $| \widetilde{g} - \underset{(u_2,\dots,u_k) \leftarrow \mu_{\delta}^{k}}{\Pr}\left[g(b,u_2, \dots, u_k) = 1\right] | \leq \frac{\epsilon}{4k}$ almost surely.
 \end{lemma}
 %
 \begin{proof}
-We define binary random variable $K_i$ for the event that $g_i = 1$.
-By Chernoff bound we get
+We define binary random variable $K_i$ for the event $g_i = 1$. By Chernoff bound we get
 \begin{align*}
-  \underset{}{\Pr}\left[\left|\frac{\epsilon^2 \log(n)}{16k^2} \sum_{i=1}^{\frac{16k^2}{\epsilon^2}\log(n)} \widetilde{g}_i - \mathbb{E}[K_i]\right| \geq \frac{\epsilon}{4k}  \right] \leq 2e^{\log(n)/3}.
+  \underset{}{\Pr}\left[\left|\frac{\epsilon^2 \log(n)}{16k^2} \sum_{i=1}^{\frac{16k^2}{\epsilon^2}\log(n)} \widetilde{g}_i - \mathbb{E}[K_i]\right| \geq \frac{\epsilon}{4k}  \right]
+  \leq 2 \cdot e^{\log(n)/3} = \frac{2}{3} \cdot n.
 \end{align*}
 \end{proof}
 %
-Next we define a procedure \textbf{EvalutePuzzles}$(\pi^{(k)}, \rho)$ that outputs a tuple indicating puzzles are solved successfully
-in the random experiment $CanonicalSuccess^{P^{(g)}, \widetilde{C}, hash}(\pi^{(k)}, \rho)$.
+Next we define a procedure $\textbf{EvalutePuzzles}^{C, P^{(1)}, hash}(\pi^{(k)}, \rho)$.
+All puzzles used by the procedure are generated internally.
+Therefore, it is possible to answer all hint and verification queries without calls to hint and verification oracles.
 %
 \begin{codeblock}
-  $\textbf{EvaluatePuzzles}^{P^{(1)}, \widetilde{C}, hash}(\pi^{(k)}, \rho)$
+  $\textbf{EvaluatePuzzles}^{P^{(1)}, P^{(g)}, C, hash}(\pi^{(k)}, \rho)$
   \medskip \hrule \medskip
-  \textbf{Oracle:}  A circuit $\widetilde{C}$, an algorithm $P^{(1)}$, a function $hash$.\\
+  \textbf{Oracle:}  A circuit $C$, posers $P^{(1)}$, $P^{(g)}$, a function $hash$.\\
   \textbf{Input:} Bitstrings $\pi^{(k)}$, $\rho$.\\
   \textbf{Output}: A tuple $(c_1, \dots, c_k)$.
   %
@@ -143,8 +130,15 @@ in the random experiment $CanonicalSuccess^{P^{(g)}, \widetilde{C}, hash}(\pi^{(
   \IndI $(\Gamma_V^{(g)}, \Gamma_H^{(k)}) := \langle P(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}}$ \\
   \IndI $x := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{\text{trans}}$ \\ \\
   %
-  $(q,y^{(k)}) := \widetilde{C}_2^{\Gamma_V^{(g)}, \Gamma_H^{(k)}, C, hash}(x, \rho)$\\
-  %
+  Run $C_2^{\Gamma_V, \Gamma_H} (x, \rho)$ \\
+  % \IndI $(q_j,y_j)$ be the first verification query such that $C_2^{\Gamma_V, \Gamma_H}(q_j, y_j) = 1$, or an arbitrary\\
+  % \IndI verification query if $C_2$ does not succeed.\\
+  % \\
+  % \textbf{If} $(\exists i < j :  q_i \in P_{hash} )$ \Or $q_j \notin P_{hash}$ \Or $\Gamma_V(q_j, y_j) \neq 1$ \then \\
+  % \IndI \textbf{return} (0, \dots, 0)
+  % %
+  % $(q,y^{(k)}) := \widetilde{C}_2^{\Gamma_V^{(g)}, \Gamma_H^{(k)}, C, hash}(x, \rho)$\\
+  % %
   \For $i:=1$ to $k$ \Do \IndII //simulate $k$ rounds of sequential interaction \\
   \IndI $(\Gamma_V^{i}, \Gamma_H^{i}) := \langle P^{(1)}(\pi_i), C_1(\rho) \rangle_{P^{(1)}} $\\
   \For $i:=1$ to $k$ \Do \\
@@ -152,9 +146,23 @@ in the random experiment $CanonicalSuccess^{P^{(g)}, \widetilde{C}, hash}(\pi^{(
   \return $(c_1, \dots, c_k)$
 \end{codeblock}
 %
-The procedure \textbf{EstimateSurplus} returns the estimate $\widetilde{S}_{\pi^*, b}$ for $S_{\pi^*, b}$.
-All puzzles used during obtaining the estimate are generated internally.
-Therefore, it is possible to answer all hint and verification queries, without calls to the verification oracles.
+
+For fixed $\pi^{(k)}, \rho$ let $(\Gamma_V^{(g)}, \Gamma_H^{(k)}) := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}}$
+and $x := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{\text{trans}}$.
+Additionally, we denote by $(\Gamma_V^{i}, \Gamma_H^{i})$ the verification and hint circuits generated in the $i$-th
+round of the interaction between $P^{(g)}(\pi^{(k)})$ and $C_1(\rho)$.
+Finally, for $(q,y_1, \dots, y_k) := \widetilde{C}_2(x^{(k)}, \rho)$ we denote the output of $\Gamma_V^i(q,y_i)$ by $c_i$.
+For $b \in \{0,1\}$ we define the surplus
+\begin{align}
+  \label{eq:s_pi_b}
+S_{\pi^*, b} = \underset{\pi^{(k)}, \rho}{\Pr}\left[g(b, c_2, \dots, c_k) = 1\right] - \underset{(u_2, \dots, u_k) \leftarrow \mu^{(k)}}{\Pr}\left[g(b, u_2, \dots, u_k) = 1\right]
+\end{align}
+%
+The surplus $S_{\pi^*, b}$ tells us how good $\widetilde{C}$ performs when the bitstring $\pi_1$ is fixed to $\pi^*$,
+and the fact whether $\widetilde{C}$ succeeds in solving the first puzzle defined by $P^{(1)}(\pi_1)$ is neglected.
+Instead, the bit $b$ is used as the input on the first position of the function $g$.
+
+The procedure \textbf{EstimateSurplus} returns an estimate $\widetilde{S}_{\pi^*, b}$ for $S_{\pi^*, b}$.
 %
 \begin{codeblock}
   $\textbf{EstimateSurplus}^{P^{(1)}, C, hash}(\pi^*, b)$
@@ -167,26 +175,37 @@ Therefore, it is possible to answer all hint and verification queries, without c
   \medskip\hrule\medskip
   $\widetilde{g}_b := \textbf{EvaluteFunctionProbability}^{g}(b, \epsilon, \delta)$ \\
   \textbf{For} $i:=1$ to $\frac{16k^2}{\epsilon^2}\log(n)$ \Do \\
-  \IndI $(\pi_{m+1}, \dots, \pi_k) \xleftarrow{\$} \{0,1\}^{(k-m-1)n}$\\
+  \IndI $(\pi_{2}, \dots, \pi_k) \xleftarrow{\$} \{0,1\}^{(k-1)n}$\\
   \IndI $\rho \xleftarrow{\$} \{0,1\}^{*}$\\
-  \IndI $(c_1, \dots, c_k) := \textbf{EvalutePuzzles}^{P^{(1)}, C, hash}(\pi_1, \dots, \pi_{m}, \pi^*, \dots, \pi_k, \rho)$\\
-  \IndI $\widetilde{s}_{\pi^*,b}^i := g(b, c_{m+1}, \dots, c_k)$\\
+  \IndI $(c_1, \dots, c_k) := \textbf{EvalutePuzzles}^{P^{(1)}, C, hash}(\pi^*, \pi_2, \dots, \pi_k, \rho)$\\
+  \IndI $\widetilde{s}_{\pi^*,b}^i := g(b, c_{2}, \dots, c_k)$\\
   \textbf{return} $\frac{\epsilon^2\log(n)}{16k^2} \sum_{i=1}^{\frac{16k^2}{\epsilon^2}\log(n)} \widetilde{s}_{\pi^*,b}^i - \widetilde{g}_b$\\
 \end{codeblock}
+%
+\begin{lemma}
+  \label{lemma:surplus_estimate}
+The estimate $\widetilde{S}_{\pi^*,b}$ returned by \textbf{EstimateSurplus} differs from $S_{\pi^*, b}$ by at most $\frac{\epsilon}{2k}$ almost surely.
+\end{lemma}
+
+\begin{proof}
+We use union bound and similar argument as in Lemma \ref{lemma:estimate_of_g}
+which yields that \\$\frac{\epsilon^2\log(n)}{16k^2} \sum_{i=1}^{\frac{16k^2}{\epsilon^2}\log(n)} \widetilde{s}_{\pi^*,b}^i$ differs from
+$\mathbb{E}[g(b, c_2, \dots, c_k)]$ by at most $\frac{\epsilon}{4k}$ almost surely. Together, with Lemma $\ref{lemma:estimate_of_g}$ we conclude that the surplus estimate
+returned by \textbf{EstimateSurplus} differs from $S_{\pi^*,b}$ by at most $\frac{\epsilon}{2k}$ almost surely.
+\end{proof}
+From Lemma \ref{lemma:surplus_estimate} we conclude that if $\widetilde{S}_{\pi^*,b} \geq (1-\frac{3}{4k})\epsilon$, then $S_{\pi^*,b} \geq (1-\frac{1}{k})\epsilon$ almost surely.
 %
 \begin{codeblock}
   \textbf{Circuit $D = (D_1, D_2) (\sigma)$}
   \medskip \hrule \medskip
-  \textbf{Phase I $D_1^{P^{(1)}, C}(\sigma)$}
+  \textbf{Phase I $D_1^{C}(\sigma)$}
   \medskip \hrule \medskip
   \textbf{Oracle:} A circuit $C$.\\
   \textbf{Input:} A bitstring $\sigma \in \{0,1\}^{*}$.
-%  \textbf{Hard coded:} Bitstrings $\pi_1, \dots, \pi_{m-1}$. \\
-%  \textbf{Output}:
   \medskip\hrule\medskip
 
-  Interact with the problem poser using $C_1(\rho)$. \\
-  \IndI Let $x^*$ be the transcript of the simulations and the interaction with the problem poser.\\
+  Interact with the problem poser $P^{(1)}$ using $C_1(\rho)$. \\
+  \IndI Let $x^*$ be the transcript of any internal simulations of $C_1$ and the interaction with the  \\ \IndI problem poser.\\
   \IndI Let $\Gamma_V^*, \Gamma_H^*$ be the verification and hint circuits output by the problem poser.
 
   \medskip \hrule \medskip
@@ -198,7 +217,7 @@ Therefore, it is possible to answer all hint and verification queries, without c
   \medskip \hrule \medskip
   \For at most $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$ iterations \Do \\
   \IndI $\pi^{(k-1)} \leftarrow$ read $(k-1)\cdot n$ bits from $\sigma$ \\
-  \IndI \For $i:=2$ to $k$ \Do \\
+  \IndI \For $i:=2$ to $k$ \Do \IndIII // Finish remaining $k-1$ interactions. \\
   \IndII Simulate $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle$ \\
   \IndIII $ x_i := \langle P^{(1)}(\pi_i), C_1(\rho)\rangle_{\text{trans}}$ \\
   \IndIII $(\Gamma_V^{i}, \Gamma_H^{i}) := \langle P^{(1)}(\pi_i), C_1(\rho) \rangle_{P^{(1)}}$ \\
@@ -227,61 +246,27 @@ Therefore, it is possible to answer all hint and verification queries, without c
   \IndI $\widetilde{S}_{\pi^*,0} := \textbf{EstimateSurplus}^{P^{(1)}, C, hash}(\pi^*, 0)$\\
   \IndI $\widetilde{S}_{\pi^*,1} := \textbf{EstimateSurplus}^{P^{(1)}, C, hash}(\pi^*, 1)$\\
   \IndI \If $ \exists b \in \{0,1\}: \widetilde{S}_{\pi^*,b} \geq (1 - \frac{3}{4k}) \epsilon$ \then \\
-  \IndII Let $C_1'$ simulate first round of interaction between $C_1$ and $P^{(g)}$ using $P^{(1)}(\pi^*)$, \\
-  \IndII then use $C_1$ for remaining $k-1$ rounds. \\
-  \IndII Let $C_2'$ be $C_2$ with the solution for the first puzzle discarded. \\
+  \IndII Let $C_1'$ be as $C_1$ except the first round of interaction between $C_1$ and $P^{(g)}$ which \\
+  \IndII is simulated internally by using $P^{(1)}(\pi^*)$\\
+  \IndII Let $C_2'$ be as $C_2$ except the solution for the first puzzle which is discarded. \\
   \IndII $C' := (C_1', C_2')$ \\
   \IndII $g'(b_2, \dots, b_k) := g(b, b_2, \dots, b_k)$\\
   \IndII\return $Gen^{C', P^{(1)}, g', hash}(\epsilon, \delta, n, v, h, k-1)$ \\
   // all estimates are lower than $(1-\frac{3}{4k})\varepsilon$\\
   \return $D^{C}$
 \end{codeblock}
-%
-% The algorithm $Gen$ recursively builds the circuit that have high success probability in solving a dynamic weakly verifiable puzzle.
-% When algorithm recurses it fixes a puzzle on the first position on the input of circuit $\widetilde{C}$ which yields a new circuit $\widetilde{C}'$.
-% It happens only in the situation when for some fixed $\pi^*$ circuit $\widetilde{C}$ performs good on the remaining $k-1$ puzzles.
-%
 For $k=1$ the function $g: \{0,1\} \rightarrow \{0,1\}$ is either the identity or a constant function.
 If $g$ is the identity function then the success probability of $C$ in the random experiment $CanonicalSuccess$ is as least $\delta + \epsilon$,
 and $D$ simply uses the circuit $\widetilde{C}$. In case $g$ is a constant function the statement is vacuously true.
 
-For fixed $\pi^{(k)}, \rho$ let $(\Gamma_V^{(g)}, \Gamma_H^{(k)}) := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}}$
-and $x := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{\text{trans}}$.
-Additionally, let $(\Gamma_V^{i}, \Gamma_H^{i})$ be the verification and hint circuits generated in the $i$-th
-round of the interaction between $P^{(g)}(\pi^{(k)})$ and $C_1(\rho)$.
-Finally, for $(q,y_1, \dots, y_k) := \widetilde{C}_2(x^{(k)}, \rho)$ we denote $c_i := \Gamma_V^i(q,y_i)$.
-We define the surplus:
-\begin{align}
-  \label{eq:s_pi_b}
-S_{\pi^*, b} = \underset{\pi^{(k)}, \rho}{\Pr}\left[g(b, c_2, \dots, c_k) = 1\right] - \underset{(u_2, \dots, u_k) \leftarrow \mu^{(k)}}{\Pr}\left[g(b, u_2, \dots, u_k) = 1\right]
-\end{align}
-%
-The surplus $S_{\pi^*, b}$ tells us how good $\widetilde{C}$ performs when the bitstring $\pi_1$ is fixed to $\pi^*$,
-and the fact whether $\widetilde{C}$ succeeds in solving the first puzzle defined by $P^{(1)}(\pi_1)$ is disregarded.
-Instead, the bit $b$ is used as the input on the first position of the function $g$.
-
-%
-\begin{lemma}
-  \label{lemma:surplus_estimate}
-The estimate $\widetilde{S}_{\pi^*,b}$ returned by \textbf{EstimateSurplus} differs from $S_{\pi^*, b}$ by at most $\frac{\epsilon}{2k}$ almost surely.
-\end{lemma}
-
-\begin{proof}
-We use union bound and similar argument as in Lemma \ref{lemma:estimate_of_g}
-which yields that $\frac{\epsilon^2\log(n)}{16k^2} \sum_{i=1}^{\frac{16k^2}{\epsilon^2}\log(n)} \widetilde{s}_{\pi^*,b}^i$ differs from
-$\mathbb{E}[g(b, c_2, \dots, c_k)]$ by at most $\frac{\epsilon}{4k}$ almost surely. Together, with Lemma $\ref{lemma:estimate_of_g}$ we conclude that the surplus estimate
-returned by \textbf{EstimateSurplus} differs from $S_{\pi^*,b}$ by at most $\frac{\epsilon}{2k}$ almost surely.
-\end{proof}
-%
-From Lemma \ref{lemma:surplus_estimate} we conclude that if $\widetilde{S}_{\pi^*,b} \geq (1-\frac{3}{4k})\epsilon$, then $S_{\pi^*,b} \geq (1-\frac{1}{k})\epsilon$ almost surely.
-
 In case $Gen$ manages to find an estimate that satisfies $\widetilde{S}_{\pi^*,b} \geq (1-\frac{3}{4k})\epsilon$
 we define a monotone function $g'(b_2, \dots, b_k) := g(b, b_2, \dots, b_k)$,
-and a circuit $\widetilde{C}' = (C_1', \widetilde{C}_2')$, where
-$C_1'$ first simulates the interaction between $C_1$ and $P^{(1)}(\pi^*)$, and then interacts with $P^{(1)}$.
-
-The circuit $\widetilde{C}$ satisfies the conditions of Lemma \ref{lemma:sec_amp_for_p_hash} for
-the remaining $k-1$ puzzles and we recurse using $g'$ and $\widetilde{C}'$.
+and a circuit $\widetilde{C}' = (C_1', C_2')$, where
+$C_1'$ first internally simulates the interaction between $C_1$ and $P^{(1)}(\pi^*)$, and then interacts with $P^{(g')}$.
+The circuit $C_2'$ is defined as $C_2$ with the solution for the first puzzle discarded.
+The surplus estimate is greater than $1 - \frac{3}{4k}\epsilon$.
+Therefore, the canonical success probability for the $(k-1)$-wise direct product of puzzles is at least $\underset{}{\Pr}[g'(u_1,\dots, u_{k-1} )] + \epsilon$.
+Hence, the circuit $C'$ satisfies the conditions of Lemma \ref{lemma:sec_amp_for_p_hash} for $k-1$ puzzles and we recurse using $g'$ and $C'$.
 
 If all estimates are less than $(1-\frac{3}{4k})\epsilon$, then intuitively $C$
 does not perform much better on the remaining $k-1$ puzzles than an algorithm that solves each puzzle independent with probability $\delta$.
