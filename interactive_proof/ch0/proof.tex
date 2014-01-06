@@ -274,89 +274,85 @@ We now show that this intuition is indeed correct. For a fixed $\pi^*$ using (\r
 % \begin{todo}
 %   \textbf{TODO:} Better explain why we can write $\Pr(g() = 1 \land g() = 0)$ as the equivalence for the difference.
 % \end{todo}
-From the monotonicity of $g$ we know that for any set of tuples $(b_1, \dots, b_k)$
-and sets $\cB_0 = \{ (b_1, b_2, \dots, b_k): g(0, b_2, \dots, b_k) = 1\}$, $ \cB_1 = \{(b_1, b_2, \dots, b_k) : g(1, b_2, \dots, b_k) = 1 \}$
-we have $\cB_0 \subseteq \cB_1$. Hence, multiplying (\ref{eq:diff_s01}) by $\Pr$:
+Let $\cG_{b} := \{ b_1, b_2, \dots, b_k : g(b, b_2, \dots, b_k) = 1 \}$.
+From the monotonicity of $g$ we know that $\cG_0 \subseteq \cG_1$.
+Using $\cG_0 \subseteq \cG_1$ and (\ref{eq:diff_s01}) we obtain:
 \begin{align}
   \label{eq:diff_s01_next}
-  &\underset{u \leftarrow \mu_{\delta}^k}{\Pr}[g(1, u_2, \dots, u_k) = 1 \land g(0, u_2, \dots, u_k) = 0] = \notag\\
-&\IndI  \underset{\pi^{(k)}, \rho}{\Pr}[g(1, c_2, \dots, c_k) = 1 \land g(0, c_2, \dots, c_k) = 0 \mid \pi_1 = \pi^*] - (S_{\pi^*,1} - S_{\pi^*,0}).
+  \underset{u \leftarrow \mu_{\delta}^k}{\Pr}[u \in \cG_1 \setminus \cG_0] = \underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] - (S_{\pi^*,1} - S_{\pi^*,0}).
+%   &\underset{u \leftarrow \mu_{\delta}^k}{\Pr}[g(1, u_2, \dots, u_k) = 1 \land g(0, u_2, \dots, u_k) = 0] = \notag\\
+% &\IndI  \underset{\pi^{(k)}, \rho}{\Pr}[g(1, c_2, \dots, c_k) = 1 \land g(0, c_2, \dots, c_k) = 0 \mid \pi_1 = \pi^*] - (S_{\pi^*,1} - S_{\pi^*,0}).
 \end{align}
-Let $G_{u^{(k)}}$ denote the event $g(1, u_2, \dots, u_k) = 1 \land g(0, u_2, \dots, u_k) = 0$, and correspondingly
-$G_{\pi^{(k)}} := g(1, c_2, \dots, c_k) = 1) \land (g(0, c_2, \dots, c_k) = 0$.
-From (\ref{eq:diff_s01_next}) for $\pi_1 = \pi^*$ fixed we obtain
+From (\ref{eq:diff_s01_next}) fixing $\pi_1 = \pi^*$ we obtain
 \begin{align}
 \label{eq:pr_d_succ_0}
-  \underset{\substack{\rho \\ \prGx}}{\Pr}[\Gamma_V(D_2(x^*, \rho)) = 1] &=
-  \frac{\underset{\rho}{\Pr}[\Gamma_V(D_2(x^*, \rho)) = 1 \mid \pi_1 = \pi^*] \underset{\rho}{\Pr}[G_{\pi} \mid \pi_1 = \pi^*]} {\underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[G_{\mu}]} \notag\\
-  & \IndI - \frac{\underset{\rho}{\Pr}[\Gamma_V(D_2(x^*, r)) = 1 \mid \pi_1 = \pi^*](S_{\pi^*,1} - S_{\pi^*,0})}{\underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[G_{\mu}]}
+&\underset{\rho}{\Pr}[CanonicalSuccess^{P^{(1)}, D, hash}(\pi^*, \rho) = 1] = \notag\\
+&\IndII\frac{\underset{\rho}{\Pr}[CanonicalSuccess^{P^{(1)}, D, hash}(\pi^*, \rho) = 1] \underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_1 \setminus \cG_2]}
+{\underset{u \leftarrow \mu_{\delta}^k}{\Pr}[u \in \cG_1 \setminus \cG_0]} \notag\\
+&\IndIII-\frac{\underset{\rho}{\Pr}[CanonicalSuccess^{P^{(1)}, D, hash}(\pi^*, \rho) = 1] (S_{\pi^*,1} - S_{\pi^*,0})}
+{\underset{u \leftarrow \mu_{\delta}^k}{\Pr}[u \in \cG_1 \setminus \cG_0]}
 \end{align}
-%
-% \begin{todo}
-%   \textbf{TODO:} Define $c_1, \dots, c_k$ correctly from the paper it is not known whether it is in the iteration or the final one
-% \end{todo}
-%If $D_2(x^*,\rho) \neq \bot$ then we denote $c_i := \Gamma_V^{i}(q, y_i)$.
-We can write the first summand of (\ref{eq:pr_d_succ_0}) as
+We make use of the fact that the event $G_{\pi}$ implies $D(x^*, r) \neq \bot$, and write the first summand of (\ref{eq:pr_d_succ_0}) as
 \begin{align}
-  &\underset{\rho}{\Pr}[\Gamma_V(D_2(x^*,\rho)) = 1 \mid \pi_1 = \pi^*] \underset{\pi^{(k)}}{\Pr}[G_{\pi} \mid \pi_1 = \pi^*] = \notag\\
-  &\IndI \underset{\rho}{\Pr}[D_2(x^*,\rho) \neq \bot \mid \pi_1 = \pi^*]
-  \underset{\pi^{(k)}}{\Pr}[c_1 = 1 \mid G_{\pi}, \pi_1 = \pi^*]
-  \underset{\pi^{(k)}}{\Pr}[G_{\pi} \mid \pi_1 = \pi^*]
+  &\underset{\rho}{\Pr}[CanonicalSuccess^{P^(1), D, hash}(\pi^*,\rho) = 1] \underset{\pi^{(k)}}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] = \notag\\
+  &\IndI \underset{\substack{\rho \\ x^* = \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{trans}}}{\Pr}[D_2(x^*,\rho) \neq \bot]
+  \underset{\pi^{(k)}}{\Pr}[c_1 = 1 \mid c \in \cG_1 \setminus \cG_0, \pi_1 = \pi^*]
+  \underset{\pi^{(k)}}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*]
 \end{align}
-where we make use of the fact that the event $G_{\pi}$ implies $D(x^*, r) \neq \bot$.
-We consider two cases.
-If $\underset{\pi^{k}}{\Pr}[g(1, c_2, \dots, c_k) = 1 \land g(0, c_2, \dots,c_k ) = 0 \mid \pi_1 = \pi^*] \leq \frac{\epsilon}{6k}$ then
+Now we consider two cases:
+if $\underset{\pi^{(k)}, \rho}{\Pr}[ c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] \leq \frac{\epsilon}{6k}$ then
 \begin{align}
-  \underset{\pi^{(k)}}{\Pr}[c_1 = 1 \mid G_{\pi}, \pi_1 = \pi^*] \underset{\pi^{(k)}}{\Pr}[G_{\pi} \mid \pi_1 = \pi^*] \leq \frac{\epsilon}{6k},
+  \underset{\pi^{(k)}}{\Pr}[c_1 = 1 \mid c \in \cG_1 \setminus \cG_0, \pi_1 = \pi^*] \underset{\pi^{(k)}}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] \leq \frac{\epsilon}{6k},
 \end{align}
-and when $\underset{\pi^{(k)}}{\Pr}[g(1, c_2, \dots, c_k) = 1 \land g(0, c_2, \dots,c_k ) = 0] > \frac{\epsilon}{6k}$ then circuit $D$ outputs $\bot$
-only if it fails in all $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$ iterations to find $\pi^{(k)}$ such that $g(1, c_2, \dots, c_k) = 1 \land g(0, c_2, \dots, c_k) = 0$
-which happens with probability
+for $\underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_1 \setminus \cG_0] > \frac{\epsilon}{6k}$ the circuit $D_2$ outputs $\bot$
+if and only if it fails in all $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$ iterations to find $\pi^{(k)}$ such that $g(1, c_2, \dots, c_k) = 1 \land g(0, c_2, \dots, c_k) = 0$
+(i.e. in none of the iterations $c \in \cG_1 \setminus \cG_0$) which happens with probability
 \begin{align}
-\underset{r}{\Pr}[D(x^*,r) = \bot \mid \pi_1 = \pi^*] \leq (1 - \frac{\epsilon}{6k})^{\frac{6k}{\epsilon}\log(\frac{\epsilon}{6k})} \leq \frac{\epsilon}{6k}.
+\underset{\substack{\rho \\ x^* := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}}}{\Pr}[D_2(x^*,\rho) = \bot]
+\leq (1 - \frac{\epsilon}{6k})^{\frac{6k}{\epsilon}\log(\frac{\epsilon}{6k})} \leq \frac{\epsilon}{6k}.
 \end{align}
 We conclude that in both cases:
 \begin{align}
-  &\underset{r}{\Pr}[D(x^*,r) \neq \bot \mid \pi_1 = \pi^*]
-  \underset{\pi^{(k)}}{\Pr}[c_1 = 1 \mid G_{\pi}, \pi_1 = \pi^*]
-  \underset{\pi^{(k)}}{\Pr}[G_{\pi} \mid \pi_1 = \pi^*] \notag\\
-  &\IndII \geq \underset{\pi^{(k)}}{\Pr}[c_1 = 1 \mid G_{\pi}, \pi_1 = \pi^*]\underset{\pi^{(k)}}{\Pr}[G_{\pi} \mid \pi_1 = \pi^*] - \frac{\epsilon}{6k}.
+  &\underset{\substack{\rho \\ x^* := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}}}{\Pr}[D_2(x^*,\rho) \neq \bot]
+  \underset{\pi^{(k)}, \rho}{\Pr}[c_1 = 1 \mid c \in \cG_1 \setminus \cG_0, \pi_1 = \pi^*]
+  \underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] \notag\\
+  &\IndIII \geq \underset{\pi^{(k)}, \rho}{\Pr}[c_1 = 1 \mid c \in \cG_1 \setminus \cG_0, \pi_1 = \pi^*]\underset{\pi^{(k)}}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] - \frac{\epsilon}{6k}.
 \end{align}
 Therefore, we have
 \begin{align*}
-  &\underset{r}{\Pr}[D(x^*,r) \neq \bot \mid \pi_1 = \pi^*]
-  \underset{\pi^{(k)}}{\Pr}[c_1 = 1 \mid G_{\pi}, \pi_1 = \pi^*]
-  \underset{\pi^{(k)}}{\Pr}[G_{\pi} \mid \pi_1 = \pi^*] \notag\\
-  &\IndII = \underset{\pi^{(k)}}{\Pr}[c_1 = 1 \land g(1, c_2,\dots, c_k) = 1 \land g(0, c_2, \dots, c_k) = 0 \mid \pi_1 = \pi^*] - \frac{\epsilon}{6k} \\
-  &\IndII = \underset{\pi^{(k)}}{\Pr}[g(c_1, c_2,\dots, c_k) = 1 \land g(0, c_2, \dots, c_k) = 0 \mid \pi_1 = \pi^*] - \frac{\epsilon}{6k} \\
-  &\IndII = \underset{\pi^{(k)}}{\Pr}[g(c_1, c_2,\dots, c_k) = 1 \mid \pi_1 = \pi^*] -  \underset{\pi^{(k)}}{\Pr}[g(0, c_2, \dots, c_k) = 0 \mid \pi_1 = \pi^*] - \frac{\epsilon}{6k},
+  &\underset{\substack{\rho \\ x^* := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}}}{\Pr}[D_2(x^*,\rho) \neq \bot]
+  \underset{\pi^{(k)}, \rho}{\Pr}[c_1 = 1 \mid c \in \cG_1 \setminus \cG_0, \pi_1 = \pi^*]
+  \underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] \notag\\
+  &\IndII \geq \underset{\pi^{(k)}, \rho}{\Pr}[c_1 = 1 \land c \in \cG_0 \setminus \cG_1 \mid \pi_1 = \pi^*] - \frac{\epsilon}{6k} \\
+  &\IndII = \underset{\pi^{(k)}, \rho}{\Pr}[g(c_1, c_2,\dots, c_k) = 1 \land g(0, c_2, \dots, c_k) = 0 \mid \pi_1 = \pi^*] - \frac{\epsilon}{6k} \\
+  &\IndII = \underset{\pi^{(k)}, \rho}{\Pr}[g(c_1, c_2,\dots, c_k) = 1 \mid \pi_1 = \pi^*] -  \underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_0 \mid \pi_1 = \pi^*] - \frac{\epsilon}{6k},
 \end{align*}
 and finally by (\ref{eq:s_pi_b})
 \begin{align}
-  &\underset{r}{\Pr}[D(x^*,r) \neq \bot \mid \pi_1 = \pi^*]
-  \underset{\pi^{(k)}}{\Pr}[c_1 = 1 \mid G_{\pi}, \pi_1 = \pi^*]
-  \underset{\pi^{(k)}}{\Pr}[G_{\pi} \mid \pi_1 = \pi^*] \notag\\
-  &\IndII = \underset{\pi^{(k)}}{\Pr}[g(c_1, c_2,\dots, c_k) = 1 \mid \pi_1 = \pi^*] -  \underset{\mu_{\delta}^{(k)}}{\Pr}[g(0, \mu_2, \dots, \mu_k) = 0 \mid \pi_1 = \pi^*]  - S_{\pi^*,0} - \frac{\epsilon}{6k}.
+  &\underset{\substack{\rho \\ x^* := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}}}{\Pr}[D_2(x^*,\rho) \neq \bot]
+  \underset{\pi^{(k)}, \rho}{\Pr}[c_1 = 1 \mid c \in \cG_1 \setminus \cG_0, \pi_1 = \pi^*]
+  \underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] \notag\\
+  &\IndIII = \underset{\pi^{(k)}, \rho}{\Pr}[g(c_1, c_2,\dots, c_k) = 1 \mid \pi_1 = \pi^*] -  \underset{u \leftarrow \mu_{\delta}^{(k)}}{\Pr}[u \in \cG_0]  - S_{\pi^*,0} - \frac{\epsilon}{6k}.
 \end{align}
 Inserting this result into the equation (\ref{eq:pr_d_succ_0}) yields
 \begin{align}
 \label{eq:pr_d_succ_1}
-  &\underset{r,\pi}{\Pr}[\Gamma_V(D(x,r)) = 1] = \mathbb{E_{\pi}}\left[\underset{r}{\Pr}[D(x,r) = 1 \mid \pi_1 = \pi^*]\right] \notag\\
-&\IndI = \mathbb{E}_{\pi}\left[\frac{{\Pr}_{\pi^{(k)}}[g(c) = 1 \mid \pi_1 = \pi^*] -
-{\Pr}_{\mu_{\delta}^{(k)}}[g(0, \mu_2, \dots, \mu_k) = 0 \mid \pi_1 = \pi^*] - \frac{\epsilon}{6k}} {{\Pr}_{\mu_{\delta}^{k}}[G_{\mu}]}\right] \notag\\
-&\IndII - \mathbb{E}_{\pi}\left[\frac{
-  S_{\pi^*,0} + \Pr_r [\Gamma_V^{(g)}(D(x^*,r)) = 1 \mid \pi_1 = \pi^*](S_{\pi^*,1} - S_{\pi^*,0})}
-{{\Pr}_{\mu_{\delta}^{k}}[G_{\mu}]}\right]
+  &\underset{\pi, \rho}{\Pr}[CanonicalSuccess^{P^{(1)}, D, hash}] = \notag\\
+&\IndI = \mathbb{E}_{\pi^*}\left[\frac{{\Pr}_{\pi^{(k)}}[g(c) = 1 \mid \pi_1 = \pi^*]
+- {\Pr}_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_0] - \frac{\epsilon}{6k}}
+{\Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_1 \setminus \cG_0]}\right] \notag\\
+&\IndII - \mathbb{E}_{\pi^*}\left[\frac{S_{\pi^*,0} + \Pr_{\rho} [CanonicalSuccess^{P^{(1)}, D, hash}(\pi^*, \rho) = 1](S_{\pi^*,1} - S_{\pi^*,0})}
+{{\Pr}_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_1 \setminus \cG_0]}\right]
 \end{align}
 For the second summand we show that if we do not recurse, then almost surely majority of estimates is low.
 Let assume
 \begin{align}
-\underset{\pi}{\Pr}\left[\left(S_{\pi,0} \leq (1 - \frac{1}{2k})\epsilon\right) \land \left( S_{\pi,1} \leq (1-\frac{1}{2k})\epsilon\right)\right] < 1 - \frac{\epsilon}{6k},
+\underset{\pi, \rho}{\Pr}\left[\left(S_{\pi,0} \leq (1 - \frac{1}{2k})\epsilon\right) \land \left( S_{\pi,1} \leq (1-\frac{1}{2k})\epsilon\right)\right] < 1 - \frac{\epsilon}{6k},
 \end{align}
 then the algorithm recurses almost surely.
 Therefore, under the assumption that $Gen$ does not recurse, we have almost surely
 \begin{align}
-\underset{\pi}{\Pr}\left[\left(S_{\pi,0} \leq (1 - \frac{1}{2k})\epsilon\right) \land \left( S_{\pi,1} \leq (1-\frac{1}{2k})\epsilon\right)\right] \geq 1 - \frac{\epsilon}{6k}.
+\underset{\pi, \rho}{\Pr}\left[\left(S_{\pi,0} \leq (1 - \frac{1}{2k})\epsilon\right) \land \left( S_{\pi,1} \leq (1-\frac{1}{2k})\epsilon\right)\right] \geq 1 - \frac{\epsilon}{6k}.
 \end{align}
 Let us define a set
 \begin{align}
@@ -365,84 +361,55 @@ Let us define a set
 and use $\cW^c$ to denote the complement of $\cW$.
 We bound the second summand in (\ref{eq:pr_d_succ_1})
 \begin{align}
-&\mathbb{E}_{\pi}\left[ S_{\pi^*,0} + \Pr_r [\Gamma_V^{(g)}(D(x^*,r)) = 1 \mid \pi_1 = \pi^*](S_{\pi^*,1} - S_{\pi^*,0}) \right] \notag\\
-&\IndII = \mathbb{E}_{\pi \in \cW^c}\left[ S_{\pi^*,0} + \Pr_r [\Gamma_V^{(g)}(D(x^*,r)) = 1 \mid \pi = \pi^*](S_{\pi^*,1} - S_{\pi^*,0}) \right] \notag\\
-&\IndIII +  \mathbb{E}_{\pi \in \cW}\left[ S_{\pi^*,0} + \Pr_r [\Gamma_V^{(g)}(D(x^*,r)) = 1 \mid \pi = \pi^*](S_{\pi^*,1} - S_{\pi^*,0}) \right] \\
-&\IndII \leq \frac{\epsilon}{6k} + \mathbb{E}_{\pi \in \cW^c}\left[ S_{\pi^*,0} + \Pr_r [\Gamma_V^{(g)}(D(x^*,r)) = 1 \mid \pi = \pi^*]((1 - \frac{1}{2k})\epsilon - S_{\pi^*,0}) \right] \\
+&\mathbb{E}_{\pi^*}\left[ S_{\pi^*,0} + \Pr_{\rho} [CanonicalSuccess^{P^{(1)}, D, hash} (\pi^*, \rho) = 1](S_{\pi^*,1} - S_{\pi^*,0}) \right] \notag\\
+&\IndII = \mathbb{E}_{\pi^* \in \cW^c}\left[ S_{\pi^*,0} + \Pr_{\rho} [CanonicalSuccess^{P^{(1)}, D, hash}(\pi^*, \rho) = 1](S_{\pi^*,1} - S_{\pi^*,0}) \right] \notag\\
+&\IndIII +  \mathbb{E}_{\pi^* \in \cW}\left[ S_{\pi^*,0} + \Pr_{\rho} [CanonicalSuccess^{P^{(1)}, D, hash}(\pi^*, \rho) = 1](S_{\pi^*,1} - S_{\pi^*,0}) \right] \notag\\
+&\IndII \leq \frac{\epsilon}{6k} + \mathbb{E}_{\pi^* \in \cW^c}\left[ S_{\pi^*,0} + \Pr_{\rho} [CanonicalSuccess^{P^{(1)}, D, hash}(\pi^*, \rho) = 1]((1 - \frac{1}{2k})\epsilon - S_{\pi^*,0}) \right] \notag\\
 &\IndII \leq \frac{\epsilon}{6k} + 1 - \frac{\epsilon}{2k} = 1 - \frac{\epsilon}{3k}
+% &\mathbb{E}_{\pi}\left[ S_{\pi^*,0} + \Pr_r [\Gamma_V^{(g)}(D(x^*,r)) = 1 \mid \pi_1 = \pi^*](S_{\pi^*,1} - S_{\pi^*,0}) \right] \notag\\
+% &\IndII = \mathbb{E}_{\pi \in \cW^c}\left[ S_{\pi^*,0} + \Pr_r [\Gamma_V^{(g)}(D(x^*,r)) = 1 \mid \pi = \pi^*](S_{\pi^*,1} - S_{\pi^*,0}) \right] \notag\\
+% &\IndIII +  \mathbb{E}_{\pi \in \cW}\left[ S_{\pi^*,0} + \Pr_r [\Gamma_V^{(g)}(D(x^*,r)) = 1 \mid \pi = \pi^*](S_{\pi^*,1} - S_{\pi^*,0}) \right] \\
+% &\IndII \leq \frac{\epsilon}{6k} + \mathbb{E}_{\pi \in \cW^c}\left[ S_{\pi^*,0} + \Pr_r [\Gamma_V^{(g)}(D(x^*,r)) = 1 \mid \pi = \pi^*]((1 - \frac{1}{2k})\epsilon - S_{\pi^*,0}) \right] \\
+% &\IndII \leq \frac{\epsilon}{6k} + 1 - \frac{\epsilon}{2k} = 1 - \frac{\epsilon}{3k}
 \end{align}
 Finally, we insert this result into equation (\ref{eq:pr_d_succ_1}) and make use of the fact
 \begin{align*}
-\underset{}{\Pr}[g(u) = 1] &= \underset{}{\Pr}[(g(0, \mu_2, \dots, \mu_k) = 1) \lor ( g(1,\mu_2, \dots, \mu_k) = 1 \land g(0, \mu_2, \dots, \mu_k) = 0 \land \mu_1 = 1)] \notag\\
-&= \Pr[g(0,\mu_2, \dots,\mu_k) = 1] + \Pr[g(1,\mu_2,\dots,\mu_k) = 1 \land g(0, \mu_2, \dots, \mu_k) = 0] \Pr[\mu_1 = 1]
+\underset{u \leftarrow \mu_{\delta}^k}{\Pr}[g(u) = 1]
+&= \Pr[u \in \cG_0 \lor ( u \in \cG_1 \setminus \cG_0 \land u_1 = 1)] \notag\\
+&= \Pr[u \in \cG_0] + \Pr[u \in \cG_1 \setminus \cG_0] \Pr[u_1 = 1]
 \end{align*}
 which yields
 \begin{align*}
-  \underset{r,\pi}{\Pr}[D(x,r) = 1]
-&\geq \mathbb{E}_{\pi}\left[\frac{{\Pr}_{\pi^{(k)}}[g(c) = 1 \mid \pi_1 = \pi^*] -
-{\Pr}_{\mu_{\delta}^{(k)}}[g(0, \mu_2, \dots, \mu_k) = 0] - (1 - \frac{1}{6k})\epsilon} {{\Pr}_{\mu_{\delta}^{k}}[G_{\mu}]}\right] \notag
+  \underset{\pi, \rho}{\Pr}[CanonicalSuccess^{P^{(1)}, D, hash}]
+&\geq \mathbb{E}_{\pi^*}\left[\frac{{\Pr}_{\pi^{(k)}}[g(c) = 1 \mid \pi_1 = \pi^*] -
+{\Pr}_{u \leftarrow \mu_{\delta}^{k}}[u \in G_0] - (1 - \frac{1}{6k})\epsilon} {\Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_1 \setminus \cG_0]}\right] \notag
  \end{align*}
  Using the assumptions of Lemma \ref{lemma:sec_amp_for_p_hash}, we get
  \begin{align}
    \label{eq:proof_final}
-   \underset{r,\pi}{\Pr}[\Gamma_V(D(x,r)) = 1]
- &\geq \frac{ {\Pr}_{\mu_{\delta}^{(k)}}[g(\mu) = 1] + \epsilon +
- \Pr_{\mu_{\delta}^{(k)}}[g(0, \mu_2, \dots, \mu_k) = 0] - (1 - \frac{1}{6k})\epsilon}
- {\Pr_{\mu_{\delta}^{k}}[G_{\mu}]} \notag\\
- &\geq \frac{\epsilon +
-\delta\Pr_{\mu_{\delta}^{(k)}}[G_{\mu}] - (1 - \frac{1}{6k})\epsilon}
-{\Pr_{\mu_{\delta}^{k}}[G_{\mu}]} \geq \delta + \frac{\epsilon}{6k}
+   \underset{\pi, \rho}{\Pr}[CanonicalSuccess^{P^{(1)}, D, hash} = 1]
+ &\geq \frac{ {\Pr}_{u \leftarrow \mu_{\delta}^{k}}[g(u) = 1] + \epsilon +
+ \Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_0] - (1 - \frac{1}{6k})\epsilon} {\Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_1 \setminus \cG_0]} \notag\\
+ &\geq \frac{\epsilon + \delta\Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_1 \setminus \cG_0] - (1 - \frac{1}{6k})\epsilon}
+{\Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_1 \setminus \cG_0]} \geq \delta + \frac{\epsilon}{6k}
 \end{align}
-% Finally, by Lemma \ref{lemma:ctilda_c} and (\ref{eq:proof_final}) we get,
-% \begin{align*}
-%    \underset{\rho,\pi}{\Pr}[\Gamma_V(D(x,r)) = 1] \leq  \delta + \frac{\epsilon}{6k}
-% \end{align*}
 \end{proof}
-Now, we can show that the Theorem \ref{def:dwvp} follows by Lemma \ref{lemma:hash_function_probability} and Lemma \ref{lemma:sec_amp_for_p_hash}.
-First we define the following circuit:
-\begin{codeblock}
-  \textbf{E}
-  \medskip
-  \hrule
-  \medskip
-  \textbf{Oracle:} Circuit $D$ from Lemma \ref{lemma:sec_amp_for_p_hash}  \\
-  \textbf{Input:} A bitstring $\rho \in \{0,1\}^{*}$
-  \medskip\hrule\medskip
-  Run circuit $(q,y) = D(\rho)$ \\
-  \If $(q,y) \neq \bot$ \then \\
-  \IndI make a verification query $(q,y)$
-\end{codeblock}
-%
-The circuit $E$ is output by the following algorithm $Gen$.
-\begin{codeblock}
-  \textbf{Gen}
-  \medskip
-  \hrule
-  \medskip
-  \textbf{Oracle:}  $C, P^{(1)}, g$\\
-  \textbf{Input:} $\epsilon, \delta, n, h, v$
-  \medskip\hrule\medskip
-  Let $\cH$ be a set of pairwise independent hash functions $Q \rightarrow \{0, 1, \dots, 2(h+v)-1\}$ \\
-  $hash := \textbf{FindHash}(\cH,h+v)$ \\
-  $D := Gen(C, g, \epsilon, \delta, n, h, v, hash)$ \\
-  \return $D^{P^{1}, C, hash}(\rho)$
-\end{codeblock}
-From the assumptions of Theorem \ref{th:sec_amp_for_dwvp} we know that success probability of $C$ is at least
+\begin{proof}[Theorem \ref{th:sec_amp_for_dwvp}]
+We show that Theorem \ref{th:sec_amp_for_dwvp} follows by Lemma \ref{lemma:hash_function_probability} and Lemma \ref{lemma:sec_amp_for_p_hash}.
+First given a solver circuit $C$ such that
 \begin{align*}
-8(h+v)\left(\underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon\right),
+    \underset{\pi^{(k)}, \rho}{\Pr}\left[Success^{P^{(g)}, C}(\pi^{(k)}, \rho) = 1\right] \geq 8(h+v)\left(\underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon\right)
 \end{align*}
-then by Lemma \ref{lemma:hash_function_probability}, the canonical success
-probability of $\widetilde{C}$ with respect to function $hash$ is at least
+by Lemma \ref{lemma:hash_function_probability} we can find a function $hash$ such that
 \begin{align*}
-\left(\underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon\right).
+    \underset{\pi^{(k)}, \rho}{\Pr}\left[CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho) = 1\right] \geq \underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon.
 \end{align*}
-Then we apply Lemma \ref{lemma:sec_amp_for_p_hash} with respect to $\widetilde{C}$ and $hash$ which yields a circuit $D$ that
-outputs $(q, y)$ such that
+We can apply Lemma \ref{lemma:sec_amp_for_p_hash} with the function $hash$ and the circuit $C$ to obtain a circuit $D$ such that
 \begin{align*}
-    \underset{\substack{\pi, \sigma \\ (\Gamma_V,\Gamma_H) := \langle P^{(1)}(\pi), D(\rho) \rangle_{P^{(1)}} \\ x := \langle P^{(1)}(\pi), D(\rho) \rangle_{\text{trans}}}}
-    {\Pr}\left[\Gamma_V(D^{P^{(1)},C,\Gamma_V, \Gamma_H, hash}(x, \sigma)) = 1\right] \geq (\delta + \frac{\varepsilon}{6k}).
+    \underset{\pi, \rho}{\Pr}\left[CanonicalSuccess^{P^{(1)}, D, hash}(\pi, \rho) = 1\right] \geq \delta + \frac{\epsilon}{6k}.
 \end{align*}
-Hence, the probability that the verification query made by $E$ is successful is at least $(\delta + \frac{\varepsilon}{6k})$.
+If $D$ succeeds in the experiment $CanonicalSuccess$ then it also succeeds in the experiment $Succees$.
+\end{proof}
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../master"
