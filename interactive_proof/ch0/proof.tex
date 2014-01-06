@@ -130,15 +130,7 @@ Therefore, it is possible to answer all hint and verification queries without ca
   \IndI $(\Gamma_V^{(g)}, \Gamma_H^{(k)}) := \langle P(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}}$ \\
   \IndI $x := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{\text{trans}}$ \\ \\
   %
-  Run $C_2^{\Gamma_V, \Gamma_H} (x, \rho)$ \\
-  % \IndI $(q_j,y_j)$ be the first verification query such that $C_2^{\Gamma_V, \Gamma_H}(q_j, y_j) = 1$, or an arbitrary\\
-  % \IndI verification query if $C_2$ does not succeed.\\
-  % \\
-  % \textbf{If} $(\exists i < j :  q_i \in P_{hash} )$ \Or $q_j \notin P_{hash}$ \Or $\Gamma_V(q_j, y_j) \neq 1$ \then \\
-  % \IndI \textbf{return} (0, \dots, 0)
-  % %
-  % $(q,y^{(k)}) := \widetilde{C}_2^{\Gamma_V^{(g)}, \Gamma_H^{(k)}, C, hash}(x, \rho)$\\
-  % %
+  $(q, y_1, \dots, y_k) := \widetilde{C}_2^{\Gamma_V, \Gamma_H} (x, \rho)$ \\
   \For $i:=1$ to $k$ \Do \IndII //simulate $k$ rounds of sequential interaction \\
   \IndI $(\Gamma_V^{i}, \Gamma_H^{i}) := \langle P^{(1)}(\pi_i), C_1(\rho) \rangle_{P^{(1)}} $\\
   \For $i:=1$ to $k$ \Do \\
@@ -265,7 +257,7 @@ and a circuit $\widetilde{C}' = (C_1', C_2')$, where
 $C_1'$ first internally simulates the interaction between $C_1$ and $P^{(1)}(\pi^*)$, and then interacts with $P^{(g')}$.
 The circuit $C_2'$ is defined as $C_2$ with the solution for the first puzzle discarded.
 The surplus estimate is greater than $1 - \frac{3}{4k}\epsilon$.
-Therefore, the canonical success probability for the $(k-1)$-wise direct product of puzzles is at least $\underset{}{\Pr}[g'(u_1,\dots, u_{k-1} )] + \epsilon$.
+Therefore, the canonical success probability for the $(k-1)$-wise direct product of puzzles is at least $\Pr_{u \leftarrow \mu^{k-1}_{\delta}}[g'(u_1,\dots, u_{k-1} )] + \epsilon$.
 Hence, the circuit $C'$ satisfies the conditions of Lemma \ref{lemma:sec_amp_for_p_hash} for $k-1$ puzzles and we recurse using $g'$ and $C'$.
 
 If all estimates are less than $(1-\frac{3}{4k})\epsilon$, then intuitively $C$
@@ -284,7 +276,7 @@ We now show that this intuition is indeed correct. For a fixed $\pi^*$ using (\r
 % \end{todo}
 From the monotonicity of $g$ we know that for any set of tuples $(b_1, \dots, b_k)$
 and sets $\cB_0 = \{ (b_1, b_2, \dots, b_k): g(0, b_2, \dots, b_k) = 1\}$, $ \cB_1 = \{(b_1, b_2, \dots, b_k) : g(1, b_2, \dots, b_k) = 1 \}$
-we have $\cB_0 \subseteq \cB_1$. Hence, we can write (\ref{eq:diff_s01}):
+we have $\cB_0 \subseteq \cB_1$. Hence, multiplying (\ref{eq:diff_s01}) by $\Pr$:
 \begin{align}
   \label{eq:diff_s01_next}
   &\underset{u \leftarrow \mu_{\delta}^k}{\Pr}[g(1, u_2, \dots, u_k) = 1 \land g(0, u_2, \dots, u_k) = 0] = \notag\\
@@ -292,7 +284,7 @@ we have $\cB_0 \subseteq \cB_1$. Hence, we can write (\ref{eq:diff_s01}):
 \end{align}
 Let $G_{u^{(k)}}$ denote the event $g(1, u_2, \dots, u_k) = 1 \land g(0, u_2, \dots, u_k) = 0$, and correspondingly
 $G_{\pi^{(k)}} := g(1, c_2, \dots, c_k) = 1) \land (g(0, c_2, \dots, c_k) = 0$.
-From (\ref{eq:diff_s01_next}) for $\pi = \pi^*$ fixed we obtain
+From (\ref{eq:diff_s01_next}) for $\pi_1 = \pi^*$ fixed we obtain
 \begin{align}
 \label{eq:pr_d_succ_0}
   \underset{\substack{\rho \\ \prGx}}{\Pr}[\Gamma_V(D_2(x^*, \rho)) = 1] &=
@@ -313,11 +305,11 @@ We can write the first summand of (\ref{eq:pr_d_succ_0}) as
 \end{align}
 where we make use of the fact that the event $G_{\pi}$ implies $D(x^*, r) \neq \bot$.
 We consider two cases.
-For $\underset{\pi^{k}}{\Pr}[g(1, c_2, \dots, c_k) = 1 \land g(0, c_2, \dots,c_k ) = 0 \mid \pi_1 = \pi^*] \leq \frac{\epsilon}{6k}$ then
+If $\underset{\pi^{k}}{\Pr}[g(1, c_2, \dots, c_k) = 1 \land g(0, c_2, \dots,c_k ) = 0 \mid \pi_1 = \pi^*] \leq \frac{\epsilon}{6k}$ then
 \begin{align}
   \underset{\pi^{(k)}}{\Pr}[c_1 = 1 \mid G_{\pi}, \pi_1 = \pi^*] \underset{\pi^{(k)}}{\Pr}[G_{\pi} \mid \pi_1 = \pi^*] \leq \frac{\epsilon}{6k},
 \end{align}
-and when $\underset{\pi^{k}}{\Pr}[g(1, c_2, \dots, c_k) = 1 \land g(0, c_2, \dots,c_k ) = 0] > \frac{\epsilon}{6k}$ then circuit $D$ outputs $\bot$
+and when $\underset{\pi^{(k)}}{\Pr}[g(1, c_2, \dots, c_k) = 1 \land g(0, c_2, \dots,c_k ) = 0] > \frac{\epsilon}{6k}$ then circuit $D$ outputs $\bot$
 only if it fails in all $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$ iterations to find $\pi^{(k)}$ such that $g(1, c_2, \dots, c_k) = 1 \land g(0, c_2, \dots, c_k) = 0$
 which happens with probability
 \begin{align}
