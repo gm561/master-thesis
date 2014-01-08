@@ -4,7 +4,7 @@
 %
 \noindent
 We write $u \leftarrow \mu_{\delta}^k$ to denote a tuple $u$ of length $k$ which each element
-is an independent Bernoulli-distributed random variable with the parameter $\delta$.
+is drawn independently from Bernoulli distribution with the parameter $\delta$.
 The protocol execution between probabilistic algorithms $A$ and $B$ is denoted by $\langle A, B \rangle$.
 Additionally, the output of $A$ in such a protocol execution is denoted by $\langle A, B \rangle_A$, and a transcript
 of communication by $\langle A, B \rangle_{\text{trans}}$.
@@ -52,11 +52,11 @@ and a hint circuit
 \end{definition}
 %
 Let $C$ be a random circuit that corresponds to a solver $S$ as in Definition \ref{def:dwvp}.
-Similarly as for two phase algorithm, we write $C(\pi) := (C_1, C_2)(\pi)$ to denote that the randomness used by $C$
-is fixed to $\pi$, and $C(\pi)$ in the first phase uses $C_1(\pi)$ and in the second phase $C_2(\pi)$.
+Similarly as for two phase algorithm, we write $C(\rho) := (C_1, C_2)(\rho)$ to denote that the randomness used by $C$
+is fixed to $\rho$, and $C(\rho)$ in the first phase uses $C_1(\rho)$ and in the second phase $C_2(\rho)$.
 %
 A verification query $(q,y)$ of $C$ for which a hint query on this $q$ has been asked before can not be a successfully verification query.
-Therefore, without loss of generality, we make an assumption that $C$ does not ask verification queries on $q$,
+Therefore, without loss of generality, we make an assumption that $C$ does not ask verification queries on $q$
 for which a hint query has been asked before.
 %
 \begin{codeblock}
@@ -69,8 +69,8 @@ for which a hint query has been asked before.
   \textbf{Output:} A bit $b \in \{0,1\}$.
   \medskip\hrule\medskip
   Run $\langle P(\pi), C_1(\rho) \rangle$ \\
-  \IndI Let $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$ \\
-  \IndI Let $x := \langle P(\pi), C_1(\rho) \rangle_{\text{trans}}$ \\ \\
+  \IndI $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$ \\
+  \IndI $x := \langle P(\pi), C_1(\rho) \rangle_{\text{trans}}$ \\ \\
   Run $C_2^{\Gamma_V,\Gamma_H}(x, \rho)$ \\
   \IndI \If $C_2^{\Gamma_V, \Gamma_H}$ asks a verification query $(q, y)$ such that $\Gamma_V(q, y) = 1$ \then \\
   \IndII \return $1$ \\
@@ -85,8 +85,8 @@ The success probability of $C$ in solving a puzzle defined by $P$ in the experim
 \begin{theorem}[Security amplification for a dynamic weakly verifiable puzzle.]
 \label{th:sec_amp_for_dwvp}
 Let $P^{(1)}$ be a fixed problem poser as in Definition \ref{def:dwvp}, and $P^{(g)}$ be a poser for the $k$-wise direct product of $P^{(1)}$.
-There exists a probabilistic algorithm $Gen(C, g, \varepsilon, \delta, n, v, h)$ which takes as input: a solver circuit $C$ for $P^{(g)}$,
-a monotone function $g:\{0,1\}^k \rightarrow \{0,1\}$, parameters $\varepsilon, \delta,n$,
+There exists a probabilistic algorithm $Gen$ with oracle access to: a solver circuit $C$ for $P^{(g)}$,
+a monotone function $g:\{0,1\}^k \rightarrow \{0,1\}$ and $P^{(1)}$. Additionally, $Gen$ takes as input: parameters $\varepsilon, \delta, n$,
 the number of verification queries $v$, and hint queries $h$ asked by $C$, and outputs a random circuit $D$
 such that the following holds: \\
 If $C$ is such that \\
@@ -103,31 +103,31 @@ and asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hin
 Finally, $Size(D) \leq Size(C) \cdot \frac{6k}{\varepsilon}$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
 \end{theorem}
 %
-The Theorem \ref{th:sec_amp_for_dwvp} implies that if there is no good solver for a puzzle defined by $P^{(1)}$, then a good solver for
-a $k$-wise direct product of $P^{(1)}$ does not exist.
+% The Theorem \ref{th:sec_amp_for_dwvp} implies that if there is no good solver for a puzzle defined by $P^{(1)}$, then a good solver for
+% a $k$-wise direct product of $P^{(1)}$ does not exist.
 
-The idea of the algorithm $Gen$ is to output a circuit $D$ that solves the input puzzle often.
-We know that $C$ has good success probability for a $k$-wise product of $P^{(1)}$.
-The algorithm $Gen$ tries to find a puzzle such that when $C$ runs with this puzzle fixed
-on the first position, and disregards whether this puzzle is correctly solved
-then the assumptions of Theorem \ref{th:sec_amp_for_dwvp} are true for a $k-1$-wise direct product.
-If it is possible to find such a puzzle then $Gen$ could recurse and solve a smaller problem.
-In the optimistic case we can reach $k=1$, which means that we found a good circuit for solving a single
-puzzle by just fixing the initial puzzles of $C$.
+% The idea of the algorithm $Gen$ is to output a circuit $D$ that solves the input puzzle often.
+% We know that $C$ has good success probability for a $k$-wise product of $P^{(1)}$.
+% The algorithm $Gen$ tries to find a puzzle such that when $C$ runs with this puzzle fixed
+% on the first position, and disregards whether this puzzle is correctly solved
+% then the assumptions of Theorem \ref{th:sec_amp_for_dwvp} are true for a $k-1$-wise direct product.
+% If it is possible to find such a puzzle then $Gen$ could recurse and solve a smaller problem.
+% In the optimistic case we can reach $k=1$, which means that we found a good circuit for solving a single
+% puzzle by just fixing the initial puzzles of $C$.
 
-Otherwise, when the first position is disregarded then the success probability of $C$ is not substantially better.
-This is remarkable, as we know that $C$ performs good for $k$-wise product, it means that the first position is important,
-in the sense that $C$ solves the puzzle on that position unusually often.
-Therefore, it is reasonable to construct the circuit $D$ using $C$ by placing the input puzzle of $D$ on that position, and then
-finding remaining $k-1$ puzzles. These $k-1$ remaining puzzles are generated by the circuit $D$, hence it is possible to check
-whether they are correctly solved by the circuit $C$. We know that circuit $C$ has good success probability, and the puzzle on the first
-position is important. Therefore, if we are able to find a $k-1$ puzzles such that the fact whether the $k$-wise direct product is correctly
-solved depends on whether the puzzle on the first position is correctly solved then we can assume that $C$ is often correct on this first position.
+% Otherwise, when the first position is disregarded then the success probability of $C$ is not substantially better.
+% This is remarkable, as we know that $C$ performs good for $k$-wise product, it means that the first position is important,
+% in the sense that $C$ solves the puzzle on that position unusually often.
+% Therefore, it is reasonable to construct the circuit $D$ using $C$ by placing the input puzzle of $D$ on that position, and then
+% finding remaining $k-1$ puzzles. These $k-1$ remaining puzzles are generated by the circuit $D$, hence it is possible to check
+% whether they are correctly solved by the circuit $C$. We know that circuit $C$ has good success probability, and the puzzle on the first
+% position is important. Therefore, if we are able to find a $k-1$ puzzles such that the fact whether the $k$-wise direct product is correctly
+% solved depends on whether the puzzle on the first position is correctly solved then we can assume that $C$ is often correct on this first position.
 
-There are some problems with this approach, first we have to ensure that we can make a decision when the algorithm $Gen$ should recurse and when not
-correctly with high probability. Then, we have to show that it is possible to find a puzzles such that $C$ is often correct on the first position.
-Finally, we also have to be sure that we do not ask a hint query, on the final verification query to the oracle.
-To satisfy the last requirement we split $Q$.
+% There are some problems with this approach, first we have to ensure that we can make a decision when the algorithm $Gen$ should recurse and when not
+% correctly with high probability. Then, we have to show that it is possible to find a puzzles such that $C$ is often correct on the first position.
+% Finally, we also have to be sure that we do not ask a hint query, on the final verification query to the oracle.
+% To satisfy the last requirement we split $Q$.
 
 %%% Local Variables:
 %%% mode: latex
