@@ -3,13 +3,23 @@
 % Define a two phase algorithm
 %
 \noindent
-We write $u \leftarrow \mu_{\delta}^k$ to denote a tuple $u$ of length $k$ which each element
-is drawn independently from Bernoulli distribution with the parameter $\delta$.
-The protocol execution between probabilistic algorithms $A$ and $B$ is denoted by $\langle A, B \rangle$.
-Additionally, the output of $A$ in such a protocol execution is denoted by $\langle A, B \rangle_A$, and a transcript
-of communication by $\langle A, B \rangle_{\text{trans}}$.
+We write $\mu_{\delta}$ to denote a Bernoulli distribution, where outcome $1$ occurs with probability $\delta$ and $0$ with probability $1-\delta$
+where $0 \leq \delta \leq 1$.
+We denote by $\mu_{\delta}^k$ a probability distribution over $k$-tuples, where each bit of
+a $k$-tuple is drawn independently according to $\mu$.
+Finally, we write $u \leftarrow \mu_{\delta}^k$ to denote that a $k$-tuple $u$ is chosen according to $\mu_{\delta}^k$.
+
+%High probability
+
+The protocol execution between two probabilistic algorithms $A$ and $B$ is denoted by $\langle A, B \rangle$.
+The output of $A$ in such a protocol execution is denoted by $\langle A, B \rangle_A$, and of $B$ by $\langle A, B \rangle_B$.
+Finally, let $\langle A, B \rangle_{\text{trans}}$ denote the transcript of communication between $\langle A, B \rangle_{\text{trans}}$.
+
+Let $A(\delta) = (A_1, A_2)(\delta)$ denote a probabilistic two phase algorithm
+where in the first phase the probabilistic algorithm $A_1$ with randomness $\delta$ is used,
+and in the second phase the probabilistic algorithm $A_2$ with the same randomness $\delta$.
+
 %
-%FIXME is x a puzzle?
 \begin{definition}[Dynamic weakly verifiable puzzle.]
   \label{def:dwvp}
   A dynamic weakly verifiable puzzle (DWVP) is defined by a probabilistic algorithm $P$
@@ -18,17 +28,17 @@ of communication by $\langle A, B \rangle_{\text{trans}}$.
   We write $P(\pi)$ to denote the execution of $P$ with the randomness fixed to $\pi \in \{0,1\}^n$, and $(S_1,S_2)(\rho)$
   to denote the execution of both $S_1$ and $S_2$ with the randomness fixed to $\rho \in \{0,1\}^{*}$.
 
-  The poser $P(\pi)$ and the solver $S_1(\rho)$ interact.
+  In the first phase, the poser $P(\pi)$ and the solver $S_1(\rho)$ interact.
   As the result of the interaction $P(\pi)$ outputs a verification circuit $\Gamma_{V}$ and a hint circuit $\Gamma_{H}$.
   The algorithm $S_1(\rho)$ produces no output.
   The circuit $\Gamma_{V}$ takes as input $q \in Q$, an answer $y \in \{0,1\}^*$,
-  and outputs a bit. An answer $(q,y)$ is a correct solution if and only if $\Gamma_V(q,y) = 1$.
+  and outputs a bit. We say an answer $(q,y)$ is a correct solution if and only if $\Gamma_V(q,y) = 1$.
   The circuit $\Gamma_H$ on input $q \in Q$ outputs a hint such that $\Gamma_V(q,\Gamma_H(q)) = 1$.
 
-  In the second phase $S_2$ takes as input $x := \langle P(\pi), S_1(\rho) \rangle_{\text{trans}}$,
+  In the second phase, $S_2$ takes as input $x := \langle P(\pi), S_1(\rho) \rangle_{\text{trans}}$,
   and has oracle access to $\Gamma_V$ and $\Gamma_H$.
   The execution of $S_2$ with the input $x$ and the randomness fixed to $\rho$
-  is denoted by $S_2(x, \rho)$. The queries of $S_2$ to $\Gamma_V$ are called verification queries, and to $\Gamma_H$ hint queries.
+  is denoted by $S_2(x, \rho)$. The queries of $S_2$ to $\Gamma_V$ and $\Gamma_H$ are called verification queries and hint queries respectively.
   The algorithm $S_2$ can ask at most $h$ hint queries, $v$ verification queries, and succeeds if and only if
   it makes a verification query $(q,y)$ such that $\Gamma_V(q,y) = 1$, and it has not previously asked for a hint query on $q$.
 \end{definition}
@@ -36,12 +46,12 @@ of communication by $\langle A, B \rangle_{\text{trans}}$.
 \begin{definition}[$k$-wise direct-product of DWVPs.]
   Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function and $P^{(1)}$ a problem poser as in Definition \ref{def:dwvp}.
   The $k$-wise direct product of $P^{(1)}$ is a DWVP defined by a probabilistic algorithm $P^{(g)}$.
-  We write $P^{(g)}(\pi^{(k)})$ to denote the execution of $P^{(g)}$ with the randomness fixed to $\pi^{(k)} := (\pi_1, \dots, \pi_k)$.
+  We write $P^{(g)}(\pi^{(k)})$ to denote the execution of $P^{(g)}$ with the randomness fixed to $\pi^{(k)} := (\pi_1, \dots, \pi_k)$ where each $\pi_i \in \{0,1\}^n$ .
   Let $(S_1, S_2)(\rho)$ be a solver for $P^{(g)}$ as in Definition \ref{def:dwvp}.
   The algorithm $S_1(\rho)$ sequentially interacts in $k$ rounds with $P^{(g)}(\pi^{(k)})$.
   In the $i$-th round $S_1(\rho)$ interacts with $P^{(1)}(\pi_i)$,
   and as the result $P^{(g)}(\pi^{(k)})$ generates circuits $\Gamma_V^i, \Gamma_H^i$.
-  Finally, after $k$ rounds $P^{(g)}$ outputs a verification circuit
+  Finally, after $k$ rounds $P^{(g)}(\pi^k)$ outputs a verification circuit
 \begin{align*}
   \Gamma_V^{(g)} (q, y_1, \dots, y_k) := g(\Gamma_V^{1}(q, y_1), \dots, \Gamma_V^{k}(q, y_k))
 \end{align*}
@@ -50,22 +60,23 @@ and a hint circuit
   \Gamma_H^{(k)} (q) := (\Gamma_H^{1}(q), \dots, \Gamma_H^{k}(q)).
 \end{align*}
 \end{definition}
-%
-Let $C$ be a random circuit that corresponds to a solver $S$ as in Definition \ref{def:dwvp}.
-Similarly as for two phase algorithm, we write $C(\rho) := (C_1, C_2)(\rho)$ to denote that the randomness used by $C$
+
+A verification query $(q,y)$ of a solver $S$ for which a hint query on this $q$ has been asked before can not be a successful verification query.
+Therefore, without loss of generality, we make the assumption that $S$ does not ask verification queries on $q$
+for which a hint query has been asked before. Furthermore, we assume that once $S$ asked a successful verification query,
+it does not ask any further hint or verification queries.
+
+Let $C$ be a circuit that corresponds to a solver $S$ as in Definition \ref{def:dwvp}.
+Similarly as for a two phase algorithm, we write $C(\rho) := (C_1, C_2)(\rho)$ to denote that the randomness used by $C$
 is fixed to $\rho$, and $C(\rho)$ in the first phase uses $C_1(\rho)$ and in the second phase $C_2(\rho)$.
 %
-A verification query $(q,y)$ of $C$ for which a hint query on this $q$ has been asked before can not be a successfully verification query.
-Therefore, without loss of generality, we make an assumption that $C$ does not ask verification queries on $q$
-for which a hint query has been asked before.
-%
 \begin{codeblock}
-  \textbf{Experiment $Success^{P, C^{(\cdot, \cdot)}}(\pi, \rho) $}
+  \textbf{Experiment $Success^{P, C}(\pi, \rho) $}
   \medskip
   \hrule
   \medskip
-  \textbf{Oracle:} A problem poser $P$, a solver circuit $C^{(\cdot,\cdot)}$.\\
-  \textbf{Input:}  Bitstrings $\pi$, $\rho$.\\
+  \textbf{Oracle:} A problem poser $P$, a solver circuit $C = (C_1, C_2)$.\\
+  \textbf{Input:}  Bitstrings $\pi \in \{0,1\}^n$, $\rho \in \{0,1\}^*$.\\
   \textbf{Output:} A bit $b \in \{0,1\}$.
   \medskip\hrule\medskip
   Run $\langle P(\pi), C_1(\rho) \rangle$ \\
@@ -77,7 +88,7 @@ for which a hint query has been asked before.
   \return $0$ \\
 \end{codeblock}
 %
-The success probability of $C$ in solving a puzzle defined by $P$ in the experiment $Success$ is
+We define \textit{the success probability} of $C$ in solving a puzzle defined by $P$ as
 \begin{align}
  \underset{\pi, \rho}{\Pr}[Success^{P,C^{(\cdot, \cdot)}}(\pi, \rho) = 1].
 \end{align}
@@ -86,8 +97,9 @@ The success probability of $C$ in solving a puzzle defined by $P$ in the experim
 \label{th:sec_amp_for_dwvp}
 Let $P^{(1)}$ be a fixed problem poser as in Definition \ref{def:dwvp}, and $P^{(g)}$ be a poser for the $k$-wise direct product of $P^{(1)}$.
 There exists a probabilistic algorithm $Gen$ with oracle access to: a solver circuit $C$ for $P^{(g)}$,
-a monotone function $g:\{0,1\}^k \rightarrow \{0,1\}$ and $P^{(1)}$. Additionally, $Gen$ takes as input: parameters $\varepsilon, \delta, n$,
-the number of verification queries $v$, and hint queries $h$ asked by $C$, and outputs a random circuit $D$
+a monotone function $g:\{0,1\}^k \rightarrow \{0,1\}$ and $P^{(1)}$. Additionally, $Gen$ takes as input parameters $\varepsilon, \delta$,
+the value $n$ being the length of the input bitstring to $P^{(1)}$,
+the number of verification queries $v$ and hint queries $h$ asked by $C$, and outputs a solver circuit $D$ for $P^{(1)}$ as in Definition \ref{def:dwvp}
 such that the following holds: \\
 If $C$ is such that \\
   \begin{align*}
@@ -97,8 +109,7 @@ then $D$ satisfies almost surely
   \begin{align*}
     \underset{\pi, \rho}{\Pr}\left[Success^{P^{(1)},D}(\pi, \rho) = 1\right] \geq (\delta + \frac{\varepsilon}{6k}).
   \end{align*}
-Additionally, $Gen$ and $D$ require oracle access to $g$, $P^{(1)}$,$C$.
-Furthermore, $D$ requires also oracle access to $\Gamma_V$ $\Gamma_H$,
+Additionally, $D$ requires oracle access to $g$, $P^{(1)}$, $C$,
 and asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hint queries and one verification query.
 Finally, $Size(D) \leq Size(C) \cdot \frac{6k}{\varepsilon}$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
 \end{theorem}
