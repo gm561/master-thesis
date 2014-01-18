@@ -5,19 +5,17 @@
 \noindent
 We write $\mu_{\delta}$ to denote a Bernoulli distribution, where outcome $1$ occurs with probability $\delta$ and $0$ with probability $1-\delta$
 where $0 \leq \delta \leq 1$.
-We denote by $\mu_{\delta}^k$ a probability distribution over $k$-tuples, where each bit of
-a $k$-tuple is drawn independently according to $\mu$.
-Finally, we write $u \leftarrow \mu_{\delta}^k$ to denote that a $k$-tuple $u$ is chosen according to $\mu_{\delta}^k$.
+Moreover, we denote by $\mu_{\delta}^k$ a probability distribution over $k$-tuples, where each bit of
+a $k$-tuple is drawn independently according to $\mu_{\delta}$.
+Finally, let $u \leftarrow \mu_{\delta}^k$ denote that a $k$-tuple $u$ is chosen according to $\mu_{\delta}^k$.
 
 %High probability
 
 The protocol execution between two probabilistic algorithms $A$ and $B$ is denoted by $\langle A, B \rangle$.
-The output of $A$ in such a protocol execution is denoted by $\langle A, B \rangle_A$, and of $B$ by $\langle A, B \rangle_B$.
+The output of $A$ in such a protocol execution is denoted by $\langle A, B \rangle_A$ and of $B$ by $\langle A, B \rangle_B$.
 Finally, let $\langle A, B \rangle_{\text{trans}}$ denote the transcript of communication between $\langle A, B \rangle_{\text{trans}}$.
 
-Let $A(\delta) = (A_1, A_2)(\delta)$ denote a probabilistic two phase algorithm
-where in the first phase the probabilistic algorithm $A_1$ with randomness $\delta$ is used,
-and in the second phase the probabilistic algorithm $A_2$ with the same randomness $\delta$.
+We define a \textit{two phase algorithm} $A := (A_1, A_2)$ as an algorithm where in the first phase $A_1$ is used and in the second phase $A_2$.
 
 %
 \begin{definition}[Dynamic weakly verifiable puzzle.]
@@ -39,7 +37,7 @@ and in the second phase the probabilistic algorithm $A_2$ with the same randomne
   and has oracle access to $\Gamma_V$ and $\Gamma_H$.
   The execution of $S_2$ with the input $x$ and the randomness fixed to $\rho$
   is denoted by $S_2(x, \rho)$. The queries of $S_2$ to $\Gamma_V$ and $\Gamma_H$ are called verification queries and hint queries respectively.
-  The algorithm $S_2$ can ask at most $h$ hint queries, $v$ verification queries, and succeeds if and only if
+  The algorithm $S_2$ asks at most $h$ hint queries, $v$ verification queries, and succeeds if and only if
   it makes a verification query $(q,y)$ such that $\Gamma_V(q,y) = 1$, and it has not previously asked for a hint query on $q$.
 \end{definition}
 %
@@ -51,7 +49,7 @@ and in the second phase the probabilistic algorithm $A_2$ with the same randomne
   The algorithm $S_1(\rho)$ sequentially interacts in $k$ rounds with $P^{(g)}(\pi^{(k)})$.
   In the $i$-th round $S_1(\rho)$ interacts with $P^{(1)}(\pi_i)$,
   and as the result $P^{(g)}(\pi^{(k)})$ generates circuits $\Gamma_V^i, \Gamma_H^i$.
-  Finally, after $k$ rounds $P^{(g)}(\pi^k)$ outputs a verification circuit
+  Finally, after $k$ rounds $P^{(g)}(\pi^{k})$ outputs a verification circuit
 \begin{align*}
   \Gamma_V^{(g)} (q, y_1, \dots, y_k) := g(\Gamma_V^{1}(q, y_1), \dots, \Gamma_V^{k}(q, y_k))
 \end{align*}
@@ -67,8 +65,10 @@ for which a hint query has been asked before. Furthermore, we assume that once $
 it does not ask any further hint or verification queries.
 
 Let $C$ be a circuit that corresponds to a solver $S$ as in Definition \ref{def:dwvp}.
-Similarly as for a two phase algorithm, we write $C(\rho) := (C_1, C_2)(\rho)$ to denote that the randomness used by $C$
-is fixed to $\rho$, and $C(\rho)$ in the first phase uses $C_1(\rho)$ and in the second phase $C_2(\rho)$.
+Similarly as for a two phase algorithm, we write $C(\rho) := (C_1, C_2)(\rho)$ to denote that $C$
+in the first phase uses a circuit $C_1$ and in the second phase a circuit $C_2$.
+Additionally, the randomness in both phases is fixed to $\rho$.
+
 %
 \begin{codeblock}
   \textbf{Experiment $Success^{P, C}(\pi, \rho) $}
@@ -88,9 +88,9 @@ is fixed to $\rho$, and $C(\rho)$ in the first phase uses $C_1(\rho)$ and in the
   \return $0$ \\
 \end{codeblock}
 %
-We define \textit{the success probability} of $C$ in solving a puzzle defined by $P$ as
+We define the \textit{success probability} of $C$ in solving a puzzle defined by $P$ as
 \begin{align}
- \underset{\pi, \rho}{\Pr}[Success^{P,C^{(\cdot, \cdot)}}(\pi, \rho) = 1].
+ \underset{\pi, \rho}{\Pr}[Success^{P,C}(\pi, \rho) = 1].
 \end{align}
 %
 \begin{theorem}[Security amplification for a dynamic weakly verifiable puzzle.]
