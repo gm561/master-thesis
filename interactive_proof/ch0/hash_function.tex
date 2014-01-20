@@ -13,13 +13,11 @@ and no hint query $q_i$ is asked before $(q_j, y_j)$ such that $hash(q_i) = 0$.
 \begin{codeblock}
   \textbf{Experiment $CanonicalSuccess^{P, C, hash}(\pi, \rho)$}
   \medskip
-
   \hrule
-
   \medskip
   \textbf{Oracle:} A problem poser $P$, a solver circuit $C = (C_1, C_2)$.\\
   \IndII A function $hash: Q \rightarrow \{0, \dots, 2(h+v) - 1\}$.\\
-  \textbf{Input:}  Bitstrings $\pi \in \{0,1\}^n$ and $\rho \in \{0,1\}^*$. \\
+  \textbf{Input:}  Bitstrings $\pi \in \{0,1\}^n$, $\rho \in \{0,1\}^*$. \\
   \textbf{Output:} A bit $b \in \{0,1\}$.
 
   \medskip\hrule\medskip
@@ -48,26 +46,27 @@ also often successful in the experiment $CanonicalSuccess$.
 
 \begin{lemma}\textbf{(\boldmath{Success probability in solving a $k$-wise direct product of $P^{(1)}$ with respect to a function $hash$.)}}
 \label{lemma:hash_function_probability}
-For fixed $P^{(g)}$ let $C$ be a solver for $P^{(g)}$ with the success probability at least $\gamma$,
+For fixed $P$ let $C$ be a solver for $P$ with the success probability at least $\gamma$,
 asking at most $h$ hint queries and $v$ verification queries.
 There exists a probabilistic algorithm \textbf{FindHash} that takes as input:
-parameters $\gamma$, $n$, $k$, the number of verification queries $v$ and hint queries $h$, and has
-oracle access to $C$ and $P^{(g)}$. Furthermore, \textbf{FindHash} runs in time $O((h+v)^4/\gamma^4)$,
+parameters $\gamma$, $n$, the number of verification queries $v$ and hint queries $h$, and has
+oracle access to $C$ and $P$. Furthermore, \textbf{FindHash} runs in time $O((h+v)^4/\gamma^4)$,
 and with high probability outputs a function $hash \in \cH$
-such that the canonical success probability of $C$ with respect to $hash$ is at least $\frac{\gamma}{8(h+v)}$.
+such that the canonical success probability of $C$ with respect to $hash$ is at least $\frac{\gamma}{16(h+v)}$.
 \end{lemma}
 %
 \begin{proof}
-We fix $P^{(g)}$ and a solver $C$ for $P^{(g)}$ in the whole proof of Lemma \ref{lemma:hash_function_probability}.
+We fix $P$ and a solver $C$ for $P$ in the whole proof of Lemma \ref{lemma:hash_function_probability}.
 Let $\cH$ be a family of pairwise independent hash functions $Q \rightarrow \{0,1, \dots,2(h+v)-1\}$.
 For all $m,n \in \{1, \dots, (h+v)\}$ and $k,l \in \{0,1,\dots,2(h+v)-1\}$ by the pairwise independence property of $\cH$, we have
 \begin{align}
   \label{eq:hash_pr}
- \forall q_m,q_n \in Q, q_m \neq q_n : \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_m) = k \mid hash(q_n) = l] = \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_m) = k] = \frac{1}{2(h+v)}.
+ \forall q_m,q_n \in Q, q_m \neq q_n : \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_m) = k \mid hash(q_n) = l] =
+ \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_m) = k] = \frac{1}{2(h+v)}.
 \end{align}
 %
-Let $\cP_{Success}$ be a set containing all $(\pi^{(k)},\rho)$ for which $Success^{P^{(g)}, C}(\pi^{(k)}, \rho) = 1$.
-We choose uniformly at random $hash \leftarrow \cH$, and consider the experiment $CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho)$.
+Let $\cP_{Success}$ be a set containing all $(\pi,\rho)$ for which $Success^{P, C}(\pi, \rho) = 1$.
+We choose uniformly at random $hash \leftarrow \cH$, and consider the experiment $CanonicalSuccess^{P, C, hash}(\pi, \rho)$.
 We are interested in the probability of the event that for a fixed $(\pi, rho) \in \cP_{Success}$ the solver $C$ succeeds canonically.
 Let $(q_j, y_j)$ denote the first query such that $\Gamma_V(q_j, y_j) = 1$.
 We have
@@ -79,24 +78,24 @@ We have
   &\IndII \stackrel{(\text{u.b})}{\geq} \frac{1}{2(h+v)} \left( 1 - \sum_{i < j} \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = 0] \right) \\
   &\IndII \stackrel{(\ref{eq:hash_pr})}{\geq} \frac{1}{4(h+v)}.
 \end{align*}
-
-We denote the set of those $(\pi^{(k)},\rho)$ for which $CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho) = 1$ by $\cP_{Canonical}$.
-For $(\pi^{(k)}, \rho)$ for which $C$ succeeds canonically, we have $Success^{P^{(g)}, C}(\pi^{(k)}, \rho) = 1$.
+%
+We denote the set of those $(\pi,\rho)$ for which $CanonicalSuccess^{P, C, hash}(\pi, \rho) = 1$ by $\cP_{Canonical}$.
+For $(\pi, \rho)$ for which $C$ succeeds canonically, we have $Success^{P, C}(\pi, \rho) = 1$.
 Hence, $\cP_{Canonical} \subseteq \cP_{Success}$, and we conclude
 \begin{align}
   \label{ineq:hash_high_prob}
-\underset{\substack{\textit{hash} \leftarrow \cH \\ \pi^{(k)}, \rho}}{\Pr}\left[CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho) = 1\right] &=
-\underset{{(\pi^{(k)},\rho) \in \cP_{Success}}}{\mathbb{E}}\left[\underset{\substack{\textit{hash} \leftarrow \cH}}{\Pr}[X = 1]\right] \notag\\
+\underset{\substack{\textit{hash} \leftarrow \cH \\ \pi, \rho}}{\Pr}\left[CanonicalSuccess^{P, C, hash}(\pi^{(k)}, \rho) = 1\right] &=
+\underset{{(\pi,\rho) \in \cP_{Success}}}{\mathbb{E}}\left[\underset{\substack{\textit{hash} \leftarrow \cH}}{\Pr}[X = 1]\right] \notag\\
 &\geq \frac{\gamma}{4(h+v)}.
 \end{align}
 %
 \begin{codeblock}
-  \textbf{Algorithm: FindHash}$(\gamma, n, k, h, v)$
+  \textbf{Algorithm: FindHash}$(\gamma, n, h, v)$
   \medskip
   \hrule
   \medskip
-  \textbf{Oracle:} A problem poser $P^{(g)}$, a solver circuit $C$ for $P^{(g)}$.\\
-  \textbf{Input:} Parameters $\gamma, n, k, h,v $\\
+  \textbf{Oracle:} A problem poser $P$, a solver circuit $C$ for $P$.\\
+  \textbf{Input:} Parameters $\gamma, n, h,v $\\
   \textbf{Output:} A function $hash:Q \rightarrow \{0,1, \dots, 2(h+v)-1 \}$.
   \medskip\hrule\medskip
   Let $\cH$ be a family of pairwise independent hash functions $Q \rightarrow \{0,1,\dots, 2(h+v)-1\}$\\
@@ -104,25 +103,25 @@ Hence, $\cP_{Canonical} \subseteq \cP_{Success}$, and we conclude
   \IndI $hash \xleftarrow{\$} \cH$ \\
   \IndI $count := 0$ \\
   \IndI \For $j := 1$ to $32(h+v)^2/\gamma^2$ \Do \\
-  \IndII $\pi^{(k)} \xleftarrow{\$} \{0,1\}^{kn} $\\
+  \IndII $\pi \xleftarrow{\$} \{0,1\}^{n} $\\
   \IndII $\rho \xleftarrow{\$} \{0,1\}^*$ \\
-  \IndII \If $CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho) = 1$ \then \\
+  \IndII \If $CanonicalSuccess^{P, C, hash}(\pi, \rho) = 1$ \then \\
   \IndIII $count := count + 1$\\
   \IndI \If $\frac{\gamma^2}{32(h+v)^2} count \geq \frac{\gamma}{6(h+v)}$ \then \\
   \IndII \return $hash$\\
   \return $\bot$
 \end{codeblock}
-We show that \textbf{FindHash} chooses $hash$ such that the canonical success probability of $C$
-with respect to $hash$ is at least $\frac{\gamma}{4(h+v)}$ almost surely.
+We show that \textbf{FindHash} chooses $hash \in \cH$ such that the canonical success probability of $C$
+with respect to $hash$ is at least $\frac{\gamma}{16(h+v)}$ almost surely.
 Let $\cH_{Good}$ denote a family of functions $hash \in \cH$ for which
 \begin{align}
   \label{eq:hash_good}
-\underset{\pi^{(k)}, \rho}{\Pr}\left[CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho) = 1\right] \geq \frac{\gamma}{8(h+v)},
+\underset{\pi, \rho}{\Pr}\left[CanonicalSuccess^{P, C, hash}(\pi, \rho) = 1\right] \geq \frac{\gamma}{8(h+v)},
 \end{align}
 and $\cH_{Bad}$ be the family of functions $hash \in \cH$ such that
 \begin{align}
   \label{eq:hash_bad}
-\underset{\pi^{(k)}, \rho}{\Pr}\left[CanonicalSuccess^{P^{(g)}, C^{(\cdot, \cdot)}, hash}(\pi^{(k)}, \rho) = 1\right] \leq \frac{\gamma}{16(h+v)}.
+\underset{\pi, \rho}{\Pr}\left[CanonicalSuccess^{P, C, hash}(\pi, \rho) = 1\right] \leq \frac{\gamma}{16(h+v)}.
 \end{align}
 %
 Let $N$ denote the number of iterations of the inner loop of \textbf{FindHash}.
@@ -171,8 +170,8 @@ But this contradicts (\ref{ineq:hash_high_prob}).
 Finally, we show that \textbf{FindHash} picks in one of its iteration $hash \in \cH_{Good}$ almost surely.
 Let $K$ be the number of iterations of the outer loop of \textbf{FindHash}.
 Let $Y_i$ be a random variable for the event
-that in the $i$-th iteration of the outer loop $hash \in \cH_{Good}$ is picked.
-Using $\underset{hash \leftarrow \cH}{\Pr}[hash \in \cH_{Good}] < \frac{\gamma}{8(g+v)}$ and  $K \leq \frac{32(h+v)^2}{\gamma^2}$ we conclude
+that in the $i$-th iteration of the outer loop $hash \notin \cH_{Good}$ is picked.
+We conclude using $\underset{hash \leftarrow \cH}{\Pr}[hash \notin \cH_{Good}] < \frac{\gamma}{8(g+v)}$ and  $K \leq \frac{32(h+v)^2}{\gamma^2}$ that
 \begin{align*}
   \underset{hash \leftarrow \cH}{\Pr}[ \bigcap_{1 \leq i \leq K} Y_i ] \leq \left(1 - \frac{\gamma}{8(h+v)}\right)^{K}
     \leq e^{-\frac{\gamma}{8(h+v)} K}
