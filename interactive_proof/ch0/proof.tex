@@ -23,15 +23,13 @@
 \end{codeblock}
 %
 Given $C = (C_1, C_2)$ we define a circuit $\widetilde{C} = (C_1, \widetilde{C}_2)$.
-The circuit $\widetilde{C}$ asks at most one verification query $(q, y_1, \dots, y_k)$
-such that $hash(q) = 0$, and every hint query on $q$ is such that $hash(q) \neq 0$.
-We write $(q, y_1, \dots, y_k) := \widetilde{C}_2(x, \rho)$ to denote
-the verification query $(q, y_1, \dots, y_k)$ asked by $\widetilde{C}_2$.
-If $\widetilde{C}_2$ does not ask a verification query we write $\widetilde{C}_2(x, \rho) = \bot $.
+Every hint query $q$ asked by $\widetilde{C}$ is such that $hash(q) \neq 0$.
+Furthermore, $\widetilde{C}$ asks no verification queries, instead it returns $\bot$ or $(q,y)$ such that
+$hash(q) = 0$.
+
 We say that for a fixed $\pi$, $\rho$ the circuit $\widetilde{C}$ succeeds if
-$x := \langle P(\pi), C_1(\rho) \rangle_{\text{trans}}$,
-$(\Gamma_V^{(g)}, \Gamma_H^{(k)}) := \langle P(\pi), C_1(\rho) \rangle_{P}$
-and we have
+for $x := \langle P(\pi), C_1(\rho) \rangle_{\text{trans}}$,
+$(\Gamma_V^{(g)}, \Gamma_H^{(k)}) := \langle P(\pi), C_1(\rho) \rangle_{P}$ we have
 \begin{align*}
 \Gamma_V^{(g)}(\widetilde{C}_2^{\Gamma_H^{(k)}, C_2, hash}(x, \rho)) = 1.
 \end{align*}
@@ -42,32 +40,37 @@ and we have
   \begin{align*}
     \underset{\pi, \rho}{\Pr}[CanonicalSuccess^{P, C, hash}(\pi, \rho) = 1]
     \leq
-    \underset{\substack{\pi, \rho \\
+    \mkern13mu
+    \underset{
+      \mathclap{
+      \substack{
+        \pi, \rho \\
         x := \langle P(\pi), C_1(\rho) \rangle_{\text{trans}} \\
         (\Gamma_V^{(g)}, \Gamma_H^{(k)}) := \langle P(\pi), C_1(\rho) \rangle_{P}
-      }}
-    {\Pr}[\Gamma_V^{(g)}(\widetilde{C}_2^{\Gamma_H^{(k)}, C_2, hash}(x, \rho)) = 1]
+      }}} {\Pr}\mkern13mu[\Gamma_V^{(g)}(\widetilde{C}_2^{\Gamma_H^{(k)}, C_2, hash}(x, \rho)) = 1]
   \end{align*}
 \end{lemma}
 %
 \begin{proof}
-If for some fixed $\pi$, $\rho$ and $hash$ the circuit $C$ succeeds canonically, then also $\widetilde{C}$ succeeds for the same $\pi$, $\rho$ and $hash$.
+If for some fixed $\pi$, $\rho$ and $hash$ the circuit $C$ succeeds canonically, then for the same $\pi$, $\rho$ and $hash$ also $\widetilde{C}$ succeeds.
 Using this observation, we conclude that
 \begin{align*}
   &\underset{\pi, \rho}{\Pr}\left[CanonicalSuccess^{P, C, hash}(\pi, \rho) = 1\right] \\
   &\IndII = \underset{\pi, \rho}{\mathbb{E}}\left[CanonicalSuccess^{P, C, hash}(\pi, \rho) = 1 \right] \\
   &\IndII \leq
-    \underset{\substack{\pi, \rho \\
+  \mkern33mu
+    \underset{\mathclap{\substack{\pi, \rho \\
         x := \langle P(\pi), C_1(\rho) \rangle_{\text{trans}} \\
         (\Gamma_V^{(g)}, \Gamma_H^{(k)}) := \langle P(\pi), C_1(\rho) \rangle_{P}
-      }}
-    {\mathbb{E}}[\Gamma_V^{(g)}(\widetilde{C}_2^{\Gamma_H^{(k)}, C_2, hash}(x, \rho)) = 1] \\
+      }}}
+    {\mathbb{E}}\mkern13mu[\Gamma_V^{(g)}(\widetilde{C}_2^{\Gamma_H^{(k)}, C_2, hash}(x, \rho)) = 1] \\
   &\IndII \leq
-    \underset{\substack{\pi, \rho \\
+  \mkern33mu
+    \underset{\mathclap{\substack{\pi, \rho \\
         x := \langle P(\pi), C_1(\rho) \rangle_{\text{trans}} \\
         (\Gamma_V^{(g)}, \Gamma_H^{(k)}) := \langle P(\pi), C_1(\rho) \rangle_{P}
-      }}
-    {\Pr}[\Gamma_V^{(g)}(\widetilde{C}_2^{\Gamma_H^{(k)}, C_2, hash}(x, \rho)) = 1]
+      }}}
+    {\Pr}\mkern13mu[\Gamma_V^{(g)}(\widetilde{C}_2^{\Gamma_H^{(k)}, C_2, hash}(x, \rho)) = 1]
 \end{align*}
 % hack to have a square at the end of the proof
 \\\text{  }
@@ -79,24 +82,31 @@ Using this observation, we conclude that
   and outputs a circuit $D := (D_1, D_2)$ such that the following holds: \\
   If $\widetilde{C} := (C_1, \widetilde{C}_2)$ with oracle access to a solver circuit $C := (C_1, C_2)$ for $P^{(g)}$ is such that
   \begin{align*}
-    \underset{\substack{\pi^{(k)}, \rho \\ x:= \langle P^{(g)}(\pi^{(k)}), {C}_1(\rho) \rangle_{\text{trans}} \\
-        (\Gamma_H^{(k)}, \Gamma_V^{(g)}) := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}}}}{\Pr}[\Gamma_V^{(g)}(\widetilde{C}_2^{\Gamma_H^{(k)}, C_2, hash}(x,\rho)) = 1]
+    \underset{\mathclap{\substack{
+          \pi^{(k)}, \rho \\
+          x:= \langle P^{(g)}(\pi^{(k)}), {C}_1(\rho) \rangle_{\text{trans}} \\
+          (\Gamma_H^{(k)}, \Gamma_V^{(g)}) := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}}}}}
+    {\Pr}\mkern13mu[\Gamma_V^{(g)}(\widetilde{C}_2^{\Gamma_H^{(k)}, C_2, hash}(x,\rho)) = 1]
     \geq \underset{u \leftarrow \mu_\delta^k}{\Pr}[g(u) = 1] + \varepsilon,
   \end{align*}
   then $D$ satisfies almost surely
   \begin{align*}
-    \underset{\substack{\pi, \rho \\ x := \langle P^{(1)}(\pi), D_1(\rho) \rangle_{\text{trans}} \\
-        (\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi), D_1(\rho) \rangle_{P^{(1)}}}}
-    {\Pr}[\Gamma_V(D_2(x, \rho)) = 1] \geq (\delta + \frac{\varepsilon}{6k}).
+    \underset{
+      \mathclap{
+      \substack{
+        \pi, \rho \\
+        x := \langle P^{(1)}(\pi), D_1(\rho) \rangle_{\text{trans}} \\
+        (\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi), D_1(\rho) \rangle_{P^{(1)}}}}}
+    {\Pr}\mkern13mu[\Gamma_V(D_2(x, \rho)) = 1] \geq (\delta + \frac{\varepsilon}{6k}).
   \end{align*}
-  Additionally, $D$ and $Gen$ requires oracle access to $g$, $P^{(1)}$, $\widetilde{C}$.
+  Additionally, $D$ and $Gen$ require oracle access to $g$, $P^{(1)}$, $\widetilde{C}$.
   Furthermore, $D$ asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hint queries and no verification queries.
   Finally, $Size(D) \leq Size(C)\frac{6k}{\varepsilon}$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
 \end{lemma}
 %
 %
-Before proving Lemma \ref{lemma:sec_amp_for_p_hash}, we define additional algorithms that are later used by $Gen$.
-First, we are interested in probability that for $u \leftarrow \mu_{\delta}^k$ and a bit $b \in \{0,1\}$ a function $g: \{0,1\}^{k} \rightarrow \{0,1\}$
+Before proving Lemma \ref{lemma:sec_amp_for_p_hash} we define additional algorithms that are later used by $Gen$.
+First, we are interested in probability that for $u \leftarrow \mu_{\delta}^k$ and a bit $b \in \{0,1\}$ a function $g$
 with the first input bit set to $b$ takes value $1$. The estimate of this probability is calculated by the algorithm
 $EstimateFunctionProbability$.
 %
@@ -137,9 +147,9 @@ the random variable $K_i$ equals $g_i$. We use the Chernoff bound to obtain
 %
 The next algorithm $\textbf{EvalutePuzzles}^{P^{(1)}, P^{(g)}, \widetilde{C}, hash}(\pi^{(k)}, \rho)$
 evaluates which puzzles defined by $P^{(g)}(\rho)$ are solved successfully by $\widetilde{C}(\rho)$.
-In this algorithm we use circuit $P^{(1)}$ to simulate $k$-rounds of interaction between $C_1(\rho)$ and $P^{(g)}(\rho)$.
-This requires an additional notation. We write $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i$ to denote the execution of the $i$-th round of the simulation, and
-$\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i_{P^{(1)}}$
+In this algorithm we use circuit $P^{(1)}$ invoking it $k$ times to simulate $k$-rounds of interaction with $C_1(\rho)$.
+This requires additional notation. We write $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i$ to denote the execution of
+the $i$-th round of the simulation, and $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i_{P^{(1)}}$
 to denote the output of $P^{(1)}(\pi_i)$ in the $i$-th round.
 %
 \begin{codeblock}
@@ -156,7 +166,7 @@ to denote the output of $P^{(1)}(\pi_i)$ in the $i$-th round.
   \IndI $(\Gamma_V^{(g)}, \Gamma_H^{(k)}) := \langle P(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}}$ \\
   \IndI $x := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{\text{trans}}$ \\
   $(q, y_1, \dots, y_k) := \widetilde{C}_2^{\Gamma_H^{(k)}, C_2, hash} (x, \rho)$ \\
-  \For $i:=1$ \To $k$ \Do \IndII //simulate $k$ rounds of sequential interaction \\
+  \For $i:=1$ \To $k$ \Do \IndII //simulate $k$ rounds of interaction \\
   \IndI $(\Gamma_V^{i}, \Gamma_H^{i}) := \langle P^{(1)}(\pi_i), C_1(\rho) \rangle_{P^{(1)}}^i$\\
   $(c_1, \dots, c_k) := (\Gamma_V^{1}(q, y_1), \dots, \Gamma_V^{k}(q, y_k))$\\
   \return $(c_1, \dots, c_k)$
@@ -171,9 +181,9 @@ Additionally, we denote by $(\Gamma_V^{i}, \Gamma_H^{i})$ the verification and h
 round of the interaction between $P^{(g)}(\pi^{(k)})$ and $C_1(\rho)$.
 Finally, for $(q,y_1, \dots, y_k) := \widetilde{C}_2(x^{(k)}, \rho)$ we denote the output of $\Gamma_V^i(q,y_i)$ by $c_i$.
 
-We are interested in the performance of $\widetilde{C}$ when the bitstring $\pi_1$ is fixed to $\pi^*$,
+We are interested in the success probability of $\widetilde{C}$ when the bitstring $\pi_1$ is fixed to $\pi^*$,
 the fact whether $\widetilde{C}$ succeeds in solving the first puzzle defined by $P^{(1)}(\pi_1)$ is neglected, and
-instead the bit $b \in \{0,1\}$ is used as the input on the first position of the function $g$.
+instead the bit $b \in \{0,1\}$ is used as the input on the first position to $g$.
 More formally, we define the surplus as
 \begin{align}
   \label{eq:s_pi_b}
@@ -276,22 +286,23 @@ We are ready to define the circuit $D$ and the algorithm $Gen$.
   \IndII $g'(b_2, \dots, b_k) := g(b, b_2, \dots, b_k)$\\
   \IndII\return $Gen^{C', P^{(1)}, g', hash}(\epsilon, \delta, n, v, h, k-1)$ \\
   // all estimates are lower than $(1-\frac{3}{4k})\varepsilon$\\
-  \return $D^{C}$
+  \return $D^{P^{(1)},\widetilde{C}}$
 \end{codeblock}
 
 \begin{proof}[Lemma \ref{lemma:sec_amp_for_p_hash}]
-First let us consider the case where $k=1$. The function $g$ is either the identity or a constant function.
-If $g$ is the identity function, then the circuit $D^{\widetilde{C}}$ returned by \textit{Gen} directly uses $\widetilde{C}$ to find a solution.
+First let us consider the case where $k=1$. The function $g: \{0,1\} \rightarrow \{0,1\}$ is either the identity or a constant function.
+If $g$ is the identity function, then the circuit $D^{P^{(1)}, \widetilde{C}}$ returned by \textit{Gen} directly uses $\widetilde{C}$ to find a solution.
 From the assumptions of Lemma \ref{lemma:sec_amp_for_p_hash} we know that $\widetilde{C}$ succeeds with probability at least
 $\delta + \epsilon$. Hence, $D^{\widetilde{C}}$ trivially satisfies the statement.
 When $g$ is a constant function the statement is vacuously true.
 
 The general case is more involved. We distinguish two possibilities.
-In the first one, $Gen$ manages to find in one of the iterations an estimate that satisfies $\widetilde{S}_{\pi^*,b} \geq (1-\frac{3}{4k})\epsilon$.
-We define a monotone function $g'(b_2, \dots, b_k) := g(b, b_2, \dots, b_k)$, and a circuit $\widetilde{C}' = (C_1', C_2')$, where
+If $Gen$ manages to find in one of the iterations $\pi^*$ with an estimate that satisfies
+$\widetilde{S}_{\pi^*,b} \geq (1-\frac{3}{4k})\epsilon$, we define a monotone function
+$g'(b_2, \dots, b_k) := g(b, b_2, \dots, b_k)$, and a circuit $\widetilde{C}' = (C_1', C_2')$, where
 $C_1'$ first internally simulates the interaction between $C_1$ and $P^{(1)}(\pi^*)$, and then interacts with $P^{(g')}$.
 The circuit $C_2'$ is defined as $C_2$ with the solution for the first puzzle discarded.
-The surplus estimate is greater or equal $1 - \frac{3}{4k}\epsilon$, and using Lemma \ref{lemma:surplus_estimate}
+In this case the surplus estimate is greater or equal $1 - \frac{3}{4k}\epsilon$, and using Lemma \ref{lemma:surplus_estimate}
 we conclude that $S_{\pi^*,b} \geq \widetilde{S}_{\pi^*, b} - \frac{\epsilon}{4k} \geq 1 - \frac{\epsilon}{4k}$ almost surely.
 The circuit $\widetilde{C}$ succeeds in solving $(k-1)$-wise direct product of puzzles with probability
 at least $\Pr_{u \leftarrow \mu^{k-1}_{\delta}}[g'(u_1,\dots, u_{k-1} )] + \epsilon$.
@@ -304,10 +315,10 @@ However, from the assumption we know that on all $k$ puzzles the performance of 
 Therefore, it is likely that the first puzzle is correctly solved unusual often.
 %
 It remains to prove that this intuition is indeed correct.
-Let $\cG_{b} := \{ b_1, b_2, \dots, b_k : g(b, b_2, \dots, b_k) = 1 \}$ using this notation we have
+Let $\cG_{b} := \{ b_1, b_2, \dots, b_k : g(b, b_2, \dots, b_k) = 1 \}$. We observe
 \begin{align*}
-  \underset{u \leftarrow \mu_{\delta}^k}{\Pr}[g(b, u_2, \dots, u_k) = 1] = \underset{u \leftarrow \mu_{\delta}^k}{\Pr}[u \in G_b] \\
-  \underset{\pi^{(k)}, \rho}{\Pr}[g(b, c_2, \dots, c_k) = 1] = \underset{\pi^{(k)}, \rho}{\Pr}[c \in G_b].
+  \underset{u \leftarrow \mu_{\delta}^k}{\Pr}[u \in G_b] = \underset{u \leftarrow \mu_{\delta}^k}{\Pr}[g(b, u_2, \dots, u_k) = 1]\\
+ \underset{\pi^{(k)}, \rho}{\Pr}[c \in G_b] = \underset{\pi^{(k)}, \rho}{\Pr}[g(b, c_2, \dots, c_k) = 1].
 \end{align*}
 We fix $\pi^*$ and use (\ref{eq:s_pi_b}) to obtain
 \begin{align}
@@ -320,12 +331,13 @@ Since $g$ is monotone we have that $\cG_0 \subseteq \cG_1$ and can write (\ref{e
   \label{eq:diff_s01_next}
   \underset{u \leftarrow \mu_{\delta}^k}{\Pr}[u \in \cG_1 \setminus \cG_0] = \underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] - (S_{\pi^*,1} - S_{\pi^*,0}).
 \end{align}
-Still fixing $\pi_1 = \pi^*$ we multiple both sides of (\ref{eq:diff_s01_next}) by
+Still fixing $\pi_1 = \pi^*$ we multiply both sides of (\ref{eq:diff_s01_next}) by
 \begin{align*}
 \underset{
-  \substack{\rho \\ x := \langle P^{(1)}(\pi^*), D^{\widetilde{C}} (\rho) \rangle_{\text{trans}}
-    \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D^{\widetilde{C}} (\rho) \rangle_{P^{(1)}} }}
-{\Pr}[\Gamma_V(D^{\widetilde{C}}(x, \rho)) = 1]
+  \mathclap{
+    \substack{\rho \\ x := \langle P^{(1)}(\pi^*), D^{\widetilde{C}} (\rho) \rangle_{\text{trans}}
+    \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D^{\widetilde{C}} (\rho) \rangle_{P^{(1)}} }}}
+{\Pr}\mkern13mu [\Gamma_V(D^{\widetilde{C}}(x, \rho)) = 1]
 / \underset{u \leftarrow \mu_{\delta}^k}{\Pr}[ u \in \cG_1 \setminus\cG_0].
 \end{align*}
 %
@@ -333,45 +345,44 @@ which yields
 \begin{align}
 \label{eq:pr_d_succ_0}
 &\underset{
-  \substack{\rho \\ x := \langle P^{(1)}(\pi^*), D^{\widetilde{C}} (\rho) \rangle_{\text{trans}}
-    \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D^{\widetilde{C}} (\rho) \rangle_{P^{(1)}} }}
-{\Pr}[\Gamma_V(D^{\widetilde{C}}(x, \rho)) = 1] \notag\\
+  \mathclap{
+    \substack{\rho \\ x := \langle P^{(1)}(\pi^*), D^{\widetilde{C}} (\rho) \rangle_{\text{trans}}
+      \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D^{\widetilde{C}} (\rho) \rangle_{P^{(1)}} }}}
+{\Pr}\mkern13mu[\Gamma_V(D^{\widetilde{C}}(x, \rho)) = 1] \notag\\
 %
-&\IndII= \frac{
-\underset{
-  \substack{\rho \\ x := \langle P^{(1)}(\pi^*), D^{\widetilde{C}} (\rho) \rangle_{\text{trans}}
-    \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D^{\widetilde{C}} (\rho) \rangle_{P^{(1)}} }}
-{\Pr}[\Gamma_V(D^{\widetilde{C}}(x, \rho)) = 1]
-\underset{\pi^{(k)},\rho}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi = \pi^*]
-}
-{
-\underset{u \leftarrow \mu_{\delta}^k}{\Pr}[ u \in \cG_1 \setminus\cG_0]
+&\IndII = \mkern13mu
+  \underset{
+    \mathclap{
+      \substack{\rho \\ x := \langle P^{(1)}(\pi^*), D^{\widetilde{C}} (\rho) \rangle_{\text{trans}}
+        \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D^{\widetilde{C}} (\rho) \rangle_{P^{(1)}} }}}
+  {\Pr}\mkern13mu[\Gamma_V(D^{\widetilde{C}}(x, \rho)) = 1]
+  \underset{\pi^{(k)},\rho}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi = \pi^*]
+\frac{1}{
+  \underset{u \leftarrow \mu_{\delta}^k}{\Pr}[ u \in \cG_1 \setminus\cG_0]
 }\notag\\
 %
-&\IndIII - \frac{
+&\IndIII - \mkern13mu
 \underset{
+  \mathclap{
   \substack{\rho \\ x := \langle P^{(1)}(\pi^*), D^{\widetilde{C}} (\rho) \rangle_{\text{trans}}
-    \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D^{\widetilde{C}} (\rho) \rangle_{P^{(1)}} }}
-{\Pr}[\Gamma_V(D^{\widetilde{C}}(x, \rho)) = 1](S_{\pi^*,1} - S_{\pi^*,0})
-}
-{
+    \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D^{\widetilde{C}} (\rho) \rangle_{P^{(1)}} }}}
+{\Pr}\mkern13mu[\Gamma_V(D^{\widetilde{C}}(x, \rho)) = 1](S_{\pi^*,1} - S_{\pi^*,0})
+\frac{1}{
 \underset{u \leftarrow \mu_{\delta}^k}{\Pr}[ u \in \cG_1 \setminus\cG_0]
 }
-%
-% &\underset{\rho}{\Pr}[CanonicalSuccess^{P^{(1)}, D, hash}(\pi^*, \rho) = 1] = \notag\\
-% &\IndII\frac{\underset{\rho}{\Pr}[CanonicalSuccess^{P^{(1)}, D, hash}(\pi^*, \rho) = 1] \underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_1 \setminus \cG_2]}
-% {\underset{u \leftarrow \mu_{\delta}^k}{\Pr}[u \in \cG_1 \setminus \cG_0]} \notag\\
-% &\IndIII-\frac{\underset{\rho}{\Pr}[CanonicalSuccess^{P^{(1)}, D, hash}(\pi^*, \rho) = 1] (S_{\pi^*,1} - S_{\pi^*,0})}
-% {\underset{u \leftarrow \mu_{\delta}^k}{\Pr}[u \in \cG_1 \setminus \cG_0]}
 \end{align}
-We make use of the fact that the event $c \in \cG_1 \setminus \cG_0$ implies $D(x^*, r) \neq \bot$, and write the first summand of (\ref{eq:pr_d_succ_0}) as
+We make use of the fact that the event $c \in \cG_1 \setminus \cG_0$ implies $D_2(x^*, r) \neq \bot$, and write the first summand of (\ref{eq:pr_d_succ_0}) as
 \begin{align}
-&\underset{
-  \substack{\rho \\ x := \langle P^{(1)}(\pi^*), D^{\widetilde{C}} (\rho) \rangle_{\text{trans}}
-    \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D^{\widetilde{C}} (\rho) \rangle_{P^{(1)}} }}
-{\Pr}[\Gamma_V(D^{\widetilde{C}}(x, \rho)) = 1]
-\underset{\pi^{(k)},\rho}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi = \pi^*] \notag\\
-  &\IndII = \underset{\substack{\rho \\ x^* = \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}}}{\Pr}[D_2(x^*,\rho) \neq \bot]
+\IndII &\underset{
+  \mathclap{
+  \substack{\rho \\
+    x := \langle P^{(1)}(\pi^*), D_1 (\rho) \rangle_{\text{trans}} \\
+    (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{P^{(1)}} }}}
+{\Pr}\mkern13mu[\Gamma_V(D_2(x, \rho)) = 1]
+\underset{\pi^{(k)},\rho}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] \notag\\
+  &\IndII = \underset{\mathclap{\substack{\rho
+      \\ x = \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}}}}
+  {\Pr}\mkern13mu[D_2(x,\rho) \neq \bot]
   \underset{\pi^{(k)}, \rho}{\Pr}[c_1 = 1 \mid c \in \cG_1 \setminus \cG_0, \pi_1 = \pi^*]
   \underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*]
 \end{align}
@@ -383,20 +394,35 @@ if $\underset{\pi^{(k)}, \rho}{\Pr}[ c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \p
 for $\underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_1 \setminus \cG_0] > \frac{\epsilon}{6k}$ the circuit $D_2$ outputs $\bot$
 if and only if it fails in all $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$ iterations to find $\pi^{(k)}$ such that $g(1, c_2, \dots, c_k) = 1 \land g(0, c_2, \dots, c_k) = 0$
 (i.e. in none of the iterations $c \in \cG_1 \setminus \cG_0$) which happens with probability
+
+
 \begin{align}
-\underset{\substack{\rho \\ x^* := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}}}{\Pr}[D_2(x^*,\rho) = \bot]
+\underset{
+  \mathclap{
+    \substack{
+      \rho \\
+      x^* := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}}}}
+{\Pr}\mkern13mu[D_2(x^*,\rho) = \bot]
 \leq (1 - \frac{\epsilon}{6k})^{\frac{6k}{\epsilon}\log(\frac{\epsilon}{6k})} \leq \frac{\epsilon}{6k}.
 \end{align}
 We conclude that in both cases:
 \begin{align}
-  &\underset{\substack{\rho \\ x^* := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}}}{\Pr}[D_2(x^*,\rho) \neq \bot]
+  &\underset{
+    \mathclap{
+    \substack{\rho \\
+      x := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}}}}
+  {\Pr}\mkern13mu[D_2(x,\rho) \neq \bot]
   \underset{\pi^{(k)}, \rho}{\Pr}[c_1 = 1 \mid c \in \cG_1 \setminus \cG_0, \pi_1 = \pi^*]
   \underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] \notag\\
   &\IndIII \geq \underset{\pi^{(k)}, \rho}{\Pr}[c_1 = 1 \mid c \in \cG_1 \setminus \cG_0, \pi_1 = \pi^*]\underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] - \frac{\epsilon}{6k}.
 \end{align}
 Therefore, we have
 \begin{align*}
-  &\underset{\substack{\rho \\ x^* := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}}}{\Pr}[D_2(x^*,\rho) \neq \bot]
+  &\underset{
+    \mathclap {
+    \substack{\rho \\
+      x^* := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}}}}
+  {\Pr}\mkern13mu[D_2(x^*,\rho) \neq \bot]
   \underset{\pi^{(k)}, \rho}{\Pr}[c_1 = 1 \mid c \in \cG_1 \setminus \cG_0, \pi_1 = \pi^*]
   \underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] \notag\\
   &\IndII \geq \underset{\pi^{(k)}, \rho}{\Pr}[c_1 = 1 \land c \in \cG_0 \setminus \cG_1 \mid \pi_1 = \pi^*] - \frac{\epsilon}{6k} \\
@@ -406,21 +432,16 @@ Therefore, we have
 and finally by (\ref{eq:s_pi_b})
 \begin{align}
   \label{ineq:first_part}
-  &\underset{\substack{\rho \\ x^* := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}}}{\Pr}[D_2(x^*,\rho) \neq \bot]
+  &\underset{
+    \mathclap{
+    \substack{
+      \rho \\
+      x^* := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}}}}
+  {\Pr}\mkern13mu[D_2(x^*,\rho) \neq \bot]
   \underset{\pi^{(k)}, \rho}{\Pr}[c_1 = 1 \mid c \in \cG_1 \setminus \cG_0, \pi_1 = \pi^*]
   \underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] \notag\\
   &\IndIII = \underset{\pi^{(k)}, \rho}{\Pr}[g(c_1, c_2,\dots, c_k) = 1 \mid \pi_1 = \pi^*] -  \underset{u \leftarrow \mu_{\delta}^{(k)}}{\Pr}[u \in \cG_0]  - S_{\pi^*,0} - \frac{\epsilon}{6k}.
 \end{align}
-% Inserting this result into the equation (\ref{eq:pr_d_succ_0}) yields
-% \begin{align}
-% \label{eq:pr_d_succ_1}
-%   &\underset{\pi, \rho}{\Pr}[CanonicalSuccess^{P^{(1)}, D, hash}] = \notag\\
-% &\IndI = \mathbb{E}_{\pi^*}\left[\frac{{\Pr}_{\pi^{(k)}}[g(c) = 1 \mid \pi_1 = \pi^*]
-% - {\Pr}_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_0] - \frac{\epsilon}{6k}}
-% {\Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_1 \setminus \cG_0]}\right] \notag\\
-% &\IndII - \mathbb{E}_{\pi^*}\left[\frac{S_{\pi^*,0} + \Pr_{\rho} [CanonicalSuccess^{P^{(1)}, D, hash}(\pi^*, \rho) = 1](S_{\pi^*,1} - S_{\pi^*,0})}
-% {{\Pr}_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_1 \setminus \cG_0]}\right]
-% \end{align}
 For the second summand we show that if we do not recurse, then majority of estimates is low almost surely.
 Let assume
 \begin{align}
@@ -439,30 +460,38 @@ and use $\cW^c$ to denote the complement of $\cW$.
 We bound the second summand in (\ref{eq:pr_d_succ_0})
 \begin{align}
   \label{ineq:second_eq}
-&\mathbb{E}_{\pi^*}[ S_{\pi^*,0} +
+&\mathbb{E}_{\pi^*}[ S_{\pi^*,0}
+\mkern23mu
++
+\mkern23mu
 \underset{
+  \mathclap{
   \substack{\rho \\ x := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}
-    \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D_1 (\rho) \rangle_{P^{(1)}} }}
-{\Pr}[\Gamma_V(D_2^{\widetilde{C}}(x, \rho)) = 1]
+    \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D_1 (\rho) \rangle_{P^{(1)}} }}}
+{\Pr}\mkern13mu[\Gamma_V(D_2^{\widetilde{C}}(x, \rho)) = 1]
 (S_{\pi^*,1} - S_{\pi^*,0})] \notag\\
 %
 &\IndII = \mathbb{E}_{\pi^* \in \cW^c}[ S_{\pi^*,0}
-+\underset{
+\mkern23mu + \mkern23mu
+\underset{
+  \mathclap{
   \substack{\rho \\ x := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}
-    \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D_1 (\rho) \rangle_{P^{(1)}} }}
-{\Pr}[\Gamma_V(D_2^{\widetilde{C}}(x, \rho)) = 1]
+    \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D_1 (\rho) \rangle_{P^{(1)}} }}}
+{\Pr}\mkern13mu[\Gamma_V(D_2^{\widetilde{C}}(x, \rho)) = 1]
   (S_{\pi^*,1} - S_{\pi^*,0})] \notag\\
-&\IndIII +  \mathbb{E}_{\pi^* \in \cW}[ S_{\pi^*,0} +
+&\IndIII +  \mathbb{E}_{\pi^* \in \cW}[ S_{\pi^*,0} \mkern13mu + \mkern13mu
 \underset{
+  \mathclap{
   \substack{\rho \\ x := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}
-    \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D_1 (\rho) \rangle_{P^{(1)}} }}
-{\Pr}[\Gamma_V(D_2^{\widetilde{C}}(x, \rho)) = 1]
+    \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D_1 (\rho) \rangle_{P^{(1)}} }}}
+{\Pr}\mkern13mu[\Gamma_V(D_2^{\widetilde{C}}(x, \rho)) = 1]
 (S_{\pi^*,1} - S_{\pi^*,0}) ] \notag\\
-&\IndII \leq \frac{\epsilon}{6k} + \mathbb{E}_{\pi^* \in \cW^c}[ S_{\pi^*,0} +
+&\IndII \leq \frac{\epsilon}{6k} + \mathbb{E}_{\pi^* \in \cW^c}[ S_{\pi^*,0} \mkern23mu + \mkern23mu
 \underset{
+  \mathclap{
   \substack{\rho \\ x := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}
-    \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D_1 (\rho) \rangle_{P^{(1)}} }}
-{\Pr}[\Gamma_V(D_2^{\widetilde{C}}(x, \rho)) = 1]
+    \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D_1 (\rho) \rangle_{P^{(1)}} }}}
+{\Pr}\mkern13mu[\Gamma_V(D_2^{\widetilde{C}}(x, \rho)) = 1]
 ((1 - \frac{1}{2k})\epsilon - S_{\pi^*,0})] \notag\\
 &\IndII \leq \frac{\epsilon}{6k} + 1 - \frac{\epsilon}{2k} = 1 - \frac{\epsilon}{3k}
 \end{align}
@@ -474,11 +503,12 @@ We observe that
 \end{align}
 Finally, we insert (\ref{ineq:first_part}) and (\ref{ineq:second_eq}) into equation (\ref{eq:pr_d_succ_0}) and use (\ref{eq:gu_rel}) to obtain
 \begin{align*}
+  \IndII
 \underset{
+  \mathclap{
   \substack{\rho \\ x := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}
-    \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D_1 (\rho) \rangle_{P^{(1)}} }}
-{\Pr}[\Gamma_V(D_2^{\widetilde{C}}(x, \rho)) = 1]
-%\underset{\pi, \rho}{\Pr}[CanonicalSuccess^{P^{(1)}, D, hash}]
+    \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D_1 (\rho) \rangle_{P^{(1)}} }}}
+{\Pr}\mkern13mu[\Gamma_V(D_2^{\widetilde{C}}(x, \rho)) = 1]
 &\geq \mathbb{E}_{\pi^*}\left[\frac{{\Pr}_{\pi^{(k)}}[g(c) = 1 \mid \pi_1 = \pi^*] -
 {\Pr}_{u \leftarrow \mu_{\delta}^{k}}[u \in G_0] - (1 - \frac{1}{6k})\epsilon} {\Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_1 \setminus \cG_0]}\right] \notag
  \end{align*}
@@ -486,10 +516,10 @@ Finally, we insert (\ref{ineq:first_part}) and (\ref{ineq:second_eq}) into equat
  \begin{align}
    \label{eq:proof_final}
 \underset{
+  \mathclap{
   \substack{\rho \\ x := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}
-    \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D_1 (\rho) \rangle_{P^{(1)}} }}
-{\Pr}[\Gamma_V(D_2^{\widetilde{C}}(x, \rho)) = 1]
-   %\underset{\pi, \rho}{\Pr}[CanonicalSuccess^{P^{(1)}, D, hash} = 1]
+    \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D_1 (\rho) \rangle_{P^{(1)}} }}}
+{\Pr}\mkern13mu[\Gamma_V(D_2^{\widetilde{C}}(x, \rho)) = 1]
  &\geq \frac{ {\Pr}_{u \leftarrow \mu_{\delta}^{k}}[g(u) = 1] + \epsilon +
  \Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_0] - (1 - \frac{1}{6k})\epsilon} {\Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_1 \setminus \cG_0]} \notag\\
  &\geq \frac{\epsilon + \delta\Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_1 \setminus \cG_0] - (1 - \frac{1}{6k})\epsilon}
