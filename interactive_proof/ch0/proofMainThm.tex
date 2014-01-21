@@ -1,0 +1,39 @@
+\begin{proof}[Theorem \ref{th:sec_amp_for_dwvp}]
+We show that Theorem \ref{th:sec_amp_for_dwvp} follows by Lemmas: \ref{lemma:sec_amp_for_p_hash}, \ref{lemma:hash_function_probability}.
+First given a solver circuit $C$ such that
+\begin{align*}
+    \underset{\pi^{(k)}, \rho}{\Pr}\left[Success^{P^{(g)}, C}(\pi^{(k)}, \rho) = 1\right] \geq 8(h+v)\left(\underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon\right)
+\end{align*}
+we apply Lemma \ref{lemma:hash_function_probability} to find a function $hash$ such that
+\begin{align*}
+    \underset{\pi^{(k)}, \rho}{\Pr}\left[CanonicalSuccess^{P^{(g)}, C, hash}(\pi^{(k)}, \rho) = 1\right] \geq \underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon.
+\end{align*}
+By Lemma (\ref{lemma:ctilda_c}) we know that it is possible to create a circuit $\widetilde{C}$ with oracle access to $hash$ and $C$ such that
+\begin{align*}
+    \underset{\substack{\pi, \rho \\
+        x := \langle P(\pi), C_1(\rho) \rangle_{\text{trans}} \\
+        (\Gamma_V^{(g)}, \Gamma_H^{(k)}) := \langle P(\pi), C_1(\rho) \rangle_{P}
+      }}
+    {\Pr}[\Gamma_V^{(g)}(\widetilde{C}_2^{\Gamma_H^{(k)}, C_2, hash}(x, \rho)) = 1]
+    \geq
+\underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon
+\end{align*}
+Now, we apply Lemma \ref{lemma:sec_amp_for_p_hash} for the function $hash$ and the circuit $\widetilde{C}$ and obtain a circuit $D$ such that
+\begin{align}
+  \label{eq:succ_prob_d}
+    \underset{\substack{\pi, \rho \\ x := \langle P^{(1)}(\pi), D_1(\rho) \rangle_{\text{trans}} \\
+        (\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi), D_1(\rho) \rangle_{P^{(1)}}}}
+    {\Pr}[\Gamma_V(D_2(x, \rho)) = 1] \geq (\delta + \frac{\varepsilon}{6k}).
+\end{align}
+Finally, we use the circuit $\widetilde{D}$ that first runs the circuit $D$, and make a verification
+query using $(q,y)$ returned by $D$. From, we know that probability that this query is successful amounts at least $(\delta + \frac{\epsilon}{6k})$.
+Therefore, we have
+\begin{align*}
+    \underset{\pi, \rho}{\Pr}\left[Success^{P^{(1)},\widetilde{D}}(\pi, \rho) = 1\right] \geq (\delta + \frac{\varepsilon}{6k}).
+\end{align*}
+\end{proof}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../master"
+%%% End:
