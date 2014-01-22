@@ -231,44 +231,62 @@ returned by \textbf{EstimateSurplus} differs from $S_{\pi^*,b}$ by at most $\fra
 We are ready to define the circuit $D$ and the algorithm $Gen$.
 %
 \begin{codeblock}
-  \textbf{Circuit $D = (D_1, D_2) (\rho)$}
+  \textbf{Circuit $D = (D_1, D_2) (r)$}
   \medskip \hrule \medskip
-  \textbf{Phase I $D_1^{P^{(1)}, \widetilde{C}}(\rho)$}
+  \textbf{Phase I $D_1^{P^{(1)}, \widetilde{C}}(r)$}
   \medskip \hrule \medskip
   \textbf{Oracle:} A circuit $\widetilde{C} = (C_1, \widetilde{C}_2)$, a poser $P^{(1)}$.\\
-  \textbf{Input:} A bitstring $\rho \in \{0,1\}^{*}$.
+  \textbf{Input:} A bitstring $r := (\rho, \sigma)$ such that $ \rho \in \{0,1\}^{*}$ and $\sigma \in \{0,1\}^{*}$.
   \medskip\hrule\medskip
-
   Interact with the problem poser $\langle P^{(1)}, C_1(\rho) \rangle^1$. \\
-  \IndI Let $(\Gamma_V^*, \Gamma_H^*) := \langle P^{(1)}, C_1(\rho) \rangle^1_{P^{(1)}}$. \\
-  \IndI Let $x^* := \langle P^{(1)}, C_1(\rho) \rangle$. \\
+  \IndI $(\Gamma_V^*, \Gamma_H^*) := \langle P^{(1)}, C_1(\rho) \rangle^1_{P^{(1)}}$. \\
+  \IndI $x^* := \langle P^{(1)}, C_1(\rho) \rangle$. \\
   \Return $x^*$
 
   \medskip \hrule \medskip
-  \textbf{Phase II $D_2^{P^{(1)}, \widetilde{C}, hash, g, \Gamma_V^*, \Gamma_H^*}(x^*, \rho)$}
+  \textbf{Phase II $D_2^{P^{(1)}, \widetilde{C}, hash, g, \Gamma_V^*, \Gamma_H^*}(x^*, r)$}
   \medskip \hrule \medskip
   \textbf{Oracle:} A poser $P^{(1)}$, a solver circuit $\widetilde{C} = (C_1, \widetilde{C}_2)$, \\
   \IndII functions $hash : Q \rightarrow \{0,1, \dots, 2(h+v)-1\}$, $g:\{0,1\}^k \rightarrow \{0,1\}$, \\
   \IndII verification and hint circuits $\Gamma_V^{*}$, $\Gamma_H^{*}$ produced by $P^{(1)}$ in the Phase I. \\
   %
-  \textbf{Input:} Bitstrings $x^* \in \{0,1\}^{*}$, $\rho \in \{0,1\}^{*}$.\\
-  \textbf{Output}: A verification query $(q, y^*)$.
+  \textbf{Input:} Bitstrings $x^* \in \{0,1\}^{*}$, $r := (\rho, \sigma)$ such that $\rho \in \{0,1\}^{*}$ and $\sigma \in \{0,1\}^{*}$\\
+  \textbf{Output}: A tuple $(q, y^*)$.
   \medskip \hrule \medskip
   \For at most $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$ iterations \Do \\
-  \IndI $\pi^{(k-1)} \leftarrow$ read $(k-1)\cdot n$ bits from $\rho$ \\
-  \IndI \For $i:=2$ \To $k$ \Do \IndIII // Finish remaining $k-1$ interactions. \\
-  \IndII Simulate $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle$ \\
-  \IndIII $ x_i := \langle P^{(1)}(\pi_i), C_1(\rho)\rangle_{\text{trans}}$ \\
-  \IndIII $(\Gamma_V^{i}, \Gamma_H^{i}) := \langle P^{(1)}(\pi_i), C_1(\rho) \rangle_{P^{(1)}}$ \\
-  \IndI $\Gamma_V^{(g)} := g(\Gamma_V^{*}, \Gamma_V^{2}, \dots, \Gamma_V^{k})$  \\
-  \IndI  $\Gamma_H^{(k)} := (\Gamma_H^{*}, \Gamma_H^{2}, \dots, \Gamma_H^{k})$ \\
-  \IndI $(q, y^*, y_2, \dots, y_k) := \widetilde{C}^{\Gamma_V^{(g)}, \Gamma_H^{(k)}, C, hash}((x^*, x_2, \dots, x_k), \rho)$\\
+  \IndI $(\pi_2, \dots, \pi_k) \leftarrow$ read next $(k-1)\cdot n$ bits from $\rho$ \\
+  \IndI \For $i:=2$ \To $k$ \Do \\
+  \IndII \Run $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i$ \\
+  \IndIII $(\Gamma_V^{i}, \Gamma_H^{i}) := \langle P^{(1)}(\pi_i), C_1(\rho) \rangle^i_{P^{(1)}}$ \\
+  \IndIII $x_i := \langle P^{(1)}(\pi_i), C_1(\rho) \rangle^i_{\text{trans}}$ \\
+  \IndI Let $\Gamma_V^{(g)}(q, y_1, \dots, y_k) := g(\Gamma_V^{*}(q,y_1), \Gamma_V^{2}(q,y_2), \dots, \Gamma_V^{k}(q, y_k))$  \\
+  \IndI Let $\Gamma_H^{(k)}(q) := (\Gamma_H^{*}(q), \Gamma_H^{2}(q), \dots, \Gamma_H^{k}(q))$ \\
+  \IndI $(q, y^*, y_2, \dots, y_k) := \widetilde{C}_2^{\Gamma_V^{(g)}, \Gamma_H^{(k)}, C, hash}((x^*, x_2, \dots, x_k), \rho)$\\
   \IndI $(c^*, c_2, \dots, c_k) := (\Gamma_V^*(q, y^*), \Gamma_V^2(q, y_2), \dots, \Gamma_V^{k}(q, y_k))$ \\
-  \IndI \If $g(1, c_{2}, \dots, c_k) = 1 \land g(0,c_{2}, \dots, c_k) = 0$ \Then \\
-  \IndII Make a verification query $(q, y^*)$ \\
+  \IndI \If $g(1, c_{2}, \dots, c_k) = 1$ \And $g(0,c_{2}, \dots, c_k) = 0$ \Then \\
   \IndII \Return $(q, y^*)$ \\
   \Return $\bot$
 %
+\end{codeblock}
+%
+\begin{codeblock}
+  \textbf{Circuit $C_1'(\rho)$}
+  \medskip \hrule \medskip
+  \textbf{Input:}  A bitstring $\rho \in \{0,1\}^{*}$\\
+  \textbf{Hard-coded:} A bitstring $\pi \in \{0,1\}^{n}$
+  \medskip\hrule\medskip
+  Simulate $\langle P^{(1)}(\pi), C_1(\rho)\rangle^1$ \\
+  Use $C_1(\rho)$ for remaining $k-1$ rounds of interaction.
+\end{codeblock}
+%
+\begin{codeblock}
+  \textbf{Circuit $\widetilde{C}_2'(x, \rho)$}
+  \medskip \hrule \medskip
+  \textbf{Input:}  Bitstrings $x \in \{0,1\}^{*}$, $\rho \in \{0,1\}^{*}$\\
+  \textbf{Oracle:} A hint oracle $\Gamma_H^{(k)}$.
+  \medskip\hrule\medskip
+  $(q, y_1, \dots, y_k) := \widetilde{C}_2^{\Gamma_H, hash}(x, \rho)$ \\
+  \Return $(q, y_2, \dots, y_k)$
 \end{codeblock}
 %
 \begin{codeblock}
@@ -288,11 +306,11 @@ We are ready to define the circuit $D$ and the algorithm $Gen$.
   \IndI \If $ \exists b \in \{0,1\}: \widetilde{S}_{\pi^*,b} \geq (1 - \frac{3}{4k}) \epsilon$ \Then \\
   \IndII Let $C_1'$ be as $C_1$ except the first round of interaction between $C_1$ and $P^{(g)}$ which \\
   \IndII is simulated internally by using $P^{(1)}(\pi^*)$\\
-  \IndII Let $C_2'$ be as $C_2$ except the solution for the first puzzle which is discarded. \\
-  \IndII $C' := (C_1', C_2')$ \\
+  \IndII Let $\widetilde{C}_2'$ be as $\widetilde{C}_2$ except the solution for the first puzzle which is discarded. \\
+  \IndII $\widetilde{C}' := (C_1', \widetilde{C}_2')$ \\
   \IndII $g'(b_2, \dots, b_k) := g(b, b_2, \dots, b_k)$\\
-  \IndII\Return $Gen^{C', P^{(1)}, g', hash}(\epsilon, \delta, n, v, h, k-1)$ \\
-  // all estimates are lower than $(1-\frac{3}{4k})\varepsilon$\\
+  \IndII\Return $Gen^{P^{(1)},P^{(g)}, \widetilde{C}, g', hash}(\epsilon, \delta, n, v, h, k-1)$ \\
+  // \textit{all estimates are lower than $(1-\frac{3}{4k})\varepsilon$}\\
   \Return $D^{P^{(1)},\widetilde{C}, g, hash}$
 \end{codeblock}
 
