@@ -27,7 +27,7 @@ Every hint query $q$ asked by $\widetilde{C}$ is such that $hash(q) \neq 0$.
 Furthermore, $\widetilde{C}$ asks no verification queries, instead it returns $\bot$ or $(q,y)$ such that
 $hash(q) = 0$.
 
-We say that for a fixed $\pi$, $\rho$ the circuit $\widetilde{C}$ succeeds if
+We say that for a fixed $\pi$, $\rho$ the circuit $\widetilde{C}$ \textit{succeeds} if
 for $x := \langle P(\pi), C_1(\rho) \rangle_{\text{trans}}$,
 $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$ we have
 \begin{align*}
@@ -83,7 +83,8 @@ Using this observation, we conclude that
 %
 \begin{lemma}\textbf{(Security amplification of a dynamic weakly verifiable puzzle with respect to \boldmath{$hash$}.)}
   \label{lemma:sec_amp_for_p_hash}
-  For fixed $P^{(1)}$ there exists an algorithm $Gen$ that takes as input parameters $\varepsilon, \delta, n, k$,
+  For fixed $P^{(1)}$ there exists an algorithm $Gen$ that takes as input parameters $\varepsilon, \delta, n, k$
+  has oracle access to $P^{(1)}$, $P^{(g)}$, $\widetilde{C}$, $hash$, $g$
   and outputs a circuit $D := (D_1, D_2)$ such that the following holds: \\
   If $\widetilde{C} := (C_1, \widetilde{C}_2)$ with oracle access to a solver circuit $C := (C_1, C_2)$ for $P^{(g)}$ is such that
   \begin{align*}
@@ -104,7 +105,6 @@ Using this observation, we conclude that
         (\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi), D_1^{P^{(1)}, \widetilde{C}}(\rho) \rangle_{P^{(1)}}}}}
     {\Pr}\mkern13mu[\Gamma_V(D_2^{P^{(1)}, \widetilde{C}, hash, g, \Gamma_V, \Gamma_H}(x, \rho)) = 1] \geq (\delta + \frac{\varepsilon}{6k}).
   \end{align*}
-  Additionally, $Gen$ requires oracle access to $g$, $P^{(1)}$, $\widetilde{C}$.
   Furthermore, $D$ asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hint queries and no verification queries.
   Finally, $Size(D) \leq Size(C)\frac{6k}{\varepsilon}$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
 \end{lemma}
@@ -151,12 +151,13 @@ the random variable $K_i$ equals $g_i$. We use the Chernoff bound to obtain
 %
 %
 The next algorithm $\textbf{EvalutePuzzles}^{P^{(1)}, P^{(g)}, \widetilde{C}, hash}(\pi^{(k)}, \rho)$
-evaluates which of $k$ puzzles of the $k$-wise direct product defined by $P^{(g)}(\rho)$ are solved successfully by $\widetilde{C}(\rho)$.
+evaluates which of $k$ puzzles of the $k$-wise direct product defined by $P^{(g)}$ are solved successfully by $\widetilde{C}(\rho) := (C_1,\widetilde{C}_2)(\rho)$.
 To decide whether the $i$-th puzzle of the $k$-wise direct product is solved successfully we need to gain access to verification oracle
-for the puzzle generated in the $i$-th round.
+for the puzzle generated in the $i$-th round of the interaction between $P^{(g)}$ and $\widetilde{C}$.
 Therefore, in the algorithm \textbf{EvalutePuzzles} we use $P^{(1)}$, and invoke it $k$ times to simulate the interaction with $C_1(\rho)$.
 We introduce additional notation. Let us denote by $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i$ the execution of
 the $i$-th round of the simulation, and by $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i_{P^{(1)}}$ the output of $P^{(1)}(\pi_i)$ in the $i$-th round.
+Furthermore, we write $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i_{trans}$ to denote a transcript of communication in the $i$-th round.
 %
 \begin{codeblock}
   $\textbf{EvaluatePuzzles}^{P^{(1)}, P^{(g)}, \widetilde{C}, hash}(\pi^{(k)}, \rho)$
@@ -168,18 +169,21 @@ the $i$-th round of the simulation, and by $\langle P^{(1)}(\pi_i), C_1(\rho)\ra
   %
   \medskip\hrule\medskip
   %
-  \Run $\langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle$ \\
-  \IndI $(\Gamma_V^{(g)}, \Gamma_H^{(k)}) := \langle P(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}}$ \\
-  \IndI $x := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{\text{trans}}$ \\
-  $(q, y_1, \dots, y_k) := \widetilde{C}_2^{\Gamma_H^{(k)}, C_2, hash} (x, \rho)$ \\
+  % \Run $\langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle$ \\
+  % \IndI $(\Gamma_V^{(g)}, \Gamma_H^{(k)}) := \langle P(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}}$ \\
+  % \IndI $x := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{\text{trans}}$ \\
   \For $i:=1$ \To $k$ \Do \IndII //simulate $k$ rounds of interaction \\
   \IndI $(\Gamma_V^{i}, \Gamma_H^{i}) := \langle P^{(1)}(\pi_i), C_1(\rho) \rangle_{P^{(1)}}^i$\\
+  \IndI $x_i := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle^i_{\text{trans}}$ \\
+  $x := (x_1, \dots, x_k)$ \\
+  $\Gamma_H^{(k)} := (\Gamma_H^1, \dots, \Gamma_H^k)$ \\
+  $(q, y_1, \dots, y_k) := \widetilde{C}_2^{\Gamma_H^{(k)}, C_2, hash} (x, \rho)$ \\
   $(c_1, \dots, c_k) := (\Gamma_V^{1}(q, y_1), \dots, \Gamma_V^{k}(q, y_k))$\\
   \Return $(c_1, \dots, c_k)$
 \end{codeblock}
 %
-All puzzles used by the procedure \textbf{EvalutePuzzles} are generated internally and the algorithm can answer itself
-all queries to hint and verification oracle.
+All puzzles used by the procedure \textbf{EvalutePuzzles} are generated internally. Thus, the algorithm can answer itself
+all queries of $\widetilde{C_2}$ to the hint oracle.
 
 For fixed $\pi^{(k)}, \rho$ let $(\Gamma_V^{(g)}, \Gamma_H^{(k)}) := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}}$
 and $x := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{\text{trans}}$.
@@ -187,7 +191,7 @@ Additionally, we denote by $(\Gamma_V^{i}, \Gamma_H^{i})$ the verification and h
 round of the simulated interaction with $C_1(\rho)$.
 Finally, for $(q,y_1, \dots, y_k) := \widetilde{C}_2(x, \rho)$ we denote the output of $\Gamma_V^i(q,y_i)$ by $c_i$.
 
-We are interested in the success probability of $\widetilde{C}$ when the bitstring $\pi_1$ is fixed to $\pi^*$, and
+We are interested in the success probability of $\widetilde{C}$ with the bitstring $\pi_1$ fixed to $\pi^*$ when
 the fact whether $\widetilde{C}$ succeeds in solving the first puzzle defined by $P^{(1)}(\pi_1)$ is neglected, and
 instead the bit $b \in \{0,1\}$ is used as the input on the first position to $g$.
 More formally, we define the surplus as
@@ -228,43 +232,11 @@ which yields that \\$\frac{\epsilon^2}{16k^2n} \sum_{i=1}^{\frac{16k^2}{\epsilon
 $\mathbb{E}[g(b, c_2, \dots, c_k)]$ by at most $\frac{\epsilon}{8k}$ almost surely. Together, with Lemma $\ref{lemma:estimate_of_g}$ we conclude that the surplus estimate
 returned by \textbf{EstimateSurplus} differs from $S_{\pi^*,b}$ by at most $\frac{\epsilon}{4k}$ almost surely.
 \end{proof}
-We are ready to define the circuit $D$ and the algorithm $Gen$.
 %
-\begin{codeblock}
-  \textbf{Circuit $D_1^{P^{(1)}, \widetilde{C}}(r)$}
-  \medskip \hrule \medskip
-  \textbf{Oracle:} A circuit $\widetilde{C} = (C_1, \widetilde{C}_2)$, a poser $P^{(1)}$.\\
-  \textbf{Input:} A tuple $r := (\rho, \sigma)$ where $ \rho \in \{0,1\}^{*}$ and $\sigma \in \{0,1\}^{*}$.
-  \medskip\hrule\medskip
-  Interact with the problem poser $\langle P^{(1)}, C_1(\rho) \rangle^1$.
-\end{codeblock}
-%
-\begin{codeblock}
-  \textbf{Circuit $D_2^{P^{(1)}, \widetilde{C}, hash, g, \Gamma_V^*, \Gamma_H^*}(x^*, r)$}
-  \medskip \hrule \medskip
-  \textbf{Oracle:} A poser $P^{(1)}$, a solver circuit $\widetilde{C} = (C_1, \widetilde{C}_2)$, \\
-  \IndII functions $hash : Q \rightarrow \{0,1, \dots, 2(h+v)-1\}$, $g:\{0,1\}^k \rightarrow \{0,1\}$, \\
-  \IndII verification and hint circuits $\Gamma_V$, $\Gamma_H$ for $P^{(1)}$. \\
-  %
-  \textbf{Input:} Bitstrings $x^* \in \{0,1\}^{*}$, $r := (\rho, \sigma)$ such that $\rho \in \{0,1\}^{*}$ and $\sigma \in \{0,1\}^{*}$\\
-  \textbf{Output}: A tuple $(q, y^*)$.
-  \medskip \hrule \medskip
-  \For at most $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$ iterations \Do \\
-  \IndI $(\pi_2, \dots, \pi_k) \leftarrow$ read next $(k-1)\cdot n$ bits from $\rho$ \\
-  \IndI \For $i:=2$ \To $k$ \Do \\
-  \IndII \Run $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i$ \\
-  \IndIII $(\Gamma_V^{i}, \Gamma_H^{i}) := \langle P^{(1)}(\pi_i), C_1(\rho) \rangle^i_{P^{(1)}}$ \\
-  \IndIII $x_i := \langle P^{(1)}(\pi_i), C_1(\rho) \rangle^i_{\text{trans}}$ \\
-  \IndI Let $\Gamma_V^{(g)}(q, y_1, \dots, y_k) := g(\Gamma_V^{*}(q,y_1), \Gamma_V^{2}(q,y_2), \dots, \Gamma_V^{k}(q, y_k))$  \\
-  \IndI Let $\Gamma_H^{(k)}(q) := (\Gamma_H^{*}(q), \Gamma_H^{2}(q), \dots, \Gamma_H^{k}(q))$ \\
-  \IndI $(q, y^*, y_2, \dots, y_k) := \widetilde{C}_2^{\Gamma_H^{(k)}, C, hash}((x^*, x_2, \dots, x_k), \rho)$\\
-  \IndI $(c^*, c_2, \dots, c_k) := (\Gamma_V^*(q, y^*), \Gamma_V^2(q, y_2), \dots, \Gamma_V^{k}(q, y_k))$ \\
-  \IndI \If $g(1, c_{2}, \dots, c_k) = 1$ \And $g(0,c_{2}, \dots, c_k) = 0$ \Then \\
-  \IndII \Return $(q, y^*)$ \\
-  \Return $\bot$
-%
-\end{codeblock}
-%
+
+We define a circuit $C' = (C_1', \widetilde{C}_2')$ build using the circuit $C$ to which $C'$ has oracle access.
+However, to make the notation easier we omit the oracle signature, and write $C'$ instead of $C^{C}$.
+
 \begin{codeblock}
   \textbf{Circuit $C_1'(\rho)$}
   \medskip \hrule \medskip
@@ -276,20 +248,58 @@ We are ready to define the circuit $D$ and the algorithm $Gen$.
 \end{codeblock}
 %
 \begin{codeblock}
-  \textbf{Circuit $\widetilde{C}_2'(x, \rho)$}
+  \textbf{Circuit $\widetilde{C}_2'(x^{(k-1)}, \rho)$}
   \medskip \hrule \medskip
-  \textbf{Oracle:} A hint oracle $\Gamma_H^{(k-1)}$. \\
-  \textbf{Input:}  A tuple $x := (x_1, \dots, x_{k-1}) \in \{0,1\}^{*}$, a bitstring $\rho \in \{0,1\}^{*}$\\
+  \textbf{Oracle:} A hint oracle $\Gamma_H^{(k-1)} := (\Gamma_H^{2}, \dots, \Gamma_H^{k})$. \\
+  \textbf{Input:}  A tuple $x^{(k-1)} := (x_2, \dots, x_{k}) \in \{0,1\}^{*}$, a bitstring $\rho \in \{0,1\}^{*}$\\
   \textbf{Hard-coded:} A bitstring $\pi^* \in \{0,1\}^{n}$
   \medskip\hrule\medskip
   Simulate $\langle P^{(1)}(\pi^*), C_1(\rho) \rangle^{1}$ \\
-  \IndI $(\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi^*), C_1(\rho) \rangle^{1}_{P^{(1)}}$ \\
+  \IndI $(\Gamma_H^*, \Gamma_V^*) := \langle P^{(1)}(\pi^*), C_1(\rho) \rangle^{1}_{P^{(1)}}$ \\
   \IndI $x^* := \langle P^{(1)}(\pi^*), C_1(\rho) \rangle^{1}_{\text{trans}}$ \\
-  Let $\Gamma_H^{(k)} := (\Gamma_H, \Gamma_H^{1}, \Gamma_H^{2}, \dots, \Gamma_H^{k-1})$ \\
-  Let $x^{(k)} := (x^*, x_1, \dots, x_{k-1})$ \\
+  Let $\Gamma_H^{(k)} := (\Gamma_H^*, \Gamma_H^{2}, \dots, \Gamma_H^{k})$ \\
+  Let $x^{(k)} := (x^*, x_2, \dots, x_{k})$ \\
   $(q, y_1, \dots, y_k) := \widetilde{C}_2^{\Gamma_H^{(k)}, hash}(x^{(k)}, \rho)$ \\
   \Return $(q, y_2, \dots, y_k)$
 \end{codeblock}
+%
+We are ready to define the circuit $D^{P^{(1)}, P^{(g)}, \widetilde{C}, hash, g} = (D_1^{P^{(1)}, \widetilde{C}}, D_2^{P^{(1)}, P^{(g)}, hash, g})$ and the algorithm $Gen$.
+%
+\begin{codeblock}
+  \textbf{Circuit $D_1^{P^{(1)}, \widetilde{C}}(r)$}
+  \medskip \hrule \medskip
+  \textbf{Oracle:} A circuit $\widetilde{C} = (C_1, \widetilde{C}_2)$, a poser $P^{(1)}$.\\
+  \textbf{Input:} A tuple $r := (\rho, \sigma)$ where $ \rho \in \{0,1\}^{*}$ and $\sigma \in \{0,1\}^{*}$.
+  \medskip\hrule\medskip
+  Interact with the problem poser $\langle P^{(1)}, C_1(\rho) \rangle^1$.
+\end{codeblock}
+%
+\begin{codeblock}
+  \textbf{Circuit $D_2^{P^{(1)}, P^{(g)}, \widetilde{C}, hash, g, \Gamma_V^*, \Gamma_H^*}(x^*, r)$}
+  \medskip \hrule \medskip
+  \textbf{Oracle:} A poser $P^{(1)}$, a solver circuit $\widetilde{C} = (C_1, \widetilde{C}_2)$, \\
+  \IndII functions $hash : Q \rightarrow \{0,1, \dots, 2(h+v)-1\}$, $g:\{0,1\}^k \rightarrow \{0,1\}$, \\
+  \IndII verification and hint circuits $\Gamma_V^*$, $\Gamma_H^*$ for $P^{(1)}$. \\
+  %
+  \textbf{Input:} Bitstrings $x^* \in \{0,1\}^{*}$, $r := (\rho, \sigma)$ such that $\rho \in \{0,1\}^{*}$ and $\sigma \in \{0,1\}^{*}$\\
+  \textbf{Output}: A tuple $(q, y^*)$.
+  \medskip \hrule \medskip
+  \For at most $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$ iterations \Do \\
+  \IndI $(\pi_2, \dots, \pi_k) \leftarrow$ read next $(k-1)\cdot n$ bits from $\rho$ \\
+  \IndI \For $i:=2$ \To $k$ \Do \\
+  \IndII \Run $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i$ \\
+  \IndIII $(\Gamma_V^{i}, \Gamma_H^{i}) := \langle P^{(1)}(\pi_i), C_1(\rho) \rangle^i_{P^{(1)}}$ \\
+  \IndIII $x_i := \langle P^{(1)}(\pi_i), C_1(\rho) \rangle^i_{\text{trans}}$ \\
+  \IndI $\Gamma_V^{(g)}(q, y_1, \dots, y_k) := g(\Gamma_V^{*}(q,y_1), \Gamma_V^{2}(q,y_2), \dots, \Gamma_V^{k}(q, y_k))$  \\
+  \IndI $\Gamma_H^{(k)}(q) := (\Gamma_H^{*}(q), \Gamma_H^{2}(q), \dots, \Gamma_H^{k}(q))$ \\
+  \IndI $(q, y^*, y_2, \dots, y_k) := \widetilde{C}_2^{\Gamma_H^{(k)}, C, hash}((x^*, x_2, \dots, x_k), \rho)$\\
+  \IndI $(c^*, c_2, \dots, c_k) := (\Gamma_V^*(q, y^*), \Gamma_V^2(q, y_2), \dots, \Gamma_V^{k}(q, y_k))$ \\
+  \IndI \If $g(1, c_{2}, \dots, c_k) = 1$ \And $g(0,c_{2}, \dots, c_k) = 0$ \Then \\
+  \IndII \Return $(q, y^*)$ \\
+  \Return $\bot$
+%
+\end{codeblock}
+%
 %
 \begin{codeblock}
   \textbf{Algorithm $Gen^{P^{(1)}, P^{(g)}, \widetilde{C}, g, hash}(\epsilon, \delta, n, v, h, k)$}
@@ -306,29 +316,28 @@ We are ready to define the circuit $D$ and the algorithm $Gen$.
   \IndI $\widetilde{S}_{\pi^*,0} := \textbf{EstimateSurplus}^{P^{(1)}, P^{(g)}, \widetilde{C}, g, hash}(\pi^*, 0)$\\
   \IndI $\widetilde{S}_{\pi^*,1} := \textbf{EstimateSurplus}^{P^{(1)}, P^{(g)}, \widetilde{C}, g, hash}(\pi^*, 1)$\\
   \IndI \If $ \exists b \in \{0,1\}: \widetilde{S}_{\pi^*,b} \geq (1 - \frac{3}{4k}) \epsilon$ \Then \\
-  \IndII Let $C_1'$ be as $C_1$ except the first round of interaction between $C_1$ and $P^{(g)}$ which \\
-  \IndII is simulated internally by using $P^{(1)}(\pi^*)$\\
-  \IndII Let $\widetilde{C}_2'$ be as $\widetilde{C}_2$ except the solution for the first puzzle which is discarded. \\
+  \IndII Let $C_1'$ use $C_1$ and have hard-coded $\pi^*$ \\
+  \IndII Let $\widetilde{C}_2'$ use $\widetilde{C}_2$ and have hard-coded $\pi^*$. \\
   \IndII $\widetilde{C}' := (C_1', \widetilde{C}_2')$ \\
   \IndII $g'(b_2, \dots, b_k) := g(b, b_2, \dots, b_k)$\\
-  \IndII\Return $Gen^{P^{(1)},P^{(g)}, \widetilde{C}, g', hash}(\epsilon, \delta, n, v, h, k-1)$ \\
+  \IndII\Return $Gen^{P^{(1)},P^{(g)}, \widetilde{C}', g', hash}(\epsilon, \delta, n, v, h, k-1)$ \\
   // \textit{all estimates are lower than $(1-\frac{3}{4k})\varepsilon$}\\
-  \Return $D^{P^{(1)},\widetilde{C}, g, hash}$
+  \Return $D^{P^{(1)},P^{(g)}, \widetilde{C}, hash, g}$
 \end{codeblock}
 
 \begin{proof}[Lemma \ref{lemma:sec_amp_for_p_hash}]
 First let us consider the case where $k=1$. The function $g: \{0,1\} \rightarrow \{0,1\}$ is either the identity or a constant function.
-If $g$ is the identity function, then the circuit $D^{P^{(1)}, \widetilde{C}, g, hash}$ returned by \textit{Gen} directly uses $\widetilde{C}$ to find a solution.
+If $g$ is the identity function, then the circuit $D$ returned by \textit{Gen} directly uses $\widetilde{C}$ to find a solution.
 From the assumptions of Lemma \ref{lemma:sec_amp_for_p_hash} we know that $\widetilde{C}$ succeeds with probability at least
-$\delta + \epsilon$. Hence, $D^{P^{(1)},\widetilde{C}, g, hash}$ trivially satisfies the statement.
-When $g$ is a constant function the statement is vacuously true.
+$\delta + \epsilon$. Hence, $D$ trivially satisfies the statement.
+If $g$ is a constant function the statement is vacuously true.
 
 The general case is more involved. We distinguish two possibilities.
 If $Gen$ manages to find in one of the iterations $\pi^*$ such that an estimate
 $\widetilde{S}_{\pi^*,b} \geq (1-\frac{3}{4k})\epsilon$, then we define a new monotone function
-$g'(b_2, \dots, b_k) := g(b, b_2, \dots, b_k)$, and a circuit $\widetilde{C}' = (C_1', \widetilde{C}_2')$, where
-$C_1'$ first internally simulates the interaction between $C_1$ and $P^{(1)}(\pi^*)$, and then interacts with $P^{(g')}$.
-The circuit $\widetilde{C}_2'$ is defined as $\widetilde{C}_2$ with the solution for the first puzzle discarded.
+$g'(b_2, \dots, b_k) := g(b, b_2, \dots, b_k)$ and a circuit $\widetilde{C}' = (C_1', \widetilde{C}_2')$, where
+$C_1'$ first internally simulates the interaction between $C_1$ and $P^{(1)}(\pi^*)$, and use $C_1$ to interact with $P^{(g')}$.
+The circuit $\widetilde{C}_2'$ uses $\widetilde{C}_2$, but returns a $(k-1)$-tuple.
 In this case the surplus estimate is greater or equal $1 - \frac{3}{4k}\epsilon$, and using Lemma \ref{lemma:surplus_estimate}
 we conclude that $S_{\pi^*,b} \geq \widetilde{S}_{\pi^*, b} - \frac{\epsilon}{4k} \geq 1 - \frac{\epsilon}{k}$ almost surely.
 The circuit $\widetilde{C}$ succeeds in solving the $(k-1)$-wise direct product of puzzles with probability

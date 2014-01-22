@@ -6,8 +6,8 @@ and the first successful verification query $(q,y)$ of $C$ is such that $hash(q)
 Therefore, if $C$ makes a verification query $(q,y)$ such that $hash(q) = 0$, then we know that no hint query is ever asked on this $q$.
 
 We denote the $i$-th query of $C$ by $q_i$ if it is a hint query, and by $(q_i, y_i)$ if it is a verification query.
-We define now an experiment $CanonicalSuccess$ in which $Q$ is partitioned using a function $hash$.
-We say that a solver circuit $C$ succeeds in the experiment $CanonicalSuccess$
+We define now an experiment $CanonicalSuccess$ in which we partition $Q$ using a function $hash$.
+We say that a solver circuit $C$ \textit{succeeds} in the experiment $CanonicalSuccess$
 if it asks a successful verification query $(q_j, y_j)$ such that $hash(q_j) = 0$,
 and no hint query $q_i$ is asked before $(q_j, y_j)$ such that $hash(q_i) = 0$.
 %
@@ -30,7 +30,7 @@ and no hint query $q_i$ is asked before $(q_j, y_j)$ such that $hash(q_i) = 0$.
   \IndI \If $C_2$ does not succeed for any verification query \Then \\
   \IndII \Return $0$ \\
   \\
-  \textbf{If} $(\Gamma_V(q_j, y_j) = 1)$ \And $(\forall i < j :  hash(q_i) \neq 0)$ \And $(hash(q_j) = 0)$ \Then \\
+  \textbf{If} $(\forall i < j :  hash(q_i) \neq 0)$ \And $(hash(q_j) = 0)$ \Then \\
   \IndI \textbf{return} 1\\
   \textbf{else}\\
   \IndI \textbf{return} 0
@@ -86,7 +86,7 @@ We have
 \end{align}
 %
 We denote the set of those $(\pi,\rho)$ for which $CanonicalSuccess^{P, C, hash}(\pi, \rho) = 1$ by $\cP_{Canonical}$.
-For $(\pi, \rho)$ for which $C$ succeeds canonically, we have $Success^{P, C}(\pi, \rho) = 1$.
+If for $\pi^*$ $\rho^*$ the circuit $C$ succeeds canonically, then for the same $\pi^*$, $\rho^*$ we also have $Success^{P, C}(\pi, \rho) = 1$.
 Hence, $\cP_{Canonical} \subseteq \cP_{Success}$, and we conclude
 \begin{align}
   \label{ineq:hash_high_prob}
@@ -102,7 +102,7 @@ Hence, $\cP_{Canonical} \subseteq \cP_{Success}$, and we conclude
   \hrule
   \medskip
   \textbf{Oracle:} A problem poser $P$, a solver circuit $C$ for $P$.\\
-  \textbf{Input:} Parameters $\gamma$, $n$. The number of hint $h$ and verification $v$ queries. \\
+  \textbf{Input:} Parameters $\gamma$, $n$. The number of $h$ hint and $v$ verification queries. \\
   \textbf{Output:} A function $hash:Q \rightarrow \{0,1, \dots, 2(h+v)-1 \}$.
   \medskip\hrule\medskip
   \For $i = 1$ \To $32(h+v)^2/\gamma^2$ \Do \\
@@ -158,7 +158,7 @@ The probability that $hash \in \cH_{Good}$, when picked, is not returned amounts
   \leq e^{-{\frac{\gamma}{8(h+v)}} N / 18} \leq e^{-\frac{2}{9} \frac{(h+v)}{\gamma}},
 \end{align*}
 where we once more used the Chernoff bound.
-We show that the probability of picking a $hash \in \cH_{Good}$ is at least $\frac{\gamma}{8(h+v)}$.
+We show now that the probability of picking a $hash \in \cH_{Good}$ is at least $\frac{\gamma}{8(h+v)}$.
 We prove this statement by contradiction. Let assume us that
 \begin{align}
   \label{ass:hash_max_prob}

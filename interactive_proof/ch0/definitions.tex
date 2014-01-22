@@ -46,7 +46,7 @@ is executed and in the second phase an algorithm $A_2$.
   Let $(S_1, S_2)(\rho)$ be a solver for $P^{(g)}$ as in Definition \ref{def:dwvp}.
   In the first phase, the algorithm $S_1(\rho)$ sequentially interacts in $k$ rounds with $P_{kn}^{(g)}(\pi^{(k)})$.
   In the $i$-th round $S_1(\rho)$ interacts with $P_n^{(1)}(\pi_i)$,
-  and as the result $P_{kn}^{(g)}(\pi^{(k)})$ generates circuits $\Gamma_V^i, \Gamma_H^i$.
+  and as the result $P_{n}^{(1)}(\pi_1)$ generates circuits $\Gamma_V^i, \Gamma_H^i$.
   Finally, after $k$ rounds $P_{kn}^{(g)}(\pi^{(k)})$ outputs a verification circuit
 \begin{align*}
   \Gamma_V^{(g)} (q, y_1, \dots, y_k) := g(\Gamma_V^{1}(q, y_1), \dots, \Gamma_V^{k}(q, y_k))
@@ -104,12 +104,13 @@ the number of verification queries $v$ and hint queries $h$ asked by $C$, and ou
 such that the following holds: \\
 If $C$ is such that
   \begin{align*}
-    \underset{\pi^{(k)}, \rho}{\Pr}\left[Success^{P^{(g)}, C}(\pi^{(k)}, \rho) = 1\right]
+    \underset{\substack{\pi^{(k)} \in \{0,1\}^{kn} \\ \rho \in \{0,1\}^{*}}}{\Pr}\left[Success^{P^{(g)}, C}(\pi^{(k)}, \rho) = 1\right]
     \geq 8(h+v)\left(\underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon\right)
   \end{align*}
 then $D$ satisfies almost surely
   \begin{align*}
-    \underset{\pi, \rho}{\Pr}\left[Success^{P^{(1)},D}(\pi, \rho) = 1\right] \geq (\delta + \frac{\varepsilon}{6k}).
+    \underset{\substack{\pi \in \{0,1\}^{n} \\ \rho \in \{0,1\}^{*}}}
+    {\Pr}\left[Success^{P^{(1)},D}(\pi, \rho) = 1\right] \geq (\delta + \frac{\varepsilon}{6k}).
   \end{align*}
 Additionally, $D$ requires oracle access to $g$, $P^{(1)}$, $C$,
 and asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hint queries and one verification query.
