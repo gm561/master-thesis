@@ -42,7 +42,7 @@ is executed and in the second phase an algorithm $A_2$.
   Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function and $P^{(1)}$ a problem poser as in Definition \ref{def:dwvp}.
   The $k$-wise direct product of $P^{(1)}$ is a DWVP defined by a probabilistic algorithm $P^{(g)}$.
   We write $P_{kn}^{(g)}(\pi^{(k)})$ to denote the execution of $P^{(g)}$ with the randomness fixed to $\pi^{(k)} := (\pi_1, \dots, \pi_k)$
-  where for each $1 \leq i \leq n : \pi_i \in \{0,1\}^n$ .
+  where for each $1 \leq i \leq n : \pi_i \in \{0,1\}^n.$
   Let $(S_1, S_2)(\rho)$ be a solver for $P^{(g)}$ as in Definition \ref{def:dwvp}.
   In the first phase, the algorithm $S_1(\rho)$ sequentially interacts in $k$ rounds with $P_{kn}^{(g)}(\pi^{(k)})$.
   In the $i$-th round $S_1(\rho)$ interacts with $P_n^{(1)}(\pi_i)$,
@@ -83,9 +83,9 @@ Additionally, the randomness in both phases is fixed to $\rho \in \{0,1\}^{*}$.
   \IndI $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$ \\
   \IndI $x := \langle P(\pi), C_1(\rho) \rangle_{\text{trans}}$ \\ \\
   \Run $C_2^{\Gamma_V,\Gamma_H}(x, \rho)$ \\
-  \IndI \If $C_2^{\Gamma_V, \Gamma_H}(x, \rho)$ asks a verification query $(q, y)$ such that $\Gamma_V(q, y) = 1$ \then \\
-  \IndII \return $1$ \\
-  \return $0$ \\
+  \IndI \If $C_2^{\Gamma_V, \Gamma_H}(x, \rho)$ asks a verification query $(q, y)$ such that $\Gamma_V(q, y) = 1$ \Then \\
+  \IndII \Return $1$ \\
+  \Return $0$ \\
 \end{codeblock}
 %
 We define the \textit{success probability} of $C$ in solving a puzzle defined by $P$ as
