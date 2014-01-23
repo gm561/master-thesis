@@ -15,7 +15,7 @@ Finally, let $\langle A, B \rangle_{\text{trans}}$ denote the transcript of comm
 We define a \textit{two phase algorithm} $A := (A_1, A_2)$ as an algorithm where in the first phase an algorithm $A_1$
 is executed and in the second phase an algorithm $A_2$.
 
-We say that an event happens \textit{almost surely} or with \textit{ high probability} if
+We say that an event happens \textit{almost surely} or with \textit{high probability} if
 its has probability at least $1 - 2^{-n} poly(n)$.
 
 \begin{definition}[Dynamic weakly verifiable puzzle.]
@@ -101,13 +101,14 @@ Furthermore, we say that $C$ succeeds for $\pi$, $\rho$ if $Success^{P,C}(\pi, \
 \label{th:sec_amp_for_dwvp}
 Let $P^{(1)}$ be a fixed problem poser as in Definition \ref{def:dwvp}, and $P^{(g)}$ be a poser for the $k$-wise direct product of $P^{(1)}$.
 There exists a probabilistic algorithm $Gen$ with oracle access to: a solver circuit $C$ for $P^{(g)}$,
-a monotone function $g:\{0,1\}^k \rightarrow \{0,1\}$ and $P^{(1)}$. Additionally, $Gen$ takes as input parameters $\varepsilon$, $\delta$, $n$,
+a monotone function $g:\{0,1\}^k \rightarrow \{0,1\}$ and problem posers $P^{(1)}$, $P^{(g)}$.
+Additionally, $Gen$ takes as input parameters $\varepsilon$, $\delta$, $n$, $k$
 the number of verification queries $v$ and hint queries $h$ asked by $C$, and outputs a solver circuit $D$ for $P^{(1)}$ as in Definition \ref{def:dwvp}
 such that the following holds: \\
 If $C$ is such that
   \begin{align*}
     \underset{\substack{\pi^{(k)} \in \{0,1\}^{kn} \\ \rho \in \{0,1\}^{*}}}{\Pr}\left[Success^{P^{(g)}, C}(\pi^{(k)}, \rho) = 1\right]
-    \geq 8(h+v)\left(\underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon\right)
+    \geq 16(h+v)\left(\underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon\right)
   \end{align*}
 then $D$ satisfies almost surely
   \begin{align*}
