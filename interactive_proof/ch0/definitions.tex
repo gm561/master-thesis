@@ -15,6 +15,9 @@ Finally, let $\langle A, B \rangle_{\text{trans}}$ denote the transcript of comm
 We define a \textit{two phase algorithm} $A := (A_1, A_2)$ as an algorithm where in the first phase an algorithm $A_1$
 is executed and in the second phase an algorithm $A_2$.
 
+We say that an event happens \textit{almost surely} or with \textit{ high probability} if
+its has probability at least $1 - 2^{-n} poly(n)$.
+
 \begin{definition}[Dynamic weakly verifiable puzzle.]
   \label{def:dwvp}
   A dynamic weakly verifiable puzzle (DWVP) is defined by a probabilistic algorithm $P$
@@ -57,11 +60,11 @@ and a hint circuit
 \end{align*}
 \end{definition}
 %
-If it is clear form a context we omit the parameter $n$ and write $P(\pi)$ instead of $P_n(\pi)$ where $\pi \in \{0,1\}^{n}$.
+If it is clear from a context we omit the parameter $n$ and write $P(\pi)$ instead of $P_n(\pi)$ where $\pi \in \{0,1\}^{n}$.
 
-A verification query $(q,y)$ of a solver $S$ for which a hint query on this $q$ has been asked before can not be a successful verification query.
+A verification query $(q,y)$ of a solver $S$ for which a hint query on this $q$ has been asked before can not be a verification query that succeeds.
 Therefore, without loss of generality, we make the assumption that $S$ does not ask verification queries on $q$
-for which a hint query has been asked before. Furthermore, we assume that once $S$ asked a successful verification query,
+for which a hint query has been asked before. Furthermore, we assume that once $S$ asked a verification query that succeeds,
 it does not ask any further hint or verification queries.
 
 Let $C$ be a circuit that corresponds to a solver $S$ as in Definition \ref{def:dwvp}.
@@ -98,8 +101,7 @@ Furthermore, we say that $C$ succeeds for $\pi$, $\rho$ if $Success^{P,C}(\pi, \
 \label{th:sec_amp_for_dwvp}
 Let $P^{(1)}$ be a fixed problem poser as in Definition \ref{def:dwvp}, and $P^{(g)}$ be a poser for the $k$-wise direct product of $P^{(1)}$.
 There exists a probabilistic algorithm $Gen$ with oracle access to: a solver circuit $C$ for $P^{(g)}$,
-a monotone function $g:\{0,1\}^k \rightarrow \{0,1\}$ and $P^{(1)}$. Additionally, $Gen$ takes as input parameters $\varepsilon, \delta$,
-the value $n$ being the length of the input bitstring to $P^{(1)}$,
+a monotone function $g:\{0,1\}^k \rightarrow \{0,1\}$ and $P^{(1)}$. Additionally, $Gen$ takes as input parameters $\varepsilon$, $\delta$, $n$,
 the number of verification queries $v$ and hint queries $h$ asked by $C$, and outputs a solver circuit $D$ for $P^{(1)}$ as in Definition \ref{def:dwvp}
 such that the following holds: \\
 If $C$ is such that

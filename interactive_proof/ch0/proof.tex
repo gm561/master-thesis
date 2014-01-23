@@ -7,7 +7,7 @@
   \textbf{Input:} Bitstrings $x \in \{0,1\}^{*}$, $\rho \in \{0,1\}^{*}$. \\
   \textbf{Output:} A tuple $(q, y)$.
   \medskip\hrule\medskip
-  Run $C_2^{(\cdot, \cdot)}(x, \rho)$ \\
+  \Run $C_2^{(\cdot, \cdot)}(x, \rho)$ \\
   \IndI \If $C_2^{(\cdot, \cdot)}(x, \rho)$ asks a hint query on $q$ \Then\\
   \IndII \If $hash(q) = 0$ \Then\\
   \IndIII \Return $\bot$\\
@@ -27,9 +27,9 @@ Every hint query $q$ asked by $\widetilde{C}$ is such that $hash(q) \neq 0$.
 Furthermore, $\widetilde{C}$ asks no verification queries, instead it returns $\bot$ or $(q,y)$ such that
 $hash(q) = 0$.
 
-We say that for a fixed $\pi$, $\rho$ the circuit $\widetilde{C}$ \textit{succeeds} if
+We say that for a fixed $\pi$, $\rho$, $hash$ the circuit $\widetilde{C}$ \textit{succeeds} if
 for $x := \langle P(\pi), C_1(\rho) \rangle_{\text{trans}}$,
-$(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$ we have
+$(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$, we have
 \begin{align*}
 \Gamma_V(\widetilde{C}_2^{\Gamma_H, C_2, hash}(x, \rho)) = 1.
 \end{align*}
@@ -66,7 +66,7 @@ Using this observation, we conclude that
         (\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}
       }}}
     {\mathbb{E}}\mkern13mu[\Gamma_V(\widetilde{C}_2^{\Gamma_H, C_2, hash}(x, \rho)) = 1] \\
-  &\IndII \leq
+  &\IndII =
   \mkern33mu
     \underset{
       \mathclap{
@@ -84,12 +84,13 @@ Using this observation, we conclude that
 \begin{lemma}\textbf{(Security amplification of a dynamic weakly verifiable puzzle with respect to \boldmath{$hash$}.)}
   \label{lemma:sec_amp_for_p_hash}
   For fixed $P^{(1)}$ there exists an algorithm $Gen$ that takes as input parameters $\varepsilon, \delta, n, k$
-  has oracle access to $P^{(1)}$, $P^{(g)}$, $\widetilde{C}$, $hash$, $g$
+  has oracle access to $P^{(1)}$, $P^{(g)}$, $\widetilde{C}$, $hash : Q \rightarrow \{0,1,\dots, 2(h+v-1)\}$, $g: \{0,1\}^{k} \rightarrow \{0,1\}$,
   and outputs a circuit $D := (D_1, D_2)$ such that the following holds: \\
-  If $\widetilde{C} := (C_1, \widetilde{C}_2)$ with oracle access to a solver circuit $C := (C_1, C_2)$ for $P^{(g)}$ is such that
+  If $\widetilde{C} := (C_1, \widetilde{C}_2)$ with oracle access to a solver circuit $C := (C_1, C_2)$ for $P^{(g)}$, which asks at most $h$ hint queries
+  and $v$ verification queries, is such that
   \begin{align*}
     \underset{\mathclap{\substack{
-          \pi^{(k)}, \rho \\
+          \pi^{(k)} \in \{0,1\}^{kn}, \rho \in \{0,1\}^{*} \\
           x:= \langle P^{(g)}(\pi^{(k)}), {C}_1(\rho) \rangle_{\text{trans}} \\
           (\Gamma_H^{(k)}, \Gamma_V^{(g)}) := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}}}}}
     {\Pr}\mkern13mu[\Gamma_V^{(g)}(\widetilde{C}_2^{\Gamma_H^{(k)}, C_2, hash}(x,\rho)) = 1]
@@ -100,12 +101,13 @@ Using this observation, we conclude that
     \underset{
       \mathclap{
       \substack{
-        \pi, \rho \\
+        \pi \in \{0,1\}^{n}, \rho \in \{0,1\}^{*} \\
         x := \langle P^{(1)}(\pi), D_1^{P^{(1)}, \widetilde{C}}(\rho) \rangle_{\text{trans}} \\
         (\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi), D_1^{P^{(1)}, \widetilde{C}}(\rho) \rangle_{P^{(1)}}}}}
-    {\Pr}\mkern13mu[\Gamma_V(D_2^{P^{(1)}, \widetilde{C}, hash, g, \Gamma_V, \Gamma_H}(x, \rho)) = 1] \geq (\delta + \frac{\varepsilon}{6k}).
+    {\Pr}\mkern13mu[\Gamma_V(D_2^{\Gamma_V, \Gamma_H, P^{(1)}, \widetilde{C}, hash, g}(x, \rho)) = 1] \geq (\delta + \frac{\varepsilon}{6k}).
   \end{align*}
-  Furthermore, $D$ asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hint queries and no verification queries.
+  Furthermore, $D$ has oracle access to hint and verification circuits, $P^{(1)}$, $\widetilde{C}$, $hash$, $g$, and
+  asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hint queries and no verification queries.
   Finally, $Size(D) \leq Size(C)\frac{6k}{\varepsilon}$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
 \end{lemma}
 %
@@ -116,7 +118,7 @@ with the first input bit set to $b$ takes value $1$. The estimate of this probab
 $EstimateFunctionProbability$.
 %
 \begin{codeblock}
-  $\textbf{EstimateFunctionProbability}^{g}(b, k, \epsilon, \delta)$
+  $\textbf{Algorithm: EstimateFunctionProbability}^{g}(b, k, \epsilon, \delta)$
   \medskip
   \hrule
   \medskip
@@ -132,7 +134,7 @@ $EstimateFunctionProbability$.
 %
 \begin{lemma}
   \label{lemma:estimate_of_g}
-  The procedure $\textbf{EstimateFunctionProbability}^{g}(b, k, \epsilon, \delta)$ outputs an estimate $\widetilde{g}$
+  The algorithm $\textbf{EstimateFunctionProbability}^{g}(b, k, \epsilon, \delta)$ outputs an estimate $\widetilde{g}$
   of $\Pr_{u \leftarrow \mu_{\delta}^k}[g(b, u_2, \dots, u_k) = 1]$ where $b \in \{0,1\}$
   such that $| \widetilde{g} - \Pr_{u \leftarrow \mu_{\delta}^{k}}\left[g(b,u_2, \dots, u_k) = 1\right] | \leq \frac{\epsilon}{8k}$ almost surely.
 \end{lemma}
@@ -140,7 +142,7 @@ $EstimateFunctionProbability$.
 \begin{proof}
 We define independent, identically distributed binary random variables $K_1, K_2, \dots, K_{\frac{64k^2}{\epsilon^2} n}$
 such that for each $1 \leq i \leq \frac{64k^2}{\epsilon^2} n$
-the random variable $K_i$ equals $g_i$. We use the Chernoff bound to obtain
+the random variable $K_i$ takes value $g_i$. We use the Chernoff bound to obtain
 \footnote{For independent Bernoulli distributed random variables $X_1, \dots, X_n$ with $X := \sum_{i=1}^n X_i$ and $0 \leq \delta \leq 1$
   we use the Chernoff bound in the form $\Pr[|X - \mathbb{E}[X]| \geq \delta \mathbb{E}[X]] \leq 2 e^{- \mathbb{E}[X] \delta^2 / 3}$.}
 \begin{align*}
@@ -152,26 +154,22 @@ the random variable $K_i$ equals $g_i$. We use the Chernoff bound to obtain
 %
 The next algorithm $\textbf{EvalutePuzzles}^{P^{(1)}, P^{(g)}, \widetilde{C}, hash}(\pi^{(k)}, \rho)$
 evaluates which of $k$ puzzles of the $k$-wise direct product defined by $P^{(g)}$ are solved successfully by $\widetilde{C}(\rho) := (C_1,\widetilde{C}_2)(\rho)$.
-To decide whether the $i$-th puzzle of the $k$-wise direct product is solved successfully we need to gain access to verification oracle
+To decide whether the $i$-th puzzle of the $k$-wise direct product is solved successfully we need to gain access to the verification oracle
 for the puzzle generated in the $i$-th round of the interaction between $P^{(g)}$ and $\widetilde{C}$.
-Therefore, in the algorithm \textbf{EvalutePuzzles} we use $P^{(1)}$, and invoke it $k$ times to simulate the interaction with $C_1(\rho)$.
-We introduce additional notation. Let us denote by $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i$ the execution of
+Therefore, in the algorithm \textbf{EvalutePuzzles}, we use $P^{(1)}$, and invoke it $k$ times to simulate the interaction with $C_1(\rho)$.
+Let us introduce some additional notation. We denote by $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i$ the execution of
 the $i$-th round of the simulation, and by $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i_{P^{(1)}}$ the output of $P^{(1)}(\pi_i)$ in the $i$-th round.
 Furthermore, we write $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i_{trans}$ to denote a transcript of communication in the $i$-th round.
 %
 \begin{codeblock}
-  $\textbf{EvaluatePuzzles}^{P^{(1)}, P^{(g)}, \widetilde{C}, hash}(\pi^{(k)}, \rho)$
+  $\textbf{Algorithm: EvaluatePuzzles}^{P^{(1)}, P^{(g)}, \widetilde{C}, hash}(\pi^{(k)}, \rho)$
   \medskip \hrule \medskip
   \textbf{Oracle:}  Problem posers $P^{(1)}$, $P^{(g)}$, a circuit $\widetilde{C} = (C_1, \widetilde{C}_2)$,\\
   \IndII a function $hash : Q \rightarrow \{0,1,\dots, 2(h+v)-1\}$.\\
   \textbf{Input:} Bitstrings $\pi^{(k)} \in \{0,1\}^{kn}$, $\rho \in \{0,1\}^{*}$.\\
   \textbf{Output}: A tuple $(c_1, \dots, c_k) \in \{0,1\}^{k}$.
-  %
   \medskip\hrule\medskip
   %
-  % \Run $\langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle$ \\
-  % \IndI $(\Gamma_V^{(g)}, \Gamma_H^{(k)}) := \langle P(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}}$ \\
-  % \IndI $x := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{\text{trans}}$ \\
   \For $i:=1$ \To $k$ \Do \IndII //simulate $k$ rounds of interaction \\
   \IndI $(\Gamma_V^{i}, \Gamma_H^{i}) := \langle P^{(1)}(\pi_i), C_1(\rho) \rangle_{P^{(1)}}^i$\\
   \IndI $x_i := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle^i_{\text{trans}}$ \\
@@ -182,8 +180,8 @@ Furthermore, we write $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i_{trans}$ to de
   \Return $(c_1, \dots, c_k)$
 \end{codeblock}
 %
-All puzzles used by the procedure \textbf{EvalutePuzzles} are generated internally. Thus, the algorithm can answer itself
-all queries of $\widetilde{C_2}$ to the hint oracle.
+All puzzles used by the algorithm \textbf{EvalutePuzzles} are generated internally.
+Thus, the algorithm can answer itself all queries of $\widetilde{C}_2$ to the hint oracle.
 
 For fixed $\pi^{(k)}, \rho$ let $(\Gamma_V^{(g)}, \Gamma_H^{(k)}) := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}}$
 and $x := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{\text{trans}}$.
@@ -194,7 +192,7 @@ Finally, for $(q,y_1, \dots, y_k) := \widetilde{C}_2(x, \rho)$ we denote the out
 We are interested in the success probability of $\widetilde{C}$ with the bitstring $\pi_1$ fixed to $\pi^*$ when
 the fact whether $\widetilde{C}$ succeeds in solving the first puzzle defined by $P^{(1)}(\pi_1)$ is neglected, and
 instead the bit $b \in \{0,1\}$ is used as the input on the first position to $g$.
-More formally, we define the surplus as
+More formally, we define the surplus $S_{\pi^*, b}$ as
 \begin{align}
   \label{eq:s_pi_b}
 S_{\pi^*, b} = \underset{\pi^{(k)}, \rho}{\Pr}\left[g(b, c_2, \dots, c_k) = 1 \mid \pi_1 = \pi^*\right] - \underset{u \leftarrow \mu^{(k)}}{\Pr}\left[g(b, u_2, \dots, u_k) = 1\right].
@@ -203,7 +201,7 @@ S_{\pi^*, b} = \underset{\pi^{(k)}, \rho}{\Pr}\left[g(b, c_2, \dots, c_k) = 1 \m
 The algorithm \textbf{EstimateSurplus} returns an estimate $\widetilde{S}_{\pi^*, b}$ for $S_{\pi^*, b}$.
 %
 \begin{codeblock}
-  $\textbf{EstimateSurplus}^{P^{(1)}, P^{(g)}, \widetilde{C}, g, hash}(\pi^*, b, k, \epsilon, \delta)$
+  $\textbf{Algorithm: EstimateSurplus}^{P^{(1)}, P^{(g)}, \widetilde{C}, g, hash}(\pi^*, b, k, \epsilon, \delta)$
   \medskip
   \hrule
   \medskip
@@ -228,14 +226,14 @@ The estimate $\widetilde{S}_{\pi^*,b}$ returned by \textbf{EstimateSurplus} diff
 
 \begin{proof}
 We use the union bound and similar argument as in Lemma \ref{lemma:estimate_of_g}
-which yields that \\$\frac{\epsilon^2}{16k^2n} \sum_{i=1}^{\frac{16k^2}{\epsilon^2}n} \widetilde{s}_{\pi^*,b}^i$ differs from
+which yields that \\$\frac{\epsilon^2}{64k^2n} \sum_{i=1}^{\frac{64k^2}{\epsilon^2}n} \widetilde{s}_{\pi^*,b}^i$ differs from
 $\mathbb{E}[g(b, c_2, \dots, c_k)]$ by at most $\frac{\epsilon}{8k}$ almost surely. Together, with Lemma $\ref{lemma:estimate_of_g}$ we conclude that the surplus estimate
 returned by \textbf{EstimateSurplus} differs from $S_{\pi^*,b}$ by at most $\frac{\epsilon}{4k}$ almost surely.
 \end{proof}
 %
 
-We define a circuit $C' = (C_1', \widetilde{C}_2')$ build using the circuit $C$ to which $C'$ has oracle access.
-However, to make the notation easier we omit the oracle signature, and write $C'$ instead of $C^{C}$.
+Let us define a circuit $\widetilde{C}' = (C_1', \widetilde{C}_2')$ with oracle access $\widetilde{C} = (C_1, \widetilde{C}_2)$.
+To make the notation easier we omit the oracle signature, and write $C'$ instead of $C^{C}$.
 
 \begin{codeblock}
   \textbf{Circuit $C_1'(\rho)$}
@@ -285,7 +283,7 @@ We are ready to define the circuit $D^{P^{(1)}, P^{(g)}, \widetilde{C}, hash, g}
   \textbf{Output}: A tuple $(q, y^*)$.
   \medskip \hrule \medskip
   \For at most $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$ iterations \Do \\
-  \IndI $(\pi_2, \dots, \pi_k) \leftarrow$ read next $(k-1)\cdot n$ bits from $\rho$ \\
+  \IndI $(\pi_2, \dots, \pi_k) \leftarrow$ read next $(k-1)\cdot n$ bits from $\sigma$ \\
   \IndI \For $i:=2$ \To $k$ \Do \\
   \IndII \Run $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i$ \\
   \IndIII $(\Gamma_V^{i}, \Gamma_H^{i}) := \langle P^{(1)}(\pi_i), C_1(\rho) \rangle^i_{P^{(1)}}$ \\
@@ -453,33 +451,9 @@ We conclude that in both cases:
   \underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] \notag\\
   &\IndII \geq \underset{\pi^{(k)}, \rho}{\Pr}[c_1 = 1 \mid c \in \cG_1 \setminus \cG_0, \pi_1 = \pi^*]\underset{\pi^{(k)}, \rho}
   {\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] - \frac{\epsilon}{6k} \notag\\
-% \end{align}
-% Therefore, we have
-% \begin{align*}
-%   &\underset{
-%     \mathclap {
-%     \substack{\rho \\
-%       x^* := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}}}}
-%   {\Pr}\mkern13mu[D_2(x^*,\rho) \neq \bot]
-%   \underset{\pi^{(k)}, \rho}{\Pr}[c_1 = 1 \mid c \in \cG_1 \setminus \cG_0, \pi_1 = \pi^*]
-%   \underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] \notag\\
-%
   &\IndII \geq \underset{\pi^{(k)}, \rho}{\Pr}[c_1 = 1 \land c \in \cG_0 \setminus \cG_1 \mid \pi_1 = \pi^*] - \frac{\epsilon}{6k} \notag\\
   &\IndII = \underset{\pi^{(k)}, \rho}{\Pr}[g(c_1, c_2,\dots, c_k) = 1 \land g(0, c_2, \dots, c_k) = 0 \mid \pi_1 = \pi^*] - \frac{\epsilon}{6k} \notag\\
   &\IndII = \underset{\pi^{(k)}, \rho}{\Pr}[g(c) = 1 \mid \pi_1 = \pi^*] -  \underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_0 \mid \pi_1 = \pi^*] - \frac{\epsilon}{6k} \notag\\
-%
-% \end{align*}
-% and finally by ()
-% \begin{align}
-  % &\IndII =
-  % \underset{
-  %   \mathclap{
-  %   \substack{
-  %     \rho \\
-  %     x^* := \langle P^{(1)}(\pi^*), D_1(\rho) \rangle_{\text{trans}}}}}
-  % {\Pr}\mkern13mu[D_2(x^*,\rho) \neq \bot]
-  % \underset{\pi^{(k)}, \rho}{\Pr}[c_1 = 1 \mid c \in \cG_1 \setminus \cG_0, \pi_1 = \pi^*]
-  % \underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] \notag\\
   &\IndII \stackrel{(\ref{eq:s_pi_b})}{=}
    \underset{\pi^{(k)}, \rho}{\Pr}[g(c_1, c_2,\dots, c_k) = 1 \mid \pi_1 = \pi^*] -  \underset{u \leftarrow \mu_{\delta}^{(k)}}{\Pr}[u \in \cG_0]  - S_{\pi^*,0} - \frac{\epsilon}{6k}.
 \end{align}
