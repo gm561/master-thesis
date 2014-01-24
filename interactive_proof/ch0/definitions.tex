@@ -2,7 +2,7 @@
 % Define high probability
 %
 \noindent
-We write $\mu_{\delta}$ to denote a Bernoulli distribution, where outcome $1$ occurs with
+We write $\mu_{\delta}$ to denote the Bernoulli distribution, where outcome $1$ occurs with
 probability $\delta$ and $0$ with probability $1-\delta$ where $0 \leq \delta \leq 1$.
 Moreover, we use $\mu_{\delta}^k$ to denote a probability distribution over $k$-tuples,
 where each bit of a $k$-tuple is drawn independently according to $\mu_{\delta}$.
@@ -49,7 +49,7 @@ its has probability at least $1 - 2^{-n} poly(n)$.
   Let $(S_1, S_2)(\rho)$ be a solver for $P^{(g)}$ as in Definition \ref{def:dwvp}.
   In the first phase, the algorithm $S_1(\rho)$ sequentially interacts in $k$ rounds with $P_{kn}^{(g)}(\pi^{(k)})$.
   In the $i$-th round $S_1(\rho)$ interacts with $P_n^{(1)}(\pi_i)$,
-  and as the result $P_{n}^{(1)}(\pi_1)$ generates circuits $\Gamma_V^i, \Gamma_H^i$.
+  and as the result $P_{n}^{(1)}(\pi_i)$ generates circuits $\Gamma_V^i, \Gamma_H^i$.
   Finally, after $k$ rounds $P_{kn}^{(g)}(\pi^{(k)})$ outputs a verification circuit
 \begin{align*}
   \Gamma_V^{(g)} (q, y_1, \dots, y_k) := g(\Gamma_V^{1}(q, y_1), \dots, \Gamma_V^{k}(q, y_k))
@@ -60,7 +60,7 @@ and a hint circuit
 \end{align*}
 \end{definition}
 %
-If it is clear from a context we omit the parameter $n$ and write $P(\pi)$ instead of $P_n(\pi)$ where $\pi \in \{0,1\}^{n}$.
+If it is clear from a context, we omit the parameter $n$, and write $P(\pi)$ instead of $P_n(\pi)$ where $\pi \in \{0,1\}^{n}$.
 
 A verification query $(q,y)$ of a solver $S$ for which a hint query on this $q$ has been asked before can not be a verification query that succeeds.
 Therefore, without loss of generality, we make the assumption that $S$ does not ask verification queries on $q$

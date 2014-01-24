@@ -1,8 +1,9 @@
+%
 \begin{proof}[Theorem \ref{th:sec_amp_for_dwvp}]
 We show that Theorem \ref{th:sec_amp_for_dwvp} follows from Lemma \ref{lemma:hash_function_probability} and Lemma \ref{lemma:sec_amp_for_p_hash}.
 For fixed $P^{(1)}$, $g$, $P^{(g)}$ given a solver circuit $C = (C_1, C_2)$ such that
 \begin{align*}
-    \underset{\pi^{(k)}, \rho}{\Pr}\left[Success^{P^{(g)}, C}(\pi^{(k)}, \rho) = 1\right] \geq 8(h+v)\left(\underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon\right)
+    \underset{\pi^{(k)}, \rho}{\Pr}\left[Success^{P^{(g)}, C}(\pi^{(k)}, \rho) = 1\right] \geq 16(h+v)\left(\underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon\right)
 \end{align*}
 we apply Lemma \ref{lemma:hash_function_probability} to find a function $hash$ such that
 \begin{align*}
@@ -32,17 +33,17 @@ Now, we apply Lemma \ref{lemma:sec_amp_for_p_hash} for the function $hash$ and $
 Finally, we build a circuit $\widetilde{D} = (D_1, \widetilde{D}_2)$ that in the first phase uses $D_1$, and in the second phase
 uses $D_2$ to find $(q,y)$, with which it makes a verification query to the oracle.
 \begin{codeblock}
-  \textbf{Circuit:} $\widetilde{D}_2^{D, P^{(1)}, P^{(g)}, hash, \Gamma_v}()$
+  \textbf{Circuit:} $\widetilde{D}_2^{D, P^{(1)}, P^{(g)}, hash, g, \Gamma_v}(x, \rho)$
   \medskip
   \hrule
   \medskip
   \textbf{Oracle:} A circuit $D$, problem posers $P^{(1)}$, $P^{(g)}$, \\
-  \IndII a function $hash: Q \rightarrow \{0,1, \dots, 2(h+v) - 1\}$, \\
+  \IndII function $hash: Q \rightarrow \{0,1, \dots, 2(h+v) - 1\}$, $g: \{0,1\}^{k} \rightarrow \{0,1\}$ \\
   \IndII a verification oracle $\Gamma_V$, a hint oracle $\Gamma_H$\\
   \textbf{Input:}  Bitstrings $x \in \{0,1\}^{*}$, $\rho \in \{0,1\}^{*}$
   \medskip\hrule\medskip
   %
-  $(q, y) := D_2^{P^{(1)}, P^{(g)}, \widetilde{C}, hash, \Gamma_H, \Gamma_V}(x, \rho)$ \\
+  $(q, y) := D_2^{P^{(1)}, P^{(g)}, \widetilde{C}, hash, g, \Gamma_H}(x, \rho)$ \\
   Make a verification query to $\Gamma_V$ using $(q,y)$
 \end{codeblock}
 We know that the probability that the verification query $(q,y)$ succeeds
@@ -54,15 +55,15 @@ Therefore, we have
 \end{proof}
 %
 \begin{codeblock}
-  \textbf{Algorithm: $\widetilde{Gen}$}
+  \textbf{Algorithm: $\widetilde{Gen}^{P^{(1)}, P^{(g)}, g, C}(n, \epsilon, \delta, k, h, v)$}
   \medskip \hrule \medskip
   \textbf{Oracle:} Problem posers $P^{(1)}$, $P^{(g)}$, a function $g: \{0,1\}^{k} \rightarrow \{0,1\}$, \\
   \IndII a solver circuit $C$ for $P^{(g)}$.  \\
   \textbf{Input:} Parameters $n$, $\epsilon$, $\delta$, $k$, $h$, $v$.
   \medskip\hrule\medskip
   %
-  $hash := FindHash(\gamma, n, h, v)$ \\
-  Let $\widetilde{C} = (C_1, \widetilde{C}_2)$ be as in Lemma \ref{lemma:ctilda_c} with oracle access to $C$. \\
+  $hash := FindHash((h+v)\epsilon, n, h, v)$ \\
+  Let $\widetilde{C} = (C_1, \widetilde{C}_2)$ be as in Lemma \ref{lemma:ctilda_c} with oracle access to $C$, $hash$. \\
   $D := Gen^{P^{(1)}, P^{(g)}, \widetilde{C}, hash, g}(\epsilon, \delta, n, k)$ \\
   \Return $\widetilde{D} := (D_1, \widetilde{D}_2)$
 \end{codeblock}

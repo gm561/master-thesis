@@ -45,7 +45,7 @@ For fixed $hash$ and a problem poser $P$ a \textit{canonical success} of $C$ for
 
 Let $\cH$ be the family of pairwise independent functions $Q \rightarrow \{0,1, \dots,2(h+v)-1\}$.
 We write $hash \leftarrow \cH$ to denote that $hash$ is chosen from $\cH$ uniformly at random.
-We show that if a solver circuit $C$ for $P^{(g)}$ often succeeds in the experiment $Success$,
+We show that if a solver circuit $C$ for $P$ often succeeds in the experiment $Success$,
 then there exists a function $hash \in \cH$ such that $C$ also often succeeds in the experiment $CanonicalSuccess$.
 \footnote{It is possible to implement a random function $hash$ efficiently by for example building its function table on the fly.}
 %
@@ -87,7 +87,7 @@ We have
 \end{align}
 %
 We denote the set of those $(\pi,\rho)$ for which $CanonicalSuccess^{P, C, hash}(\pi, \rho) = 1$ by $\cP_{Canonical}$.
-If for $\pi$ $\rho$ the circuit $C$ succeeds canonically, then for the same $\pi$, $\rho$ we also have $Success^{P, C}(\pi, \rho) = 1$.
+If for $\pi$, $\rho$ the circuit $C$ succeeds canonically, then for the same $\pi$, $\rho$ we also have $Success^{P, C}(\pi, \rho) = 1$.
 Hence, $\cP_{Canonical} \subseteq \cP_{Success}$, and we conclude
 \begin{align}
   \label{ineq:hash_high_prob}
@@ -118,7 +118,7 @@ Hence, $\cP_{Canonical} \subseteq \cP_{Success}$, and we conclude
   \IndII \Return $hash$\\
   \Return $\bot$
 \end{codeblock}
-We show that \textbf{FindHash} chooses $hash \in \cH$ such that the canonical success probability of $C$
+We show that \textit{FindHash} chooses $hash \in \cH$ such that the canonical success probability of $C$
 with respect to $hash$ is at least $\frac{\gamma}{16(h+v)}$ almost surely.
 Let $\cH_{Good}$ denote a family of functions $hash \in \cH$ for which
 \begin{align}
@@ -131,7 +131,7 @@ and $\cH_{Bad}$ be the family of functions $hash \in \cH$ such that
 \underset{\pi, \rho}{\Pr}\left[CanonicalSuccess^{P, C, hash}(\pi, \rho) = 1\right] \leq \frac{\gamma}{16(h+v)}.
 \end{align}
 %
-Let $N$ denote the number of iterations of the inner loop of \textbf{FindHash}.
+Let $N$ denote the number of iterations of the inner loop of \textit{FindHash}.
 For a fixed $hash$, we define independent, identically distributed binary random variables $X_1, \dots, X_{N}$ such that
 \begin{align*}
   X_i =
@@ -140,10 +140,10 @@ For a fixed $hash$, we define independent, identically distributed binary random
     0 & \text{otherwise.}
   \end{cases}
 \end{align*}
-We show now that \textbf{FindHash} is unlikely to return $hash \in \cH_{Bad}$.
+We show now that \textit{FindHash} is unlikely to return $hash \in \cH_{Bad}$.
 For $hash \in \cH_{Bad}$ by (\ref{eq:hash_bad}) we have $\mathbb{E}_{{\pi}, \rho}[X_i] \leq \frac{\gamma}{16(h+v)}$.
 Therefore, for any fixed $hash \in \cH_{Bad}$ using the Chernoff bound we get
-\footnote{For $X = \sum_{i=1}^N X_i$ and $0 < \delta \leq 1$ we use the Chernoff bounds in the form
+\footnote{For independent, identically distributed binary random variables $X = \sum_{i=1}^N X_i$ and $0 < \delta \leq 1$ we use the Chernoff bounds in the form
 $\Pr[X \geq (1+\delta) \mathbb{E}[X]] \leq e^{- \mathbb{E}[X] \delta^2/3}$ and
 $\Pr[X \leq (1-\delta) \mathbb{E}[X]] \leq e^{- \mathbb{E}[X] \delta^2/2}$.}
 \begin{align*}
@@ -156,14 +156,14 @@ The probability that $hash \in \cH_{Good}$, when picked, is not returned amounts
 \begin{align*}
   \underset{\pi, \rho}{\Pr}\left[\frac{1}{N} \sum_{i=1}^{N} X_i \leq \frac{\gamma}{12(h+v)}\right] \leq
   \underset{\pi, \rho}{\Pr}\left[\frac{1}{N} \sum_{i=1}^{N} X_i \leq (1 - \frac{1}{3})\mathbb{E}[X_i]\right]
-  \leq e^{-{\frac{\gamma}{8(h+v)}} N / 18} \leq e^{-\frac{2}{9} \frac{(h+v)}{\gamma}n},
+  \leq e^{-{\frac{\gamma}{8(h+v)}} N / 18} = e^{-\frac{2}{9} \frac{(h+v)}{\gamma}n},
 \end{align*}
 where we once more used the Chernoff bound.
 We show now that the probability of picking $hash \in \cH_{Good}$ is at least $\frac{\gamma}{8(h+v)}$.
 We prove this statement by contradiction. Let assume us that
 \begin{align}
   \label{ass:hash_max_prob}
-\underset{hash \leftarrow \cH}{\Pr}[hash \in \cH_{Good}] < \frac{\gamma}{8(g+v)}.
+\underset{hash \leftarrow \cH}{\Pr}[hash \in \cH_{Good}] < \frac{\gamma}{8(h+v)}.
 \end{align}
 We have
 \begin{align*}
