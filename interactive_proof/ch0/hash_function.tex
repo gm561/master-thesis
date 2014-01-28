@@ -81,8 +81,8 @@ We have
   &\IndII = \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_j) = 0 \land (\forall i < j : hash(q_i) \neq 0)] \notag\\
   &\IndII = \underset{\textit{hash} \leftarrow \cH}{\Pr}[\forall i < j : hash(q_i) \neq 0 \mid hash(q_j) = 0] \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_j) = 0] \notag\\
   &\IndII \stackrel{(\ref{eq:hash_pr})}{=} \frac{1}{2(h+v)}\left(1 -\underset{\textit{hash} \leftarrow \cH}{\Pr}[\exists i < j : hash(q_i) = 0 \mid hash(q_j) = 0] \right) \notag\\
-  &\IndII \stackrel{(\ref{eq:hash_pr})}{=} \frac{1}{2(h+v)} \left( 1 -\underset{\textit{hash} \leftarrow \cH}{\Pr}[\exists i < j : hash(q_i) = 0] \right) \notag\\
-  &\IndII \stackrel{(\text{u.b})}{\geq} \frac{1}{2(h+v)} \left( 1 - \sum_{i < j} \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = 0] \right) \notag\\
+  &\IndII \stackrel{(\text{u.b})}{\geq} \frac{1}{2(h+v)} \left( 1 - \sum_{i < j} \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = 0 | hash(q_j) = 0] \right) \notag\\
+  &\IndII \stackrel{(\ref{eq:hash_pr})}{=} \frac{1}{2(h+v)} \left( 1 -  \sum_{i < j}\underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = 0] \right) \notag\\
   &\IndII \stackrel{(\ref{eq:hash_pr})}{\geq} \frac{1}{4(h+v)}.
 \end{align}
 %
@@ -160,7 +160,7 @@ The probability that $hash \in \cH_{Good}$, when picked, is not returned amounts
 \end{align*}
 where we once more used the Chernoff bound.
 We show now that the probability of picking $hash \in \cH_{Good}$ is at least $\frac{\gamma}{8(h+v)}$.
-We prove this statement by contradiction. Let assume us that
+We prove this statement by contradiction. Let us assume that
 \begin{align}
   \label{ass:hash_max_prob}
 \underset{hash \leftarrow \cH}{\Pr}[hash \in \cH_{Good}] < \frac{\gamma}{8(h+v)}.
@@ -189,6 +189,7 @@ We conclude using $\underset{hash \leftarrow \cH}{\Pr}[hash \in \cH_{Good}] \geq
     \leq e^{-\frac{\gamma}{8(h+v)} \frac{32(h+v)^2}{\gamma^2}n}
     \leq e^{-\frac{4(h+v)}{\gamma}n}.
 \end{align*}
+
 \end{proof}
 %%% Local Variables:
 %%% mode: latex
