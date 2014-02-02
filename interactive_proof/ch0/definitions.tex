@@ -10,13 +10,13 @@ Finally, let $u \leftarrow \mu_{\delta}^k$ denote that a $k$-tuple $u$ is chosen
 
 The protocol execution between two probabilistic algorithms $A$ and $B$ is denoted by $\langle A, B \rangle$.
 The output of $A$ in such a protocol execution is denoted by $\langle A, B \rangle_A$ and of $B$ by $\langle A, B \rangle_B$.
-Finally, let $\langle A, B \rangle_{\text{trans}}$ denote the transcript of communication between $\langle A, B \rangle_{\text{trans}}$.
+Finally, let $\langle A, B \rangle_{\text{trans}}$ denote the transcript of communication between $A$ and $B$.
 
 We define a \textit{two phase algorithm} $A := (A_1, A_2)$ as an algorithm where in the first phase an algorithm $A_1$
 is executed and in the second phase an algorithm $A_2$.
 
 We say that an event happens \textit{almost surely} or with \textit{high probability} if
-its has probability at least $1 - 2^{-n} poly(n)$.
+it occurs with probability at least $1 - 2^{-n} poly(n)$.
 
 \begin{definition}[Dynamic weakly verifiable puzzle.]
   \label{def:dwvp}
