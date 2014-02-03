@@ -84,16 +84,16 @@ Using this observation, we conclude that
 \begin{lemma}\textbf{(Security amplification of a dynamic weakly verifiable puzzle with respect to \boldmath{$\hash$}.)}
   \label{lemma:sec_amp_for_p_hash}
   For fixed $P_n^{(1)}$ there exists an algorithm $\mathit{Gen}$ that takes as input parameters $\varepsilon$,$\delta$, $n$, $k$,
-  has oracle access to $P_n^{(1)}$, $P_{kn}^{(g)}$, $\widetilde{C}$, functions $\hash : Q \rightarrow \{0,1,\dots, 2(h+v-1)\}$, $g: \{0,1\}^{k} \rightarrow \{0,1\}$,
+  has oracle access to $P_n^{(1)}$, $\widetilde{C}$, functions $\hash : Q \rightarrow \{0,1,\dots, 2(h+v-1)\}$, $g: \{0,1\}^{k} \rightarrow \{0,1\}$,
   and outputs a circuit $D := (D_1, D_2)$ such that the following holds: \\
   If $\widetilde{C} := (C_1, \widetilde{C}_2)$ has oracle access to $\hash$ and a solver circuit $C := (C_1, C_2)$ for $P_{kn}^{(g)}$,
   which asks at most $h$ hint queries and $v$ verification queries, is such that
   \begin{align*}
     \underset{\mathclap{\substack{
           \pi^{(k)} \in \{0,1\}^{kn}, \rho \in \{0,1\}^{*} \\
-          x:= \langle P^{(g)}(\pi^{(k)}), {C}_1(\rho) \rangle_{\text{trans}} \\
+          x:= \langle P^{(g)}(\pi^{(k)}), {C}_1(\rho) \rangle_{\mathit{trans}} \\
           (\Gamma_H^{(k)}, \Gamma_V^{(g)}) := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}}}}}
-    {\Pr}\mkern13mu[\Gamma_V^{(g)}(\widetilde{C}_2^{\Gamma_H^{(k)}, C_2, hash}(x,\rho)) = 1]
+    {\Pr}\mkern13mu[\Gamma_V^{(g)}(\widetilde{C}_2^{\Gamma_H^{(k)}, C_2, \hash}(x,\rho)) = 1]
     \geq \underset{u \leftarrow \mu_\delta^k}{\Pr}[g(u) = 1] + \varepsilon,
   \end{align*}
   then $D$ satisfies almost surely
@@ -102,39 +102,39 @@ Using this observation, we conclude that
       \mathclap{
       \substack{
         \pi \in \{0,1\}^{n}, \rho \in \{0,1\}^{*} \\
-        x := \langle P^{(1)}(\pi), D_1^{\widetilde{C}}(\rho) \rangle_{\text{trans}} \\
+        x := \langle P^{(1)}(\pi), D_1^{\widetilde{C}}(\rho) \rangle_{\mathit{trans}} \\
         (\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi), D_1^{P^{(1)}, \widetilde{C}}(\rho) \rangle_{P^{(1)}}}}}
-    {\Pr}\mkern13mu[\Gamma_V(D_2^{P^{(1)}, P^{(g)}, \widetilde{C}, hash, g, \Gamma_H}(x, \rho)) = 1] \geq (\delta + \frac{\varepsilon}{6k}).
+    {\Pr}\mkern13mu[\Gamma_V(D_2^{P^{(1)}, \widetilde{C}, \hash, g, \Gamma_H}(x, \rho)) = 1] \geq (\delta + \frac{\varepsilon}{6k}).
   \end{align*}
-  Furthermore, $D$ has oracle access to a hint circuit, $P^{(1)}$, $P^{(g)}$,  $\widetilde{C}$, $hash$, $g$, and
+  Furthermore, $D$ has oracle access to a hint circuit, $P^{(1)}$, $\widetilde{C}$, $\hash$, $g$, and
   asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hint queries and no verification queries.
-  Finally, $Size(D) \leq Size(C)\frac{6k}{\varepsilon}$ and $Time(Gen) = poly(k, \frac{1}{\varepsilon}, n, v, h)$.
+  Finally, $\mathit{Size}(D) \leq \mathit{Size}(C)\frac{6k}{\varepsilon}$ and $\mathit{Time}(\mathit{Gen}) = \mathit{poly}(k, \frac{1}{\varepsilon}, n, v, h)$.
 \end{lemma}
 %
 %
-Before proving Lemma \ref{lemma:sec_amp_for_p_hash} we define additional algorithms that are later used by $Gen$.
+Before proving Lemma \ref{lemma:sec_amp_for_p_hash} we define additional algorithms that are later used by Gen.
 First, we are interested in the probability that for $u \leftarrow \mu_{\delta}^k$ and a bit $b \in \{0,1\}$ the function $g$
 with the first input bit set to $b$ takes value $1$. The estimate of this probability is calculated by the algorithm
-$EstimateFunctionProbability$.
+EstimateFunctionProbability.
 %
 \begin{codeblock}
-  $\textbf{Algorithm: EstimateFunctionProbability}^{g}(b, k, \epsilon, \delta, n)$
+  \textbf{Algorithm} $\text{EstimateFunctionProbability}^{g}(b, k, \epsilon, \delta, n)$
   \medskip
   \hrule
   \medskip
   \textbf{Oracle:} A function $g : \{0,1\}^{k} \rightarrow \{0,1\}$.\\
   \textbf{Input:} A bit $b \in \{0,1\}$, parameters $k$, $\epsilon$, $\delta$, $n$. \\
-  \textbf{Output:} An estimate $\widetilde{g}$ of $\Pr_{u \leftarrow \mu_{\delta}^{k}}[g(b,u_2, \dots, u_k) = 1]$.
+  \textbf{Output:} An estimate $\widetilde{g}$ of $\Pr_{u \leftarrow \mu_{\delta}^{k}}[g(b,u_2, \dotsc, u_k) = 1]$.
   \medskip\hrule\medskip
   \For $i:=1$ \To $\frac{64^2}{\epsilon^2} n$ \Do \\
   \IndI $u \leftarrow \mu_{\delta}^{k}$ \\
-  \IndI $g_i := g(b, u_2, \dots, u_k)$ \\
-  \textbf{return} $\frac{\epsilon^2}{64^2n} \sum_{i=1}^{\frac{64^2}{\epsilon^2} n} g_i$
+  \IndI $g_i := g(b, u_2, \dotsc, u_k)$ \\
+  \Return $\frac{\epsilon^2}{64^2n} \sum_{i=1}^{\frac{64^2}{\epsilon^2} n} g_i$
 \end{codeblock}
 %
 \begin{lemma}
   \label{lemma:estimate_of_g}
-  The algorithm $\textbf{EstimateFunctionProbability}^{g}(b, k, \epsilon, \delta)$ outputs an estimate $\widetilde{g}$
+  The algorithm $\text{EstimateFunctionProbability}^{g}(b, k, \epsilon, \delta)$ outputs an estimate $\widetilde{g}$
   of $\Pr_{u \leftarrow \mu_{\delta}^k}[g(b, u_2, \dots, u_k) = 1]$ where $b \in \{0,1\}$
   such that $| \widetilde{g} - \Pr_{u \leftarrow \mu_{\delta}^{k}}\left[g(b,u_2, \dots, u_k) = 1\right] | \leq \frac{\epsilon}{8k}$ almost surely.
 \end{lemma}
@@ -152,22 +152,22 @@ the random variable $K_i$ takes value $g_i$. We use the Chernoff bound to obtain
 \end{proof}
 %
 %
-The next algorithm $\textbf{EvalutePuzzles}^{P^{(1)}, P^{(g)}, \widetilde{C}, hash}(\pi^{(k)}, \rho, n, k)$
+The next algorithm $\text{EvalutePuzzles}^{P^{(1)}, P^{(g)}, \widetilde{C}, \hash}(\pi^{(k)}, \rho, n, k)$
 evaluates which of $k$ puzzles of the $k$-wise direct product defined by $P^{(g)}$ are solved successfully by $\widetilde{C}(\rho) := (C_1,\widetilde{C}_2)(\rho)$.
 To decide whether the $i$-th puzzle of the $k$-wise direct product is solved successfully we need to gain access to the verification oracle
 for the puzzle generated in the $i$-th round of the interaction between $P^{(g)}$ and $\widetilde{C}$.
-Therefore, in the algorithm \textbf{EvalutePuzzles}, we use $P^{(1)}$, and invoke it $k$ times to simulate the interaction with $C_1(\rho)$.
+Therefore, in the algorithm EvalutePuzzles, we use $P^{(1)}$, and invoke it $k$ times to simulate the interaction with $C_1(\rho)$.
 Let us introduce some additional notation. We denote by $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i$ the execution of
 the $i$-th round of the simulation, and by $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i_{P^{(1)}}$ the output of $P^{(1)}(\pi_i)$ in the $i$-th round.
-Furthermore, we write $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i_{trans}$ to denote a transcript of communication in the $i$-th round.
+Furthermore, we write $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i_{\mathit{trans}}$ to denote a transcript of communication in the $i$-th round.
 %
 
-To make the notation easier in the code excerpts of circuits $C_2$, $D_2$ and \textit{EvalutePuzzles} we
-omit some oracle signatures writing for example $\widetilde{C}_2^{\Gamma_H^{(k)}, hash}$ instead of $\widetilde{C}_2^{\Gamma_H^{(k)}, C, hash}$ where
+To make the notation easier in the code excerpts of circuits $C_2$, $D_2$ and EvalutePuzzles we
+omit some oracle signatures writing for example $\widetilde{C}_2^{\Gamma_H^{(k)}, \hash}$ instead of $\widetilde{C}_2^{\Gamma_H^{(k)}, C, \hash}$ where
 the access to oracle circuit $C$ is omitted. We make sure that it is clear from a context which circuit $C$ is used by $\widetilde{C}_2$.
 
 \begin{codeblock}
-  $\textbf{Algorithm: EvaluatePuzzles}^{P^{(1)}, \widetilde{C}, hash}(\pi^{(k)}, \rho, n, k)$
+  \textbf{Algorithm} $\text{EvaluatePuzzles}^{P^{(1)}, \widetilde{C}, \hash}(\pi^{(k)}, \rho, n, k)$
   \medskip \hrule \medskip
   \textbf{Oracle:}  Problem posers $P^{(1)}$, a solver circuit $\widetilde{C} = (C_1, \widetilde{C}_2)$ for $P^{(g)}$,\\
   \IndII a function $hash : Q \rightarrow \{0,1,\dots, 2(h+v)-1\}$.\\
@@ -204,19 +204,19 @@ S_{\pi^*, b} = \underset{\pi^{(k)}, \rho}{\Pr}\left[g(b, c_2, \dots, c_k) = 1 \m
 The algorithm EstimateSurplus returns an estimate $\widetilde{S}_{\pi^*, b}$ for $S_{\pi^*, b}$.
 %
 \begin{codeblock}
-  \textbf{Algorithm} $\text{EstimateSurplus}^{P^{(1)}, P^{(g)}, \widetilde{C}, g, hash}(\pi^*, b, k, \epsilon, \delta, n)$
+  \textbf{Algorithm} $\text{EstimateSurplus}^{P^{(1)}, \widetilde{C}, g, \hash}(\pi^*, b, k, \epsilon, \delta, n)$
   \medskip
   \hrule
   \medskip
-  \textbf{Oracle:} Problem posers $P^{(1)}$, $P^{(g)}$, a circuit $\widetilde{C}$, a function $g: \{0,1\}^{k} \rightarrow \{0,1\}$ \\
-  \IndII a function $hash : Q \rightarrow \{0,1,\dots, 2(h+v)-1\}$.\\
+  \textbf{Oracle:} A problem poser $P^{(1)}$, a circuit $\widetilde{C}$ for $P^{(g)}$, a function $g: \{0,1\}^{k} \rightarrow \{0,1\}$ \\
+  \IndII a function $\hash : Q \rightarrow \{0,1,\dots, 2(h+v)-1\}$.\\
   \textbf{Input:} A bistring $\pi^* \in \{0,1\}^{n}$, a bit $b \in \{0,1\}$, parameters $k$, $\epsilon$, $\delta$, $n$.\\
   \textbf{Output:} An estimate $\widetilde{S}_{\pi^*, b}$ for $S_{\pi^*, b}$.
   \medskip\hrule\medskip
   \For $i:=1$ \To $\frac{64k^2}{\epsilon^2}n$ \Do \\
   \IndI $(\pi_{2}, \dots, \pi_k) \xleftarrow{\$} \{0,1\}^{(k-1)n}$\\
   \IndI $\rho \xleftarrow{\$} \{0,1\}^{*}$\\
-  \IndI $(c_1, \dots, c_k) := \text{EvalutePuzzles}^{P^{(1)}, P^{(g)}, \widetilde{C}, hash}((\pi^*, \pi_2, \dots, \pi_k), \rho)$\\
+  \IndI $(c_1, \dots, c_k) := \text{EvalutePuzzles}^{P^{(1)}, \widetilde{C}, \hash}((\pi^*, \pi_2, \dots, \pi_k), \rho)$\\
   \IndI $\widetilde{s}_{\pi^*,b}^i := g(b, c_{2}, \dots, c_k)$\\
   $\widetilde{g}_b := \text{EstimateFunctionProbability}^{g}(b, k, \epsilon, \delta, n)$ \\
   \textbf{return} $\left(\frac{\epsilon^2}{64k^2n} \sum_{i=1}^{\frac{64k^2}{\epsilon^2} n} \widetilde{s}_{\pi^*,b}^i \right) - \widetilde{g}_b$\\
@@ -278,7 +278,7 @@ We are ready to define the solver circuit $D = (D_1, D_2)$ for $P^{(1)}$ and the
 \end{codeblock}
 %
 \begin{codeblock}
-  \textbf{Circuit $D_2^{P^{(1)}, P^{(g)}, \widetilde{C}, \mathit{hash}, g,  \Gamma_H^*}(x^*, \rho)$}
+  \textbf{Circuit} $D_2^{P^{(1)}, \widetilde{C}, \mathit{hash}, g,  \Gamma_H^*}(x^*, \rho)$
   \medskip \hrule \medskip
   \textbf{Oracle:} A poser $P^{(1)}$, a solver circuit $\widetilde{C} = (C_1, \widetilde{C}_2)$, \\
   \IndII functions $hash : Q \rightarrow \{0,1, \dots, 2(h+v)-1\}$, $g:\{0,1\}^k \rightarrow \{0,1\}$, \\
@@ -296,7 +296,7 @@ We are ready to define the solver circuit $D = (D_1, D_2)$ for $P^{(1)}$ and the
   \IndIII $x_i := \langle P^{(1)}(\pi_i), C_1(\tau) \rangle^i_{\mathit{trans}}$ \\
   \IndI $\Gamma_H^{(k)}(q) := (\Gamma_H^{*}(q), \Gamma_H^{2}(q), \dots, \Gamma_H^{k}(q))$ \\
   \IndI $(q, y^*, y_2, \dots, y_k) := \widetilde{C}_2^{\Gamma_H^{(k)}, \hash}((x^*, x_2, \dots, x_k), \tau)$\\
-  \IndI $(c_2, \dots, c_k) := (\Gamma_V^2(q, y_2), \dots, \Gamma_V^{k}(q, y_k))$ \\
+  \IndI $(c_2, \dots, c_k) := (\Gamma_V^2(q, y_2), \dotsc, \Gamma_V^{k}(q, y_k))$ \\
   \IndI \If $g(1, c_{2}, \dots, c_k) = 1$ \And $g(0,c_{2}, \dots, c_k) = 0$ \Then \\
   \IndII \Return $(q, y^*)$ \\
   \Return $\bot$
@@ -305,25 +305,25 @@ We are ready to define the solver circuit $D = (D_1, D_2)$ for $P^{(1)}$ and the
 %
 %
 \begin{codeblock}
-  \textbf{Algorithm} $\text{Gen}^{P^{(1)}, P^{(g)}, \widetilde{C}, g, \mathit{hash}}(\epsilon, \delta, n, v, h, k)$
+  \textbf{Algorithm} $\text{Gen}^{P^{(1)}, \widetilde{C}, g, \mathit{hash}}(\epsilon, \delta, n, v, h, k)$
   \medskip \hrule \medskip
-  \textbf{Oracle:} Posers $P^{(1)}$, $P^{(g)}$, a solver circuit $\widetilde{C}$ for $P^{(g)}$, functions $g: \{0,1\}^{k} \rightarrow \{0,1\}$, \\
+  \textbf{Oracle:} A poser $P^{(1)}$, a solver circuit $\widetilde{C}$ for $P^{(g)}$, functions $g: \{0,1\}^{k} \rightarrow \{0,1\}$, \\
   \IndII  $hash:Q \rightarrow \{0,1, \dots, 2(h + v) - 1\}$. \\
   \textbf{Input:}  Parameters $\epsilon$, $\delta$, $n$, $k$, the number of verification $v$ and hint $h$ queries.\\
   \textbf{Output:} A circuit $D$.
   \medskip\hrule\medskip
   \For $i:=1$ \To $\frac{6k}{\epsilon}n$ \Do \\
   \IndI $\pi^* \xleftarrow{\$} \{0,1\}^{n}$\\
-  \IndI $\widetilde{S}_{\pi^*,0} := \text{EstimateSurplus}^{P^{(1)}, P^{(g)}, \widetilde{C}, g, hash}(\pi^*, 0, k, \epsilon, \delta,n)$\\
-  \IndI $\widetilde{S}_{\pi^*,1} := \text{EstimateSurplus}^{P^{(1)}, P^{(g)}, \widetilde{C}, g, hash}(\pi^*, 1, k, \epsilon, \delta,n)$\\
+  \IndI $\widetilde{S}_{\pi^*,0} := \text{EstimateSurplus}^{P^{(1)},  \widetilde{C}, g, hash}(\pi^*, 0, k, \epsilon, \delta,n)$\\
+  \IndI $\widetilde{S}_{\pi^*,1} := \text{EstimateSurplus}^{P^{(1)},  \widetilde{C}, g, hash}(\pi^*, 1, k, \epsilon, \delta,n)$\\
   \IndI \If $ \exists b \in \{0,1\}: \widetilde{S}_{\pi^*,b} \geq (1 - \frac{3}{4k}) \epsilon$ \Then \\
   \IndII Let $C_1'$ have oracle access to $\widetilde{C}$, and have hard-coded $\pi^*$ \\
   \IndII Let $\widetilde{C}_2'$ have oracle access to $\widetilde{C}$, and have hard-coded $\pi^*$. \\
   \IndII $\widetilde{C}' := (C_1', \widetilde{C}_2')$ \\
   \IndII $g'(b_2, \dots, b_k) := g(b, b_2, \dots, b_k)$\\
-  \IndII\Return $Gen^{P^{(1)},P^{(g)}, \widetilde{C}', g', hash}(\epsilon, \delta, n, v, h, k-1)$ \\
+  \IndII\Return $Gen^{P^{(1)}, \widetilde{C}', g', hash}(\epsilon, \delta, n, v, h, k-1)$ \\
   // \textit{all estimates are lower than $(1-\frac{3}{4k})\varepsilon$}\\
-  \Return $D^{P^{(1)},P^{(g)}, \widetilde{C}, hash, g}$
+  \Return $D^{P^{(1)}, \widetilde{C}, hash, g}$
 \end{codeblock}
 
 \begin{proof}[Lemma \ref{lemma:sec_amp_for_p_hash}]

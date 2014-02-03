@@ -3,11 +3,11 @@
 Let use first define following circuits.
 %
 \begin{codeblock}
-  \textbf{Circuit} $\widetilde{D}_2^{D, P^{(1)}, P^{(g)}, \hash, g, \Gamma_v}(x, \rho)$
+  \textbf{Circuit} $\widetilde{D}_2^{D, P^{(1)}, \hash, g, \Gamma_v}(x, \rho)$
   \medskip
   \hrule
   \medskip
-  \textbf{Oracle:} A circuit $D$, problem posers $P^{(1)}$, $P^{(g)}$, \\
+  \textbf{Oracle:} A circuit $D$ for $P^{(1)}$, a problem poser $P^{(1)}$, \\
   \IndII function $\hash: Q \rightarrow \{0,1, \dots, 2(h+v) - 1\}$, $g: \{0,1\}^{k} \rightarrow \{0,1\}$ \\
   \IndII a verification oracle $\Gamma_V$, a hint oracle $\Gamma_H$\\
   \textbf{Input:}  Bitstrings $x \in \{0,1\}^{*}$, $\rho \in \{0,1\}^{*}$
@@ -18,34 +18,35 @@ Let use first define following circuits.
 \end{codeblock}
 %
 \begin{codeblock}
-  \textbf{Algorithm} $\widetilde{\text{Gen}}^{P^{(1)}, P^{(g)}, g, C}(n, \epsilon, \delta, k, h, v)$
+  \textbf{Algorithm} $\widetilde{\text{Gen}}^{P^{(1)}, g, C}(n, \epsilon, \delta, k, h, v)$
   \medskip \hrule \medskip
-  \textbf{Oracle:} Problem posers $P^{(1)}$, $P^{(g)}$, a function $g: \{0,1\}^{k} \rightarrow \{0,1\}$, \\
+  \textbf{Oracle:} A problem poser $P^{(1)}$, a function $g: \{0,1\}^{k} \rightarrow \{0,1\}$, \\
   \IndII a solver circuit $C$ for $P^{(g)}$.  \\
   \textbf{Input:} Parameters $n$, $\epsilon$, $\delta$, $k$, $h$, $v$.
   \medskip\hrule\medskip
   %
   $hash := \text{FindHash}((h+v)\epsilon, n, h, v)$ \\
-  Let $\widetilde{C} = (C_1, \widetilde{C}_2)$ be as in Lemma \ref{lemma:ctilda_c} with oracle access to $C$, $\hash$. \\
+  Let $\widetilde{C} := (C_1, \widetilde{C}_2)$ be as in Lemma \ref{lemma:ctilda_c} with oracle access to $C$, $\hash$. \\
   $D := Gen^{P^{(1)}, P^{(g)}, \widetilde{C}, \hash, g}(\epsilon, \delta, n, k)$ \\
   \Return $\widetilde{D} := (D_1, \widetilde{D}_2)$
 \end{codeblock}
 %
 We show that Theorem \ref{th:sec_amp_for_dwvp} follows from Lemma \ref{lemma:hash_function_probability} and Lemma \ref{lemma:sec_amp_for_p_hash}.
-We use the algorithm $\widetilde{Gen}$ to obtain a circuit $D := (D_1, D_2)$ and a function $\hash$. Then, the circuit $D$ uses $\widetilde{D}$ to find $(q,y)$.
-We will show that
+We use the algorithm $\widetilde{Gen}$ to obtain a circuit $D := (D_1, D_2)$. Then, the circuit $D$ uses $\widetilde{D}$ to find $(q,y)$.
+We will show that with high probability it holds
 \begin{align*}
     \underset{\pi, \rho}{\Pr}\left[\Success^{P^{(1)},\widetilde{D}}(\pi, \rho) = 1\right] \geq (\delta + \frac{\varepsilon}{6k}).
 \end{align*}
 %
-For fixed $P^{(1)}$, $g$, $P^{(g)}$ given a solver circuit $C = (C_1, C_2)$ such that
+We fix $P^{(1)}$, $g$, $P^{(g)}$. Given a solver circuit $C = (C_1, C_2)$ such that
 \begin{align*}
     \underset{\pi^{(k)}, \rho}{\Pr}\left[\Success^{P^{(g)}, C}(\pi^{(k)}, \rho) = 1\right] \geq 16(h+v)\left(\underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon\right)
 \end{align*}
-we apply Lemma \ref{lemma:hash_function_probability} to find a function $\hash$ such that
+we satisfy conditions of Lemma \ref{lemma:hash_function_probability} and can use the algorithm FindHash to find a function $\hash$ such that
 \begin{align*}
-    \underset{\pi^{(k)}, \rho}{\Pr}\left[\CanonicalSuccess^{P^{(g)}, C, \hash}(\pi^{(k)}, \rho) = 1\right] \geq \underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon.
+    \underset{\pi^{(k)}, \rho}{\Pr}\left[\CanonicalSuccess^{P^{(g)}, C, \hash}(\pi^{(k)}, \rho) = 1\right] \geq \underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon
 \end{align*}
+almost surely.
 By Lemma \ref{lemma:ctilda_c} we know that it is possible to create a circuit $\widetilde{C} = (C_1, \widetilde{C}_2)$ with oracle access to $\hash$ and $C$ such that
 \begin{align*}
     \underset{
@@ -58,15 +59,21 @@ By Lemma \ref{lemma:ctilda_c} we know that it is possible to create a circuit $\
     \geq
 \underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon.
 \end{align*}
-Now, we apply Lemma \ref{lemma:sec_amp_for_p_hash} for the function $\hash$ and $\widetilde{C} = (C_1, \widetilde{C}_2)$ and obtain a circuit $D = (D_1, D_2)$ such that
+Now, by Lemma \ref{lemma:sec_amp_for_p_hash} using $\hash$ and $\widetilde{C} = (C_1, \widetilde{C}_2)$ we use the algorithm Gen to obtain a circuit $D = (D_1, D_2)$ such that
 \begin{align}
   \label{eq:succ_prob_d}
     \underset{
       \mathclap{
       \substack{\pi, \rho \\ x := \langle P^{(1)}(\pi), D_1(\rho) \rangle_{\mathit{trans}} \\
         (\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi), D_1(\rho) \rangle_{P^{(1)}}}}}
-    {\Pr}\mkern13mu[\Gamma_V(D_2(x, \rho)) = 1] \geq (\delta + \frac{\varepsilon}{6k}).
+    {\Pr}\mkern13mu[\Gamma_V(D_2(x, \rho)) = 1] \geq (\delta + \frac{\varepsilon}{6k})
 \end{align}
+almost surely.
+Hence, the circuit $\widetilde{D}$ output by $\widetilde{\text{Gen}}$ satisfies with high probability
+\begin{align*}
+    \underset{\pi, \rho}{\Pr}\left[\Success^{P^{(1)},\widetilde{D}}(\pi, \rho) = 1\right] \geq (\delta + \frac{\varepsilon}{6k}).
+\end{align*}
+This ends the proof of Theorem \ref{th:sec_amp_for_dwvp}.
 %
 % We know that the probability that the verification query $(q,y)$ succeeds
 % amounts at least $(\delta + \frac{\epsilon}{6k})$.
