@@ -1,5 +1,7 @@
-If we want to answer hint and verification queries of $C_2$ by ourselves we write $C_2^{(\cdot, \cdot)}$ to stress that $C_2$ does not obtain
+%
+In the second phase of execution of $C := (C_1, C_2)$ we write $C_2^{(\cdot, \cdot)}$ to emphasize that $C_2$ does not obtain
 direct access to hint and verification circuits.
+Instead, all hint and verification queries are answered explicitly as in the code excerpt of the circuit $\widetilde{C}_2$.
 %
 \begin{codeblock}
   \textbf{Circuit} $\widetilde{C}_2^{\Gamma_H, C_2, hash} (x, \rho)$
@@ -81,19 +83,20 @@ Using this observation, we conclude that
 \end{proof}
 %
 %
-\begin{lemma}\textbf{(Security amplification of a dynamic weakly verifiable puzzle with respect to \boldmath{$\hash$}.)}
+\begin{lemma}\textbf{(Security amplification for dynamic weakly verifiable puzzles with respect to \boldmath{$\hash$}.)}
   \label{lemma:sec_amp_for_p_hash}
-  For fixed $P_n^{(1)}$ there exists an algorithm $\mathit{Gen}$ that takes as input parameters $\varepsilon$,$\delta$, $n$, $k$,
-  has oracle access to $P_n^{(1)}$, $\widetilde{C}$, functions $\hash : Q \rightarrow \{0,1,\dots, 2(h+v-1)\}$, $g: \{0,1\}^{k} \rightarrow \{0,1\}$,
-  and outputs a circuit $D := (D_1, D_2)$ such that the following holds: \\
-  If $\widetilde{C} := (C_1, \widetilde{C}_2)$ has oracle access to $\hash$ and a solver circuit $C := (C_1, C_2)$ for $P_{kn}^{(g)}$,
-  which asks at most $h$ hint queries and $v$ verification queries, is such that
+  For fixed $P_n^{(1)}$ let $\widetilde{C} := (C_1, \widetilde{C}_2)$ has oracle access to a function $\hash: Q \rightarrow \{0,1,\dots, 2(h+v-1)\}$
+  and a solver circuit $C := (C_1, C_2)$ for $P_{kn}^{(g)}$ which asks at most $h$ hint queries and $v$ verification queries.
+  There exists an algorithm $\mathit{Gen}$ that takes as input parameters $\varepsilon$, $\delta$, $n$, $k$,
+  has oracle access to $P_n^{(1)}$,  $\widetilde{C}$ for $P_{kn}^{(g)}$, functions $\hash$, $g: \{0,1\}^{k} \rightarrow \{0,1\}$,
+  and outputs a solver circuit $D := (D_1, D_2)$ for $P^{(1)}$ such that the following holds: \\
+  If $\widetilde{C}$ is such that
   \begin{align*}
     \underset{\mathclap{\substack{
           \pi^{(k)} \in \{0,1\}^{kn}, \rho \in \{0,1\}^{*} \\
           x:= \langle P^{(g)}(\pi^{(k)}), {C}_1(\rho) \rangle_{\mathit{trans}} \\
           (\Gamma_H^{(k)}, \Gamma_V^{(g)}) := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}}}}}
-    {\Pr}\mkern13mu[\Gamma_V^{(g)}(\widetilde{C}_2^{\Gamma_H^{(k)}, C_2, \hash}(x,\rho)) = 1]
+    {\Pr}[\Gamma_V^{(g)}(\widetilde{C}_2^{\Gamma_H^{(k)}, C_2, \hash}(x,\rho)) = 1]
     \geq \underset{u \leftarrow \mu_\delta^k}{\Pr}[g(u) = 1] + \varepsilon,
   \end{align*}
   then $D$ satisfies almost surely
@@ -104,15 +107,17 @@ Using this observation, we conclude that
         \pi \in \{0,1\}^{n}, \rho \in \{0,1\}^{*} \\
         x := \langle P^{(1)}(\pi), D_1^{\widetilde{C}}(\rho) \rangle_{\mathit{trans}} \\
         (\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi), D_1^{P^{(1)}, \widetilde{C}}(\rho) \rangle_{P^{(1)}}}}}
-    {\Pr}\mkern13mu[\Gamma_V(D_2^{P^{(1)}, \widetilde{C}, \hash, g, \Gamma_H}(x, \rho)) = 1] \geq (\delta + \frac{\varepsilon}{6k}).
+    {\Pr}[\Gamma_V(D_2^{P^{(1)}, \widetilde{C}, \hash, g, \Gamma_H}(x, \rho)) = 1] \geq (\delta + \frac{\varepsilon}{6k}).
   \end{align*}
-  Furthermore, $D$ has oracle access to a hint circuit, $P^{(1)}$, $\widetilde{C}$, $\hash$, $g$, and
+  Furthermore, $D$
+  %has oracle access to a hint circuit, $P^{(1)}$, $\widetilde{C}$, $\hash$, $g$, and
   asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hint queries and no verification queries.
   Finally, $\mathit{Size}(D) \leq \mathit{Size}(C)\frac{6k}{\varepsilon}$ and $\mathit{Time}(\mathit{Gen}) = \mathit{poly}(k, \frac{1}{\varepsilon}, n, v, h)$.
 \end{lemma}
 %
 %
-Before proving Lemma \ref{lemma:sec_amp_for_p_hash} we define additional algorithms that are later used by Gen.
+
+Before we give a proof of Lemma \ref{lemma:sec_amp_for_p_hash} we define some additional algorithms.
 First, we are interested in the probability that for $u \leftarrow \mu_{\delta}^k$ and a bit $b \in \{0,1\}$ the function $g$
 with the first input bit set to $b$ takes value $1$. The estimate of this probability is calculated by the algorithm
 EstimateFunctionProbability.

@@ -59,7 +59,7 @@ and a hint circuit
 \end{align*}
 \end{definition}
 %
-If it is clear from a context, we omit the parameter $n$, and write $P(\pi)$ instead of $P_n(\pi)$ where $\pi \in \{0,1\}^{n}$.
+If it is clear from a context, we omit the subscript $n$, and write $P(\pi)$ instead of $P_n(\pi)$ where $\pi \in \{0,1\}^{n}$.
 
 A verification query $(q,y)$ of a solver $C$ for which a hint query on this $q$ has been asked before can not be a verification query that succeeds.
 Therefore, without loss of generality, we make the assumption that $C$ does not ask verification queries on $q$
@@ -68,10 +68,8 @@ it does not ask any further hint or verification queries.
 
 %
 \begin{codeblock}
-  \textbf{Experiment $\mathit{Success}^{P, C}(\pi, \rho) $}
-  \medskip
-  \hrule
-  \medskip
+  \textbf{Experiment} $\Success^{P, C}(\pi, \rho)$
+  \medskip \hrule \medskip
   \textbf{Oracle:} A problem poser $P$, a solver $C = (C_1, C_2)$ for $P$.\\
   \textbf{Input:}  Bitstrings $\pi \in \{0,1\}^n$, $\rho \in \{0,1\}^*$.\\
   \textbf{Output:} A bit $b \in \{0,1\}$.
@@ -87,16 +85,16 @@ it does not ask any further hint or verification queries.
 %
 We define the \textit{success probability} of $C$ in solving a puzzle defined by $P$ as
 \begin{align}
- \underset{\pi, \rho}{\Pr}[\mathit{Success}^{P,C}(\pi, \rho) = 1].
+ \underset{\pi, \rho}{\Pr}[\Success^{P,C}(\pi, \rho) = 1].
 \end{align}
-Furthermore, we say that $C$ succeeds for $\pi$, $\rho$ if $\mathit{Success}^{P,C}(\pi, \rho) = 1$.
+Furthermore, we say that $C$ succeeds for $\pi$, $\rho$ if $\Success^{P,C}(\pi, \rho) = 1$.
 %
-\begin{theorem}[Security amplification for a dynamic weakly verifiable puzzle.]
+\begin{theorem}[Security amplification for dynamic weakly verifiable puzzles.]
 \label{th:sec_amp_for_dwvp}
-Let $P_{n}^{(1)}$ be a fixed problem poser as in Definition \ref{def:dwvp},
-and $P_{kn}^{(g)}$ a poser for the $k$-wise direct product of $P_{n}^{(1)}$.
+Let $P_{n}^{(1)}$ be a fixed problem poser as in Definition \ref{def:dwvp}
+and $P_{kn}^{(g)}$ a problem poser for the $k$-wise direct product of $P_{n}^{(1)}$.
 Furthermore, let $C$ be a problem solver for $P_{kn}^{(g)}$ asking at most $h$ hint queries and $v$ verification queries.
-There exists a probabilistic algorithm $\mathit{Gen}$ with oracle access to a solver circuit $C$,
+There exists a probabilistic algorithm Gen with oracle access to a solver circuit $C$,
 a monotone function $g:\{0,1\}^k \rightarrow \{0,1\}$ and problem posers $P_{n}^{(1)}$, $P_{kn}^{(g)}$.
 Additionally, $\mathit{Gen}$ takes as input parameters $\varepsilon$, $\delta$, $n$, $k$, $h$, $v$ and outputs a solver circuit $D$ for $P_{n}^{(1)}$
 such that the following holds: \\
