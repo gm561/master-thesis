@@ -1,6 +1,6 @@
 %
 \begin{proof}[Theorem \ref{th:sec_amp_for_dwvp}]
-We first define the following circuits.
+We define following circuits.
 %
 \begin{codeblock}
   \textbf{Circuit} $\widetilde{D}_2^{D, P^{(1)}, \hash, g, \Gamma_V, \Gamma_H}(x, \rho)$
@@ -32,12 +32,6 @@ We first define the following circuits.
 \end{codeblock}
 %
 We show that Theorem \ref{th:sec_amp_for_dwvp} follows from Lemma \ref{lemma:hash_function_probability} and Lemma \ref{lemma:sec_amp_for_p_hash}.
-%We fix a problem poser $P^{(1)}$ and use $\widetilde{Gen}$ to obtain $D := (D_1, D_2)$. We define a circuit $\widetilde{D} = (D_1, \widetilde{D}_2)$.
-% We will show that with high probability it holds
-% \begin{align*}
-%     \underset{\pi, \rho}{\Pr}\left[\Success^{P^{(1)},\widetilde{D}}(\pi, \rho) = 1\right] \geq (\delta + \frac{\varepsilon}{6k}).
-% \end{align*}
-%
 We fix $P^{(1)}$, $g$, $P^{(g)}$. Given a solver circuit $C = (C_1, C_2)$ such that
 \begin{align*}
     \underset{\pi^{(k)}, \rho}{\Pr}\left[\Success^{P^{(g)}, C}(\pi^{(k)}, \rho) = 1\right] \geq 16(h+v)\left(\underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon\right)
@@ -59,7 +53,7 @@ By Lemma \ref{lemma:ctilda_c} we know that it is possible to build $\widetilde{C
     \geq
 \underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon.
 \end{align*}
-Now, we use the algoriithm Gen to obtain the circuit $D = (D_1, D_2)$, which by Lemma \ref{lemma:sec_amp_for_p_hash} satisfies
+Now, we use Gen to obtain a circuit $D = (D_1, D_2)$, which by Lemma \ref{lemma:sec_amp_for_p_hash} satisfies
 \begin{align}
   \label{eq:succ_prob_d}
     \underset{
@@ -73,6 +67,11 @@ Finally, $\widetilde{\text{Gen}}$ outputs $\widetilde{D} = (D_1, \widetilde{D}_2
 \begin{align*}
     \underset{\pi, \rho}{\Pr}\left[\Success^{P^{(1)},\widetilde{D}}(\pi, \rho) = 1\right] \geq (\delta + \frac{\varepsilon}{6k}).
 \end{align*}
+Let $h$ and $v$ denote the number of hint and verification queries asked by the circuit $C$
+The running time of FindHash is $\mathit{poly(h,v,\frac{1}{\gamma},n)}$  and of Gen $\mathit{poly(k, \frac{1}{\epsilon}, n, h)}$.
+Thus, the overall running time of $\widetilde{\mathit{Gen}}$ is  $\mathit{poly(k,\frac{1}{\gamma},h,v,n)}$.
+Furthmore, the circuit $\widetilde{D}$ asks at most $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})h$ hint queries and one verification query.
+Finally, we have $\mathit{Size}\widetilde{D} \leq Size(C) \cdot \frac{6k}{\epsilon}$.
 This ends the proof of Theorem \ref{th:sec_amp_for_dwvp}.
 \end{proof}
 

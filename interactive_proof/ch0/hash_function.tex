@@ -1,4 +1,11 @@
 %
+We call a function mapping values from $\mathcal{D}$ to values from $\mathcal{R}$ a \textit{hash function}.
+We say that a family of hash functions $\cH$ from $\mathcal{D}$ to $\mathcal{R}$ is \textit{pairwise independent}
+if $\forall x \neq y \in \mathcal{D}$ and $\forall \alpha, \beta \in \mathcal{R}$, we have
+\begin{align}
+\underset{\hash \la0 \cH}{\Pr}[hash(x) = \alpha \land hash(y) = \beta] = \frac{1}{|R|^2},
+\end{align}
+where $\hash \leftarrow \cH$ denotes that $\hash$ is chosen from $\cH$ uniformly at random.
 
 Let $\hash:Q\rightarrow\{0,1,\dots, 2(h+v)-1\}$, the idea is to partition $Q$ such that the set of preimages
 of $0$ for $\hash$ contains $q \in Q$ on which $C$ is not allowed to ask hint queries,
@@ -34,22 +41,13 @@ and no hint query $q_i$ is asked before $(q_j, y_j)$ such that $\hash(q_i) = 0$.
   \IndI \Return 0
 \end{codeblock}
 %
-We define the \textit{canonical success probability} of a solver $C$ for $P$ with respect to a function $\hash$ as
+We define the \textit{canonical success probability} of a solver circuit $C$ for $P$ with respect to a function $\hash$ as
 \begin{align}
  \underset{\pi, \rho}{\Pr}[\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1].
 \end{align}
 %
 For fixed $\hash$ and a problem poser $P$ a \textit{canonical success} of $C$ for $\pi$, $\rho$ is a situation where
 $\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1$.
-
-We call a function $\hash : \mathcal{D} \rightarrow \mathcal{R}$
-a \textit{hash function} if it maps values from $\mathcal{D}$ to values from $\mathcal{R}$.
-We say that a family of hash functions $\cH$ from $\mathcal{D}$ to $\mathcal{R}$ is \textit{pairwise independent}
-if $\forall x \neq y \in \mathcal{D}$ and $\forall \alpha, \beta \in \mathcal{R}$, we have
-\begin{align}
-\underset{\hash leftarrow \cH}{\Pr}[hash(x) = \alpha \land hash(y) = \beta] = \frac{1}{|R|^2},
-\end{align}
-where $\hash \leftarrow \cH$ denote that $\hash$ is chosen from $\cH$ uniformly at random.
 
 We show that if a solver circuit $C$ for $P$ often succeeds in the experiment $\Success$,
 then there exists a hash function such that $C$ also often succeeds in the experiment $\CanonicalSuccess$.
@@ -91,9 +89,9 @@ Let $(q_j, y_j)$ denote the first query such that $\Gamma_V(q_j, y_j) = 1$. We h
   &\IndII \stackrel{(\ref{eq:hash_pr})}{=} \frac{1}{2(h+v)}\left(1 -\underset{\hash \leftarrow \cH}{\Pr}[\exists i < j : \hash(q_i) = 0 \mid \hash(q_j) = 0] \right) \notag\\
   &\IndII \stackrel{(*)}{\geq} \frac{1}{2(h+v)} \left( 1 - \sum_{i < j} \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_i) = 0 | \hash(q_j) = 0] \right) \notag\\
   &\IndII \stackrel{(\ref{eq:hash_pr})}{=} \frac{1}{2(h+v)} \left( 1 -  \sum_{i < j}\underset{\hash \leftarrow \cH}{\Pr}[\hash(q_i) = 0] \right) \notag\\
-  &\IndII \stackrel{(\ref{eq:hash_pr})}{\geq} \frac{1}{4(h+v)}.
+  &\IndII \stackrel{(\ref{eq:hash_pr})}{\geq} \frac{1}{4(h+v)},
 \end{align}
-Where in $(*)$ we used the union bound.
+where in $(*)$ we used the union bound.
 Let us denote the set of those $(\pi,\rho)$ for which \linebreak
  $\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1$ by $\cP_{\mathit{Canonical}}$.
 If for $\pi$, $\rho$ the circuit $C$ succeeds canonically, then for the same $\pi$, $\rho$ we also have $\Success^{P, C}(\pi, \rho) = 1$.
@@ -162,7 +160,7 @@ For a fixed $\hash$, we define independent, identically distributed binary rando
 \end{align*}
 We show now that FindHash is unlikely to return $\hash \in \cH_{Bad}$.
 For $\hash \in \cH_{\mathit{Bad}}$ by (\ref{eq:hash_bad}) we have $\mathbb{E}_{{\pi}, \rho}[X_i] \leq \frac{\gamma}{16(h+v)}$.
-Therefore, for any fixed $\hash \in \cH_{\mathit{Bad}}$ using the Chernoff bound we get \footnote{For independent, identically distributed binary
+Therefore, for any fixed $\hash \in \cH_{\mathit{Bad}}$ using the Chernoff bound we get\footnote{For independent, identically distributed binary
 random variables $X = \sum_{i=1}^N X_i$ and $0 < \delta \leq 1$ we use the Chernoff bounds in the form
 $\Pr[X \geq (1+\delta) \mathbb{E}[X]] \leq e^{- \mathbb{E}[X] \delta^2/3}$ and
 $\Pr[X \leq (1-\delta) \mathbb{E}[X]] \leq e^{- \mathbb{E}[X] \delta^2/2}$.}
@@ -203,9 +201,9 @@ where the probability is taken over a choice of $\hash$.
 We show that FindHash picks in one of its iteration $\hash \in \cH_{\mathit{Good}}$ almost surely.
 Let $K$ be the number of iterations of the outer loop of FindHash and $Y_i$ be a random variable for the event
 that in the $i$-th iteration of the outer loop $\hash \notin \cH_{\mathit{Good}}$ is picked.
-We use $\underset{\hash \leftarrow \cH}{\Pr}[\hash \in \cH_{\textit{Good}}] \geq \frac{\gamma}{8(g+v)}$ and $K \leq \frac{32(h+v)^2}{\gamma^2}n$, and conclude
+We use $\underset{\hash \leftarrow \cH}{\Pr}[\hash \in \cH_{\textit{Good}}] \geq \frac{\gamma}{8(h+v)}$ and $K \leq \frac{32(h+v)^2}{\gamma^2}n$, and conclude
 \begin{align*}
-  \underset{\hash \leftarrow \cH}{\Pr}\bigl[ \bigcap_{1 \leq i \leq K} Y_i \bigr] \leq \left(1 - \frac{\gamma}{8(h+v)}\right)^{\frac{32(h+v)^2}{\gamma^2}n}
+  \underset{\hash \leftarrow \cH}{\Pr}\Bigl[ \bigcap_{1 \leq i \leq K} Y_i \Bigr] \leq \left(1 - \frac{\gamma}{8(h+v)}\right)^{\frac{32(h+v)^2}{\gamma^2}n}
     \leq e^{-\frac{\gamma}{8(h+v)} \frac{32(h+v)^2}{\gamma^2}n}
     \leq e^{-\frac{4(h+v)}{\gamma}n} \leq e^{-n}.
 \end{align*}
