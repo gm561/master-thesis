@@ -1,6 +1,6 @@
 %
 \begin{proof}[Theorem \ref{th:sec_amp_for_dwvp}]
-We define following circuits.
+We define the following circuits.
 %
 \begin{codeblock}
   \textbf{Circuit} $\widetilde{D}_2^{D, P^{(1)}, \hash, g, \Gamma_V, \Gamma_H}(x, \rho)$
@@ -27,7 +27,7 @@ We define following circuits.
   %
   $hash := \text{FindHash}((h+v)\epsilon, n, h, v)$ \\
   Let $\widetilde{C} := (C_1, \widetilde{C}_2)$ be as in Lemma \ref{lemma:ctilda_c} with oracle access to $C$, $\hash$. \\
-  $D := Gen^{P^{(1)},  \widetilde{C}, \hash, g}(\epsilon, \delta, n, k)$ \\
+  $D := Gen^{P^{(1)},  \widetilde{C},  g, \hash}(\epsilon, \delta, n, k)$ \\
   \Return $\widetilde{D} := (D_1, \widetilde{D}_2)$
 \end{codeblock}
 %
@@ -45,9 +45,9 @@ By Lemma \ref{lemma:ctilda_c} we know that it is possible to build $\widetilde{C
 \begin{align*}
     \underset{
       \mathclap {
-      \substack{\pi, \rho \\
-        x := \langle P(\pi), C_1(\rho) \rangle_{\mathit{trans}} \\
-        (\Gamma_V^{(g)}, \Gamma_H^{(k)}) := \langle P(\pi), C_1(\rho) \rangle_{P}
+      \substack{\pi^{(k)}, \rho \\
+        x := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{\mathit{trans}} \\
+        (\Gamma_V^{(g)}, \Gamma_H^{(k)}) := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}}
       }}}
     {\Pr}\mkern13mu[\Gamma_V^{(g)}(\widetilde{C}_2^{\Gamma_H^{(k)}, C_2, \hash}(x, \rho)) = 1]
     \geq
@@ -58,20 +58,20 @@ Now, we use Gen to obtain a circuit $D = (D_1, D_2)$, which by Lemma \ref{lemma:
   \label{eq:succ_prob_d}
     \underset{
       \mathclap{
-      \substack{\pi, \rho \\ x := \langle P^{(1)}(\pi), D_1(\rho) \rangle_{\mathit{trans}} \\
-        (\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi), D_1(\rho) \rangle_{P^{(1)}}}}}
-    {\Pr}\mkern13mu[\Gamma_V(D_2(x, \rho)) = 1] \geq (\delta + \frac{\varepsilon}{6k})
+      \substack{\pi, \rho \\ x := \langle P^{(1)}(\pi), D_1^{\widetilde{C}}(\rho) \rangle_{\mathit{trans}} \\
+        (\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi), D_1^{\widetilde{C}}(\rho) \rangle_{P^{(1)}}}}}
+    {\Pr}\mkern13mu[\Gamma_V(D_2^{P^{(1)}, \widetilde{C}, hash, g, \Gamma_H}(x, \rho)) = 1] \geq (\delta + \frac{\varepsilon}{6k})
 \end{align}
 almost surely.
-Finally, $\widetilde{\text{Gen}}$ outputs $\widetilde{D} = (D_1, \widetilde{D}_2)$ that with high probability satisfies
+Finally, $\widetilde{\text{Gen}}$ outputs $\widetilde{D} = (D_1, \widetilde{D}_2)$ with oracle access to $D$, $P^{(1)}$, $hash$, $g$ that with high probability satisfies
 \begin{align*}
     \underset{\pi, \rho}{\Pr}\left[\Success^{P^{(1)},\widetilde{D}}(\pi, \rho) = 1\right] \geq (\delta + \frac{\varepsilon}{6k}).
 \end{align*}
-The running time of FindHash is $\mathit{poly(h,v,\frac{1}{\epsilon},n)}$  and of Gen $\mathit{poly(k, \frac{1}{\epsilon}, n, h)}$.
-Thus, the overall running time of $\widetilde{\mathit{Gen}}$ is  $\mathit{poly(k,\frac{1}{\epsilon},h,v,n)}$.
+The running time of FindHash is $\mathit{poly(h,v,\frac{1}{\epsilon},n,t)}$  and of Gen $\mathit{poly(k, \frac{1}{\epsilon}, n, t)}$.
+Thus, the overall running time of $\widetilde{\mathit{Gen}}$ is  $\mathit{poly(k,\frac{1}{\epsilon},h,v,n,t)}$.
 Furthermore, the circuit $\widetilde{D}$ asks at most $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})h$ hint queries and one verification query.
 Finally, we have $\mathit{Size}(\widetilde{D}) \leq \mathit{Size}(C) \cdot \frac{6k}{\epsilon}$.
-This ends the proof of Theorem \ref{th:sec_amp_for_dwvp}.
+This finishes the proof of Theorem \ref{th:sec_amp_for_dwvp}.
 \end{proof}
 
 %%% Local Variables:

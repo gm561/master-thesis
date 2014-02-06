@@ -83,7 +83,8 @@ Using this observation, we conclude that
 %
 \begin{lemma}\textbf{(Security amplification for dynamic weakly verifiable puzzles with respect to \boldmath{$\hash$}.)}
   \label{lemma:sec_amp_for_p_hash}
-  For the fixed problem poser $P_n^{(1)}$ let $\widetilde{C} := (C_1, \widetilde{C}_2)$ have oracle access to a function $\hash: Q \rightarrow \{0,1,\dots, 2(h+v-1)\}$
+  Let $P_n^{(1)}$ be a fixed problem poser as in Definition \ref{def:dwvp} and $\widetilde{C} := (C_1, \widetilde{C}_2)$ a circuit
+  with oracle access to a function $\hash: Q \rightarrow \{0,1,\dots, 2(h+v-1)\}$
   and a solver circuit $C := (C_1, C_2)$ for $P_{kn}^{(g)}$ which asks at most $h$ hint queries and $v$ verification queries.
   There exists an algorithm Gen that takes as input parameters $\varepsilon$, $\delta$, $n$, $k$,
   has oracle access to $P_n^{(1)}$,  $\widetilde{C}$, $\hash$, $g: \{0,1\}^{k} \rightarrow \{0,1\}$,
@@ -110,7 +111,7 @@ Using this observation, we conclude that
   Furthermore, $D$
   %has oracle access to a hint circuit, $P^{(1)}$, $\widetilde{C}$, $\hash$, $g$, and
   asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hint queries and no verification queries.
-  Finally, $\mathit{Size}(D) \leq \mathit{Size}(C)\frac{6k}{\varepsilon}$ and $\mathit{Time}(\mathit{Gen}) = \mathit{poly}(k, \frac{1}{\varepsilon}, n, v, h)$.
+  Finally, $\mathit{Size}(D) \leq \mathit{Size}(C)\frac{6k}{\varepsilon}$ and $\mathit{Time}(\mathit{Gen}) = \mathit{poly}(k, \frac{1}{\varepsilon}, n, t)$.
 \end{lemma}
 %
 %
@@ -160,15 +161,15 @@ evaluates which of $k$ puzzles of the $k$-wise direct product defined by $P^{(g)
 To decide whether the $i$-th puzzle of the $k$-wise direct product is solved successfully we need to gain access to the verification circuit
 for the puzzle generated in the $i$-th round of the interaction between $P^{(g)}$ and $\widetilde{C}$.
 Therefore, the algorithm EvalutePuzzles runs $k$ times $P^{(1)}$ to simulate the interaction with
-$C_1(\rho)$ each time with a fresh random bitstring $\pi_i \in \{0,1\}^{n}$ where $1 \leq i \leq n$.
+$C_1(\rho)$ each time with a fresh random bitstring $\pi_i \in \{0,1\}^{n}$ where $1 \leq i \leq k$.
 Let us introduce some additional notation.
 We denote by $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i$ the execution of the $i$-th round of the sequential interaction.
 We use $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i_{P^{(1)}}$ to denote the output of $P^{(1)}(\pi_i)$ in the $i$-th round.
 Finally, we write $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i_{\mathit{trans}}$ to denote the transcript of communication in the $i$-th round.
-The $i$-th round of the interaction between $P^{(1)}$ and $C_1$ is well defined only if all previous rounds have been executed before.
+Finally, we note that the $i$-th round of the interaction between $P^{(1)}$ and $C_1$ is well defined only if all previous rounds have been executed before.
 
 To make the notation easier in the code excerpts of circuits $C_2$, $D_2$ and EvalutePuzzles we
-omit some oracle superscripts. Exemplary we write $\widetilde{C}_2^{\Gamma_H^{(k)}, \hash}$ instead of $\widetilde{C}_2^{\Gamma_H^{(k)}, C, \hash}$ where
+omit some oracle superscripts. Exemplary, we write $\widetilde{C}_2^{\Gamma_H^{(k)}, \hash}$ instead of $\widetilde{C}_2^{\Gamma_H^{(k)}, C, \hash}$ where
 the superscript of the oracle circuit $C$ is omitted. We make sure that it is clear from a context which oracles are used.
 
 \begin{codeblock}
@@ -286,7 +287,7 @@ We are ready to define the solver circuit $D = (D_1, D_2)$ for $P^{(1)}$ and the
 \end{codeblock}
 %
 \begin{codeblock}
-  \textbf{Circuit} $D_2^{P^{(1)}, \widetilde{C}, \mathit{hash}, g,  \Gamma_H^*}(x^*, r)$
+  \textbf{Circuit} $D_2^{P^{(1)}, \widetilde{C}, \mathit{hash}, g,  \Gamma_H}(x^*, r)$
   \medskip \hrule \medskip
   \textbf{Oracle:} A poser $P^{(1)}$, a solver circuit $\widetilde{C} = (C_1, \widetilde{C}_2)$ for $P^{(g)}$, \\
   \IndII functions $hash : Q \rightarrow \{0,1, \dots, 2(h+v)-1\}$, $g:\{0,1\}^k \rightarrow \{0,1\}$, \\
@@ -302,7 +303,7 @@ We are ready to define the solver circuit $D = (D_1, D_2)$ for $P^{(1)}$ and the
   \IndII \Run $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i$ \\
   \IndIII $(\Gamma_V^{i}, \Gamma_H^{i}) := \langle P^{(1)}(\pi_i), C_1(\rho) \rangle^i_{P^{(1)}}$ \\
   \IndIII $x_i := \langle P^{(1)}(\pi_i), C_1(\rho) \rangle^i_{\mathit{trans}}$ \\
-  \IndI $\Gamma_H^{(k)}(q) := (\Gamma_H^{*}(q), \Gamma_H^{2}(q), \dots, \Gamma_H^{k}(q))$ \\
+  \IndI $\Gamma_H^{(k)}(q) := (\Gamma_H(q), \Gamma_H^{2}(q), \dots, \Gamma_H^{k}(q))$ \\
   \IndI $(q, y^*, y_2, \dots, y_k) := \widetilde{C}_2^{\Gamma_H^{(k)}, \hash}(x^*, x_2, \dotsc, x_k, \rho)$\\
   \IndI $(c_2, \dots, c_k) := (\Gamma_V^2(q, y_2), \dotsc, \Gamma_V^{k}(q, y_k))$ \\
   \IndI \If $g(1, c_{2}, \dots, c_k) = 1$ \And $g(0,c_{2}, \dots, c_k) = 0$ \Then \\
@@ -313,11 +314,11 @@ We are ready to define the solver circuit $D = (D_1, D_2)$ for $P^{(1)}$ and the
 %
 %
 \begin{codeblock}
-  \textbf{Algorithm} $\text{Gen}^{P^{(1)}, \widetilde{C}, g, \mathit{hash}}(\epsilon, \delta, n, v, h, k)$
+  \textbf{Algorithm} $\text{Gen}^{P^{(1)}, \widetilde{C}, g, \mathit{hash}}(\epsilon, \delta, n, k)$
   \medskip \hrule \medskip
   \textbf{Oracle:} A poser $P^{(1)}$, a solver circuit $\widetilde{C}$ for $P^{(g)}$, functions $g: \{0,1\}^{k} \rightarrow \{0,1\}$, \\
   \IndII  $hash:Q \rightarrow \{0,1, \dots, 2(h + v) - 1\}$. \\
-  \textbf{Input:}  Parameters $\epsilon$, $\delta$, $n$, $k$, the number of verification $v$ and hint $h$ queries.\\
+  \textbf{Input:}  Parameters $\epsilon$, $\delta$, $n$, $k$.\\
   \textbf{Output:} A circuit $D$.
   \medskip\hrule\medskip
   \For $i:=1$ \To $\frac{6k}{\epsilon}n$ \Do \\
@@ -359,9 +360,10 @@ However, from the assumptions of Lemma \ref{lemma:sec_amp_for_p_hash} we know th
 $k$ puzzles the success probability of $\widetilde{C}$ is higher.
 Therefore, it is likely that the first puzzle is correctly solved unusually often.
 It remains to prove that this intuition is indeed correct.
+
 We fix the notation used in the code excerpt of the circuit $D_2$.
-Additionally, we define $c_1 := \Gamma^*_V(q,y^*)$, where $(q,y^*)$ is the output of $D_2$, and $\Gamma_V^*$
-is the verification circuit generated by $P^{(1)}$ in the first phase after the interaction with $D_1$.
+Additionally, we define $c_1 := \Gamma_V(q,y_1)$, where $\Gamma_V$ is the verification circuit generated
+by $P^{(1)}(\pi_1)$ in the first phase after the interaction with $D_1(r)$.
 Let $\cG_{b} := \{ b_1, b_2, \dots, b_k : g(b, b_2, \dots, b_k) = 1 \}$ and $c = (c_1, c_2, \dotsc, c_k)$.
 We note that these are equivalent
 \begin{align}
@@ -427,14 +429,14 @@ We analyze the first summand of \eqref{eq:pr_d_succ_0}. First, we have
       \substack{r \\
         x^* := \langle P^{(1)}(\pi^*), D_1 (r) \rangle_{\mathit{trans}} \\
         (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D_1(r) \rangle_{P^{(1)}} }}}
-  {\Pr}[\Gamma_V(D_2(x^*, r)) = 1 | D_2(x,r) \neq \bot]
+  {\Pr}[\Gamma_V(D_2(x^*, r)) = 1 | D_2(x^*,r) \neq \bot]
   \underset{\mathclap{\substack{r \\ x^* = \langle P^{(1)}(\pi^*), D_1(r) \rangle_{\mathit{trans}}}}}{\Pr}[D_2(x^*,r) \neq \bot] \notag\\
   &\IndI \stackrel{(*)}{=}
   \underset{\pi^{(k)}, \rho}{\Pr}[c_1 = 1 \mid c \in \cG_1 \setminus \cG_0, \pi_1 = \pi^*]
   \underset{\mathclap{\substack{r \\ x^* = \langle P^{(1)}(\pi^*), D_1(r) \rangle_{\mathit{trans}}}}} {\Pr}[D_2(x^*,r) \neq \bot],
 \end{align}
 where in $(*)$ we use the observation that $D_2(x^*, r) \neq \bot$ implies that the circuit $D_2(x^*, r)$ finds $\pi^{(k)}$
-such that $c \in \cG_1 \setminus \cG_0$, and if $\Gamma_V(D_2(x^*,r)) = 1$ then $c_1 = 1$
+such that $c \in \cG_1 \setminus \cG_0$, and if $\Gamma_V(D_2(x^*,r)) = 1$ then $c_1 = 1$.
 Inserting \eqref{eq:pr_gamma_v_0} to the numerator of the first summand of (\ref{eq:pr_d_succ_0}) yields
 \begin{align}
 \IndII &\underset{
@@ -485,7 +487,7 @@ We conclude that in both cases by \eqref{ineq:case_0} and \eqref{ineq:case_1} we
   &\IndII \stackrel{(\ref{eq:s_pi_b})}{=}
    \underset{\pi^{(k)}, \rho}{\Pr}[g(c) = 1 \mid \pi_1 = \pi^*] -  \underset{u \leftarrow \mu_{\delta}^{(k)}}{\Pr}[u \in \cG_0]  - S_{\pi^*,0} - \frac{\epsilon}{6k}.
 \end{align}
-We take the expected value of \eqref{eq:pr_d_succ_0} over $\pi$ and insert \eqref{ineq:first_part} to obtain
+We take the expected value of \eqref{eq:pr_d_succ_0} over $\pi^*$ and insert \eqref{ineq:first_part} to obtain
 \begin{align}
   \label{ineq:ex_pr_gamma}
 \underset{
@@ -505,7 +507,7 @@ Let us assume that
 \begin{align}
 \underset{\pi, \rho}{\Pr}\left[\left(S_{\pi,0} \leq (1 - \frac{1}{2k})\epsilon\right) \land \left( S_{\pi,1} \leq (1-\frac{1}{2k})\epsilon\right)\right] < 1 - \frac{\epsilon}{6k},
 \end{align}
-then the algorithm Gen recurses with probability at least $1 - 2^{-n}$, because the probability that
+then the algorithm Gen recurses with almost surely, because the probability that
 Gen does not find $\widetilde{S}_{\pi, b} \geq (1-\frac{3}{4k})$ in none of the $\frac{6k}{\epsilon}n$ iterations is at most
 \begin{align*}
   (1 - \frac{\epsilon}{6k})^{\frac{6k}{\epsilon}n} \leq e^{-n}.
@@ -589,6 +591,7 @@ Finally, we insert (\ref{ineq:first_part}) and (\ref{ineq:second_eq}) into equat
  &\stackrel{\eqref{eq:gu_rel}}{\geq} \frac{\epsilon + \delta\Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_1 \setminus \cG_0] - (1 - \frac{1}{6k})\epsilon}
 {\Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_1 \setminus \cG_0]} \geq \delta + \frac{\epsilon}{6k}
 \end{align}
+Clearly, the running time of Gen is $poly(k, \frac{1}{\epsilon}, n, t)$.
 \end{proof}
 
 %

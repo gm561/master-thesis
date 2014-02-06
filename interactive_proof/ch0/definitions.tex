@@ -7,7 +7,7 @@ Moreover, we use $\mu_{\delta}^k$ to denote a probability distribution over $k$-
 where each bit of a $k$-tuple is drawn independently according to $\mu_{\delta}$.
 Finally, let $u \leftarrow \mu_{\delta}^k$ denote that a $k$-tuple $u$ is chosen according to $\mu_{\delta}^k$.
 
-The protocol execution between two probabilistic algorithms $A$ and $B$ is denoted by $\langle A, B \rangle$.
+The protocol execution between two probabilistic circuits $A$ and $B$ is denoted by $\langle A, B \rangle$.
 The output of $A$ in such a protocol execution is denoted by $\langle A, B \rangle_A$ and of $B$ by $\langle A, B \rangle_B$.
 Finally, let $\langle A, B \rangle_{\mathit{trans}}$ denote the transcript of communication between $A$ and $B$.
 
@@ -21,7 +21,7 @@ it occurs with probability at least $1 - 2^{-n} \mathit{poly}(n)$.
   \label{def:dwvp}
   A dynamic weakly verifiable puzzle (DWVP) is defined by a family of probabilistic circuits $\{P_n\}$.
   A circuit belonging to $\{P_n\}$ is called a problem poser.
-  A problem solver $C := (C_1, C_2)$ for $P_n$ is a probabilistic two phase circuit.
+  A solver $C := (C_1, C_2)$ for $P_n$ is a probabilistic two phase circuit.
   We write $P_n(\pi)$ to denote the execution of $P_n$ with the randomness fixed to $\pi \in \{0,1\}^n$, and $(C_1,C_2)(\rho)$
   to denote the execution of both $C_1$ and $C_2$ with the randomness fixed to $\rho \in \{0,1\}^{*}$.
 
@@ -88,6 +88,7 @@ We define the \textit{success probability} of $C$ in solving a puzzle defined by
  \underset{\pi, \rho}{\Pr}[\Success^{P,C}(\pi, \rho) = 1].
 \end{align}
 Furthermore, we say that $C$ succeeds for $\pi$, $\rho$ if $\Success^{P,C}(\pi, \rho) = 1$.
+Finally, we denote time required to run the experiment $\Success$ by $t$.
 %
 \begin{theorem}[Security amplification for dynamic weakly verifiable puzzles.]
 \label{th:sec_amp_for_dwvp}
@@ -110,7 +111,7 @@ then $D$ satisfies almost surely
   \end{align*}
 Additionally, $D$ requires oracle access to $g$, $P_{n}^{(1)}$, $C$,
 and asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hint queries and one verification query.
-Finally, $\mathit{Size}(D) \leq \mathit{Size}(C) \cdot \frac{6k}{\varepsilon}$ and $\mathit{Time}(\mathit{Gen}) = \mathit{poly}(k, \frac{1}{\varepsilon}, n, v, h)$.
+Finally, $\mathit{Size}(D) \leq \mathit{Size}(C) \cdot \frac{6k}{\varepsilon}$ and $\mathit{Time}(\mathit{Gen}) = \mathit{poly}(k, \frac{1}{\varepsilon}, n, v, h, t)$.
 \end{theorem}
 %
 % The Theorem \ref{th:sec_amp_for_dwvp} implies that if there is no good solver for a puzzle defined by $P^{(1)}$, then a good solver for

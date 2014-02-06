@@ -46,8 +46,8 @@ We define the \textit{canonical success probability} of a solver circuit $C$ for
  \underset{\pi, \rho}{\Pr}[\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1].
 \end{align}
 %
-For fixed $\hash$ and $P$ a \textit{canonical success} of $C$ for $\pi$, $\rho$ is a situation where
-$\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1$.
+For fixed $\hash$ and $P$ a \textit{canonical success} of $C$ for bistrings $\pi$, $\rho$ is a situation where \linebreak
+$\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1$. Clearly, time required to run the experiment $\CanonicalSuccess$ is $O(t)$.
 
 We show that if a solver circuit $C$ for $P$ often succeeds in the experiment $\Success$,
 then there exists a hash function such that $C$ also often succeeds in the experiment $\CanonicalSuccess$.
@@ -61,7 +61,7 @@ Let $\cH$ be the family of pairwise independent hash functions $Q \rightarrow \{
 is possible to implement a random function $\hash: Q \rightarrow \{0,1,\dotsc, 2(h+v)-1\}$ efficiently by for example building its function table on the fly.}
 There exists a probabilistic algorithm FindHash that takes as input
 parameters $\gamma$, $n$, $h$, $v$, and has oracle access to $C$ and $P_n$.
-Furthermore, FindHash runs in time $\mathit{poly}(h,v,\frac{1}{\gamma},n)$,
+Furthermore, FindHash runs in time $\mathit{poly}(h,v,\frac{1}{\gamma},n,t)$,
 and with high probability outputs a function $\hash \in \cH$
 such that the canonical success probability of $C$ with respect to $\hash$ is at least $\frac{\gamma}{16(h+v)}$.
 \end{lemma}
@@ -71,7 +71,7 @@ We fix a problem poser $P$ and a solver $C$ for $P$ in the whole proof of Lemma 
 For all $k,l \in \{1, \dotsc, (h+v)\}$ and $\alpha,\beta \in \{0,1,\dotsc,2(h+v)-1\}$ by the pairwise independence property, we have
 \begin{align}
   \label{eq:hash_pr}
- \forall q_k,q_l \in Q, q_k \neq q_l : \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_k) = \alpha \mid \hash(q_l) = \beta] &=
+ \forall q_k \neq q_l \in Q : \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_k) = \alpha \mid \hash(q_l) = \beta] &=
  \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_k) = \alpha] \notag\\
  &= \frac{1}{2(h+v)}.
 \end{align}
@@ -121,7 +121,7 @@ Hence, $\cP_{\mathit{Canonical}} \subseteq \cP_{\mathit{Success}}$, and we concl
   \hrule
   \medskip
   \textbf{Oracle:} A problem poser $P$, a solver circuit $C$ for $P$.\\
-  \textbf{Input:} Parameters $\gamma$, $n$. The number $h$ of hint queries and $v$ of verification queries. \\
+  \textbf{Input:} Parameters $\gamma$, $n$. The number of hint queries $h$ and of verification queries $v$. \\
   \textbf{Output:} A function $\hash:Q \rightarrow \{0,1, \dots, 2(h+v)-1 \}$.
   \medskip\hrule\medskip
   \For $i := 1$ \To $32n(h+v)^2/\gamma^2$ \Do \\
@@ -150,7 +150,7 @@ and $\cH_{\mathit{Bad}}$ be the family of functions $\hash \in \cH$ such that
     \end{align}
 %
 Let $N$ denote the number of iterations of the inner loop of FindHash.
-For a fixed $\hash$, we define independent, identically distributed binary random variables $X_1, \dots, X_{N}$ such that
+For a fixed $\hash$, we define independent, identically distributed, binary random variables $X_1, \dots, X_{N}$ such that
 \begin{align*}
   X_i =
   \begin{cases}
@@ -174,7 +174,7 @@ The probability that $\hash \in \cH_{\mathit{Good}}$, when picked, is not return
 \begin{align*}
   \underset{\pi, \rho}{\Pr}\left[\frac{1}{N} \sum_{i=1}^{N} X_i \leq \frac{\gamma}{12(h+v)}\right] \leq
   \underset{\pi, \rho}{\Pr}\left[\frac{1}{N} \sum_{i=1}^{N} X_i \leq \bigl(1 - \frac{1}{3}\bigr)\mathbb{E}[X_i]\right]
-  \leq e^{-{\frac{\gamma}{8(h+v)}} N / 18} = e^{-\frac{2}{9} \frac{(h+v)}{\gamma}n} \leq e^{-\frac{2}{9}n},
+  \leq e^{-{\frac{\gamma}{8(h+v)}} N / 18} \leq e^{-\frac{2}{9} \frac{(h+v)}{\gamma}n} \leq e^{-\frac{2}{9}n},
 \end{align*}
 where we once more used the Chernoff bound.
 We show now that the probability of picking $\hash \in \cH_{\mathit{Good}}$ is at least $\frac{\gamma}{8(h+v)}$.
@@ -207,7 +207,7 @@ We use $\underset{\hash \leftarrow \cH}{\Pr}[\hash \in \cH_{\textit{Good}}] \geq
     \leq e^{-\frac{\gamma}{8(h+v)} \frac{32(h+v)^2}{\gamma^2}n}
     \leq e^{-\frac{4(h+v)}{\gamma}n} \leq e^{-n}.
 \end{align*}
-
+It is clear that running time of FindHash is $\mathit{poly}(n,h,v,\gamma, t)$ .
 \end{proof}
 
 %%% Local Variables:
