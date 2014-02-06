@@ -1,16 +1,16 @@
 %
 \begin{proof}[Theorem \ref{th:sec_amp_for_dwvp}]
-Let use first define following circuits.
+We first define the following circuits.
 %
 \begin{codeblock}
-  \textbf{Circuit} $\widetilde{D}_2^{D, P^{(1)}, \hash, g, \Gamma_v}(x, \rho)$
+  \textbf{Circuit} $\widetilde{D}_2^{D, P^{(1)}, \hash, g, \Gamma_V, \Gamma_H}(x, \rho)$
   \medskip
   \hrule
   \medskip
-  \textbf{Oracle:} A circuit $D$ for $P^{(1)}$, a problem poser $P^{(1)}$, \\
-  \IndII function $\hash: Q \rightarrow \{0,1, \dots, 2(h+v) - 1\}$, $g: \{0,1\}^{k} \rightarrow \{0,1\}$ \\
-  \IndII a verification oracle $\Gamma_V$, a hint oracle $\Gamma_H$\\
-  \textbf{Input:}  Bitstrings $x \in \{0,1\}^{*}$, $\rho \in \{0,1\}^{*}$
+  \textbf{Oracle:} A solver circuit $D$ for $P^{(1)}$, a problem poser $P^{(1)}$, \\
+  \IndII functions $\hash: Q \rightarrow \{0,1, \dots, 2(h+v) - 1\}$, $g: \{0,1\}^{k} \rightarrow \{0,1\}$ \\
+  \IndII a verification oracle $\Gamma_V$, a hint oracle $\Gamma_H$.\\
+  \textbf{Input:}  Bitstrings $x \in \{0,1\}^{*}$, $\rho \in \{0,1\}^{*}$.
   \medskip\hrule\medskip
   %
   $(q, y) := D_2^{P^{(1)}, P^{(g)}, \widetilde{C}, \hash, g, \Gamma_H}(x, \rho)$ \\
@@ -32,22 +32,22 @@ Let use first define following circuits.
 \end{codeblock}
 %
 We show that Theorem \ref{th:sec_amp_for_dwvp} follows from Lemma \ref{lemma:hash_function_probability} and Lemma \ref{lemma:sec_amp_for_p_hash}.
-We use the algorithm $\widetilde{Gen}$ to obtain a circuit $D := (D_1, D_2)$. Then, the circuit $D$ uses $\widetilde{D}$ to find $(q,y)$.
-We will show that with high probability it holds
-\begin{align*}
-    \underset{\pi, \rho}{\Pr}\left[\Success^{P^{(1)},\widetilde{D}}(\pi, \rho) = 1\right] \geq (\delta + \frac{\varepsilon}{6k}).
-\end{align*}
+%We fix a problem poser $P^{(1)}$ and use $\widetilde{Gen}$ to obtain $D := (D_1, D_2)$. We define a circuit $\widetilde{D} = (D_1, \widetilde{D}_2)$.
+% We will show that with high probability it holds
+% \begin{align*}
+%     \underset{\pi, \rho}{\Pr}\left[\Success^{P^{(1)},\widetilde{D}}(\pi, \rho) = 1\right] \geq (\delta + \frac{\varepsilon}{6k}).
+% \end{align*}
 %
 We fix $P^{(1)}$, $g$, $P^{(g)}$. Given a solver circuit $C = (C_1, C_2)$ such that
 \begin{align*}
     \underset{\pi^{(k)}, \rho}{\Pr}\left[\Success^{P^{(g)}, C}(\pi^{(k)}, \rho) = 1\right] \geq 16(h+v)\left(\underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon\right)
 \end{align*}
-we satisfy conditions of Lemma \ref{lemma:hash_function_probability} and can use the algorithm FindHash to find a function $\hash$ such that
+we satisfy conditions of Lemma \ref{lemma:hash_function_probability}. Therefore, $\widetilde{\text{Gen}}$ can use the algorithm FindHash to find $\hash$ such that
 \begin{align*}
     \underset{\pi^{(k)}, \rho}{\Pr}\left[\CanonicalSuccess^{P^{(g)}, C, \hash}(\pi^{(k)}, \rho) = 1\right] \geq \underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon
 \end{align*}
 almost surely.
-By Lemma \ref{lemma:ctilda_c} we know that it is possible to create a circuit $\widetilde{C} = (C_1, \widetilde{C}_2)$ with oracle access to $\hash$ and $C$ such that
+By Lemma \ref{lemma:ctilda_c} we know that it is possible to build $\widetilde{C} = (C_1, \widetilde{C}_2)$ such that
 \begin{align*}
     \underset{
       \mathclap {
@@ -59,7 +59,7 @@ By Lemma \ref{lemma:ctilda_c} we know that it is possible to create a circuit $\
     \geq
 \underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon.
 \end{align*}
-Now, by Lemma \ref{lemma:sec_amp_for_p_hash} using $\hash$ and $\widetilde{C} = (C_1, \widetilde{C}_2)$ we use the algorithm Gen to obtain a circuit $D = (D_1, D_2)$ such that
+Now, we use the algoriithm Gen to obtain the circuit $D = (D_1, D_2)$, which by Lemma \ref{lemma:sec_amp_for_p_hash} satisfies
 \begin{align}
   \label{eq:succ_prob_d}
     \underset{
@@ -69,7 +69,7 @@ Now, by Lemma \ref{lemma:sec_amp_for_p_hash} using $\hash$ and $\widetilde{C} = 
     {\Pr}\mkern13mu[\Gamma_V(D_2(x, \rho)) = 1] \geq (\delta + \frac{\varepsilon}{6k})
 \end{align}
 almost surely.
-Hence, the circuit $\widetilde{D}$ output by $\widetilde{\text{Gen}}$ satisfies with high probability
+Finally, $\widetilde{\text{Gen}}$ outputs $\widetilde{D} = (D_1, \widetilde{D}_2$ that with high probability satisfies
 \begin{align*}
     \underset{\pi, \rho}{\Pr}\left[\Success^{P^{(1)},\widetilde{D}}(\pi, \rho) = 1\right] \geq (\delta + \frac{\varepsilon}{6k}).
 \end{align*}
