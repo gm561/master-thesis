@@ -11,8 +11,8 @@ The protocol execution between two probabilistic algorithms $A$ and $B$ is denot
 The output of $A$ in such a protocol execution is denoted by $\langle A, B \rangle_A$ and of $B$ by $\langle A, B \rangle_B$.
 Finally, let $\langle A, B \rangle_{\mathit{trans}}$ denote the transcript of communication between $A$ and $B$.
 
-We define a \textit{two phase circuit} $C := (C_1, C_2)$ as a circuit where in the first phase a circuit $C_1$
-is executed and in the second phase a circuit $C_2$.
+We define a \textit{two phase circuit} $C := (C_1, C_2)$ as a circuit where in the first phase the circuit $C_1$
+is used and in the second phase the circuit $C_2$.
 
 We say that an event happens \textit{almost surely} or with \textit{high probability} if
 it occurs with probability at least $1 - 2^{-n} \mathit{poly}(n)$.
@@ -61,7 +61,7 @@ and a hint circuit
 %
 If it is clear from a context, we omit the subscript $n$, and write $P(\pi)$ instead of $P_n(\pi)$ where $\pi \in \{0,1\}^{n}$.
 
-A verification query $(q,y)$ of a solver $C$ for which a hint query on this $q$ has been asked before can not be a verification query that succeeds.
+A verification query $(q,y)$ of a solver $C$ for which a hint query on this $q$ has been asked before cannot be a verification query that succeeds.
 Therefore, without loss of generality, we make the assumption that $C$ does not ask verification queries on $q$
 for which a hint query has been asked before. Furthermore, we assume that once $C$ asked a verification query that succeeds,
 it does not ask any further hint or verification queries.
@@ -96,7 +96,7 @@ and $P_{kn}^{(g)}$ a problem poser for the $k$-wise direct product of $P_{n}^{(1
 Furthermore, let $C$ be a problem solver for $P_{kn}^{(g)}$ asking at most $h$ hint queries and $v$ verification queries.
 There exists a probabilistic algorithm Gen with oracle access to a solver circuit $C$,
 a monotone function $g:\{0,1\}^k \rightarrow \{0,1\}$ and problem posers $P_{n}^{(1)}$, $P_{kn}^{(g)}$.
-Additionally, $\mathit{Gen}$ takes as input parameters $\varepsilon$, $\delta$, $n$, $k$, $h$, $v$ and outputs a solver circuit $D$ for $P_{n}^{(1)}$
+Additionally, $\mathit{Gen}$ takes as input parameters $\varepsilon$, $\delta$, $n$, $k$, $h$, $v$, and outputs a solver circuit $D$ for $P_{n}^{(1)}$
 such that the following holds: \\
 If $C$ is such that
   \begin{align*}
