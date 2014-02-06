@@ -7,7 +7,7 @@ We define the following circuits.
   \medskip
   \hrule
   \medskip
-  \textbf{Oracle:} A solver circuit $D$ for $P^{(1)}$, a problem poser $P^{(1)}$, \\
+  \textbf{Oracle:} A circuit $D :=(D_1, D_2)$ from Lemma \ref{lemma:sec_amp_for_p_hash}, a problem poser $P^{(1)}$, \\
   \IndII functions $\hash: Q \rightarrow \{0,1, \dots, 2(h+v) - 1\}$, $g: \{0,1\}^{k} \rightarrow \{0,1\}$ \\
   \IndII a verification oracle $\Gamma_V$, a hint oracle $\Gamma_H$.\\
   \textbf{Input:}  Bitstrings $x \in \{0,1\}^{*}$, $\rho \in \{0,1\}^{*}$.
@@ -63,12 +63,12 @@ Now, we use Gen to obtain a circuit $D = (D_1, D_2)$, which by Lemma \ref{lemma:
     {\Pr}\mkern13mu[\Gamma_V(D_2^{P^{(1)}, \widetilde{C}, hash, g, \Gamma_H}(x, \rho)) = 1] \geq (\delta + \frac{\varepsilon}{6k})
 \end{align}
 almost surely.
-Finally, $\widetilde{\text{Gen}}$ outputs $\widetilde{D} = (D_1, \widetilde{D}_2)$ with oracle access to $D$, $P^{(1)}$, $hash$, $g$ that with high probability satisfies
+Finally, $\widetilde{\text{Gen}}$ outputs $\widetilde{D} = (D_1, \widetilde{D}_2)$ with oracle access to $D$, $P^{(1)}$, $hash$, $g$ such that with high probability it holds
 \begin{align*}
     \underset{\pi, \rho}{\Pr}\left[\Success^{P^{(1)},\widetilde{D}}(\pi, \rho) = 1\right] \geq (\delta + \frac{\varepsilon}{6k}).
 \end{align*}
-The running time of FindHash is $\mathit{poly(h,v,\frac{1}{\epsilon},n,t)}$  and of Gen $\mathit{poly(k, \frac{1}{\epsilon}, n, t)}$.
-Thus, the overall running time of $\widetilde{\mathit{Gen}}$ is  $\mathit{poly(k,\frac{1}{\epsilon},h,v,n,t)}$.
+The running time of FindHash is $\mathit{poly}(h,v,\frac{1}{\epsilon},n)$ with oracle calls and of Gen $\mathit{poly(k, \frac{1}{\epsilon}, n)}$ with oracle calls.
+Thus, the overall running time of $\widetilde{\mathit{Gen}}$ is  $\mathit{poly(k,\frac{1}{\epsilon},h,v,n,t)}$ with oracle calls.
 Furthermore, the circuit $\widetilde{D}$ asks at most $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})h$ hint queries and one verification query.
 Finally, we have $\mathit{Size}(\widetilde{D}) \leq \mathit{Size}(C) \cdot \frac{6k}{\epsilon}$.
 This finishes the proof of Theorem \ref{th:sec_amp_for_dwvp}.

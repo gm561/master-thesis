@@ -17,6 +17,9 @@ is used and in the second phase the circuit $C_2$.
 We say that an event happens \textit{almost surely} or with \textit{high probability} if
 it occurs with probability at least $1 - 2^{-n} \mathit{poly}(n)$.
 
+For a circuit $C$ let $\mathit{Size}(C)$ denote the size of $C$. For an algorithm $A$ we write $\mathit{Time}(A)$ to denote the running time of $A$.
+Finally, we use $\mathit{poly}(\alpha_1, \dots, \alpha_n)$ to denote a polynomial on variables $\alpha_1, \dots, \alpha_n$.
+
 \begin{definition}[Dynamic weakly verifiable puzzle.]
   \label{def:dwvp}
   A dynamic weakly verifiable puzzle (DWVP) is defined by a family of probabilistic circuits $\{P_n\}$.
@@ -25,7 +28,7 @@ it occurs with probability at least $1 - 2^{-n} \mathit{poly}(n)$.
   We write $P_n(\pi)$ to denote the execution of $P_n$ with the randomness fixed to $\pi \in \{0,1\}^n$, and $(C_1,C_2)(\rho)$
   to denote the execution of both $C_1$ and $C_2$ with the randomness fixed to $\rho \in \{0,1\}^{*}$.
 
-  In the first phase, the poser $P_n(\pi)$ and the solver $C_1(\rho)$ interact.
+  In the first phase, the problem poser $P_n(\pi)$ and the solver $C_1(\rho)$ interact.
   As the result of the interaction $P_n(\pi)$ outputs a verification circuit $\Gamma_{V}$ and a hint circuit $\Gamma_{H}$.
   The circuit $C_1(\rho)$ produces no output.
   The circuit $\Gamma_{V}$ takes as input $q \in Q$, an answer $y \in \{0,1\}^*$,
@@ -61,7 +64,7 @@ and a hint circuit
 %
 If it is clear from a context, we omit the subscript $n$, and write $P(\pi)$ instead of $P_n(\pi)$ where $\pi \in \{0,1\}^{n}$.
 
-A verification query $(q,y)$ of a solver $C$ for which a hint query on this $q$ has been asked before cannot be a verification query that succeeds.
+A verification query $(q,y)$ of a solver $C$ for which a hint query on this $q$ has been asked before cannot be a verification query for which $C$ succeeds.
 Therefore, without loss of generality, we make the assumption that $C$ does not ask verification queries on $q$
 for which a hint query has been asked before. Furthermore, we assume that once $C$ asked a verification query that succeeds,
 it does not ask any further hint or verification queries.
@@ -88,16 +91,15 @@ We define the \textit{success probability} of $C$ in solving a puzzle defined by
  \underset{\pi, \rho}{\Pr}[\Success^{P,C}(\pi, \rho) = 1].
 \end{align}
 Furthermore, we say that $C$ succeeds for $\pi$, $\rho$ if $\Success^{P,C}(\pi, \rho) = 1$.
-Finally, we denote time required to run the experiment $\Success$ by $t$.
 %
 \begin{theorem}[Security amplification for dynamic weakly verifiable puzzles.]
 \label{th:sec_amp_for_dwvp}
 Let $P_{n}^{(1)}$ be a fixed problem poser as in Definition \ref{def:dwvp}
 and $P_{kn}^{(g)}$ a problem poser for the $k$-wise direct product of $P_{n}^{(1)}$.
-Furthermore, let $C$ be a problem solver for $P_{kn}^{(g)}$ asking at most $h$ hint queries and $v$ verification queries.
+Additionally, let $C$ be a problem solver for $P_{kn}^{(g)}$ asking at most $h$ hint queries and $v$ verification queries.
 There exists a probabilistic algorithm Gen with oracle access to a solver circuit $C$,
 a monotone function $g:\{0,1\}^k \rightarrow \{0,1\}$ and problem posers $P_{n}^{(1)}$, $P_{kn}^{(g)}$.
-Additionally, $\mathit{Gen}$ takes as input parameters $\varepsilon$, $\delta$, $n$, $k$, $h$, $v$, and outputs a solver circuit $D$ for $P_{n}^{(1)}$
+Furthermore, $\mathit{Gen}$ takes as input parameters $\varepsilon$, $\delta$, $n$, $k$, $h$, $v$, and outputs a solver circuit $D$ for $P_{n}^{(1)}$
 such that the following holds: \\
 If $C$ is such that
   \begin{align*}
@@ -109,9 +111,9 @@ then $D$ satisfies almost surely
     \underset{\substack{\pi \in \{0,1\}^{n} \\ \rho \in \{0,1\}^{*}}}
     {\Pr}\left[\mathit{Success}^{P_{n}^{(1)},D}(\pi, \rho) = 1\right] \geq (\delta + \frac{\varepsilon}{6k}).
   \end{align*}
-Additionally, $D$ requires oracle access to $g$, $P_{n}^{(1)}$, $C$,
+Additionally, $D$ requires oracle access to $g$, $P_{n}^{(1)}$, $C$, hint and verification circuits,
 and asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hint queries and one verification query.
-Finally, $\mathit{Size}(D) \leq \mathit{Size}(C) \cdot \frac{6k}{\varepsilon}$ and $\mathit{Time}(\mathit{Gen}) = \mathit{poly}(k, \frac{1}{\varepsilon}, n, v, h, t)$.
+Finally, $\mathit{Size}(D) \leq \mathit{Size}(C) \cdot \frac{6k}{\varepsilon}$ and $\mathit{Time}(\mathit{Gen}) = \mathit{poly}(k, \frac{1}{\varepsilon}, n, v, h)$.
 \end{theorem}
 %
 % The Theorem \ref{th:sec_amp_for_dwvp} implies that if there is no good solver for a puzzle defined by $P^{(1)}$, then a good solver for

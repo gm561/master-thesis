@@ -47,7 +47,7 @@ We define the \textit{canonical success probability} of a solver circuit $C$ for
 \end{align}
 %
 For fixed $\hash$ and $P$ a \textit{canonical success} of $C$ for bistrings $\pi$, $\rho$ is a situation where \linebreak
-$\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1$. Clearly, time required to run the experiment $\CanonicalSuccess$ is $O(t)$.
+$\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1$.
 
 We show that if a solver circuit $C$ for $P$ often succeeds in the experiment $\Success$,
 then there exists a hash function such that $C$ also often succeeds in the experiment $\CanonicalSuccess$.
@@ -57,18 +57,18 @@ then there exists a hash function such that $C$ also often succeeds in the exper
 \label{lemma:hash_function_probability}
 For fixed $P_n$ let $C$ be a solver for $P_n$ with success probability at least $\gamma$,
 asking at most $h$ hint queries and $v$ verification queries.
-Let $\cH$ be the family of pairwise independent hash functions $Q \rightarrow \{0,1, \dots,2(h+v)-1\}$.\footnote{It
+Let $\cH$ be a family of pairwise independent hash functions $Q \rightarrow \{0,1, \dots,2(h+v)-1\}$.\footnote{It
 is possible to implement a random function $\hash: Q \rightarrow \{0,1,\dotsc, 2(h+v)-1\}$ efficiently by for example building its function table on the fly.}
 There exists a probabilistic algorithm FindHash that takes as input
 parameters $\gamma$, $n$, $h$, $v$, and has oracle access to $C$ and $P_n$.
-Furthermore, FindHash runs in time $\mathit{poly}(h,v,\frac{1}{\gamma},n,t)$,
+Furthermore, FindHash runs in time $\mathit{poly}(h,v,\frac{1}{\gamma},n)$,
 and with high probability outputs a function $\hash \in \cH$
 such that the canonical success probability of $C$ with respect to $\hash$ is at least $\frac{\gamma}{16(h+v)}$.
 \end{lemma}
 %
 \begin{proof}
 We fix a problem poser $P$ and a solver $C$ for $P$ in the whole proof of Lemma \ref{lemma:hash_function_probability}.
-For all $k,l \in \{1, \dotsc, (h+v)\}$ and $\alpha,\beta \in \{0,1,\dotsc,2(h+v)-1\}$ by the pairwise independence property, we have
+For $k,l \in \{1, \dotsc, (h+v)\}$ and $\alpha,\beta \in \{0,1,\dotsc,2(h+v)-1\}$ by the pairwise independence property, we have
 \begin{align}
   \label{eq:hash_pr}
  \forall q_k \neq q_l \in Q : \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_k) = \alpha \mid \hash(q_l) = \beta] &=
@@ -76,7 +76,7 @@ For all $k,l \in \{1, \dotsc, (h+v)\}$ and $\alpha,\beta \in \{0,1,\dotsc,2(h+v)
  &= \frac{1}{2(h+v)}.
 \end{align}
 %
-We define $\cP_{\Success}$ as a set containing all $(\pi,\rho)$ for which $\Success^{P, C}(\pi, \rho) = 1$.
+We write $\cP_{\Success}$ to denote a set containing all $(\pi,\rho)$ for which $\Success^{P, C}(\pi, \rho) = 1$.
 Let us fix $(\pi^*, \rho^*) \in \cP_{\mathit{Success}}$. We are interested in the probability over
 a choice of function $\hash$ of the event $\CanonicalSuccess^{P,C,\hash}(\pi^*, \rho^*) = 1$.
 Let $(q_j, y_j)$ denote the first query such that $\Gamma_V(q_j, y_j) = 1$. We have
@@ -181,9 +181,9 @@ We show now that the probability of picking $\hash \in \cH_{\mathit{Good}}$ is a
 We prove this statement by contradiction. Let us assume that
 \begin{align}
   \label{ass:hash_max_prob}
-\underset{\hash \leftarrow \cH}{\Pr}[\hash \in \cH_{\mathit{Good}}] < \frac{\gamma}{8(h+v)}.
+\underset{\hash \leftarrow \cH}{\Pr}[\hash \in \cH_{\mathit{Good}}] < \frac{\gamma}{8(h+v)},
 \end{align}
-We have
+then we have
 \begin{align*}
   &\underset{\substack{\hash \leftarrow \cH \\ \pi, \rho}}{\Pr}[\CanonicalSuccess^{P,C,\hash}(\pi, \rho) = 1] \\
   &\IndI = \underset{\substack{ \hash \leftarrow \cH \\ \pi, \rho}}{\Pr}[\CanonicalSuccess^{P,C,\hash}(\pi, \rho) = 1 \mid \hash \in \cH_{\mathit{Good}}]
@@ -195,8 +195,7 @@ We have
   & \IndI  \stackrel{\substack{ (\ref{eq:hash_good}) \\ (\ref{ass:hash_max_prob})}}{<} \frac{\gamma}{8(h+v)} + \frac{\gamma}{8(h+v)} = \frac{\gamma}{4(h+v)},
 \end{align*}
 but this contradicts (\ref{ineq:hash_high_prob}).
-Therefore, we know that the probability of choosing a $\hash \in \cH_{\mathit{Good}}$ amounts at least $\frac{\gamma}{8(h+v)}$
-where the probability is taken over a choice of $\hash$.
+Therefore, we know that the probability of choosing a $\hash \in \cH_{\mathit{Good}}$ amounts at least $\frac{\gamma}{8(h+v)}$.
 
 We show that FindHash picks in one of its iteration $\hash \in \cH_{\mathit{Good}}$ almost surely.
 Let $K$ be the number of iterations of the outer loop of FindHash and $Y_i$ be a random variable for the event
@@ -207,9 +206,8 @@ We use $\underset{\hash \leftarrow \cH}{\Pr}[\hash \in \cH_{\textit{Good}}] \geq
     \leq e^{-\frac{\gamma}{8(h+v)} \frac{32(h+v)^2}{\gamma^2}n}
     \leq e^{-\frac{4(h+v)}{\gamma}n} \leq e^{-n}.
 \end{align*}
-It is clear that running time of FindHash is $\mathit{poly}(n,h,v,\gamma, t)$ .
+It is clear that running time of FindHash is $\mathit{poly}(n,h,v,\gamma)$ with oracle access.
 \end{proof}
-
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../master"
