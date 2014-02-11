@@ -1,6 +1,7 @@
 %
 \begin{proof}[Theorem \ref{th:sec_amp_for_dwvp}]
 We define the following circuits.
+%What are these circuits for?
 %
 \begin{codeblock}
   \textbf{Circuit} $\widetilde{D}_2^{D, P^{(1)}, \hash, g, \Gamma_V, \Gamma_H}(x, \rho)$
@@ -16,6 +17,8 @@ We define the following circuits.
   $(q, y) := D_2^{P^{(1)}, \widetilde{C}, \hash, g, \Gamma_H}(x, \rho)$ \\
   Make a verification query to $\Gamma_V$ using $(q,y)$
 \end{codeblock}
+%
+% TODO: add return
 %
 \begin{codeblock}
   \textbf{Algorithm} $\widetilde{\text{Gen}}^{P^{(1)}, g, C}(n, \epsilon, \delta, k, h, v)$
@@ -67,8 +70,8 @@ Finally, $\widetilde{\text{Gen}}$ outputs $\widetilde{D} = (D_1, \widetilde{D}_2
 \begin{align*}
     \underset{\pi, \rho}{\Pr}\left[\Success^{P^{(1)},\widetilde{D}}(\pi, \rho) = 1\right] \geq (\delta + \frac{\varepsilon}{6k}).
 \end{align*}
-The running time of FindHash is $\mathit{poly}(h,v,\frac{1}{\epsilon},n)$ with oracle calls and of Gen $\mathit{poly(k, \frac{1}{\epsilon}, n)}$ with oracle calls.
-Thus, the overall running time of $\widetilde{\mathit{Gen}}$ is  $\mathit{poly(k,\frac{1}{\epsilon},h,v,n,t)}$ with oracle calls.
+The running time of FindHash is $\mathit{poly}(h,v,\frac{1}{\epsilon},n)$ with oracle calls and of Gen $\mathit{poly(k, \frac{1}{\epsilon}, n)}$ with oracle access.
+Thus, the overall running time of $\widetilde{\mathit{Gen}}$ is  $\mathit{poly(k,\frac{1}{\epsilon},h,v,n,t)}$ with oracle access.
 Furthermore, the circuit $\widetilde{D}$ asks at most $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})h$ hint queries and one verification query.
 Finally, we have $\mathit{Size}(\widetilde{D}) \leq \mathit{Size}(C) \cdot \frac{6k}{\epsilon}$.
 This finishes the proof of Theorem \ref{th:sec_amp_for_dwvp}.

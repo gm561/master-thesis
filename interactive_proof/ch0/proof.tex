@@ -58,7 +58,6 @@ If for some fixed $\pi$, $\rho$ and $\hash$ the circuit $C$ succeeds canonically
 Using this observation, we conclude that
 \begin{align*}
   &\underset{\pi, \rho}{\Pr}\left[\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1\right] \\
-  &\IndII = \underset{\pi, \rho}{\mathbb{E}}\left[\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1 \right] \\
   &\IndII \leq
   \mkern33mu
     \underset{
@@ -109,9 +108,8 @@ Using this observation, we conclude that
     {\Pr}[\Gamma_V(D_2^{P^{(1)}, \widetilde{C}, \hash, g, \Gamma_H}(x, \rho)) = 1] \geq (\delta + \frac{\varepsilon}{6k}).
   \end{align*}
   Furthermore, $D$
-  %has oracle access to a hint circuit, $P^{(1)}$, $\widetilde{C}$, $\hash$, $g$, and
   asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hint queries and no verification queries.
-  Finally, $\mathit{Size}(D) \leq \mathit{Size}(C)\frac{6k}{\varepsilon}$ and $\mathit{Time}(\mathit{Gen}) = \mathit{poly}(k, \frac{1}{\varepsilon}, n)$ with oracle access.
+  Finally, $\mathit{Time}(\mathit{Gen}) = \mathit{poly}(k, \frac{1}{\varepsilon}, n)$ with oracle calls to $\widetilde{C}$.
 \end{lemma}
 %
 %
@@ -129,10 +127,10 @@ The estimate of this probability is calculated by EstimateFunctionProbability.
   \textbf{Input:} A bit $b \in \{0,1\}$, parameters $k$, $\epsilon$, $\delta$, $n$. \\
   \textbf{Output:} An estimate $\widetilde{g}_b$ of $\Pr_{u \leftarrow \mu_{\delta}^{k}}[g(b,u_2, \dotsc, u_k) = 1]$.
   \medskip\hrule\medskip
-  \For $i:=1$ \To $\frac{64k^2}{\epsilon^2} n$ \Do \\
+  \For $i:=1$ \To $N := \frac{64k^2}{\epsilon^2} n$ \Do \\
   \IndI $u \leftarrow \mu_{\delta}^{k}$ \\
   \IndI $g_i := g(b, u_2, \dotsc, u_k)$ \\
-  \Return $\frac{\epsilon^2}{64k^2n} \sum_{i=1}^{\frac{64k^2}{\epsilon^2} n} g_i$
+  \Return $\frac{1}{N} \sum_{i=1}^{N} g_i$
 \end{codeblock}
 %
 \begin{lemma}
@@ -142,15 +140,15 @@ The estimate of this probability is calculated by EstimateFunctionProbability.
 \end{lemma}
 %
 \begin{proof}
-We define independent, identically distributed binary random variables $K_1, K_2, \dots, K_{64k^2n/\epsilon^2}$
-such that for each $1 \leq i \leq \frac{64k^2}{\epsilon^2} n$
-the random variable $K_i$ takes value $g_i$. We use the Chernoff bound to obtain\footnote{For independent Bernoulli distributed
+We define independent, identically distributed binary random variables $K_1, K_2, \dots, K_N$
+such that for each $1 \leq i \leq N$
+the random variable $K_i$ takes value $g_i$. We use the Chernoff bound to obtain\footnote{For independent, identically distributed Bernoulli
 random variables $X_1, \dots, X_n$ with $X := \sum_{i=1}^n X_i$ and $0 \leq \delta \leq 1$
 we use the Chernoff bound in the form $\Pr[|X - \mathbb{E}[X]| \geq \delta \mathbb{E}[X]] \leq 2 e^{- \mathbb{E}[X] \delta^2 / 3}$.}
 %
 \begin{align*}
   &\Pr \Bigl[ \Bigl| \widetilde{g}_b - \Pr_{u \leftarrow \mu_{\delta}^{k}}\left[g(b,u_2, \dots, u_k) = 1\right] \Bigr| \geq \frac{\epsilon}{8k} \Bigr]\\
-  &\IndII = \Pr \Bigl[\Bigl|\Bigl(\frac{\epsilon^2}{64k^2n} \sum_{i=1}^{64k^2n / \epsilon^2 } K_i \Bigr) - \mathbb{E}_{u \leftarrow \mu_{\delta}^k}[g(b,u_2, \dots, u_k)\Bigr]\Bigr|
+  &\IndII = \Pr \Bigl[\Bigl|\Bigl(\frac{1}{N} \sum_{i=1}^N K_i \Bigr) - \mathbb{E}_{u \leftarrow \mu_{\delta}^k}[g(b,u_2, \dots, u_k)]\Bigr|
     \geq \frac{\epsilon}{8k} \Bigr] \leq 2 \cdot e^{-n/3}.
 \end{align*}
 \end{proof}
@@ -207,9 +205,10 @@ the fact whether $\widetilde{C}$ succeeds in solving the first puzzle defined by
 instead a bit $b$ is used. More formally, we define the surplus $S_{\pi^*, b}$ as
 \begin{align}
   \label{eq:s_pi_b}
-S_{\pi^*, b} = \underset{\pi^{(k)}, \rho}{\Pr}\left[g(b, c_2, \dots, c_k) = 1 \mid \pi_1 = \pi^*\right] - \underset{u \leftarrow \mu^{k}_{\delta}}{\Pr}\left[g(b, u_2, \dots, u_k) = 1\right].
+S_{\pi^*, b} = \underset{\pi^{(k)}, \rho}{\Pr}\left[g(b, c_2, \dots, c_k) = 1 \mid \pi_1 = \pi^*\right] - \underset{u \leftarrow \mu^{k}_{\delta}}{\Pr}\left[g(b, u_2, \dots, u_k) = 1\right],
 \end{align}
-%
+where $(c_2, c_3, \dotsc, c_k)$ is obtained as in EvalutePuzzles.
+
 The algorithm EstimateSurplus returns an estimate $\widetilde{S}_{\pi^*, b}$ for $S_{\pi^*, b}$.
 %
 \begin{codeblock}
@@ -222,13 +221,13 @@ The algorithm EstimateSurplus returns an estimate $\widetilde{S}_{\pi^*, b}$ for
   \textbf{Input:} A bistring $\pi^* \in \{0,1\}^{n}$, a bit $b \in \{0,1\}$, parameters $k$, $\epsilon$, $\delta$, $n$.\\
   \textbf{Output:} An estimate $\widetilde{S}_{\pi^*, b}$ for $S_{\pi^*, b}$.
   \medskip\hrule\medskip
-  \For $i:=1$ \To $\frac{64k^2}{\epsilon^2}n$ \Do \\
+  \For $i:=1$ \To $N := \frac{64k^2}{\epsilon^2}n$ \Do \\
   \IndI $(\pi_{2}, \dots, \pi_k) \xleftarrow{\$} \{0,1\}^{(k-1)n}$\\
   \IndI $\rho \xleftarrow{\$} \{0,1\}^{*}$\\
   \IndI $(c_1, \dots, c_k) := \text{EvalutePuzzles}^{P^{(1)}, \widetilde{C}, \hash}((\pi^*, \pi_2, \dots, \pi_k), \rho, n, k)$\\
   \IndI $\widetilde{s}_{\pi^*,b}^i := g(b, c_{2}, \dots, c_k)$\\
   $\widetilde{g}_b := \text{EstimateFunctionProbability}^{g}(b, k, \epsilon, \delta, n)$ \\
-  \textbf{return} $\Bigl(\frac{\epsilon^2}{64k^2n} \sum_{i=1}^{\frac{64k^2}{\epsilon^2} n} \widetilde{s}_{\pi^*,b}^i \Bigr) - \widetilde{g}_b$\\
+  \textbf{return} $\Bigl(\frac{1}{N} \sum_{i=1}^N \widetilde{s}_{\pi^*,b}^i \Bigr) - \widetilde{g}_b$\\
 \end{codeblock}
 %
 \begin{lemma}
@@ -238,13 +237,13 @@ The estimate $\widetilde{S}_{\pi^*,b}$ returned by EstimateSurplus differs from 
 
 \begin{proof}
 We use the union bound and similar argument as in Lemma \ref{lemma:estimate_of_g}
-which yields that \\$\frac{\epsilon^2}{64k^2n} \sum_{i=1}^{\frac{64k^2}{\epsilon^2}n} \widetilde{s}_{\pi^*,b}^i$ differs from
+which yields that \\$\frac{1}{N} \sum_{i=1}^{N} \widetilde{s}_{\pi^*,b}^i$ differs from
 $\mathbb{E}[g(b, c_2, \dots, c_k)]$ by at most $\frac{\epsilon}{8k}$ almost surely. Together, with Lemma $\ref{lemma:estimate_of_g}$ we conclude that the surplus estimate
 returned by EstimateSurplus differs from $S_{\pi^*,b}$ by at most $\frac{\epsilon}{4k}$ almost surely.
 \end{proof}
 %
 %
-We define now the following circuit $C' = (C_1', C_2')$, which is a solver for the $(k-1)$-wise direct product of $P^{(1)}$.
+We define the following circuit $C' = (C_1', C_2')$, which is a solver for the $(k-1)$-wise direct product of $P^{(1)}$.
 \begin{codeblock}
   \textbf{Circuit} $C_1'^{\widetilde{C}, P^{(1)}}(\rho)$
   \medskip \hrule \medskip
@@ -352,7 +351,18 @@ we conclude that $S_{\pi^*,b} \geq \widetilde{S}_{\pi^*, b} - \frac{\epsilon}{4k
 Therefore, the circuit $\widetilde{C}'$ succeeds in solving the $(k-1)$-wise direct product of puzzles with probability
 at least $\Pr_{u \leftarrow \mu^{(k-1)}_{\delta}}[g'(u_1,\dots, u_{k-1} )] + (1 - \frac{1}{k})\epsilon$.
 We see that in this case $\widetilde{C}'$ satisfies the conditions of Lemma \ref{lemma:sec_amp_for_p_hash}
-for the $(k-1)$-wise direct product of puzzles, and we can call Gen recursively.
+for the $(k-1)$-wise direct product of puzzles and Gen can be called recursively.
+The recursive call to Gen returns a circuit $D = (D_1, D_2)$ that with high probability satisfies
+\begin{align*}
+  \underset{
+    \mathclap{
+      \substack{
+        \pi, \rho \\
+        x := \langle P^{(1)}(\pi), D_1^{\widetilde{C}}(\rho) \rangle_{\mathit{trans}} \\
+        (\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi), D_1^{\widetilde{C}}(\rho) \rangle_{P^{(1)}}}}}
+  {\Pr}[\Gamma_V(D_2^{P^{(1)}, \widetilde{C}, \hash, g, \Gamma_H}(x, \rho)) = 1] \geq \delta + \Bigl(1 - \frac{1}{k}\Bigr)\frac{\epsilon}{6(k-1)} =
+  \delta + \frac{\epsilon}{6k}.
+\end{align*}
 
 If all estimates are less than $(1-\frac{3}{4k})\epsilon$, then intuitively $C$
 does not succeed on the remaining $k-1$ puzzles with much higher probability than
@@ -363,10 +373,11 @@ Therefore, it is likely that the first puzzle is correctly solved unusually ofte
 It remains to prove that this intuition is indeed correct.
 
 We fix the notation used in the code excerpt of the circuit $D_2$.
+We consider a single iteration of the outer loop of $D_2$, in which values $\pi_1, \dotsc, \pi_k$ are fixed.
 Additionally, we define $c_1 := \Gamma_V(q,y_1)$, where $\Gamma_V$ is the verification circuit generated
 by $P^{(1)}(\pi_1)$ in the first phase of the interaction with $D_1(r)$.
-Let $\cG_{b} := \{ b_1, b_2, \dots, b_k : g(b, b_2, \dots, b_k) = 1 \}$ and $c = (c_1, c_2, \dotsc, c_k)$.
-We note that these are equivalent
+Let $\cG_{b} := \{ (b_1, b_2, \dots, b_k) : g(b, b_2, \dots, b_k) = 1 \}$ and $c = (c_1, c_2, \dotsc, c_k)$.
+We conclude that these are equivalent
 \begin{align}
   \label{eqs:set_g}
   \underset{u \leftarrow \mu_{\delta}^k}{\Pr}[u \in \cG_b] = \underset{u \leftarrow \mu_{\delta}^k}{\Pr}[g(b, u_2, \dots, u_k) = 1]\notag\\
@@ -436,8 +447,9 @@ We analyze the first summand of \eqref{eq:pr_d_succ_0}. First, we have
   \underset{\pi^{(k)}, \rho}{\Pr}[c_1 = 1 \mid c \in \cG_1 \setminus \cG_0, \pi_1 = \pi^*]
   \underset{\mathclap{\substack{r \\ x^* = \langle P^{(1)}(\pi^*), D_1(r) \rangle_{\mathit{trans}}}}} {\Pr}[D_2(x^*,r) \neq \bot],
 \end{align}
-where in $(*)$ we use the observation that $D_2(x^*, r) \neq \bot$ implies that the circuit $D_2(x^*, r)$ finds $\pi^{(k)}$
-such that $c \in \cG_1 \setminus \cG_0$, and if $\Gamma_V(D_2(x^*,r)) = 1$ then $c_1 = 1$.
+where in $(*)$ we use the observation that the event $D_2(x^*, r) \neq \bot$ happens if and only if the circuit $D_2(x^*, r)$ finds $\pi^{(k)}$
+such that $c \in \cG_1 \setminus \cG_0$. Furthermore, conditioned on $c \in \cG_1 \setminus \cG_0$
+we have that $\Gamma_V(D_2(x^*,r)) = 1$ occurs if and only if $c_1 = 1$.
 Inserting \eqref{eq:pr_gamma_v_0} to the numerator of the first summand of (\ref{eq:pr_d_succ_0}) yields
 \begin{align}
 \IndII &\underset{
@@ -468,7 +480,7 @@ which happens with probability
     \substack{
       r \\
       x^* := \langle P^{(1)}(\pi^*), D_1(r) \rangle_{\mathit{trans}}}}}
-{\Pr}[D_2(x^*,\rho) = \bot]
+{\Pr}[D_2(x^*,r) = \bot]
 \leq (1 - \frac{\epsilon}{6k})^{\frac{6k}{\epsilon}\log(\frac{6k}{\epsilon})} \leq \frac{\epsilon}{6k}.
 \end{align}
 We conclude that in both cases by \eqref{ineq:case_0} and \eqref{ineq:case_1} we have
@@ -493,7 +505,7 @@ We take the expected value of \eqref{eq:pr_d_succ_0} over $\pi^*$ and insert \eq
   \label{ineq:ex_pr_gamma}
 \underset{
   \mathclap{
-    \substack{r \\ x := \langle P^{(1)}(\pi), D_1(r) \rangle_{\mathit{trans}} \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi), D_1(r) \rangle_{P^{(1)}} }}}
+    \substack{\pi, r \\ x := \langle P^{(1)}(\pi), D_1(r) \rangle_{\mathit{trans}} \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi), D_1(r) \rangle_{P^{(1)}} }}}
 {\Pr}\mkern13mu[\Gamma_V(D_2(x, r)) = 1]
 &\geq \mathbb{E}_{\pi^*}\left[\frac{\Pr_{\pi^{(k)}, \rho}[g(c) = 1 | \pi_1 = \pi^*]
   - \Pr_{u \leftarrow \mu_{\delta}^{(k)}}[u \in \cG_0] - \frac{\epsilon}{6k}}{\Pr_{u \leftarrow \mu_{\delta}^{(k)}}[u \in \cG_1 \setminus \cG_0]}\right] \notag\\
@@ -506,22 +518,23 @@ We take the expected value of \eqref{eq:pr_d_succ_0} over $\pi^*$ and insert \eq
 We show that if Gen does not recurse, then the majority of estimates is low almost surely.
 Let us assume that
 \begin{align}
-\underset{\pi, \rho}{\Pr}\left[\left(S_{\pi,0} \leq (1 - \frac{1}{2k})\epsilon\right) \land \left( S_{\pi,1} \leq (1-\frac{1}{2k})\epsilon\right)\right] < 1 - \frac{\epsilon}{6k},
+\underset{\pi}{\Pr}\left[\left(S_{\pi,0} \leq (1 - \frac{1}{2k})\epsilon\right) \land \left( S_{\pi,1} \leq (1-\frac{1}{2k})\epsilon\right)\right] < 1 - \frac{\epsilon}{6k},
 \end{align}
-then Gen recurses almost surely, because probability that
-Gen does not find $\widetilde{S}_{\pi, b} \geq (1-\frac{3}{4k})$ in all of the $\frac{6k}{\epsilon}n$ iterations is at most
+then Gen recurses almost surely, because the probability that
+Gen does not find $\widetilde{S}_{\pi, b} \geq (1-\frac{3}{4k})\epsilon$ in all of the $\frac{6k}{\epsilon}n$ iterations is at most
 \begin{align*}
-  (1 - \frac{\epsilon}{6k})^{\frac{6k}{\epsilon}n} \leq e^{-n}.
+  \Bigl(1 - \frac{\epsilon}{6k}\Bigr)^{\frac{6k}{\epsilon}n} \leq e^{-n}
 \end{align*}
+almost surely, where we used Lemma \ref{lemma:surplus_estimate}.
 Therefore, under the assumption that Gen does not recurse, we have with high probability
 \begin{align}
 \underset{\pi, \rho}{\Pr}\left[\left(S_{\pi,0} \leq (1 - \frac{1}{2k})\epsilon\right) \land \left( S_{\pi,1} \leq (1-\frac{1}{2k})\epsilon\right)\right] \geq 1 - \frac{\epsilon}{6k}.
 \end{align}
 Let us define a set
 \begin{align}
-  \cW = \left\{ \pi :  \left(S_{\pi,0} \leq (1 - \frac{1}{2k})\epsilon\right) \land \left( S_{\pi,1} \leq (1-\frac{1}{2k})\epsilon \right) \right\}
+  \cW = \left\{ \pi :  \left(S_{\pi,0} \leq (1 - \frac{1}{2k})\epsilon\right) \land \left( S_{\pi,1} \leq (1-\frac{1}{2k})\epsilon \right) \right\},
 \end{align}
-and use $\cW^c$ to denote the complement of $\cW$.
+and use $\overline{\cW}$ to denote the complement of $\cW$.
 We bound the numerator of the second summand in (\ref{ineq:ex_pr_gamma})
 \begin{align}
   \label{ineq:second_eq}
@@ -536,28 +549,28 @@ We bound the numerator of the second summand in (\ref{ineq:ex_pr_gamma})
 {\Pr}\mkern13mu[\Gamma_V(D_2(x^*, r)) = 1]
 (S_{\pi^*,1} - S_{\pi^*,0})] \notag\\
 %
-&\IndII = \mathbb{E}_{\pi^* \in \cW^c}[ S_{\pi^*,0}
+&\IndII = \mathbb{E}_{\pi^*}\Bigl[ S_{\pi^*,0}
 \mkern23mu + \mkern23mu
 \underset{
   \mathclap{
   \substack{r \\ x^* := \langle P^{(1)}(\pi^*), D_1(r) \rangle_{\mathit{trans}}
     \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D_1 (r) \rangle_{P^{(1)}} }}}
 {\Pr}\mkern13mu[\Gamma_V(D_2(x^*, r) = 1]
-  (S_{\pi^*,1} - S_{\pi^*,0})] \notag\\
-&\IndIII +  \mathbb{E}_{\pi^* \in \cW}[ S_{\pi^*,0} \mkern13mu + \mkern13mu
+  (S_{\pi^*,1} - S_{\pi^*,0}) \mid \pi^* \in \overline{\cW}] \Pr_{\pi^*}[\pi^* \in \overline{\cW}\Bigr]\notag\\
+&\IndIII +  \mathbb{E}_{\pi^*}\Bigl[ S_{\pi^*,0} \mkern13mu + \mkern13mu
 \underset{
   \mathclap{
   \substack{r \\ x^* := \langle P^{(1)}(\pi^*), D_1(r) \rangle_{\mathit{trans}}
     \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D_1 (r) \rangle_{P^{(1)}} }}}
 {\Pr}\mkern13mu[\Gamma_V(D_2(x^*, r)) = 1]
-(S_{\pi^*,1} - S_{\pi^*,0}) ] \notag\\
-&\IndII \leq \frac{\epsilon}{6k} + \mathbb{E}_{\pi^* \in \cW}[ S_{\pi^*,0} \mkern23mu + \mkern23mu
+(S_{\pi^*,1} - S_{\pi^*,0})  \mid \pi^* \in \cW] \Pr_{\pi^*}[\pi^* \in \cW\Bigr] \notag\\
+&\IndII \leq \frac{\epsilon}{6k} + \mathbb{E}_{\pi^*}\Bigl[ S_{\pi^*,0} \mkern23mu + \mkern23mu
 \underset{
   \mathclap{
   \substack{r \\ x := \langle P^{(1)}(\pi^*), D_1(r) \rangle_{\mathit{trans}}
     \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D_1 (r) \rangle_{P^{(1)}} }}}
 {\Pr}\mkern13mu[\Gamma_V(D_2^{\widetilde{C}}(x^*, r)) = 1]
-((1 - \frac{1}{2k})\epsilon - S_{\pi^*,0})] \notag\\
+(\bigl(1 - \frac{1}{2k}\bigr)\epsilon - S_{\pi^*,0})  \mid \pi^* \in \cW \Bigr] \Pr_{\pi^*}[\pi^* \in \cW] \notag\\
 &\IndII \leq \frac{\epsilon}{6k} + (1 - \frac{1}{2k})\epsilon = (1 - \frac{1}{3k}) \epsilon.
 \end{align}
 We observe that
@@ -567,7 +580,7 @@ We observe that
 &= \Pr[u \in \cG_0 \lor ( u \in \cG_1 \setminus \cG_0 \land u_1 = 1)] \notag\\
 &= \Pr[u \in \cG_0] + \Pr[u \in \cG_1 \setminus \cG_0] \Pr[u_1 = 1].
 \end{align}
-Finally, we insert (\ref{ineq:first_part}) and (\ref{ineq:second_eq}) into equation \eqref{ineq:ex_pr_gamma}, and use (\ref{eq:gu_rel}) to obtain
+Finally, we insert and \eqref{ineq:second_eq} into equation \eqref{ineq:ex_pr_gamma} and obtain
 \begin{align*}
   \IndII
 \underset{
