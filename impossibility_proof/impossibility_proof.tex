@@ -1,0 +1,37 @@
+We show that the bound achieved in the Theorem 1.1 is asymptotically optimal.
+Let us define the following algorithm.
+
+%define DWVP
+
+\begin{codeblock}
+  Algorithm $\text{Breaker}^{\Gamma_H^{(k)}}(r_B)$
+  \medskip \hrule \medskip
+  \textbf{Oracle:}  A hint circuit $\Gamma_H^{(k)}$ for the $k$-wise direct product of DWVP. \\
+  \textbf{Input:}  A bitstring $r_B \in \{0,1\}^{*}$.
+  \medskip\hrule\medskip
+  $q \leftarrow Q$ \\
+  \For all $q \in Q \setminus \{q\}$ \Do \\
+  \IndI ask a hint query using oracle $\Gamma_H$ on $q'$ \\
+  With probability $\delta^{(k)}$ ask a verification query $(q,(y_1, \dotsc, y_k))$
+\end{codeblock}
+
+We define the following problem poser for a dynamic weakly verifiable puzzle.
+
+\begin{codeblock}
+  Poser $\Pi_{DWVP}$ \\
+  \medskip\hrule\medskip
+  \textbf{Input:} A bitstring $r_{\pi} \in \{0,1\}^{n}$. \\
+  \medskip\hrule\medskip
+  \IndI \\
+  Pick a random permutation $\pi: \{0,1\}^{n} \rightarrow \{0,1\}^{n}$ \\
+  Generate hint and verification circuits such that: \\
+  $\Gamma_H(q)$ on input $q \in \{0,1\}^{n}$ returns $\pi(q)$ or $\bot$ if $q \notin \{0,1\}^{n}$ \\
+  $\Gamma_V(q,(y_1, \dotsc, y_k))$ on input $q \in \{0,1\}^{n}$ returns $1$ if for each $1 \leq i \leq k$
+  we have $\pi_i(q) = y_i$ and $0$ otherwise.\\
+\end{codeblock}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "master"
+%%% End:
