@@ -1,0 +1,173 @@
+
+Let $hash:Q\rightarrow\{0,1,\dots, 2(h+v)-1\}$, then a set $P_{hash} \subseteq Q$,
+defined with respect to $hash$, is the set of preimages of $0$ for $hash$.
+The idea is that $P_{hash}$ contains $q \in Q$ on which $C$ is not allowed to ask hint queries and $q$ on which the
+first successful verification query is asked is in $P_{hash}$.
+Therefore, if $C$ makes a verification query on $q \in P_{hash}$ we know that no hint query is ever asked on this $q$.
+In the experiment $CanonicalSuccess$ a circuit $C$ succeeds if and only if it ask a verification query on $q \in P_{hash}$
+and no hint query is asked on $q \in P_{hash}$.
+Finally, Lemma \ref{lemma:hash_function_probability} states that
+it is possible to find $hash$ such that success probability of $C$ in the experiment $CanonicalSuccess$ is
+not much worser than in the experiment $Success$.
+
+% If the $i$th query of $C$ is a hint query, then we denote it by $q_i$.
+% If it is a verification query, then it is denoted by $(q_i, y_i)$
+In the experiment $CanonicalSuccess$ we denote the $i$th query of $C$ as $q_i$ if it is a hint query, and as $(q_i, y_i)$ if it is a verification query.
+%
+\begin{codeblock}
+  \textbf{Experiment $CanonicalSuccess^{P, C^{(\cdot, \cdot)}, hash}(\pi, \rho)$}
+  \medskip
+
+  \hrule
+
+  \medskip
+  \textbf{Oracle:} A problem poser $P$. A solver circuit $C^{(\cdot, \cdot)}$.\\
+  \IndII A function $hash: Q \leftarrow \{0, \dots, 2(h+v) - 1\}$.\\
+  \textbf{Input:}  Bitstrings: $\pi$, $\rho$. \\
+  \textbf{Output:} A bit $b \in \{0,1\}$.
+
+  \medskip\hrule\medskip
+  $(x, \Gamma_V, \Gamma_H) := P(\pi)$\\
+  Run $C^{\Gamma_V, \Gamma_H} (x, \rho)$ \\
+  \IndI Let $(q_j,y_j)$ be the first verification query such that $C^{\Gamma_V, \Gamma_H}(q_j, y_j) = 1$, or an arbitrary\\ \IndI
+  verification query if $C$ does not succeed.\\
+  \\
+  \textbf{If} $(\forall i < j :  q_i \notin P_{hash} )$ and $q_j \in P_{hash}$ and $\Gamma_V(q_j, y_j) = 1$ \\
+  \IndI \textbf{return} 1\\
+  \textbf{else}\\
+  \IndI \textbf{return} 0
+\end{codeblock}
+%
+Similarly as for the experiment $Success$, we define the success probability of $C$ with respect to a function $hash$
+in the experiment $CanonicalSuccess$ in solving a puzzle defined by $P$ as
+%
+\begin{align}
+ \underset{\pi, \rho}{\Pr}[CanonicalSuccess^{P,C^{(\cdot, \cdot)},hash}(\pi, \rho) = 1].
+\end{align}
+%
+For fixed $hash$ and $P^{(1)}$ a canonical success of $C$ for $\pi^{(k )}, \rho$ is a situation when \\ $CanonicalSuccess^{P^{(g)}, C^{(\cdot, \cdot)}, hash}(\pi^{(k)}, \rho) = 1$.
+We show that if for a fixed $P^{(1)}$ a solver circuit $C$ often succeeds in the experiment $Success$ for $P^{(g)}$,
+then it also often successful in the experiment $CanonicalSuccess$ for $P^{(g)}$.
+%
+\begin{lemma}\textbf{(Success probability in solving a $k$-wise direct product of $P^{(1)}$ with respect to a function $hash$.)}
+\label{lemma:hash_function_probability}
+For fixed $P^{(1)}$ let $C$ succeed in the experiment $Success$ for $P^{(g)}$ with probability $\gamma$,
+asking at most $h$ hint queries and $v$ verification queries.
+There exists a probabilistic algorithm, with oracle access to $C$ and $P^{(g)}$, that runs in time $O((h+v)^4/\gamma^4)$,
+and with high probability outputs a function $hash: Q \rightarrow \{0, \dots, 2(h+v)-1\}$
+such that success probability of $C$ with respect to $P_{hash}$ in the experiment $CanonicalSuccess$ is at least $\frac{\gamma}{8(h+v)}$.
+\end{lemma}
+%
+\begin{proof}
+We fix $P^{(1)}$ and $C$ in the whole proof.
+Let $\cH$ be a family of pairwise independent hash functions $Q \rightarrow \{0,1, \dots,2(h+v)-1\}$.
+For all $i \neq j \in \{1, \dots, (h+v)\}$ and $k,l \in \{0,1,\dots,2(h+v)-1\}$ by pairwise independence property of $\cH$,
+we have
+\begin{align}
+  \label{eq:hash_pr}
+ \forall q_i,q_j \in Q : \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = k \mid hash(q_j) = l] = \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = k] = \frac{1}{2(h+v)}.
+\end{align}
+Let $\pi^{(k)}, \rho$ be fixed. We consider the experiment $CanonicalSuccess$ for $P^{(g)}$.
+in which we define a binary random variable $X$ for the event that $hash(q_j) = 0$, and for every query $q_i$ asked before $q_j : hash(q_i) \neq 0$.
+Conditioned on the event $hash(q_i) = 0$, we get
+\begin{align*}
+  \underset{\textit{hash} \leftarrow \cH}{\Pr}[X=1] &= \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_j) = 0 \land \forall i < j : hash(q_i) \neq 0] \\
+  &=\underset{\textit{hash} \leftarrow \cH}{\Pr}[\forall i < j : hash(q_i) \neq 0 \mid hash(q_j) = 0] \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_j) = 0].
+\end{align*}
+Now we use (\ref{eq:hash_pr}) twice and obtain
+\begin{align*}
+\underset{\textit{hash} \leftarrow \cH}{\Pr}[X=1] &=
+\frac{1}{2(h+v)}\left(1 -\underset{\textit{hash} \leftarrow \cH}{\Pr}[\exists i < j : hash(q_i) = 0 \mid hash(q_j) = 0] \right) \\
+ &= \frac{1}{2(h+v)} \left( 1 -\underset{\textit{hash} \leftarrow \cH}{\Pr}[\exists i < j : hash(q_i) = 0] \right).
+\end{align*}
+Finally, we use union bound and the fact that $j \leq (h+v)$ to get
+\begin{align*}
+\underset{\textit{hash} \leftarrow \cH}{\Pr}[X=1] \geq
+\frac{1}{2(h+v)} \left( 1 - \sum_{i < j} \underset{\textit{hash} \leftarrow \cH}{\Pr}[hash(q_i) = 0] \right) \geq \frac{1}{4(h+v)}.
+\end{align*}
+Let $\cP_{Success}$ be the set of all $(\pi^{(k)},\rho)$ for which $C$ succeeds in the random experiment $Success$ for $P^{(g)}$. Furthermore,
+we denote the set of those $(\pi^{(k)},\rho)$ for which $CanonicalSuccess^{P^{(g)}, C(\dot, \dot), hash}(\pi^{(k)}) = 1$ by $\cP_{Canonical}$.
+For fixed $\pi^{(k)}, \rho$, if $C$ succeeds canonically, then it also succeeds in the experiment $Success$ for $P^{(g)}$.
+Hence, $\cP_{Canonical} \subseteq \cP_{Success}$, and we have
+\begin{align}
+  \label{ineq:hash_high_prob}
+\underset{\substack{\textit{hash} \leftarrow \cH \\ \pi^{(k)}, \rho}}{\Pr}\left[CanonicalSuccess^{P^{(g)}, C^{(\cdot, \cdot)}, hash}(\pi^{(k)}, \rho) = 1\right] &=
+\underset{{(\pi^{(k)},\rho) \in \cP_{Success}}}{\mathbb{E}}\left[\underset{\substack{\textit{hash} \leftarrow \cH}}{\Pr}[X = 1]\right] \notag\\
+&\geq \frac{\gamma}{4(h+v)}.
+\end{align}
+%
+\begin{codeblock}
+  \textbf{Algorithm: FindHash}
+  \medskip
+  \hrule
+  \medskip
+
+  \textbf{Oracle:} A solver circuit $C^{(\cdot, \cdot)}$ for a $k$-wise direct product of DWVP. \\
+  \textbf{Input:} A set $\cH$.\\
+  \textbf{Output:} A function $hash \in \cH$.
+  \medskip\hrule\medskip
+  For $i = 1$ to $32(h+v)^2/\gamma^2$ \\
+  \IndI $hash \xleftarrow{\$} \cH$ \\
+  \IndI $count := 0$ \\
+  \IndI \For $j := 1$ to $32(h+v)^2/\gamma^2$ \\
+  \IndII $\pi^{(k)} \xleftarrow{\$} \{0,1\}^{kl} $\\
+  \IndII \If $CanonicalSuccess^{P^{(g)}, C^{(\cdot, \cdot)}, hash}(\pi^{(k)}) = 1$ \then \\
+  \IndIII $count := count + 1$\\
+  \IndI \If $\frac{\gamma^2}{32(h+v)^2} count \geq \frac{\gamma}{6(h+v)}$ \\
+  \IndII \return $hash$\\
+  \return $\bot$
+\end{codeblock}
+We show that \textbf{FindHash} chooses $hash$ such
+that the canonical success probability of $C$
+with respect to $P_{hash}$ is at least $\frac{\gamma}{4(h+v)}$ almost surely.
+Let $\cH_{Good}$ denote a family of functions $hash \in \cH$ for which
+\begin{align*}
+\underset{\pi^{(k)}, \rho}{\Pr}\left[CanonicalSuccess^{P^{(g)}, C^{(\cdot, \cdot)}, hash}(\pi^{(k)}, \rho) = 1\right] \geq \frac{\gamma}{4(h+v)},
+\end{align*}
+and $\cH_{Bad}$ be the family of functions $hash \in \cH$ such that
+\begin{align*}
+\underset{\pi^{(k)}, \rho}{\Pr}\left[CanonicalSuccess^{P^{(g)}, C^{(\cdot, \cdot)}, hash}(\pi^{(k)}, \rho) = 1\right] \leq \frac{\gamma}{8(h+v)}.
+\end{align*}
+Additionally, for a fixed $hash$, we define binary random variables $X_1, \dots, X_N$ such that
+\begin{align*}
+  X_i =
+  \begin{cases}
+    1 & \text{if in $i$th iteration variable $count$ is increased}\\
+    0 & \text{otherwise .}
+  \end{cases}
+\end{align*}
+We first show that it is unlikely that \textbf{FindHash} returns $hash \in \cH_{Bad}$.
+For $hash \in \cH_{Bad}$ we have $\mathbb{E}_{\pi^{(k)},\rho}[X_i] < \frac{\gamma}{8(h+v)}$.
+Therefore, for any fixed $hash \in \cH_{Bad}$ using the Chernoff bound we get
+\begin{align*}
+  \underset{\pi^{(k)},\rho}{\Pr} \left[\frac{1}{N} \sum_{i=1}^{N} X_i \geq \frac{\gamma}{6(h+v)} \right] \leq
+  \underset{\pi^{(k)}, \rho}{\Pr}\left[\frac{1}{N} \sum_{i=1}^{N} X_i \geq (1 + \frac{1}{3}) \mathbb{E}[X_i]\right] \leq
+  e^{-{\frac{\gamma}{4(h+v)}} N /27}.
+\end{align*}
+%
+The probability that $hash \in \cH_{Good}$, when picked, is not returned amounts
+\begin{align*}
+  \underset{\pi^{(k)}, \rho}{\Pr}\left[\frac{1}{N} \sum_{i=1}^{N} X_i \leq \frac{\gamma}{6(h+v)}\right] \leq
+  \underset{\pi^{(k)}, \rho}{\Pr}\left[\frac{1}{N} \sum_{i=1}^{N} X_i \leq (1 - \frac{1}{3})\mathbb{E}[X_i]\right] \leq e^{-{\frac{\gamma}{4(h+v)}} N /27}.
+\end{align*}
+%
+Finally, we show that \textbf{FindHash} picks in one of its iteration $hash \in \cH_{Good}$ almost surely.
+Let $Y_i$ be a binary random variable such that
+\begin{align*}
+  Y_i =
+  \begin{cases}
+    1 & \text{if in $i$th iteration $hash \in \cH_{Good}$ is picked} \\
+    0 & \text{otherwise .}
+  \end{cases}
+\end{align*}
+From equation (\ref{ineq:hash_high_prob}) we know that $\underset{hash \leftarrow \cH}{\Pr}[Y_i = 1] = \mathbb{E}[Y_i] \geq \frac{\gamma}{4(h+v)}$, almost surely.
+Thus, we get
+\begin{align*}
+  \underset{hash \leftarrow \cH}{\Pr}\left[\sum_{i=1}^{K} Y_i = 0\right] &\leq \left(1 - \frac{\gamma}{4(h+v)}\right)^{K} \leq e^{-\frac{\gamma}{4(h+v)} K}.
+\end{align*}
+The bound stated in the Lemma \ref{lemma:hash_function_probability} is achieved for $K = N = 32(h+v)^2/\gamma^2$.
+\end{proof}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../master"
+%%% End:

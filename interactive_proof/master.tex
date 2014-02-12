@@ -2,7 +2,7 @@
 % \documentclass[11commpt]{article}
 
 % %% We use the memoir class because it offers a many easy to use features.
-\documentclass[10pt,a4paper,article,oneside]{memoir}
+\documentclass[11pt,a4paper,article,oneside]{memoir}
 
 \counterwithout{section}{chapter}
 \usepackage[margin=1in]{geometry}
@@ -48,29 +48,54 @@
 %% afterwards; or at least NEVER use its underlining features.
 \usepackage{soul}
 
+%% For code snippets
+\usepackage[framemethod=tikz]{mdframed}
+\newdimen\linenumbersep
+
+\newcommand{\linenumber}[1]{%
+  \linenumbersep 4pt%
+  \advance\linenumbersep\mdflength{innerleftmargin}%
+  \advance\linenumbersep\mdflength{innerlinewidth}%
+  \advance\linenumbersep\mdflength{middlelinewidth}%
+  \advance\linenumbersep\mdflength{outerlinewidth}%
+  \advance\linenumbersep\mdflength{linewidth}%
+  \makebox[0pt][r]{{\rmfamily\tiny#1}\hspace*{\linenumbersep}}}
+
+%\usepackage{mdframed}
+\newenvironment{codeblock}%
+   {\medskip\begin{mdframed}\setlength{\parindent}{0cm}}%
+   {\end{mdframed}\medskip}
+\newcommand{\Ind}{\mbox{}}
+\newcommand{\IndI}{\mbox\qquad}
+\newcommand{\IndII}{\mbox\qquad\qquad}
+\newcommand{\IndIII}{\mbox\qquad\qquad\qquad}
+\newcommand{\IndIIII}{\mbox\qquad\qquad\qquad\qquad}
+
+\newenvironment{todo}%
+   {\medskip\begin{mdframed}\setlength{\parindent}{0cm}}%
+   {\end{mdframed}\medskip}
+
 %% Some more packages that you may want to use.  Have a look at the
 %% file, and consult the package docs for each.
 \input{extrapackages}
-
+%
 %% Our layout configuration.  DO NOT CHANGE.
 %\input{layoutsetup}
-
+%
 %% Theorem environments.
 %% thesis.
 \input{theoremsetup}
-
+%
 %% Helpful macros.
 \input{macrosetup}
-
+%
 \usepackage{enumerate}
-
-\begin{document}
-
-\title{Complexity Theory \\ Graded Problem Set 1}
-\author{Grzegorz Makosa}
-\maketitle
-
+%
 \setcounter {myc}{1}
-\input{problem1}
+\begin{document}
+%\title{Latex template}
+%\author{Grzegorz Makosa}
+%\maketitle
+\input{ch0/ch0}
 \end{document}
 

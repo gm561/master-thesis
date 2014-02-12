@@ -1,0 +1,150 @@
+%TODO pairwise independent hash function
+%TODO define Size and Time
+\noindent
+For $0 \leq \delta \leq 1$ we write $\mu_{\delta}$ to denote the Bernoulli distribution where outcome $1$ occurs with
+probability $\delta$ and $0$ with probability $1-\delta$.
+Moreover, we use $\mu_{\delta}^k$ to denote a probability distribution over $k$-tuples
+where each bit of a $k$-tuple is drawn independently according to $\mu_{\delta}$.
+Finally, let $u \leftarrow \mu_{\delta}^k$ denote that a $k$-tuple $u$ is chosen according to $\mu_{\delta}^k$.
+
+The protocol execution between two probabilistic circuits $A$ and $B$ is denoted by $\langle A, B \rangle$.
+The output of $A$ in such a protocol execution is denoted by $\langle A, B \rangle_A$ and of $B$ by $\langle A, B \rangle_B$.
+Finally, let $\langle A, B \rangle_{\mathit{trans}}$ denote the transcript of communication between $A$ and $B$.
+
+We define a \textit{two phase circuit} $C := (C_1, C_2)$ as a circuit where in the first phase the circuit $C_1$
+is used and in the second phase the circuit $C_2$.
+
+We say that an event happens \textit{almost surely} or with \textit{high probability} if
+it occurs with probability at least $1 - 2^{-n} \mathit{poly}(n)$.
+
+For a circuit $C$ let $\mathit{Size}(C)$ denote the size of $C$. For an algorithm $A$ we write $\mathit{Time}(A)$ to denote the running time of $A$.
+Finally, we use $\mathit{poly}(\alpha_1, \dots, \alpha_n)$ to denote a polynomial on variables $\alpha_1, \dots, \alpha_n$.
+
+\begin{definition}[Dynamic weakly verifiable puzzle.]
+  \label{def:dwvp}
+  A dynamic weakly verifiable puzzle (DWVP) is defined by a family of probabilistic circuits $\{P_n\}$.
+  A circuit belonging to $\{P_n\}$ is called a problem poser.
+  A solver $C := (C_1, C_2)$ for $P_n$ is a probabilistic two phase circuit.
+  We write $P_n(\pi)$ to denote the execution of $P_n$ with the randomness fixed to $\pi \in \{0,1\}^n$, and $(C_1,C_2)(\rho)$
+  to denote the execution of both $C_1$ and $C_2$ with the randomness fixed to $\rho \in \{0,1\}^{*}$.
+
+  In the first phase, the problem poser $P_n(\pi)$ and the solver $C_1(\rho)$ interact.
+  As the result of the interaction $P_n(\pi)$ outputs a verification circuit $\Gamma_{V}$ and a hint circuit $\Gamma_{H}$.
+  The circuit $C_1(\rho)$ produces no output.
+  The circuit $\Gamma_{V}$ takes as input $q \in Q$, an answer $y \in \{0,1\}^*$,
+  and outputs a bit. We say that an answer $(q,y)$ is a correct solution if and only if $\Gamma_V(q,y) = 1$.
+  The circuit $\Gamma_H$ on input $q \in Q$ outputs a hint such that $\Gamma_V(q,\Gamma_H(q)) = 1$.
+
+  In the second phase, $C_2$ takes as input $x := \langle P_n(\pi), C_1(\rho) \rangle_{\mathit{trans}}$,
+  and has oracle access to $\Gamma_V$ and $\Gamma_H$.
+  The execution of $C_2$ with the input $x$ and the randomness fixed to $\rho$
+  is denoted by $C_2(x, \rho)$. The queries of $C_2$ to $\Gamma_V$ and $\Gamma_H$ are called verification queries and hint queries respectively.
+  The circuit $C_2$ succeeds if and only if it makes a verification query $(q,y)$ such that $\Gamma_V(q,y) = 1$,
+  and it has not previously asked for a hint query on $q$.
+\end{definition}
+%
+\begin{definition}[$k$-wise direct-product of DWVPs.]
+  Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function and $P_n^{(1)}$ a problem poser as in Definition \ref{def:dwvp}.
+  The $k$-wise direct product of $P_n^{(1)}$ is a DWVP defined by a circuit $P_{kn}^{(g)}$.
+  We write $P_{kn}^{(g)}(\pi^{(k)})$ to denote the execution of $P_{kn}^{(g)}$ with the randomness fixed to $\pi^{(k)} := (\pi_1, \dots, \pi_k)$
+  where for each $1 \leq i \leq n : \pi_i \in \{0,1\}^n.$
+  Let $(C_1, C_2)(\rho)$ be a solver for $P_{kn}^{(g)}$ as in Definition \ref{def:dwvp}.
+  In the first phase, the algorithm $C_1(\rho)$ sequentially interacts in $k$ rounds with $P_{kn}^{(g)}(\pi^{(k)})$.
+  In the $i$-th round $C_1(\rho)$ interacts with $P_n^{(1)}(\pi_i)$,
+  and as the result $P_{n}^{(1)}(\pi_i)$ generates circuits $\Gamma_V^i, \Gamma_H^i$.
+  Finally, after $k$ rounds $P_{kn}^{(g)}(\pi^{(k)})$ outputs a verification circuit
+\begin{align*}
+  \Gamma_V^{(g)} (q, y_1, \dots, y_k) := g(\Gamma_V^{1}(q, y_1), \dots, \Gamma_V^{k}(q, y_k))
+\end{align*}
+and a hint circuit
+\begin{align*}
+  \Gamma_H^{(k)} (q) := (\Gamma_H^{1}(q), \dots, \Gamma_H^{k}(q)).
+\end{align*}
+\end{definition}
+%
+If it is clear from a context, we omit the subscript $n$, and write $P(\pi)$ instead of $P_n(\pi)$ where $\pi \in \{0,1\}^{n}$.
+
+A verification query $(q,y)$ of a solver $C$ for which a hint query on this $q$ has been asked before cannot be a verification query for which $C$ succeeds.
+Therefore, without loss of generality, we make the assumption that $C$ does not ask verification queries on $q$
+for which a hint query has been asked before. Furthermore, we assume that once $C$ asked a verification query that succeeds,
+it does not ask any further hint or verification queries.
+
+%
+\begin{codeblock}
+  \textbf{Experiment} $\Success^{P, C}(\pi, \rho)$
+  \medskip \hrule \medskip
+  \textbf{Oracle:} A problem poser $P$, a solver $C = (C_1, C_2)$ for $P$.\\
+  \textbf{Input:}  Bitstrings $\pi \in \{0,1\}^n$, $\rho \in \{0,1\}^*$.\\
+  \textbf{Output:} A bit $b \in \{0,1\}$.
+  \medskip\hrule\medskip
+  \Run $\langle P(\pi), C_1(\rho) \rangle$ \\
+  \IndI $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$ \\
+  \IndI $x := \langle P(\pi), C_1(\rho) \rangle_{\mathit{trans}}$ \\ \\
+  \Run $C_2^{\Gamma_V,\Gamma_H}(x, \rho)$ \\
+  \IndI \If $C_2^{\Gamma_V, \Gamma_H}(x, \rho)$ asks a verification query $(q, y)$ such that $\Gamma_V(q, y) = 1$ \Then \\
+  \IndII \Return $1$ \\
+  \Return $0$ \\
+\end{codeblock}
+%
+We define the \textit{success probability} of $C$ in solving a puzzle defined by $P$ as
+\begin{align}
+ \underset{\pi, \rho}{\Pr}[\Success^{P,C}(\pi, \rho) = 1].
+\end{align}
+Furthermore, we say that $C$ succeeds for $\pi$, $\rho$ if $\Success^{P,C}(\pi, \rho) = 1$.
+%
+\begin{theorem}[Security amplification for dynamic weakly verifiable puzzles.]
+\label{th:sec_amp_for_dwvp}
+Let $P_{n}^{(1)}$ be a fixed problem poser as in Definition \ref{def:dwvp}
+and $P_{kn}^{(g)}$ a problem poser for the $k$-wise direct product of $P_{n}^{(1)}$.
+Additionally, let $C$ be a problem solver for $P_{kn}^{(g)}$ asking at most $h$ hint queries and $v$ verification queries.
+There exists a probabilistic algorithm Gen with oracle access to a solver circuit $C$,
+a monotone function $g:\{0,1\}^k \rightarrow \{0,1\}$ and problem posers $P_{n}^{(1)}$, $P_{kn}^{(g)}$.
+Furthermore, $\mathit{Gen}$ takes as input parameters $\varepsilon$, $\delta$, $n$, $k$, $h$, $v$, and outputs a solver circuit $D$ for $P_{n}^{(1)}$
+such that the following holds: \\
+If $C$ is such that
+  \begin{align*}
+    \underset{\substack{\pi^{(k)} \in \{0,1\}^{kn} \\ \rho \in \{0,1\}^{*}}}{\Pr}\left[\mathit{Success}^{P_{kn}^{(g)}, C}(\pi^{(k)}, \rho) = 1\right]
+    \geq 16(h+v)\Bigl(\underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon\Bigr)
+  \end{align*}
+then $D$ satisfies almost surely
+  \begin{align*}
+    \underset{\substack{\pi \in \{0,1\}^{n} \\ \rho \in \{0,1\}^{*}}}
+    {\Pr}\left[\mathit{Success}^{P_{n}^{(1)},D}(\pi, \rho) = 1\right] \geq (\delta + \frac{\varepsilon}{6k}).
+  \end{align*}
+Additionally, $D$ requires oracle access to $g$, $P_{n}^{(1)}$, $C$, hint and verification circuits,
+and asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hint queries and one verification query.
+Finally, $\mathit{Time}(\mathit{Gen}) = \mathit{poly}(k, \frac{1}{\varepsilon}, n, v, h)$ with oracle access to $C$.
+
+%Finally, $\mathit{Size}(D) \leq \mathit{Size}(C) \cdot \frac{6k}{\varepsilon}$ and
+\end{theorem}
+%
+% The Theorem \ref{th:sec_amp_for_dwvp} implies that if there is no good solver for a puzzle defined by $P^{(1)}$, then a good solver for
+% a $k$-wise direct product of $P^{(1)}$ does not exist.
+
+% The idea of the algorithm $Gen$ is to output a circuit $D$ that solves the input puzzle often.
+% We know that $C$ has good success probability for a $k$-wise product of $P^{(1)}$.
+% The algorithm $Gen$ tries to find a puzzle such that when $C$ runs with this puzzle fixed
+% on the first position, and disregards whether this puzzle is correctly solved
+% then the assumptions of Theorem \ref{th:sec_amp_for_dwvp} are true for a $k-1$-wise direct product.
+% If it is possible to find such a puzzle then $Gen$ could recurse and solve a smaller problem.
+% In the optimistic case we can reach $k=1$, which means that we found a good circuit for solving a single
+% puzzle by just fixing the initial puzzles of $C$.
+
+% Otherwise, when the first position is disregarded then the success probability of $C$ is not substantially better.
+% This is remarkable, as we know that $C$ performs good for $k$-wise product, it means that the first position is important,
+% in the sense that $C$ solves the puzzle on that position unusually often.
+% Therefore, it is reasonable to construct the circuit $D$ using $C$ by placing the input puzzle of $D$ on that position, and then
+% finding remaining $k-1$ puzzles. These $k-1$ remaining puzzles are generated by the circuit $D$, hence it is possible to check
+% whether they are correctly solved by the circuit $C$. We know that circuit $C$ has good success probability, and the puzzle on the first
+% position is important. Therefore, if we are able to find a $k-1$ puzzles such that the fact whether the $k$-wise direct product is correctly
+% solved depends on whether the puzzle on the first position is correctly solved then we can assume that $C$ is often correct on this first position.
+
+% There are some problems with this approach, first we have to ensure that we can make a decision when the algorithm $Gen$ should recurse and when not
+% correctly with high probability. Then, we have to show that it is possible to find a puzzles such that $C$ is often correct on the first position.
+% Finally, we also have to be sure that we do not ask a hint query, on the final verification query to the oracle.
+% To satisfy the last requirement we split $Q$.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../master"
+%%% End:
