@@ -1,0 +1,214 @@
+%
+We call a function mapping values from $\mathcal{D}$ to values from $\mathcal{R}$ a \textit{hash function}.
+We say that a family of hash functions $\cH$ from $\mathcal{D}$ to $\mathcal{R}$ is \textit{pairwise independent}
+if $\forall x \neq y \in \mathcal{D}$ and $\forall \alpha, \beta \in \mathcal{R}$, we have
+\begin{align}
+\underset{\hash \la0 \cH}{\Pr}[hash(x) = \alpha \land hash(y) = \beta] = \frac{1}{|R|^2},
+\end{align}
+where $\hash \leftarrow \cH$ denotes that $\hash$ is chosen from $\cH$ uniformly at random.
+
+Let $\hash:Q\rightarrow\{0,1,\dots, 2(h+v)-1\}$, the idea is to partition $Q$ such that the set of preimages
+of $0$ for $\hash$ contains $q \in Q$ on which $C$ is not allowed to ask hint queries,
+and the first successful verification query $(q,y)$ of $C$ is such that $\hash(q) = 0$.
+Therefore, if $C$ makes a verification query $(q,y)$ such that $\hash(q) = 0$, then we know that no hint query is ever asked on this $q$.
+
+We denote the $i$-th query of $C$ by $q_i$ if it is a hint query, and by $(q_i, y_i)$ if it is a verification query.
+We define now the experiment $\CanonicalSuccess$ in which we partition $Q$ using a function $\hash$.
+We say that a solver circuit \textit{succeeds} in the experiment $\CanonicalSuccess$
+if it asks a successful verification query $(q_j, y_j)$ such that $\hash(q_j) = 0$,
+and no hint query $q_i$ is asked before $(q_j, y_j)$ such that $\hash(q_i) = 0$.
+%
+\begin{codeblock}
+  \textbf{Experiment} $\CanonicalSuccess^{P, C, \hash}(\pi, \rho)$
+  \medskip \hrule \medskip
+  \textbf{Oracle:} A problem poser $P$, a solver circuit $C = (C_1, C_2)$ for $P$,\\
+  \IndII a function $\hash: Q \rightarrow \{0, \dots, 2(h+v) - 1\}$.\\
+  \textbf{Input:}  Bitstrings $\pi \in \{0,1\}^n$, $\rho \in \{0,1\}^*$. \\
+  \textbf{Output:} A bit $b \in \{0,1\}$.
+
+  \medskip\hrule\medskip
+  \Run $\langle P(\pi), C_1(\rho) \rangle$ \\
+  \IndI $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$ \\
+  \IndI $x := \langle P(\pi), C_1(\rho) \rangle_{\mathit{trans}}$ \\ \\
+  \Run $C_2^{\Gamma_V, \Gamma_H} (x, \rho)$ \\
+  \IndI \If $C_2^{\Gamma_V, \Gamma_H} (x, \rho)$ does not succeed for any verification query \Then \\
+  \IndII \Return $0$ \\
+  \IndI Let $(q_j,y_j)$ be the first verification query of $C_2^{\Gamma_V, \Gamma_H} (x, \rho)$ such that $\Gamma_V(q_j, y_j) = 1$.\\
+  \\
+  \If $(\forall i < j :  \hash(q_i) \neq 0)$ \And $(\hash(q_j) = 0)$ \Then \\
+  \IndI \Return 1\\
+  \Else\\
+  \IndI \Return 0
+\end{codeblock}
+%
+We define the \textit{canonical success probability} of a solver circuit $C$ for $P$ with respect to a function $\hash$ as
+\begin{align}
+ \underset{\pi, \rho}{\Pr}[\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1].
+\end{align}
+%
+For fixed $\hash$ and $P$ a \textit{canonical success} of $C$ for bistrings $\pi$, $\rho$ is a situation where \linebreak
+$\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1$.
+
+We show that if a solver circuit $C$ for $P$ often succeeds in the experiment $\Success$,
+then there exists a hash function such that $C$ also often succeeds in the experiment $\CanonicalSuccess$.
+%
+%
+\begin{lemma}\textbf{(\boldmath{Success probability in solving DWVP with respect to a function $\hash$.)}}
+\label{lemma:hash_function_probability}
+For fixed $P_n$ let $C$ be a solver for $P_n$ with success probability at least $\gamma$,
+asking at most $h$ hint queries and $v$ verification queries.
+Let $\cH$ be a family of pairwise independent hash functions $Q \rightarrow \{0,1, \dots,2(h+v)-1\}$.\footnote{It
+is possible to implement a random function $\hash: Q \rightarrow \{0,1,\dotsc, 2(h+v)-1\}$ efficiently by for example building its function table on the fly.}
+There exists a probabilistic algorithm FindHash that takes as input
+parameters $\gamma$, $n$, $h$, $v$, and has oracle access to $C$ and $P_n$.
+Furthermore, FindHash runs in time $\mathit{poly}(h,v,\frac{1}{\gamma},n)$,
+and with high probability outputs a function $\hash \in \cH$
+such that the canonical success probability of $C$ with respect to $\hash$ is at least $\frac{\gamma}{16(h+v)}$.
+\end{lemma}
+%
+\begin{proof}
+We fix a problem poser $P$ and a solver $C$ for $P$ in the whole proof of Lemma \ref{lemma:hash_function_probability}.
+For $k,l \in \{1, \dotsc, (h+v)\}$ and $\alpha,\beta \in \{0,1,\dotsc,2(h+v)-1\}$ by the pairwise independence property, we have
+\begin{align}
+  \label{eq:hash_pr}
+ \forall q_k \neq q_l \in Q : \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_k) = \alpha \mid \hash(q_l) = \beta] &=
+ \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_k) = \alpha] \notag\\
+ &= \frac{1}{2(h+v)}.
+\end{align}
+%
+We write $\cP_{\Success}$ to denote a set containing all $(\pi,\rho)$ for which $\Success^{P, C}(\pi, \rho) = 1$.
+Let us fix $(\pi^*, \rho^*) \in \cP_{\mathit{Success}}$. We are interested in the probability over
+a choice of function $\hash$ of the event $\CanonicalSuccess^{P,C,\hash}(\pi^*, \rho^*) = 1$.
+Let $(q_j, y_j)$ denote the first query such that $\Gamma_V(q_j, y_j) = 1$. We have
+\begin{align}
+  \label{ineq:prob_hash_success}
+  &\underset{\hash \leftarrow \cH}{\Pr}\left[\CanonicalSuccess^{P,C,\hash}(\pi^*, \rho^*) = 1\right] \notag\\
+  &\IndII = \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_j) = 0 \land (\forall i < j : \hash(q_i) \neq 0)] \notag\\
+  &\IndII = \underset{\hash \leftarrow \cH}{\Pr}[
+  \forall i < j : \hash(q_i) \neq 0 \mid \hash(q_j) = 0] \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_j) = 0] \notag\\
+  &\IndII \stackrel{(\ref{eq:hash_pr})}{=} \frac{1}{2(h+v)}\left(1 -\underset{\hash \leftarrow \cH}{\Pr}[\exists i < j : \hash(q_i) = 0 \mid \hash(q_j) = 0] \right) \notag\\
+  &\IndII \stackrel{(*)}{\geq} \frac{1}{2(h+v)} \left( 1 - \sum_{i < j} \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_i) = 0 | \hash(q_j) = 0] \right) \notag\\
+  &\IndII \stackrel{(\ref{eq:hash_pr})}{=} \frac{1}{2(h+v)} \left( 1 -  \sum_{i < j}\underset{\hash \leftarrow \cH}{\Pr}[\hash(q_i) = 0] \right) \notag\\
+  &\IndII \stackrel{(\ref{eq:hash_pr})}{\geq} \frac{1}{4(h+v)},
+\end{align}
+where in $(*)$ we used the union bound.
+Let us denote the set of those $(\pi,\rho)$ for which \linebreak
+ $\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1$ by $\cP_{\mathit{Canonical}}$.
+If for $\pi$, $\rho$ the circuit $C$ succeeds canonically, then for the same $\pi$, $\rho$ we also have $\Success^{P, C}(\pi, \rho) = 1$.
+Hence, $\cP_{\mathit{Canonical}} \subseteq \cP_{\mathit{Success}}$, and we conclude
+\begin{align}
+  \label{ineq:hash_high_prob}
+&\underset{\substack{\hash \leftarrow \cH \\ \pi, \rho}}{\Pr}\left[\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1\right] \notag\\
+&\IndII = \underset{\substack{\hash \leftarrow \cH \\ \pi, \rho}}{\Pr}\left[\CanonicalSuccess^{P,C,\hash}(\pi, \rho) = 1 \mid (\pi, \rho) \in \cP_{\mathit{Success}}\right]
+\underset{\pi, \rho}{\Pr}[(\pi, \rho) \in \cP_{\mathit{Success}}] \notag\\
+&\IndIII + \underset{\substack{\hash \leftarrow \cH \\ \pi, \rho}}{\Pr}\left[\CanonicalSuccess^{P,C,\hash}(\pi, \rho) = 1 \mid (\pi, \rho) \notin \cP_{\mathit{Success}} \right]
+\underset{\pi, \rho}{\Pr}[(\pi, \rho) \notin \cP_{\mathit{Success}}] \notag\\
+%
+&\IndII = \underset{\substack{\hash \leftarrow \cH \\ \pi, \rho}}{\Pr}\left[\CanonicalSuccess^{P,C,\hash}(\pi, \rho) = 1 \mid (\pi, \rho) \in \cP_{\mathit{Success}}\right]
+\underset{\pi, \rho}{\Pr}[(\pi, \rho) \in \cP_{\mathit{Success}}] \notag\\
+%
+&\IndII \geq
+\underset{\substack{\hash \leftarrow \cH \\ \pi, \rho}}{\Pr}\left[\CanonicalSuccess^{P,C,\hash}(\pi, \rho) = 1 \mid (\pi, \rho) \in \cP_{\mathit{Success}}\right] \cdot \gamma \notag\\
+&\IndII =
+\underset{(\pi, \rho) \in \cP_{\mathit{Success}}}
+{\mathbb{E}}\left[\underset{\hash \leftarrow \cH}{\Pr}[\CanonicalSuccess^{P,C,\hash}(\pi, \rho) = 1] \right] \cdot \gamma \notag\\
+&\IndII \stackrel{(\ref{ineq:prob_hash_success})}{\geq} \frac{\gamma}{4(h+v)}
+\end{align}
+%
+\begin{codeblock}
+  \textbf{Algorithm} $\text{FindHash}(\gamma, n, h, v)$
+  \medskip
+  \hrule
+  \medskip
+  \textbf{Oracle:} A problem poser $P$, a solver circuit $C$ for $P$.\\
+  \textbf{Input:} Parameters $\gamma$, $n$. The number of hint queries $h$ and of verification queries $v$. \\
+  \textbf{Output:} A function $\hash:Q \rightarrow \{0,1, \dots, 2(h+v)-1 \}$.
+  \medskip\hrule\medskip
+  \For $i := 1$ \To $32n(h+v)^2/\gamma^2$ \Do \\
+  \IndI $\hash \leftarrow{} \cH$ \\
+  \IndI $\mathit{count} := 0$ \\
+  \IndI \For $j := 1$ \To $32n(h+v)^2/\gamma^2$ \Do \\
+  \IndII $\pi \xleftarrow{\$} \{0,1\}^{n} $\\
+  \IndII $\rho \xleftarrow{\$} \{0,1\}^*$ \\
+  \IndII \If $\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1$ \Then \\
+  \IndIII $\mathit{count} := \mathit{count} + 1$\\
+  \IndI \If $\mathit{count} \geq \frac{\gamma}{12(h+v)} \frac{32(h+v)^2}{\gamma^2}n$ \Then \\
+  \IndII \Return $\hash$\\
+  \Return $\bot$
+\end{codeblock}
+We show that FindHash chooses $\hash \in \cH$ such that the canonical success probability of $C$
+with respect to $\hash$ is at least $\frac{\gamma}{16(h+v)}$ almost surely.
+Let $\cH_{\mathit{Good}}$ denote a family of functions $\hash \in \cH$ for which
+\begin{align}
+  \label{eq:hash_good}
+\underset{\pi, \rho}{\Pr}\left[\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1\right] \geq \frac{\gamma}{8(h+v)},
+\end{align}
+and $\cH_{\mathit{Bad}}$ be the family of functions $\hash \in \cH$ such that
+\begin{align}
+  \label{eq:hash_bad}
+    \underset{\pi, \rho}{\Pr}\left[\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1\right] \leq \frac{\gamma}{16(h+v)}.
+    \end{align}
+%
+Let $N$ denote the number of iterations of the inner loop of FindHash.
+For a fixed $\hash$, we define independent, identically distributed, binary random variables $X_1, \dots, X_{N}$ such that
+\begin{align*}
+  X_i =
+  \begin{cases}
+    1 & \text{if in the $i$-th iteration of the inner loop $\mathit{count}$ is increased}\\
+    0 & \text{otherwise.}
+  \end{cases}
+\end{align*}
+We show now that FindHash is unlikely to return $\hash \in \cH_{Bad}$.
+For $\hash \in \cH_{\mathit{Bad}}$ by (\ref{eq:hash_bad}) we have $\mathbb{E}_{{\pi}, \rho}[X_i] \leq \frac{\gamma}{16(h+v)}$.
+Therefore, for any fixed $\hash \in \cH_{\mathit{Bad}}$ using the Chernoff bound we get\footnote{For independent, identically distributed binary
+random variables $X = \sum_{i=1}^N X_i$ and $0 < \delta \leq 1$ we use the Chernoff bounds in the form
+$\Pr[X \geq (1+\delta) \mathbb{E}[X]] \leq e^{- \mathbb{E}[X] \delta^2/3}$ and
+$\Pr[X \leq (1-\delta) \mathbb{E}[X]] \leq e^{- \mathbb{E}[X] \delta^2/2}$.}
+\begin{align*}
+  \underset{\pi,\rho}{\Pr} \left[\frac{1}{N} \sum_{i=1}^{N} X_i \geq \frac{\gamma}{12(h+v)} \right] \leq
+  \underset{\pi, \rho}{\Pr}\left[\frac{1}{N} \sum_{i=1}^{N} X_i \geq \bigl(1 + \frac{1}{3}\bigr) \mathbb{E}[X_i]\right] \leq
+  e^{-{\frac{\gamma}{16(h+v)}} N / 27} \leq e^{-\frac{2}{27}\frac{(h+v)}{\gamma}n} \leq e^{-\frac{2}{27}n}.
+\end{align*}
+%
+The probability that $\hash \in \cH_{\mathit{Good}}$, when picked, is not returned amounts
+\begin{align*}
+  \underset{\pi, \rho}{\Pr}\left[\frac{1}{N} \sum_{i=1}^{N} X_i \leq \frac{\gamma}{12(h+v)}\right] \leq
+  \underset{\pi, \rho}{\Pr}\left[\frac{1}{N} \sum_{i=1}^{N} X_i \leq \bigl(1 - \frac{1}{3}\bigr)\mathbb{E}[X_i]\right]
+  \leq e^{-{\frac{\gamma}{8(h+v)}} N / 18} \leq e^{-\frac{2}{9} \frac{(h+v)}{\gamma}n} \leq e^{-\frac{2}{9}n},
+\end{align*}
+where we once more used the Chernoff bound.
+We show now that the probability of picking $\hash \in \cH_{\mathit{Good}}$ is at least $\frac{\gamma}{8(h+v)}$.
+We prove this statement by contradiction. Let us assume that
+\begin{align}
+  \label{ass:hash_max_prob}
+\underset{\hash \leftarrow \cH}{\Pr}[\hash \in \cH_{\mathit{Good}}] < \frac{\gamma}{8(h+v)},
+\end{align}
+then we have
+\begin{align*}
+  &\underset{\substack{\hash \leftarrow \cH \\ \pi, \rho}}{\Pr}[\CanonicalSuccess^{P,C,\hash}(\pi, \rho) = 1] \\
+  &\IndI = \underset{\substack{ \hash \leftarrow \cH \\ \pi, \rho}}{\Pr}[\CanonicalSuccess^{P,C,\hash}(\pi, \rho) = 1 \mid \hash \in \cH_{\mathit{Good}}]
+  \underset{\hash \leftarrow \cH}{\Pr}[\hash \in \cH_{\mathit{Good}}] \\
+  & \IndII + \underset{\substack{\hash \leftarrow \cH \\ \pi, \rho}}{\Pr}[\CanonicalSuccess^{P,C,\hash}(\pi, \rho) = 1 \mid \hash \notin \cH_{\mathit{Good}}]
+  \underset{\hash \leftarrow \cH}{\Pr}[\hash \notin \cH_{\mathit{Good}}] \\
+  & \IndI \leq \underset{\hash \leftarrow \cH}{\Pr}[\hash \in \cH_{\mathit{Good}}] +
+  \underset{\substack{\hash \leftarrow \cH \\ \pi, \rho}}{\Pr}[\CanonicalSuccess^{P,C,\hash}(\pi, \rho) = 1 \mid \hash \notin \cH_{\mathit{Good}}] \\
+  & \IndI  \stackrel{\substack{ (\ref{eq:hash_good}) \\ (\ref{ass:hash_max_prob})}}{<} \frac{\gamma}{8(h+v)} + \frac{\gamma}{8(h+v)} = \frac{\gamma}{4(h+v)},
+\end{align*}
+but this contradicts (\ref{ineq:hash_high_prob}).
+Therefore, we know that the probability of choosing a $\hash \in \cH_{\mathit{Good}}$ amounts at least $\frac{\gamma}{8(h+v)}$.
+
+We show that FindHash picks in one of its iteration $\hash \in \cH_{\mathit{Good}}$ almost surely.
+Let $K$ be the number of iterations of the outer loop of FindHash and $Y_i$ be a random variable for the event
+that in the $i$-th iteration of the outer loop $\hash \notin \cH_{\mathit{Good}}$ is picked.
+We use $\underset{\hash \leftarrow \cH}{\Pr}[\hash \in \cH_{\textit{Good}}] \geq \frac{\gamma}{8(h+v)}$ and $K \leq \frac{32(h+v)^2}{\gamma^2}n$, and conclude
+\begin{align*}
+  \underset{\hash \leftarrow \cH}{\Pr}\Bigl[ \bigcap_{1 \leq i \leq K} Y_i \Bigr] \leq \left(1 - \frac{\gamma}{8(h+v)}\right)^{\frac{32(h+v)^2}{\gamma^2}n}
+    \leq e^{-\frac{\gamma}{8(h+v)} \frac{32(h+v)^2}{\gamma^2}n}
+    \leq e^{-\frac{4(h+v)}{\gamma}n} \leq e^{-n}.
+\end{align*}
+It is clear that running time of FindHash is $\mathit{poly}(n,h,v,\gamma)$ with oracle access.
+\end{proof}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../master"
+%%% End:
