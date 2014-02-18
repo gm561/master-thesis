@@ -1,80 +1,17 @@
-We are interested whether it is possible to improve bound stated in Theorem 1.1.
-We show that the bound achieved in Theorem 1.1 is asymptotically optimal.
-
-\begin{definition}(Black-box reduction)
-\end{definition}
-
-\begin{definition}(One way permutation)
-  How to generate random permutation in the fly?
-  How to efficiently find a permutation using only n bits of randomness
-\end{definition}
-
-Let us define the following problem poser for a dynamic weakly verifiable puzzle.
-
 \begin{codeblock}
-  Poser $\Pi_{DWVP}(r_{\pi})$
-  \medskip\hrule\medskip
-  \textbf{Input:} A bitstring $r_{\pi} \in \{0,1\}^{n}$.
-  \medskip\hrule\medskip
-  \IndI \\
-  Send $1^n$ to the problem solver.\\
-  Pick a random permutation $\pi: \{0,1\}^{n} \rightarrow \{0,1\}^{n}$ \\
-  Generate hint and verification circuits such that: \\
-  $\Gamma_H(q)$ on input $q \in \{0,1\}^{n}$.\\
-  $\Gamma_V(q,y)$ on input $q \in \{0,1\}^{n}$ returns $1$ if $\pi(q) = y$ and $0$ otherwise.
-\end{codeblock}
-
-We denote by $\Pi_{DWVP}^{(k)}$ the $k$-wise direct product of $\Pi_{DWVP}$. Furthermore, let the hint circuit for $\Pi_{DWVP}^{(k)}$ be as follows
-\begin{align*}
-  \Gamma_H^{(k)}(q) := (\Gamma_H^{1}(q), \dotsc, \Gamma_H^{k}(q))
-\end{align*}
-and the verification circuit
-\begin{align*}
-  \Gamma_V^{(k)}(q, (y_1, \dotsc, y_k)) := \prod_{i=1}^{k} \Gamma_V^{i}(q, y_i).
-\end{align*}
-
-We give the description of the following inefficient algorithm Breaker that helps to break the $k$-wise direct product of $\Pi_{DWVP}$.
-\begin{codeblock}
-  Algorithm $\text{Breaker}^{\Gamma_H^{(k)}}(x, r_B)$
+  Algorithm $\text{Breaker}^{\Gamma_H^{(k)}}$
   \medskip \hrule \medskip
-  \textbf{Oracle:}  A hint circuit $\Gamma_H^{(k)}$ for the $k$-wise direct product of DWVP. \\
-  \textbf{Input:}  A bitstring $r_B \in \{0,1\}^{*}$ and $x \in \{0,1\}^{n}$.
+
+  \textbf{Oracle:} A hint oracle for the $k$-wise direct product $\Gamma_H^{(k)}$  \\
+  \textbf{Input:}  $x^*$ a transcript of communication, $1^{n}$
+
   \medskip\hrule\medskip
-  $q \leftarrow \{0,1\}^{n}$ \\
-  \For all $q_i' \in \{0,1\}^{n} \setminus \{q\}$ \Do \\
-  \IndI Ask a hint query on $q'$ using oracle $\Gamma_H$\\
-  \IndI Let $(y_1', \dotsc, y_k') := \Gamma_H^{(k)}(q_i)$ \\
-  \IndI \If $(y_1', \dotsc, y_k') \notin \{0,1\}^{n}$ \Then \\
-  \IndII \Return $\bot$ \\
-  \IndI \If $\exists j < i : \Gamma_H^{(k)}(q_i) = \Gamma_H^{(k)}(q_j)$ \Then \\
-  \IndII \Return $\bot$ \\
-  With probability $\delta^{k}$ ask a verification query $(q,(y_1, \dotsc, y_k))$ where $(y_1, \dotsc, y_k)$ is such that
-  $\forall q' \in \{0,1\}^{n} \setminus q : \Gamma_H^{k}(q_i) \neq (y_1, \dotsc, y_k)$.
+  \textit{// not possible to fix all remaining puzzles}
+
+  \textit{// not possible to cheat the Breaker with different oracle}
+
+  \textit{// not possible to improve solving by repetition}
 \end{codeblock}
-Finally, we define the following polynomial time algorithm $A$ with oracle access to Breaker that solves the $k$-wise direct product of $\Pi_{DWVP}$.
-\begin{codeblock}
-  Solver algorithm $A^{\text{Breaker}, \Gamma_H^{(k)}, \Gamma_V^{(k)}}$
-  \medskip \hrule \medskip
-  \textbf{Oracle:} A hint circuit $\Gamma_H^{(k)}$ and a verification circuit $\Gamma_V^{(k)}$ for $\Pi_{DWVP}^{(k)}$, \\
-  \IndII an algorithm Breaker. \\
-  \textbf{Input:}  Bitstrings $x \in \{0,1\}^{n}$ and $\rho \in \{0,1\}^{*}$
-  \medskip\hrule\medskip
-  Let $(q, (y_1, \dotsc, y_k)) := \text{Breaker}^{\Gamma_H^{(k)}}(x, \rho)$. \\
-  \If $(q, (y_1, \dotsc, y_k)) \neq \bot$ \Then \\
-  \IndI ask a verification query $(q, (y_1, \dotsc, y_k))$ to $\Gamma_V^{(k)}$.
-\end{codeblock}
-It is clear that the success probability of $A$ in solving a puzzle defined by $\Pi_{DWVP}^{(k)}$ is $\delta^k$.
-
-\begin{theorem}
-\label{thm:no_black_box_reduction}
-There exists no black-box reduction from solving the $k$-wise direct product $\Pi_{DWVP}^{(k)}$ with probability $\delta^{k}$
-to solving a dynamic weakly verifiable puzzle defined by $\Pi_{DWVP}$ with probability at least $\delta$.
-\end{theorem}
-
-\begin{lemma}
-Let $S$ be a solver for $\Pi_{DWVP}$ with oracle access to Breaker and hint and verification oracles for 
-\end{lemma}
-
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "master"

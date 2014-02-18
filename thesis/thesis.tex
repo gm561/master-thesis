@@ -4,7 +4,6 @@
 % Largely adapted from Adrian Nievergelt's template for the ADPS
 % (lecture notes) project.
 
-
 %% We use the memoir class because it offers a many easy to use features.
 \documentclass[11pt,a4paper,titlepage]{memoir}
 
@@ -83,14 +82,14 @@
 
 \frontmatter
 
-\begin{titlingpage}
-  \calccentering{\unitlength}
-  \begin{adjustwidth*}{\unitlength-24pt}{-\unitlength-24pt}
-    \maketitle
-  \end{adjustwidth*}
-\end{titlingpage}
+% \begin{titlingpage}
+%   \calccentering{\unitlength}
+%   \begin{adjustwidth*}{\unitlength-24pt}{-\unitlength-24pt}
+%     \maketitle
+%   \end{adjustwidth*}
+% \end{titlingpage}
 
-\input{abstract}
+%\input{abstract}
 
 \cleartorecto
 \tableofcontents
@@ -100,8 +99,7 @@
 \section{Security amplification}
 \section{Organization of the thesis}
 \input{preliminaries}
-\section{Hash functions}
-\chapter{Security amplification of weakly verifiable puzzles}
+\chapter{Hardness amplification of weakly verifiable puzzles}
 \section{Weakly verifiable puzzles}
 \section{Previous results}
 \subsection{Dynamic puzzles}

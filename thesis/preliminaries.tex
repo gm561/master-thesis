@@ -1,5 +1,8 @@
 \chapter{Preliminaries}
 \section{Notation}
+We use calligraphic letters to denote sets and small letters do denote an element of the set.
+Let $\cR$ be a finite set and $r \in \cR$, then we write $r \leftarrow \cR$ to denote that $r$ is chosen from $\cR$ uniformly at random.
+
 For $\delta \in \R : 0 \leq \delta \leq 1$ we write $\mu_{\delta}$ to denote the Bernoulli distribution where outcome $1$ occurs with
 probability $\delta$ and $0$ with probability $1-\delta$.
 Moreover, we use $\mu_{\delta}^k$ to denote a probability distribution over $k$-tuples
@@ -21,20 +24,37 @@ We denote the transcript of communication between $A$ and $B$ by $\langle A, B \
 We define a \textit{two phase circuit} $C := (C_1, C_2)$ as a circuit where in the first phase the circuit $C_1$
 is used and in the second phase the circuit $C_2$.
 
-We say that an event happens \textit{almost surely} or with \textit{high probability} if
-it occurs with probability at least $1 - 2^{-n} \mathit{poly}(n)$.
+Let $\Omega$ be a probability space such that $|\Omega| = 2^{n}$.
+We say that an event $\omega \in \Omega$ happens \textit{almost surely} or with \textit{high probability} if
+$\Pr[\omega] \geq 1 - 2^{-n} \mathit{poly}(n)$.
 
-For a circuit $C$ let $\mathit{Size}(C)$ denote the number of gates of $C$. For an algorithm $A$ we write $\mathit{Time}(A)$ to denote the running time of $A$.
+For a circuit $C$ let $\mathit{Size}(C)$ denote the size of $C$. For an algorithm $A$ we write $\mathit{Time}(A)$ to denote the running time of $A$.
 Finally, we use $\mathit{poly}(\alpha_1, \dots, \alpha_n)$ to denote a polynomial on variables $\alpha_1, \dots, \alpha_n$.
 
-\section{Hardness amplification results}
+\section{Pairwise independent hash functions}
+\begin{definition}[Efficient pairwise independent family of hash functions]
+Let $\cD$ and $\cR$ be some finite sets and $\cH$ be a family of functions mapping values $\cD$ to values from $\cR$.
+We say that $\cH$ is \textnormal{the efficient family of pairwise independent hash functions}
+if $\cH$ satisfies following conditions.
 
-\section{Weakly verifiable puzzles}
+\textbf{(Pairwise independent)} For $\forall x \neq y \in \mathcal{D}$ and $\forall \alpha, \beta \in \cR$, we have
+\begin{displaymath}
+\underset{\hash \la0 \cH}{\Pr}[hash(x) = \alpha \land hash(y) = \beta] = \frac{1}{|\cR|^2}.
+\end{displaymath}
 
-\section{Examples}
+\textbf{(Polynomial time sampleable)} For every $\mathit{hash} \in \cH$ the function $\mathit{hash}$ is sampleable in time $\mathit{poly}(\log|\cD|, \log|\cR|)$.
+
+\textbf{(Efficiently computable)}
+For every $hash \in \cH$ there exists an algorithm running in time $\mathit{poly}(\log|\cD|, \log|\cR|)$ which
+on input $x \in \cD$ outputs $y \in \cR$ such that $y = hash(x)$.
+\end{definition}
+
+\section{Oracel Machines}
+
+\section{Hardness amplification}
+The hardness amplification is a central point of interest of this thesis.
 
 \section{Algorithm simulation with access to the oracle}
-
 
 %%% Local Variables:
 %%% mode: latex
