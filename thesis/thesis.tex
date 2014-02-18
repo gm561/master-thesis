@@ -28,7 +28,7 @@
 
 %% This changes default fonts for both text and math mode to use Herman Zapfs
 %% excellent Palatino font.  Do not change this.
-\usepackage[sc]{mathpazo}
+%\usepackage[sc]{mathpazo}
 
 %% The AMS-LaTeX extensions for mathematical typesetting.  Do not
 %% remove.
@@ -88,7 +88,6 @@
 %     \maketitle
 %   \end{adjustwidth*}
 % \end{titlingpage}
-
 %\input{abstract}
 
 \cleartorecto
@@ -98,25 +97,23 @@
 \chapter{Introduction}
 \section{Security amplification}
 \section{Organization of the thesis}
+
+\chapter{Preliminaries}
 \input{preliminaries}
+
 \chapter{Hardness amplification of weakly verifiable puzzles}
+\subsection{Hardness implication statements}
+\subsection{Computational security}
+\subsection{Information--theoretic security}
 \section{Weakly verifiable puzzles}
-\section{Previous results}
-\subsection{Dynamic puzzles}
-\subsection{Interactive puzzles}
+\subsection{Interactive weakly verifiable puzzles}
+\subsection{Dynamic weakly verifiable puzzles}
 \section{Proof Interactive Dynamic puzzles}
-\subsection{Our techniques}
-\input{interactive_proof/intuition}
 \input{interactive_proof/definitions}
+\subsection{Our techniques}
 \input{interactive_proof/hash_function}
 \input{interactive_proof/proof}
 \input{interactive_proof/proofMainThm}
-
-%% Your real content!
-% \input{introduction}
-% \input{rules}
-% \input{typography}
-% \input{sections}
 
 \appendix
 

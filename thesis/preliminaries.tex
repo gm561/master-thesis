@@ -1,45 +1,49 @@
-\chapter{Preliminaries}
+In this section we define the notation used in this thesis. Furthermore, we give definitions of some notations
+used in further chapters.
 \section{Notation}
-We use calligraphic letters to denote sets and small letters do denote an element of the set.
-Let $\cR$ be a finite set and $r \in \cR$, then we write $r \leftarrow \cR$ to denote that $r$ is chosen from $\cR$ uniformly at random.
-
+\textbf{(Probabilities and distributions)}
+Let $\cR$ be a finite set, then we write $r \leftarrow \cR$ to denote that $r \in \cR$ is chosen from $\cR$ uniformly at random.
 For $\delta \in \R : 0 \leq \delta \leq 1$ we write $\mu_{\delta}$ to denote the Bernoulli distribution where outcome $1$ occurs with
 probability $\delta$ and $0$ with probability $1-\delta$.
 Moreover, we use $\mu_{\delta}^k$ to denote a probability distribution over $k$-tuples
 where each element of a $k$-tuple is drawn independently according to $\mu_{\delta}$.
 Finally, let $u \leftarrow \mu_{\delta}^k$ denote that a $k$-tuple $u$ is chosen according to $\mu_{\delta}^k$.
 
-We use capital letters to denote boolean circuits. We define a family of probabilistic circuit $\{C_n\}$
-as a family of circuits taking as part of the input a random bitstring.
-A circuit $C_n \in \{C_n\}$ is called a probabilistic circuit.
+Let $(\Omega, \cF, \Pr)$ be a probability space. We say that an event $E_n \in \cF$
+happens \textit{almost surely} or with \textit{high probability} if $\Pr[E_n] \geq 1 - 2^{-n} \mathit{poly}(n)$.
 
-We are often interested in situations where two probabilistic circuits interact with each other according to some protocol.
-A protocol execution between two such circuits $A$ and $B$ is denoted by $\langle A, B \rangle$.
+\textbf{(Interactive protocols)} We are often interested in situations where two probabilistic circuits interact with each other according to some protocol.
+A protocol execution between two probabilistic circuits $A$ and $B$ is denoted by $\langle A, B \rangle$.
 The output of $A$ in such a protocol execution is denoted by $\langle A, B \rangle_A$ and of $B$ by $\langle A, B \rangle_B$.
-We define a transcript of the protocol execution between $A$ and $B$ as all messages sent by both $A$ and $B$.
-We assume that messages of both $A$ and $B$ can be represented as bitstrings, and transcript of communication between $A$ and $B$
-can be repressed as a tuple consisting from messages sent by $A$ and $B$.
-We denote the transcript of communication between $A$ and $B$ by $\langle A, B \rangle_{\mathit{trans}}$.
+We consider a case when $A$ and $B$ interact by means of messages that can be represented as bitstrings.
+A sequence of all messages sent by $A$ and $B$ in the protocol execution is called a communication transcript and
+is denoted by $\langle A, B \rangle_{\mathit{trans}}$.
 
-We define a \textit{two phase circuit} $C := (C_1, C_2)$ as a circuit where in the first phase the circuit $C_1$
-is used and in the second phase the circuit $C_2$.
+\textbf{(Algorithms, Circuits and Bitstrings)}
+We write $\mathit{poly}(\alpha_1, \dots, \alpha_n)$ to denote a polynomial on variables $\alpha_1, \dots, \alpha_n$.
+%TODO more precise?
+We define a circuit $C$ as a directed acyclic graph with vertices that degree equals 0 - input vertices,
+1 - vertices implementing logical $\mathit{Negation}$, or 2 - vertices implementing logical functions $\mathit{And}$, $\mathit{Or}$.
+We denote circuits using capital letters from Greek and English alphabet.
+For a circuit $C$ we write $\mathit{Size}(C)$ to denote the total number of vertices.
 
-Let $\Omega$ be a probability space such that $|\Omega| = 2^{n}$.
-We say that an event $\omega \in \Omega$ happens \textit{almost surely} or with \textit{high probability} if
-$\Pr[\omega] \geq 1 - 2^{-n} \mathit{poly}(n)$.
+For an algorithm $A$ we write $\mathit{Time}(A)$ to denote the number of steps it takes to execute $A$.
+We often write the randomness used by a probabilistic algorithm explicitly as a bitstring taken as an input.
 
-For a circuit $C$ let $\mathit{Size}(C)$ denote the size of $C$. For an algorithm $A$ we write $\mathit{Time}(A)$ to denote the running time of $A$.
-Finally, we use $\mathit{poly}(\alpha_1, \dots, \alpha_n)$ to denote a polynomial on variables $\alpha_1, \dots, \alpha_n$.
+We write $\{0,1\}^{n}$ to denote a bitstring of length $n$.
+We also use $\{0,1\}^{*}$ which should be understood that the length of the bitstring is arbitrary.
+Exemplary, for a probabilistic algorithm $A$ that uses bitstring $\delta = \{0,1\}^{*}$ as a source of randomness
+the length of $\delta$ is naturally bounded by $\mathit{Time}(A)$.
 
-\section{Pairwise independent hash functions}
+\subsection{Pairwise independent hash functions}
 \begin{definition}[Efficient pairwise independent family of hash functions]
-Let $\cD$ and $\cR$ be some finite sets and $\cH$ be a family of functions mapping values $\cD$ to values from $\cR$.
+Let $\cD$ and $\cR$ be finite sets and $\cH$ be a family of functions mapping values from $\cD$ to values in $\cR$.
 We say that $\cH$ is \textnormal{the efficient family of pairwise independent hash functions}
-if $\cH$ satisfies following conditions.
+if $\cH$ has the following properties.
 
 \textbf{(Pairwise independent)} For $\forall x \neq y \in \mathcal{D}$ and $\forall \alpha, \beta \in \cR$, we have
 \begin{displaymath}
-\underset{\hash \la0 \cH}{\Pr}[hash(x) = \alpha \land hash(y) = \beta] = \frac{1}{|\cR|^2}.
+\underset{\hash \la0 \cH}{\Pr}[hash(x) = \alpha \mid hash(y) = \beta] = \frac{1}{|\cR|}.
 \end{displaymath}
 
 \textbf{(Polynomial time sampleable)} For every $\mathit{hash} \in \cH$ the function $\mathit{hash}$ is sampleable in time $\mathit{poly}(\log|\cD|, \log|\cR|)$.
@@ -49,13 +53,26 @@ For every $hash \in \cH$ there exists an algorithm running in time $\mathit{poly
 on input $x \in \cD$ outputs $y \in \cR$ such that $y = hash(x)$.
 \end{definition}
 
-\section{Oracel Machines}
+We note that the pairwise independence property is equivalent to
+\begin{displaymath}
+\underset{\hash \la0 \cH}{\Pr}[hash(x) = \alpha \land hash(y) = \beta] = \frac{1}{|\cR|^2}.
+\end{displaymath}
+%TODO: How to efficiently implement the random function
 
-\section{Hardness amplification}
-The hardness amplification is a central point of interest of this thesis.
+\section{Oracel Machines and Circuits}
+% algorithms = circuits equivalence
+% how to write
+
+We define a family of probabilistic circuit $\{C_n\}$ as a family of circuits taking as part of the input a random bitstring.
+A circuit $C_n \in \{C_n\}$ is called a probabilistic circuit.
+
+We define a \textit{two phase circuit} $C := (C_1, C_2)$ as a circuit where in the first phase the circuit $C_1$
+is used and in the second phase the circuit $C_2$.
 
 \section{Algorithm simulation with access to the oracle}
 
+\section{Basic inequalities}
+Chernoff ...
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "master"
