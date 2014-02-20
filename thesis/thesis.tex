@@ -71,7 +71,7 @@
 %% Document information
 %% ====================
 
-\title{Title of Thesis}
+\title{On amplification of weakly verifiable dynamic cryptographic primitives}
 \author{Grzegorz Makosa}
 \thesistype{Master Thesis}
 \advisors{Advisors: Prof. Dr. Thomas Holenstein, Dr. Robin Künzler}
@@ -95,33 +95,68 @@
 \mainmatter
 
 \chapter{Introduction}
-\section{Security amplification}
+\section{Security amplification theorems}
+Introduction to security amplification theorems and hardness implication statements.
+Example of classical results. Problems captured by weakly verifiable puzzles.
+Contribution of this thesis.
+
 \section{Organization of the thesis}
+Overview of the content of the succeeding chapters.
 
 \chapter{Preliminaries}
 \input{preliminaries}
 
-\chapter{Hardness amplification of weakly verifiable puzzles}
-\subsection{Hardness implication statements}
-\subsection{Computational security}
-\subsection{Information--theoretic security}
+\chapter{Weakly verifiable cryptographic primitives}
+In this chapter we introduce the notion of weakly verifiable puzzles. In section \ref{def:dwvp} we provide a formal definitions that
+is followed by a series of cryptographic primitives that are captured by this notion.
+Finally, in Section \ref{st:previous_results} we give an overview of the earlier research in this area
+that is primarily covered in \cite{canetti2004hardness}, \cite{Dodis:2009:SAI:1530441.1530450}, and \cite{DBLP:journals/corr/abs-1002-3534}.
+
 \section{Weakly verifiable puzzles}
-\subsection{Interactive weakly verifiable puzzles}
-\subsection{Dynamic weakly verifiable puzzles}
-\section{Proof Interactive Dynamic puzzles}
-\input{interactive_proof/definitions}
-\subsection{Our techniques}
-\input{interactive_proof/hash_function}
-\input{interactive_proof/proof}
-\input{interactive_proof/proofMainThm}
+\begin{definition}[Dynamic weakly verifiable puzzle.]
+  \label{def:dwvp}
+  A dynamic weakly verifiable puzzle (DWVP) is defined by a family of probabilistic circuits $\{P_n\}$.
+  A circuit belonging to $\{P_n\}$ is called a problem poser.
+  A solver $C := (C_1, C_2)$ for $P_n$ is a probabilistic two phase circuit.
+  We write $P_n(\pi)$ to denote the execution of $P_n$ with the randomness fixed to $\pi \in \{0,1\}^n$, and $(C_1,C_2)(\rho)$
+  to denote the execution of both $C_1$ and $C_2$ with the randomness fixed to $\rho \in \{0,1\}^{*}$.
+
+  In the first phase, the problem poser $P_n(\pi)$ and the solver $C_1(\rho)$ interact.
+  As the result of the interaction $P_n(\pi)$ outputs a verification circuit $\Gamma_{V}$ and a hint circuit $\Gamma_{H}$.
+  The circuit $C_1(\rho)$ produces no output.
+  The circuit $\Gamma_{V}$ takes as input $q \in Q$, an answer $y \in \{0,1\}^*$,
+  and outputs a bit. We say that an answer $(q,y)$ is a correct solution if and only if $\Gamma_V(q,y) = 1$.
+  The circuit $\Gamma_H$ on input $q \in Q$ outputs a hint such that $\Gamma_V(q,\Gamma_H(q)) = 1$.
+
+  In the second phase, $C_2$ takes as input $x := \langle P_n(\pi), C_1(\rho) \rangle_{\mathit{trans}}$,
+  and has oracle access to $\Gamma_V$ and $\Gamma_H$.
+  The execution of $C_2$ with the input $x$ and the randomness fixed to $\rho$
+  is denoted by $C_2(x, \rho)$. The queries of $C_2$ to $\Gamma_V$ and $\Gamma_H$ are called verification queries and hint queries respectively.
+  The circuit $C_2$ succeeds if and only if it makes a verification query $(q,y)$ such that $\Gamma_V(q,y) = 1$,
+  and it has not previously asked for a hint query on $q$.
+\end{definition}
+
+\section{Examples}
+\subsection{Message authentication codes}
+\subsection{Public key encryption}
+\subsection{Bit commitments}
+\subsection{CAPTACHs}
+
+\section{Previews results}
+\label{st:previous_results}
+\subsection{Results of R.Canetti, S.Halevi, and M.Steiner}
+\subsection{Results of Y.Dodis, R.Impagliazzo, R.Jaiswal, V.Kabanets}
+\subsection{Results of T.Holenstein and G.Scheonebeck}
+\section{Limitations of security amplification}
+
+\input{interactive_proof/interactive_proof}
 
 \appendix
-
 \input{appendix}
 
 \backmatter
 
-% \bibliographystyle{plain}
-% \bibliography{refs}
+\bibliographystyle{alpha}
+\bibliography{refs}
 
 \end{document}

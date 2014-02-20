@@ -37,6 +37,9 @@ thesis.pdf: $(texfiles) thesis.bbl
 thesis.aux: $(texfiles)
 	$(Q) $(Q_LATEX) $(LATEX) -interaction=nonstopmode -file-line-error thesis.tex
 
+thesis.bbl: thesis.aux
+	$(Q)$(Q_OTHER) $(BIBTEX) thesis
+
 clean:
 	rm -rf build/
 	rm -f *.aux

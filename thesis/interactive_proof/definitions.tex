@@ -1,27 +1,5 @@
 %TODO pairwise independent hash function
 \noindent
-\begin{definition}[Dynamic weakly verifiable puzzle.]
-  \label{def:dwvp}
-  A dynamic weakly verifiable puzzle (DWVP) is defined by a family of probabilistic circuits $\{P_n\}$.
-  A circuit belonging to $\{P_n\}$ is called a problem poser.
-  A solver $C := (C_1, C_2)$ for $P_n$ is a probabilistic two phase circuit.
-  We write $P_n(\pi)$ to denote the execution of $P_n$ with the randomness fixed to $\pi \in \{0,1\}^n$, and $(C_1,C_2)(\rho)$
-  to denote the execution of both $C_1$ and $C_2$ with the randomness fixed to $\rho \in \{0,1\}^{*}$.
-
-  In the first phase, the problem poser $P_n(\pi)$ and the solver $C_1(\rho)$ interact.
-  As the result of the interaction $P_n(\pi)$ outputs a verification circuit $\Gamma_{V}$ and a hint circuit $\Gamma_{H}$.
-  The circuit $C_1(\rho)$ produces no output.
-  The circuit $\Gamma_{V}$ takes as input $q \in Q$, an answer $y \in \{0,1\}^*$,
-  and outputs a bit. We say that an answer $(q,y)$ is a correct solution if and only if $\Gamma_V(q,y) = 1$.
-  The circuit $\Gamma_H$ on input $q \in Q$ outputs a hint such that $\Gamma_V(q,\Gamma_H(q)) = 1$.
-
-  In the second phase, $C_2$ takes as input $x := \langle P_n(\pi), C_1(\rho) \rangle_{\mathit{trans}}$,
-  and has oracle access to $\Gamma_V$ and $\Gamma_H$.
-  The execution of $C_2$ with the input $x$ and the randomness fixed to $\rho$
-  is denoted by $C_2(x, \rho)$. The queries of $C_2$ to $\Gamma_V$ and $\Gamma_H$ are called verification queries and hint queries respectively.
-  The circuit $C_2$ succeeds if and only if it makes a verification query $(q,y)$ such that $\Gamma_V(q,y) = 1$,
-  and it has not previously asked for a hint query on $q$.
-\end{definition}
 %
 \begin{definition}[$k$-wise direct-product of DWVPs.]
   Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function and $P_n^{(1)}$ a problem poser as in Definition \ref{def:dwvp}.
@@ -42,17 +20,16 @@ and a hint circuit
 \end{align*}
 \end{definition}
 %
-If it is clear from a context, we omit the subscript $n$, and write $P(\pi)$ instead of $P_n(\pi)$ where $\pi \in \{0,1\}^{n}$.
+If it is clear from the context, we omit the subscript $n$ and write $P(\pi)$ instead of $P_n(\pi)$ where $\pi \in \{0,1\}^{n}$.
 
 A verification query $(q,y)$ of a solver $C$ for which a hint query on this $q$ has been asked before cannot be a verification query for which $C$ succeeds.
 Therefore, without loss of generality, we make the assumption that $C$ does not ask verification queries on $q$
 for which a hint query has been asked before. Furthermore, we assume that once $C$ asked a verification query that succeeds,
 it does not ask any further hint or verification queries.
-
 %
 \begin{codeblock}
   \textbf{Experiment} $\Success^{P, C}(\pi, \rho)$
-  \medskip \hrule 
+  \medskip \hrule
   \textbf{Oracle:} A problem poser $P$, a solver $C = (C_1, C_2)$ for $P$.\\
   \textbf{Input:}  Bitstrings $\pi \in \{0,1\}^n$, $\rho \in \{0,1\}^*$.\\
   \textbf{Output:} A bit $b \in \{0,1\}$.
@@ -86,44 +63,18 @@ If $C$ is such that
     \underset{\substack{\pi^{(k)} \in \{0,1\}^{kn} \\ \rho \in \{0,1\}^{*}}}{\Pr}\left[\mathit{Success}^{P_{kn}^{(g)}, C}(\pi^{(k)}, \rho) = 1\right]
     \geq 16(h+v)\Bigl(\underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon\Bigr)
   \end{align*}
-then $D$ satisfies almost surely
+then $D$ is a two phase probabilistic circuit and satisfies almost surely
   \begin{align*}
     \underset{\substack{\pi \in \{0,1\}^{n} \\ \rho \in \{0,1\}^{*}}}
     {\Pr}\left[\mathit{Success}^{P_{n}^{(1)},D}(\pi, \rho) = 1\right] \geq \delta + \frac{\varepsilon}{6k}.
   \end{align*}
-Additionally, $D$ requires oracle access to $g$, $P_{n}^{(1)}$, $C$, hint and verification circuits,
+Additionally, $D$ requires oracle access to $g$, $P_{n}^{(1)}$, $C$, hint and verification circuits
 and asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hint queries and one verification query.
 Finally, $\mathit{Time}(\mathit{Gen}) = \mathit{poly}(k, \frac{1}{\varepsilon}, n, v, h)$ with oracle access to $C$.
-
-%Finally, $\mathit{Size}(D) \leq \mathit{Size}(C) \cdot \frac{6k}{\varepsilon}$ and
 \end{theorem}
-%
+
 % The Theorem \ref{th:sec_amp_for_dwvp} implies that if there is no good solver for a puzzle defined by $P^{(1)}$, then a good solver for
 % a $k$-wise direct product of $P^{(1)}$ does not exist.
-
-% + add intuition for hashing
-The idea of the algorithm $Gen$ is to output a circuit $D$ that solves the input puzzle often.
-We know that $C$ has high success probability in solving the $k$-wise direct product of $P^{(1)}$.
-The algorithm $Gen$ tries to find a puzzle such that when $C$ runs with this puzzle fixed
-on the first position, and disregards whether this puzzle is correctly solved
-then the assumptions of Theorem \ref{th:sec_amp_for_dwvp} are true for a $k-1$-wise direct product.
-If it is possible to find such a puzzle then $Gen$ could recurse and solve a smaller problem.
-In the optimistic case we can reach $k=1$, which means that we found a good circuit for solving a single
-puzzle by just fixing the initial puzzles of $C$.
-
-Otherwise, when the first position is disregarded then the success probability of $C$ is not substantially better.
-This is remarkable, as we know that $C$ performs good for $k$-wise product. It means that the first position is important,
-in the sense that $C$ solves the puzzle on that position unusually often.
-Therefore, it is reasonable to construct the circuit $D$ using $C$ by placing the input puzzle of $D$ on that position, and then
-finding remaining $k-1$ puzzles. The $(k-1)$ remaining puzzles are generated by the circuit $D$, hence it is possible to check
-whether they are correctly solved by the circuit $C$. We know that circuit $C$ has good success probability, and the puzzle on the first
-position is important. Therefore, if we are able to find a $(k-1)$ puzzles such that the fact whether the $k$-wise direct product is correctly
-solved depends on whether the puzzle on the first position is correctly solved then we can assume that $C$ is often correct on this first position.
-
-There are some problems with this approach, first we have to ensure that we can make a decision when the algorithm $Gen$ should recurse and when not
-correctly with high probability. Then, we have to show that it is possible to find a puzzles such that $C$ is often correct on the first position.
-Finally, we also have to be sure that we do not ask a hint query, on the final verification query to the oracle.
-To satisfy the last requirement we split the set $Q$.
 
 %%% Local Variables:
 %%% mode: latex
