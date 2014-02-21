@@ -1,28 +1,33 @@
 In this section we set up notation and terminology used in the thesis.
 %
-\section{Notation}
+\section{Notation and Definitions}
 \textbf{(Algorithms, Bitstrings and Circuits)}
-We define a circuit as a directed acyclic graph with input vertices and vertices implementing logical functions \textit{and}, \textit{or}, and \textit{not}.
-We denote circuits using capital letters from the Greek and English alphabet.
-For a circuit $C$ we write $\mathit{Size}(C)$ to denote total number of vertices of $C$.
-We define a \textit{family of probabilistic circuits} $\{C_n\}$ as a family of circuits taking as part of the input a random bitstring.
-A circuit $C_n \in \{C_n\}$ is called a probabilistic circuit.
-We define a \textit{two phase circuit} $C := (C_1, C_2)$ as a circuit where in the first phase a circuit $C_1$
-is used and in the second phase a circuit $C_2$.
+We define a Boolean circuit as a directed acyclic graph with input vertices and vertices implementing logical functions \textit{and}, \textit{or}, and \textit{not}.
+We denote Boolean circuits using capital letters from the Greek and English alphabet.
+
+We define a \textit{probabilistic circuit} as a Boolean circuit $C_{m,n} : \{0,1\}^{m} \times \{0,1\}^{n} \rightarrow \{0,1\}^{*}$,
+For input $x \in \{0,1\}^{m}$ we write to denote $C_{m,n}(x;r)$ where $r \in \{0,1\}^{n}$ is called auxiliary input.
+If a probabilistic circuit does not take input $x$, we slightly abuse notation and write $C_{n}(r)$.
+Similarly we use $\{C_n\}$ to denote a family of probabilist circuits that takes only auxiliary input.
+We make sure that it is clear from the context that probabilist circuits with only auxiliary input
+are not confused with circuits that do not take auxiliary input.
+
+For a (probabilist) circuit $C$ we write $\mathit{Size}(C)$ to denote the total number of vertices of $C$.
+
+We define a \textit{two phase circuit} $C := (C_1, C_2)$ as a circuit where in the first phase a circuit $C_1$ is used and in the second phase a circuit $C_2$.
+If $C_1$ and $C_2$ are probabilistic circuits we write $C(\delta) := (C_1, C_2)(\delta)$ to denote that in both phases $C_1$ and $C_2$ take
+as auxiliary input the same bitstring $\delta$.
+
 It is well known \cite{Arora:2009:CCM:1540612} that a probabilistic polynomial time algorithm can be represented as a circuit of polynomial size.
-Additionally it can be computed in polynomial time and logarithmic space. Therefore, whenever we state a theorem about
-circuits we can also apply it to polynomial time algorithms.
+Moreover, it can be computed in polynomial time and logarithmic space.
+Therefore, whenever we state a theorem about circuits we can also apply it to polynomial time algorithms.
 
 We write $\mathit{poly}(\alpha_1, \dots, \alpha_n)$ to denote a polynomial on variables $\alpha_1, \dots, \alpha_n$.
 For an algorithm $A$ we write $\mathit{Time}(A)$ to denote the number of steps it takes to execute $A$.
-We often write the randomness used by a probabilistic algorithm explicitly as a bitstring provided as an auxiliary input.
-
-We write $\{0,1\}^{n}$ to denote a set of all bitstring of length $n$, and $\{0,1\}^{*}$ for a set of bitstrings that length is arbitrary.
-We note that for probabilistic algorithms and circuits the length of an arbitrary bitstring provided as an input is naturally bounded by
-running time of an algorithm or number of input vertices of a circuit.
+Similarly, as for probabilistic circuits we write the randomness used by a probabilistic algorithm explicitly as a bitstring provided as an auxiliary input.
 
 \textbf{(Probabilities and distributions)}
-For a finite set $\cR$ we write $r \xleftarrow{\$} \cR$ to denote that $r \in \cR$ is chosen from $\cR$ uniformly at random.
+For a finite set $\cR$ we write $r \xleftarrow{\$} \cR$ to denote that $r$ is chosen from $\cR$ uniformly at random.
 For $\delta \in \R : 0 \leq \delta \leq 1$ we write $\mu_{\delta}$ to denote the Bernoulli distribution where outcome $1$ occurs with
 probability $\delta$ and $0$ with probability $1-\delta$.
 Moreover, we use $\mu_{\delta}^k$ to denote the probability distribution over $k$-tuples
@@ -33,17 +38,20 @@ Let $(\Omega, \cF, \Pr)$ be a probability space and $n \in \N$. We say that an e
 happens \textit{almost surely} or with \textit{high probability} if $\Pr[E_n] \geq 1 - 2^{-n} \mathit{poly}(n)$.
 
 \textbf{(Interactive protocols)} We are often interested in situations where two probabilistic algorithms interact with each other according to some protocol.
+We limit ourselves to the cases where algorithms interact by means of messages representable by bitstrings.
 A protocol execution between two probabilistic algorithms $A$ and $B$ is denoted by $\langle A, B \rangle$.
-We limit ourselves to the cases where $A$ and $B$ interact by means of messages that can be represented as bitstrings.
 The output of $A$ in a protocol execution is denoted by $\langle A, B \rangle_A$ and of $B$ by $\langle A, B \rangle_B$.
 A sequence of all messages sent by $A$ and $B$ in the protocol execution is called a communication transcript and
 is denoted by $\langle A, B \rangle_{\mathit{trans}}$.
-%
-\section{Pairwise independent family of hash functions}
-\begin{definition}[Polynomial time sampleable function]
-  \begin{todo}
-    \textbf{TODO:}
-  \end{todo}
+
+\textbf{(Oracle algorithms)}
+\begin{todo}
+  \textbf{TODO:} set up notation
+\end{todo}
+
+\begin{definition}[Polynomial time sampleable distribution]
+We say that a distribution is polynomial time sampleable if it can be approximated by polynomial time algorithm
+up to exponential factor.
 \end{definition}
 
 \begin{definition}[Pairwise independent family of efficient hash functions]
@@ -68,18 +76,6 @@ We note that the pairwise independence property is equivalent to
 \underset{\hash \la0 \cH}{\Pr}[hash(x) = \alpha \land hash(y) = \beta] = \frac{1}{|\cR|^2}.
 \end{displaymath}
 It is well know \cite{Carter:1977:UCH:800105.803400} that there exists a family of hash functions meeting the above criteria.
-
-%TODO: How to efficiently implement the random function
-% \section{Efficient implementation of random functions}
-% It is possible to implement a random function $\hash: Q \rightarrow \{0,1,\dotsc, 2(h+v)-1\}$ efficiently by for example building its function table on the fly.
-
-\section{Oracle algorithms}
-Explain the motivation to model our problem using algorithms with oracle access.
-Clarify the case when an algorithm is run with different oracles, or the oracle calls are simulated and answered by the algorithm.
-Description how the oracle calls are counted.
-
-%the difference between traditional approach and our apporach
-%algorithms circuit equivalence
 
 %%% Local Variables:
 %%% mode: latex

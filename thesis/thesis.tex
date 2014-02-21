@@ -99,7 +99,8 @@
 Introduction to security amplification theorems and hardness implication statements.
 Example of classical results. Problems captured by weakly verifiable puzzles.
 Contribution of this thesis.
-
+\section{Weakly verifiable puzzles}
+\section{Contribution of the Thesis}
 \section{Organization of the Thesis}
 Overview of the content of the succeeding chapters.
 
@@ -113,6 +114,8 @@ Finally, in Section \ref{st:previous_results} we give an overview of the earlier
 that is primarily covered in \cite{canetti2004hardness}, \cite{Dodis:2009:SAI:1530441.1530450}, and \cite{DBLP:journals/corr/abs-1002-3534}.
 
 \section{Weakly Verifiable Puzzles}
+
+We start by defining \textit{dynamic weakly verifiable puzzles}.
 \begin{definition}[Dynamic weakly verifiable puzzle.]
   \label{def:dwvp}
   A dynamic weakly verifiable puzzle (DWVP) is defined by a family of probabilistic circuits $\{P_n\}$.
@@ -136,12 +139,36 @@ that is primarily covered in \cite{canetti2004hardness}, \cite{Dodis:2009:SAI:15
   and it has not previously asked for a hint query on $q$.
 \end{definition}
 
+The above definition generalizes the previous approaches contained in \cite{canetti2004hardness}, \cite{Dodis:2009:SAI:1530441.1530450}, \cite{DBLP:journals/corr/abs-1002-3534}.
+Some of more interesting cryptographic primitives captured by this definition are described in Section \ref{section:wvp_examples}.
+There is no loss of generality in assuming that a problem poser and problem solver are defined by probabilistic circuits.
+This definition applies also when a problem poser and solver are probabilistic algorithms
+by using the well know fact \cite{LectureNotesCT} that probabilistic algorithms can be represented as Boolean circuits.
+
 \section{Examples}
+\label{section:wvp_examples}
+In this section we give examples of cryptographic constructions that are dynamic weakly verifiable puzzles.
 \subsection{Message Authentication Codes}
+Let us consider the following setting. Two parties send and receiver communicate over an insecure channel.
+It is possible that messages sent by the sender are intercept by the third party called adversary.
+Message authentication codes are used to verify the authenticity of the message sent by a sender to a receiver.
+Both sender and receiver share a secrete key. A sender before sending a message computes MAC using a secrete key
+and appends it to the message. After obtaining the message receiver computes MAC and check whether it matches
+the MAC appended to the message. In case it does the message is accepted, otherwise the receiver rejects the message.
+We give a formal definition of MAC and security of MAC based on \cite{LectureNotesCrypo}.
+\begin{definition}[Message Authentication Codes (MAC)]
+  A message authentication code for a set of messages $\cM$, a set of keys $\cK$ and a sef of tag $\cT$
+  is a function $\cM \times \cK \rightarrow \cT$. We say that MAC is secure if it the following holds:
+
+  Let $k$ be choosen uniformly at radnom from $\cK$. Additionally, let $\Gamma_H: \cM \rightarrow \cT$ be an oracle computing
+  the message authentication code for key $k$ and message as input $m$. If there is not probabilistic polynomial time algorithm
+  that with non-neglible probability outputs a message $m'$, as well as corresponding MAC $t'$ such that
+  $\Gamma_V(m', t') = 1$.
+\end{definition}
 \subsection{Public Key Encryption}
 \subsection{Bit Commitments}
 \subsection{CAPTACHs}
-
+\subsection{Information theoretically secure constructions}
 \section{Previous results}
 \label{st:previous_results}
 \subsection{Results of R.Canetti, S.Halevi, and M.Steiner}
