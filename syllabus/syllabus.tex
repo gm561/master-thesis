@@ -1,0 +1,125 @@
+%% (Master) Thesis template
+% Template version used: v1.4
+%
+%% We use the memoir class because it offers a many easy to use features.
+%\documentclass[11pt,a4paper,titlepage]{memoir}
+\documentclass[11pt,a4paper,article,oneside]{memoir}
+
+\usepackage[margin=1in]{geometry}
+%% Packages
+%% ========
+%% LaTeX Font encoding -- DO NOT CHANGE
+\usepackage[OT1]{fontenc}
+%% Babel provides support for languages.  'english' uses British
+%% English hyphenation and text snippets like "Figure" and
+%% "Theorem". Use the option 'ngerman' if your document is in German.
+%% Use 'american' for American English.  Note that if you change this,
+%% the next LaTeX run may show spurious errors.  Simply run it again.
+%% If they persist, remove the .aux file and try again.
+\usepackage[english]{babel}
+%% Input encoding 'utf8'. In some cases you might need 'utf8x' for
+%% extra symbols. Not all editors, especially on Windows, are UTF-8
+%% capable, so you may want to use 'latin1' instead.
+\usepackage[utf8]{inputenc}
+%% This changes default fonts for both text and math mode to use Herman Zapfs
+%% excellent Palatino font.  Do not change this.
+% \usepackage[sc]{mathpazo}
+%% The AMS-LaTeX extensions for mathematical typesetting.  Do not
+%% remove.
+\usepackage{amsmath,amssymb,amsfonts,mathrsfs}
+%% NTheorem is a reimplementation of the AMS Theorem package. This
+%% will allow us to typeset theorems like examples, proofs and
+%% similar.  Do not remove.
+%% NOTE: Must be loaded AFTER amsmath, or the \qed placement will
+%% break
+\usepackage[amsmath,thmmarks]{ntheorem}
+%% LaTeX' own graphics handling
+\usepackage{graphicx}
+%% We unfortunately need this for the Rules chapter.  Remove it
+%% afterwards; or at least NEVER use its underlining features.
+\usepackage{soul}
+%% Some more packages that you may want to use.  Have a look at the
+%% file, and consult the package docs for each.
+\input{extrapackages}
+%% Our layout configuration.  DO NOT CHANGE.
+%\input{layoutsetup}
+%% Theorem environments.  You will have to adapt this for a German
+%% thesis.
+\input{theoremsetup}
+%% Helpful macros.
+\input{macrosetup}
+%% Make document internal hyperlinks wherever possible. (TOC, references)
+%% This MUST be loaded after varioref, which is loaded in 'extrapackages'
+%% above.  We just load it last to be safe.
+\usepackage[linkcolor=black,colorlinks=true,citecolor=black,filecolor=black]{hyperref}
+
+\newcommand{\IndI}{\mbox\qquad}
+\newcommand{\IndII}{\mbox\qquad\qquad}
+\newcommand{\IndIII}{\mbox\qquad\qquad\qquad}
+
+\newcommand{\schapter}[1]{{\noindent\Large{\textbf{#1}}\\}}
+\newcommand{\ssection}[1]{{\noindent\large{\textbf{#1}} \\}}
+\newcommand{\ssubsection}[1]{{\noindent\textbf{#1} \\}}
+
+\begin{document}
+
+{\LARGE{\textbf{Contents}}} \\ \\
+
+\schapter{1 Introduction}
+\ssection{1.1 Security Amplification Theorems}
+Why security amplification is interesting topic in cryptography.
+Examples of the classical results -- a weak one way function implying the strong ones.
+Hardness implication statements. Problems captured by weakly verifiable puzzles.
+Contribution of this thesis.
+
+\ssection{1.2 Organization of the Thesis}
+Overview of the content of the following chapters.
+\\
+\\
+\\
+\schapter{2 Preliminaries}
+\ssection{2.1 Notation}
+Set up notation and terminology used in the Thesis.\\
+\ssection{2.2 Pairwise independent family of hash functions}
+Define efficient pairwise independent family of hash functions.\\
+\ssection{2.3 Oracle machines}
+Describe the way in which algorithms access the oracle, and the oracle queries are answered.
+\\
+\\
+\\
+\schapter{3 Weakly Verifiable Cryptographic Primitives}
+% In this chapter we introduce the notion of weakly verifiable puzzles. In section \ref{def:dwvp} we provide a formal definitions that
+% is followed by a series of cryptographic primitives that are captured by this notion.
+% Finally, in Section \ref{st:previous_results} we give an overview of the earlier research in this area
+% that is primarily covered in \cite{canetti2004hardness}, \cite{Dodis:2009:SAI:1530441.1530450}, and \cite{DBLP:journals/corr/abs-1002-3534}.
+\ssection{3.1 Weakly Verifiable Puzzles}
+Give a definition of dynamic, interactive weakly verifiable puzzles.
+\\
+\ssection{3.2 Examples}
+\IndI \ssubsection{3.2.1 Message Authentication Codes}
+\IndI \ssubsection{3.2.2 Public Key Encryption}
+\IndI \ssubsection{3.2.3 Bit Commitments}
+\IndI \ssubsection{3.2.4 CAPTACHs}
+\\
+\ssection{3.3 Previous results}
+Give an overview of the previous works considering WVP. Present the approach of the authors,
+the contribution of the paper, give a sketch of the proof (e.g. the algorithm without the formal proof). \\
+\IndI \ssubsection{3.3.1 Results of R.Canetti, S.Halevi, and M.Steiner}
+\IndI \ssubsection{3.3.2 Results of Y.Dodis, R.Impagliazzo, R.Jaiswal, V.Kabanets}
+\IndI \ssubsection{3.3.3 Results of T.Holenstein and G.Scheonebeck}
+\\
+\\
+\schapter{4 Security amplification for dynamic weakly verifiable puzzles}
+In this chapter I present my main result.\\
+\ssection{4.1 Main theorem}
+\IndI \ssubsection{4.1.1 The $k$-wise direct product of weakly verifiable puzzle}
+\IndI\ssubsection{4.1.2 Intuition}
+\IndI\ssubsection{4.1.3 Domain partitioning}
+\IndI\ssubsection{4.1.4 Amplification proof for the partitioned domain}
+\IndI\ssubsection{4.1.5 Putting it together}
+\ssection{4.2 Discussion}
+Discuss optimality of the result.
+
+% appendix
+
+\end{document}

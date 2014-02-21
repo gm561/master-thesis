@@ -1,5 +1,5 @@
 %
-\section{Amplification proof for partitioned domain}
+\subsection{Amplification proof for partitioned domain}
 \label{st:amplification_proof}
 Let $C = (C_1, C_2)$ be a solver circuit for a dynamic weakly verifiable puzzle as in definition \ref{def:dwvp}.
 We write $C_2^{(\cdot, \cdot)}$ to emphasize that $C_2$ does not obtain direct access to hint and verification circuits.
@@ -149,7 +149,6 @@ such that for each $1 \leq i \leq N$ the random variable $K_i$ takes value $g_i$
     \geq \frac{\epsilon}{8k} \Bigr] \leq 2 \cdot e^{-n/3}.
 \end{align*}
 \end{proof}
-%
 %
 The algorithm $\text{EvalutePuzzles}^{P^{(1)}, \widetilde{C}, \hash}(\pi^{(k)}, \rho, n, k)$
 evaluates which of the $k$ puzzles of the $k$-wise direct product defined by $P^{(g)}$ are solved successfully by $\widetilde{C}(\rho) := (C_1,\widetilde{C}_2)(\rho)$.
