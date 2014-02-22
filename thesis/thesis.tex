@@ -148,27 +148,93 @@ by using the well know fact \cite{LectureNotesCT} that probabilistic algorithms 
 \section{Examples}
 \label{section:wvp_examples}
 In this section we give examples of cryptographic constructions that are dynamic weakly verifiable puzzles.
-\subsection{Message Authentication Codes}
-Let us consider the following setting. Two parties send and receiver communicate over an insecure channel.
-It is possible that messages sent by the sender are intercept by the third party called adversary.
-Message authentication codes are used to verify the authenticity of the message sent by a sender to a receiver.
-Both sender and receiver share a secrete key. A sender before sending a message computes MAC using a secrete key
-and appends it to the message. After obtaining the message receiver computes MAC and check whether it matches
-the MAC appended to the message. In case it does the message is accepted, otherwise the receiver rejects the message.
-We give a formal definition of MAC and security of MAC based on \cite{LectureNotesCrypo}.
-\begin{definition}[Message Authentication Codes (MAC)]
-  A message authentication code for a set of messages $\cM$, a set of keys $\cK$ and a sef of tag $\cT$
-  is a function $\cM \times \cK \rightarrow \cT$. We say that MAC is secure if it the following holds:
 
-  Let $k$ be choosen uniformly at radnom from $\cK$. Additionally, let $\Gamma_H: \cM \rightarrow \cT$ be an oracle computing
-  the message authentication code for key $k$ and message as input $m$. If there is not probabilistic polynomial time algorithm
-  that with non-neglible probability outputs a message $m'$, as well as corresponding MAC $t'$ such that
-  $\Gamma_V(m', t') = 1$.
+\subsection{Message Authentication Codes}
+Let us consider the following setting. Two parties a \textit{sender} and a \textit{receiver} communicate over an insecure channel.
+Messages sent by the sender may be read and change by a third party called an \textit{adversary}.
+Therefore, the receiver needs a way to ensure messages originate from the sender and are not modified.
+A solution is to use message authentication codes.
+
+We assume that both the sender, receiver and adversary are polynomial time algorithms.
+Furthermore, the sender and the receive share a secrete key to which an adversary has no access.
+For each message the sender appends a tag that is computed as a function of a key and a message.
+For a received message the receiver compute the tag and checks whether it matches the tag appended to the message.
+Below we give more formal definition,  based on \cite{LectureNotesCrypo} and \cite{Goldreich:2004:FCV:975541},
+of message authentication codes (MAC) and MAC security.
+\begin{definition}[Message Authentication Codes (MAC)]
+  Let $\cM$ be a set of messages, $\cK$ a set of keys and finally $\cT$ a set of tags.
+  The message authentication code is a function $f:\cM \times \cK \rightarrow \cT$, and it is secure if additionally satisfies the following condition:
+
+  Let $k$ be chosen uniformly at random from $\cK$ and $\Gamma_H: \cM \rightarrow \cT$ be an oracle computing
+  a tag for the key $k$ and a message $m$. We say that MAC is secure if there is not probabilistic polynomial time algorithm
+  that with non-negligible probability outputs a message $m'$, as well as corresponding MAC $t'$ such that $f(m', k) = t$.
 \end{definition}
-\subsection{Public Key Encryption}
+
+We show how the above definition of MAC is captured by dynamic weakly verifiable puzzles.
+The first phase is non interactive.
+The $k$ key corresponds to a bitstring $\pi \in \{0,1\}^{n}$ taken by a problem poser $P_n$.
+The problem poser outputs a hint circuit $\Gamma_H: \cM \rightarrow \cT$ that given a message computes a tag.
+and a verification circuit $\Gamma_V: \cM \times \cT \rightarrow \{0,1\}$ that on input $m \in \cM$ and $t \in \cT$
+outputs one if and only if $f(m, k) = t$.
+
+The adversary is a probabilistic polynomial time algorithm, thus equivalently it can be turn into a circuit of polynomial size.
+In the second phase the adversary takes no input ($x^*$ is empty string), but is given oracle access to $\Gamma_H$ and $\Gamma_V$.
+The adversary succeeds in breaking the security of MAC if it finds a valid tag $t' \in \cT$ for a message $m' \in \cM$ such that a hint for this message
+has no been asked before. That corresponds to asking a successful verification query to oracle circuit $\Gamma_V$.
+Conversely, if there is no polynomial time algorithm that succeeds in solving this dynamic weakly verifiable puzzle with non-negligible probability
+then the message authentication code is secure.
+
+Thus, a game in which an adversary has to break security of MAC is a dynamic weakly verifiable puzzle which first phase is not interactive,
+as the adversary does not communicate with the problem poser.
+
+\subsection{Public Key Signature Scheme}
+First we give a definition of public key encryption scheme and security of such a scheme. Both definition are based on \cite{Goldreich:2004:FCV:975541}.
+
+
+\begin{definition}[Public key signature scheme]
+A public key encryption scheme is defined by a triple of probabilistic polynomial time algorithms:
+$G$ the key generation algorithm, $V$ the verification algorithm, $S$ the verification algorithm such that the following conditions are satisfied:
+\begin{enumerate}[]
+  \item $G(1^n)$ outputs a pair of bitstrings $k_{priv}$ a private key, $k_{pub}$ a public key.
+  \item For every $k_{priv}$, $k_{pub}$ output by $G$ and $q \in Q$ it holds
+    \begin{align*}
+      \Pr[V(k_{pub}, q, S(k_{priv}, q))] = 1.
+    \end{align*}
+\end{enumerate}
+\end{definition}
+
+%TODO efficiency of the algorithms
+
+\begin{definition}\textbf{(Security of public key signature scheme with respect to the chosen message attack)}
+Let us consider a situation in which an adversary is given a public key $k_{pub}$ and can ask for a signature of chosen messages.
+We say that the adversary succeeds if it finds a valid signature for a message for which a signature has not been asked.
+Furthermore, we say that the public key encryption scheme is secure if probability that any polynomial time bounded adversary
+succeeds in breaking the signature scheme with negligible probability.
+\end{definition}
+
+We show now that the public key signature schemes are also captured by definition \ref{def:dwvp}.
+First the problem poser uses algorithm $G(1^n)$ to obtain a public and private key.
+Then it generates a hint circuit $\Gamma_H : \cM \rightarrow S$ and a verification circuit $\Gamma_V : \cM \times \cS \rightarrow \{0,1\}$.
+The hint circuit takes as input $m \in \cM$ and outputs a signature for $m$. The verification circuits checks whether
+signature $s \in S$ is a valid for message $m \in \cM$.
+In the second phase the problem solver obtains $k_{pub}$, and is given oracle access to the hint circuit and verification circuit.
+The problem solver can ask a hint oracle for signature on chosen message.
+
+Finally, it is clear that if a problem solver succeeds in solving a DWVP defined as above, it also breaks the secuirty of the public signature schemes.
+
+Public key signature schemes are type of puzzles that are dynamic - the problem poser gain oracle access to hint and verification circuits,
+but are not interactive.
+
 \subsection{Bit Commitments}
+\cite{LectureNotesComThCrypto}
+
+
 \subsection{CAPTACHs}
+
+
 \subsection{Information theoretically secure constructions}
+
+
 \section{Previous results}
 \label{st:previous_results}
 \subsection{Results of R.Canetti, S.Halevi, and M.Steiner}
