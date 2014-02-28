@@ -97,7 +97,6 @@
 \chapter{Introduction}
 
 % use term \textit{puzzle} to denote somewhat-hard automatically-generated computational a problems
-
 \section{Security Amplification Theorems}
 Introduction to security amplification theorems and hardness implication statements.
 Example of classical results. Problems captured by weakly verifiable puzzles.
@@ -111,13 +110,14 @@ Overview of the content of the succeeding chapters.
 \input{preliminaries}
 
 \chapter{Weakly Verifiable Cryptographic Primitives}
-In this chapter we introduce the notion of weakly verifiable puzzles. In section \ref{def:dwvp} we provide a formal definitions that
-is followed by a series of cryptographic primitives that are captured by this notion.
+In this chapter we introduce weakly verifiable puzzles.
+Section \ref{section:wvp} contains the formal definitions of dynamic weakly verifiable puzzles.
+In Section \ref{section:wvp_examples} we give a series of cryptographic primitives that are captured by dynamic weakly verifiable puzzles.
 Finally, in Section \ref{st:previous_results} we give an overview of the earlier research in this area
 that is primarily covered in \cite{canetti2004hardness}, \cite{Dodis:2009:SAI:1530441.1530450}, and \cite{DBLP:journals/corr/abs-1002-3534}.
 
-\section{Weakly Verifiable Puzzles}
-
+\section{Dynamic Weakly Verifiable Puzzles}
+\label{section:wvp}
 We start by defining \textit{dynamic weakly verifiable puzzles}.
 \begin{definition}[Dynamic weakly verifiable puzzle.]
   \label{def:dwvp}
@@ -145,25 +145,26 @@ We start by defining \textit{dynamic weakly verifiable puzzles}.
 The above definition generalizes the previous approaches contained in \cite{canetti2004hardness}, \cite{Dodis:2009:SAI:1530441.1530450}, \cite{DBLP:journals/corr/abs-1002-3534}.
 Some of more interesting cryptographic primitives captured by this definition are described in Section \ref{section:wvp_examples}.
 There is no loss of generality in assuming that a problem poser and problem solver are defined by probabilistic circuits.
-This definition applies also when a problem poser and solver are probabilistic algorithms
-by using the well know fact \cite{LectureNotesCT} that probabilistic algorithms can be represented as Boolean circuits.
+The definition embraces also a case a problem poser and a problem solver are probabilistic polynomial time algorithms
+by using the well know fact \cite{LectureNotesCT} that probabilistic algorithms can be transform into equivalent family of Boolean circuits of polynomial size.
 
 \section{Examples}
 \label{section:wvp_examples}
-In this section we give examples of cryptographic constructions that are dynamic weakly verifiable puzzles.
+In this section we give examples of cryptographic constructions that are generalized by definition \ref{def:dwvp}.
 
 \subsection{Message Authentication Codes}
-Let us consider the following setting. Two parties a \textit{sender} and a \textit{receiver} communicate over an insecure channel.
-Messages sent by the sender may be read and change by a third party called an \textit{adversary}.
-Therefore, the receiver needs a way to ensure messages originate from the sender and are not modified.
-A solution is to use message authentication codes.
+Let us consider the setting in which two parties a \textit{sender} and a \textit{receiver} communicate over an insecure channel.
+Messages of the sender may be read and changed by a third party called an \textit{adversary}.
+The receiver needs a way to ensure that received messages are indeed sent by the sender and have not been modified by the adversary.
+The solution is to use message authentication codes.
 
-We assume that both the sender, receiver and adversary are polynomial time algorithms.
-Furthermore, the sender and the receive share a secrete key to which an adversary has no access.
-For each message the sender appends a tag that is computed as a function of a key and a message.
-For a received message the receiver compute the tag and checks whether it matches the tag appended to the message.
-Below we give more formal definition,  based on \cite{LectureNotesCrypo} and \cite{Goldreich:2004:FCV:975541},
-of message authentication codes (MAC) and MAC security.
+We consider a setting in which all parties are polynomial time algorithms, and messages can be represented as bitstring.
+Additionally, we assume that the sender and the receive share a secrete key to which an adversary has no access.
+The sender appends to every message a tag that is as computed as a function of the key and the message.
+The receiver, using the key, has a way to check whether the tag is valid for the received message.
+On the other hand, it should be hard for the adversary to find a tag and message that would be correctly validate by the receiver.
+
+The following definition is based on \cite{LectureNotesCrypo} and \cite{Goldreich:2004:FCV:975541}.
 \begin{definition}[Message Authentication Codes (MAC)]
   Let $\cM$ be a set of messages, $\cK$ a set of keys and finally $\cT$ a set of tags.
   The message authentication code is a function $f:\cM \times \cK \rightarrow \cT$, and it is secure if additionally satisfies the following condition:
@@ -192,7 +193,6 @@ as the adversary does not communicate with the problem poser.
 
 \subsection{Public Key Signature Scheme}
 First we give a definition of public key encryption scheme and security of such a scheme. Both definition are based on \cite{Goldreich:2004:FCV:975541}.
-
 
 \begin{definition}[Public key signature scheme]
 A public key encryption scheme is defined by a triple of probabilistic polynomial time algorithms:
