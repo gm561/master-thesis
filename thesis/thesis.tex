@@ -95,6 +95,9 @@
 \mainmatter
 
 \chapter{Introduction}
+
+% use term \textit{puzzle} to denote somewhat-hard automatically-generated computational a problems
+
 \section{Security Amplification Theorems}
 Introduction to security amplification theorems and hardness implication statements.
 Example of classical results. Problems captured by weakly verifiable puzzles.
@@ -225,19 +228,63 @@ Finally, it is clear that if a problem solver succeeds in solving a DWVP defined
 Public key signature schemes are type of puzzles that are dynamic - the problem poser gain oracle access to hint and verification circuits,
 but are not interactive.
 
+%todo define negligible
+%todo define computational security
 \subsection{Bit Commitments}
 \cite{LectureNotesComThCrypto}
+Let us consider a bit commitment protocol, in which there are two parties a \textit{sender} and a \textit{receiver}.
+In the first phase the sender and the receiver interact and the sender commit to a value $b \in \{0,1\}$.
+We require that it is hard for the sender, after the commitment phase, to guess correctly the bit $b$.
+In the send phase the sender open the commitment by sending to the receiver the information $y$ that let
+the receiver validate the commitment.
+We say that the protocol is secure if it is computationally hard for the sender to find to such strings $y_0$ and $y_1$
+that both $(0, y_0)$ and $(1, y_1)$ are valid.
 
+\begin{todo}
+  \textbf{TODO:} Security definition
+\end{todo}
 
-\subsection{CAPTACHs}
+\begin{todo}
+  \textbf{TODO:} Type of puzzles generalized by this
+\end{todo}
 
+\subsection{Automated Turing Tests}
+The goal of \textit{Automated Turing Tests} is to distinguish humans from computers.
+A frequent application of \textit{Automated Turing Tests} is preventing computer programs from accessing resources
+for human beings (like creating an email account).
+An example of implementation of \textit{Automated Turing Tests} is CAPTCHA that was defined in \cite{von2003captcha}.
+Loossly speaking, CAPTCHA is a test that human can solve with probability close to 1, but it is hard to write a computer program
+that has a success probability comparable to the one achieved by humans.
+An example of CAPTACHA is sending a distorted text. It is easy for most humans to guess the right text, but it might be hard to write
+a program for which it would also be easy. We note that the definition of hardness is not precesily defined, as it is possible that
+there exists a program that reaches the success probability close to the one achieved by humans.
 
-\subsection{Information theoretically secure constructions}
+CAPTCHAs basing on guessing the distorted text are yet another example of weakly verifiable puzzles.
+In the first round the problem poser and problem solver engage in interactive protocol, such that
+after the execution of the protocol the problem poser has a way to verify the solution.
+The problem poser in the second round takes as input a distorted image, and try to guess the text that was used to generated it.
+We note that the standard distorted text base CAPTCHAs are non dynamic. The problem poser does not gain access to the hint oracle,
+only to the verification oracle to which it asks a single query.
 
+Our definition captures also this the above type of problems, additionally it is also applicable in the broader context for a different
+AI problems.
+
+As it is not know how good the possible algorithm can be to recognize CAPTCHA it is likely that the gap between human
+performance and a performance of computer programs may be small. Therefore, it is of interest to find
+a way to amplify this gap.
+It turns out that it is indeed possible which for not dynamic puzzles was proved in \cite{DBLP:journals/corr/abs-1002-3534}.
+The proof presented in \ref{ch:main_result} applies also to dynamic context.
+
+% why is it hard to automatically check the solution for CAPTCHAs
+
+%todo define information theoretic security
+% \subsection{Information theoretically secure constructions}
+% The definition presented in \ref{def:dwvp} applies also to information theoretic secure constructions.
 
 \section{Previous results}
 \label{st:previous_results}
 \subsection{Results of R.Canetti, S.Halevi, and M.Steiner}
+% the matrix with entries, the combinatorial observation.
 \subsection{Results of Y.Dodis, R.Impagliazzo, R.Jaiswal, V.Kabanets}
 \subsection{Results of T.Holenstein and G.Scheonebeck}
 \section{Limitations of Security Amplification}
