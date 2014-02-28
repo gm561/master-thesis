@@ -110,14 +110,14 @@ Overview of the content of the succeeding chapters.
 
 \chapter{Weakly Verifiable Cryptographic Primitives}
 In this chapter we introduce weakly verifiable puzzles.
-Section \ref{section:wvp} contains the formal definitions of dynamic weakly verifiable puzzles.
+Section \ref{section:wvp} contains a formal definition of dynamic weakly verifiable puzzles.
 In Section \ref{section:wvp_examples} we give a series of cryptographic primitives that are captured by dynamic weakly verifiable puzzles.
-Finally, in Section \ref{st:previous_results} we give an overview of the earlier research in this area
+Finally, in Section \ref{st:previous_results} we give an overview of the previous results in this area
 that is primarily covered in \cite{canetti2004hardness}, \cite{Dodis:2009:SAI:1530441.1530450}, and \cite{DBLP:journals/corr/abs-1002-3534}.
 
 \section{Dynamic Weakly Verifiable Puzzles}
 \label{section:wvp}
-We start by defining \textit{dynamic weakly verifiable puzzles}.
+We start by giving the formal definition of dynamic weakly verifiable puzzles.
 \begin{definition}[Dynamic weakly verifiable puzzle.]
   \label{def:dwvp}
   A dynamic weakly verifiable puzzle (DWVP) is defined by a family of probabilistic circuits $\{P_n\}$.
@@ -142,7 +142,7 @@ We start by defining \textit{dynamic weakly verifiable puzzles}.
 \end{definition}
 
 The above definition generalizes the previous approaches contained in \cite{canetti2004hardness}, \cite{Dodis:2009:SAI:1530441.1530450}, \cite{DBLP:journals/corr/abs-1002-3534}.
-Some of more interesting cryptographic primitives captured by this definition are described in Section \ref{section:wvp_examples}.
+Some of cryptographic primitives that are dynamic weakly verifiable puzzles are described in Section \ref{section:wvp_examples}.
 There is no loss of generality in assuming that a problem poser and problem solver are defined by probabilistic circuits.
 The definition embraces also a case a problem poser and a problem solver are probabilistic polynomial time algorithms
 by using the well know fact \cite{LectureNotesCT} that probabilistic algorithms can be transform into equivalent family of Boolean circuits of polynomial size.
@@ -152,16 +152,17 @@ by using the well know fact \cite{LectureNotesCT} that probabilistic algorithms 
 In this section we give examples of cryptographic constructions that are dynamic weakly verifiable puzzles.
 
 \subsection{Message Authentication Codes}
-We consider the setting in which two parties a \textit{sender} and a \textit{receiver} communicate over an insecure channel, and
-messages of the sender may be read and changed by a third party called an \textit{adversary}.
-The receiver needs a way to ensure that received messages are indeed sent by the sender and have not been modified by the adversary.
+We consider the setting in which two parties a \textit{sender} and a \textit{receiver} communicate over an insecure channel.
+The messages of the sender may be read and changed by a third party called an \textit{adversary}.
+The receiver needs a way to ensure that received messages have been indeed sent by the sender and have not been modified by the adversary.
 The solution is to use message authentication codes.
 
 We assume that all parties are polynomial time algorithms, and messages can be represented as bitstring.
 Additionally, we assume that the sender and the receive share a secrete key to which an adversary has no access.
 The sender appends to every message a tag that is as computed as a function of the key and the message.
-The receiver, using the key, has a way to check whether the tag is valid for the received message.
-On the other hand, it should be hard for the adversary to find a tag and message that would be correctly validate by the receiver.
+The receiver, using the key, has a way to check whether the tag is valid for the received message. If a tag is valid for the message we say that the receiver
+accepts the message. Otherwise, the receiver rejects.
+On the other hand, it should be computationally infeasible for the adversary to find a tag and a message that is accepted by the receiver with non-negligible probability.
 
 We give the following more formal definition based on \cite{LectureNotesCrypo} and \cite{Goldreich:2004:FCV:975541}.
 \begin{definition}[Message Authentication Codes (MAC)]
@@ -170,33 +171,36 @@ We give the following more formal definition based on \cite{LectureNotesCrypo} a
   that the message authentication code is secure if it satisfies the following condition:
 
   Let $k$ be chosen uniformly at random from $\cK$ and $\Gamma_H: \cM \rightarrow \cT$ be an oracle computing
-  a tag for the key $k$ and a message $m$. We say that MAC is secure if there is no probabilistic polynomial time algorithm with oracle access to $\Gamma_h$
-  that with non-negligible probability outputs a message $m'$, as well as corresponding MAC $t'$ such that $f(m', k) = t'$
+  a tag for the key $k$ and a message $m$. We say that MAC is secure if there is no probabilistic polynomial time algorithm with oracle access to $\Gamma_H$
+  that with non-negligible probability outputs a message $m'$, as well as corresponding tag $t'$ such that $f(m', k) = t'$
   and $\Gamma_H$ has not been queried for a tag of message $m'$.
 \end{definition}
 
 We show how the above definition of MAC is captured by dynamic weakly verifiable puzzles.
-The sender corresponds to a problem poser, and the adversary is a problem solver.
-The first phase is non interactive. The $k$ key corresponds to a bitstring $\pi \in \{0,1\}^{n}$ taken by a problem poser $P_n$.
-The problem poser outputs a hint circuit $\Gamma_H: \cM \rightarrow \cT$ that given a message computes a tag
+For fixed security parameter $n$ the sender corresponds to a problem poser, the adversary to a problem solver, and
+the $k$ key is a bitstring $\pi \in \{0,1\}^{n}$ taken as auxiliary input by a problem poser.
+In the first phase, which is non interactive, the problem poser outputs a hint circuit
+$\Gamma_H: \cM \rightarrow \cT$ that given a message computes a tag
 and a verification circuit $\Gamma_V: \cM \times \cT \rightarrow \{0,1\}$ that on input $m \in \cM$ and $t \in \cT$
 outputs one if and only if $f(m, k) = t$.
 
-In the second phase the adversary takes no input ($x^*$ is empty string), but is given oracle access to $\Gamma_H$ and $\Gamma_V$.
+In the second phase the adversary takes no input ($x^*$ is empty string) as the first phase was non-interactive and
+is given oracle access to $\Gamma_H$ and $\Gamma_V$.
 The adversary succeeds in breaking the security of MAC if it finds a valid tag $t' \in \cT$ for a message $m' \in \cM$ such that a hint for this message
 has no been asked before. That corresponds to asking a successful verification query to $\Gamma_V$.
 Conversely, if there is no polynomial time algorithm that succeeds in solving this dynamic weakly verifiable puzzle with non-negligible probability
 then the message authentication code is secure.
 
 Thus, a game in which an adversary has to break security of MAC is a non interactive dynamic weakly verifiable puzzle.
-
+%
 \subsection{Public Key Signature Scheme}
-First we give a definition of public key encryption scheme and security of such a scheme. Both definition are based on \cite{Goldreich:2004:FCV:975541}.
+First we give a definition of public key encryption scheme and what it means for such a scheme to be secure.
+These definitions are based on \cite{Goldreich:2004:FCV:975541}.
 
 \begin{definition}[Public key signature scheme]
 A public key encryption scheme is defined by a triple of probabilistic polynomial time algorithms:
-$G$ the key generation algorithm, $V$ the verification algorithm, $S$ the verification algorithm such that the following conditions are satisfied:
-\begin{enumerate}[]
+$G$ -- the key generation algorithm, $V$ -- the verification algorithm, $S$ -- the signing algorithm such that the following conditions are satisfied:
+\begin{enumerate}[-]
   \item $G(1^n)$ outputs a pair of bitstrings $k_{priv}$ a private key, $k_{pub}$ a public key.
   \item For every $k_{priv}$, $k_{pub}$ output by $G$ and $q \in Q$ it holds
     \begin{align*}
