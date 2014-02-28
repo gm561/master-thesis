@@ -95,7 +95,6 @@
 \mainmatter
 
 \chapter{Introduction}
-
 % use term \textit{puzzle} to denote somewhat-hard automatically-generated computational a problems
 \section{Security Amplification Theorems}
 Introduction to security amplification theorems and hardness implication statements.
@@ -150,46 +149,46 @@ by using the well know fact \cite{LectureNotesCT} that probabilistic algorithms 
 
 \section{Examples}
 \label{section:wvp_examples}
-In this section we give examples of cryptographic constructions that are generalized by definition \ref{def:dwvp}.
+In this section we give examples of cryptographic constructions that are dynamic weakly verifiable puzzles.
 
 \subsection{Message Authentication Codes}
-Let us consider the setting in which two parties a \textit{sender} and a \textit{receiver} communicate over an insecure channel.
-Messages of the sender may be read and changed by a third party called an \textit{adversary}.
+We consider the setting in which two parties a \textit{sender} and a \textit{receiver} communicate over an insecure channel, and
+messages of the sender may be read and changed by a third party called an \textit{adversary}.
 The receiver needs a way to ensure that received messages are indeed sent by the sender and have not been modified by the adversary.
 The solution is to use message authentication codes.
 
-We consider a setting in which all parties are polynomial time algorithms, and messages can be represented as bitstring.
+We assume that all parties are polynomial time algorithms, and messages can be represented as bitstring.
 Additionally, we assume that the sender and the receive share a secrete key to which an adversary has no access.
 The sender appends to every message a tag that is as computed as a function of the key and the message.
 The receiver, using the key, has a way to check whether the tag is valid for the received message.
 On the other hand, it should be hard for the adversary to find a tag and message that would be correctly validate by the receiver.
 
-The following definition is based on \cite{LectureNotesCrypo} and \cite{Goldreich:2004:FCV:975541}.
+We give the following more formal definition based on \cite{LectureNotesCrypo} and \cite{Goldreich:2004:FCV:975541}.
 \begin{definition}[Message Authentication Codes (MAC)]
-  Let $\cM$ be a set of messages, $\cK$ a set of keys and finally $\cT$ a set of tags.
-  The message authentication code is a function $f:\cM \times \cK \rightarrow \cT$, and it is secure if additionally satisfies the following condition:
+  Let $\cM \subseteq \{0,1\}^*$ be a set of messages, $\cK \subseteq \{0,1\}^{n}$ a set of keys and $\cT \subseteq \{0,1\}^*$ a set of tags where $n \in \N$
+  is a security parameter. We define the \textit{message authentication code} as function $f:\cM \times \cK \rightarrow \cT$. Furthermore, we say
+  that the message authentication code is secure if it satisfies the following condition:
 
   Let $k$ be chosen uniformly at random from $\cK$ and $\Gamma_H: \cM \rightarrow \cT$ be an oracle computing
-  a tag for the key $k$ and a message $m$. We say that MAC is secure if there is not probabilistic polynomial time algorithm
-  that with non-negligible probability outputs a message $m'$, as well as corresponding MAC $t'$ such that $f(m', k) = t$.
+  a tag for the key $k$ and a message $m$. We say that MAC is secure if there is no probabilistic polynomial time algorithm with oracle access to $\Gamma_h$
+  that with non-negligible probability outputs a message $m'$, as well as corresponding MAC $t'$ such that $f(m', k) = t'$
+  and $\Gamma_H$ has not been queried for a tag of message $m'$.
 \end{definition}
 
 We show how the above definition of MAC is captured by dynamic weakly verifiable puzzles.
-The first phase is non interactive.
-The $k$ key corresponds to a bitstring $\pi \in \{0,1\}^{n}$ taken by a problem poser $P_n$.
-The problem poser outputs a hint circuit $\Gamma_H: \cM \rightarrow \cT$ that given a message computes a tag.
+The sender corresponds to a problem poser, and the adversary is a problem solver.
+The first phase is non interactive. The $k$ key corresponds to a bitstring $\pi \in \{0,1\}^{n}$ taken by a problem poser $P_n$.
+The problem poser outputs a hint circuit $\Gamma_H: \cM \rightarrow \cT$ that given a message computes a tag
 and a verification circuit $\Gamma_V: \cM \times \cT \rightarrow \{0,1\}$ that on input $m \in \cM$ and $t \in \cT$
 outputs one if and only if $f(m, k) = t$.
 
-The adversary is a probabilistic polynomial time algorithm, thus equivalently it can be turn into a circuit of polynomial size.
 In the second phase the adversary takes no input ($x^*$ is empty string), but is given oracle access to $\Gamma_H$ and $\Gamma_V$.
 The adversary succeeds in breaking the security of MAC if it finds a valid tag $t' \in \cT$ for a message $m' \in \cM$ such that a hint for this message
-has no been asked before. That corresponds to asking a successful verification query to oracle circuit $\Gamma_V$.
+has no been asked before. That corresponds to asking a successful verification query to $\Gamma_V$.
 Conversely, if there is no polynomial time algorithm that succeeds in solving this dynamic weakly verifiable puzzle with non-negligible probability
 then the message authentication code is secure.
 
-Thus, a game in which an adversary has to break security of MAC is a dynamic weakly verifiable puzzle which first phase is not interactive,
-as the adversary does not communicate with the problem poser.
+Thus, a game in which an adversary has to break security of MAC is a non interactive dynamic weakly verifiable puzzle.
 
 \subsection{Public Key Signature Scheme}
 First we give a definition of public key encryption scheme and security of such a scheme. Both definition are based on \cite{Goldreich:2004:FCV:975541}.
