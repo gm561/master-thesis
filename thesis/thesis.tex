@@ -143,8 +143,9 @@ We start by giving the formal definition of dynamic weakly verifiable puzzles.
 
 The above definition generalizes the previous approaches contained in \cite{canetti2004hardness}, \cite{Dodis:2009:SAI:1530441.1530450}, \cite{DBLP:journals/corr/abs-1002-3534}.
 Some of cryptographic primitives that are dynamic weakly verifiable puzzles are described in Section \ref{section:wvp_examples}.
-There is no loss of generality in assuming that a problem poser and problem solver are defined by probabilistic circuits.
-The definition embraces also a case a problem poser and a problem solver are probabilistic polynomial time algorithms
+
+There is no loss of generality in assuming that a problem poser and a problem solver are defined by probabilistic circuits.
+The definition embraces also a case where a problem poser and a problem solver are probabilistic polynomial time algorithms
 by using the well know fact \cite{LectureNotesCT} that probabilistic algorithms can be transform into equivalent family of Boolean circuits of polynomial size.
 
 \section{Examples}
@@ -198,35 +199,36 @@ First we give a definition of public key encryption scheme and what it means for
 These definitions are based on \cite{Goldreich:2004:FCV:975541}.
 
 \begin{definition}[Public key signature scheme]
-A public key encryption scheme is defined by a triple of probabilistic polynomial time algorithms:
+Let $Q$ be the set of messages. A public key encryption scheme is defined by a triple of probabilistic polynomial time algorithms:
 $G$ -- the key generation algorithm, $V$ -- the verification algorithm, $S$ -- the signing algorithm such that the following conditions are satisfied:
 \begin{enumerate}[-]
-  \item $G(1^n)$ outputs a pair of bitstrings $k_{priv}$ a private key, $k_{pub}$ a public key.
+  \item $G(1^n)$ outputs a pair of bitstrings $k_{priv}$ and $k_{pub}$. We call $k_{priv}$ a private key and $k_{pub}$ a public key.
   \item For every $k_{priv}$, $k_{pub}$ output by $G$ and $q \in Q$ it holds
     \begin{align*}
       \Pr[V(k_{pub}, q, S(k_{priv}, q))] = 1.
     \end{align*}
 \end{enumerate}
 \end{definition}
-
+We say that signature $s \in S$ is \textit{valid} for $q \in Q$ if and only if $V(k_{pub}, q, s) = 1$.
+%
 %TODO efficiency of the algorithms
-
-\begin{definition}\textbf{(Security of public key signature scheme with respect to the chosen message attack)}
-Let us consider a situation in which an adversary is given a public key $k_{pub}$ and can ask for a signature of chosen messages.
-We say that the adversary succeeds if it finds a valid signature for a message for which a signature has not been asked.
-Furthermore, we say that the public key encryption scheme is secure if probability that any polynomial time bounded adversary
-succeeds in breaking the signature scheme with negligible probability.
+%
+\begin{definition}\textbf{(Security of public key signature scheme with respect to a chosen message attack)}
+Let an \textit{adversary} be a probabilistic polynomial time algorithm that takes as input $k_{pub}$ and has oracle access $S$.
+We say that the adversary succeeds if it finds a signature $s \in S$ for a message $q \in Q$ such that $V(k_{pub}, q, s) = 1$
+and the oracle $S$ has not been asked for a signature of $q$.
+We say that the public key encryption scheme is secure if there is no adversary that succeeds with non negligible probability.
 \end{definition}
 
-We show now that the public key signature schemes are also captured by definition \ref{def:dwvp}.
-First the problem poser uses algorithm $G(1^n)$ to obtain a public and private key.
-Then it generates a hint circuit $\Gamma_H : \cM \rightarrow S$ and a verification circuit $\Gamma_V : \cM \times \cS \rightarrow \{0,1\}$.
-The hint circuit takes as input $m \in \cM$ and outputs a signature for $m$. The verification circuits checks whether
-signature $s \in S$ is a valid for message $m \in \cM$.
-In the second phase the problem solver obtains $k_{pub}$, and is given oracle access to the hint circuit and verification circuit.
-The problem solver can ask a hint oracle for signature on chosen message.
-
-Finally, it is clear that if a problem solver succeeds in solving a DWVP defined as above, it also breaks the secuirty of the public signature schemes.
+Let $n$ be fixed security parameter.
+We show now that public key signature schemes defined as above are dynamic weakly verifiable puzzles.
+First the problem poser uses algorithm $G(1^n)$ to obtain $k_{pub}$ and $k_{priv}$.
+Next, $k_{pub}$ is sent to the adversary.
+The problem poser generates a hint circuit $\Gamma_H : \cQ \rightarrow S$ and a verification circuit $\Gamma_V : \cQ \times \cS \rightarrow \{0,1\}$.
+The hint circuit takes as input $q \in \cQ$ and outputs a signature for $q$. The verification circuit checks whether
+signature $s \in S$ is valid for message $q \in \cQ$.
+In the second phase the problem solver takes as input $k_{pub}$, and is given oracle access to $\Gamma_V$ and $\Gamma_H$.
+It is clear that if the adversary asks a successful verification query $(q,s)$ then it also breaks the security of a signature scheme.
 
 Public key signature schemes are type of puzzles that are dynamic - the problem poser gain oracle access to hint and verification circuits,
 but are not interactive.
@@ -234,22 +236,52 @@ but are not interactive.
 %todo define negligible
 %todo define computational security
 \subsection{Bit Commitments}
-\cite{LectureNotesComThCrypto}
-Let us consider a bit commitment protocol, in which there are two parties a \textit{sender} and a \textit{receiver}.
-In the first phase the sender and the receiver interact and the sender commit to a value $b \in \{0,1\}$.
-We require that it is hard for the sender, after the commitment phase, to guess correctly the bit $b$.
-In the send phase the sender open the commitment by sending to the receiver the information $y$ that let
-the receiver validate the commitment.
-We say that the protocol is secure if it is computationally hard for the sender to find to such strings $y_0$ and $y_1$
-that both $(0, y_0)$ and $(1, y_1)$ are valid.
+We base the following definition of Bit Commitment Protocols on \cite{LectureNotesComThCrypto}.
 
-\begin{todo}
-  \textbf{TODO:} Security definition
-\end{todo}
+Let us consider the following bit commitment protocol that involves two parties a \textit{sender} and a \textit{receiver}.
+We suppose that both the sender and the receiver are polynomial time algorithms.
+The protocol consists of two phases a \textit{commit} phase and \textit{reveal} phase.
+In the commit phase the sender and the receiver interact such that the sender commits to a value $b \in \{0,1\}$.
+In the reveal phase the sender opens the commitment by sending to the receiver $(y,b')$ where $y \in \{0,1\}^{*}$ and $b' \in \{0,1\}$.
+We require from the bit commitment protocol that it is hard after the commit phase for the receiver to guess $b$.
+Additionally, in the \textit{reveal} the sender can not convince the receiver that was committed to the value $b' \neq b$.
 
-\begin{todo}
-  \textbf{TODO:} Type of puzzles generalized by this
-\end{todo}
+We give the formal definition of Bit Commitment.
+\begin{definition}[Bit Commitment]
+  \label{def:bit_commitment}
+Let $S_n = (S_1, S_2)$ be a two phase probabilistic circuit and $R_n$ be a probabilistic circuit where $n$ is a security parameter.
+Both $S_n$ and $R_n$ are of size polynomial in $n$.
+The circuit $S_1$, used in the commit phase, takes as input a tuple of length $n+1$ such that $(b, \rho_S)$ where $b$ is interpreted as a bit to which $S_n$
+commits and $\rho_S$ the randomness used by the algorithm $S_n$. The receiver $R_n$ takes only auxiliary input $\rho_R$ that denotes the
+randomness used by $R_n$ and $|\rho_R| = n$.
+The protocol consists of two phases -- the commit phase where circuits $S_1$, $R_1$ engage in the protocol execution,
+and the reveal phase where $S_2$ and $R_2$ are used.
+After the commit phase the receiver generates a circuit $V$.
+For fixed $b \in \{0,1\}$ and $n$ we require the bit commit protocol to have the following properties:
+\begin{enumerate}[]
+\item{\textnormal{\textbf{Correctness}}}
+  \begin{align*}
+    \Pr[V(b,y) = 1] \geq 1 - \epsilon(k),
+  \end{align*}
+where $\epsilon$ is negligible function of $k$.
+\item{\textnormal{\textbf{Hiding}}}
+  Probability over random coins of $S_n$ and $R_n$ that any polynomial size circuit
+  can guess bit $b$ correctly after the commit phase is at most $\frac{1}{2} + \epsilon(k)$ where $\epsilon(k)$ is a negligible function of $k$.
+\item{\textnormal{\textbf{Binding}}}
+  For every polynomial size circuit $S_n$ we have
+  \begin{align*}
+    \Pr[V(0,y_0) = 1 \land V(1,y_1) = 1] \leq \epsilon(k),
+  \end{align*}
+  where $\epsilon(k)$ is a negligible function in $k$.
+\end{enumerate}
+\end{definition}
+
+The bit commitment protocols can be generalized in the language of weakly verifiable puzzles for a special
+case when the number of hint queries amounts o zero, and the problem poser can ask at most one verification query.
+In the context of bit commitment the sender corresponds to a problem solver and the receiver is a problem poser.
+The first phase is as in Definition \ref{def:bit_commitment}. In the reveal phase the problem poser tries to find a bitstring $y$
+such that $V(\lnot b, y) = 1$.
+Thus, breaking the binding property of bit commitment is generalized by an interactive weakly verifiable puzzle that is non dynamic.
 
 \subsection{Automated Turing Tests}
 The goal of \textit{Automated Turing Tests} is to distinguish humans from computers.

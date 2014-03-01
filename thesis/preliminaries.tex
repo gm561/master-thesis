@@ -24,6 +24,8 @@ Therefore, whenever we state a theorem about circuits we can also apply it to po
 
 We write $\mathit{poly}(\alpha_1, \dots, \alpha_n)$ to denote a polynomial on variables $\alpha_1, \dots, \alpha_n$.
 For an algorithm $A$ we write $\mathit{Time}(A)$ to denote the number of steps it takes to execute $A$.
+We say that the algorithm $A$ runs in polynomial time if number of steps required to evaluate $A$ is bounded by $poly(|x|)$, where $|x|$ denotes
+the length of the input that $A$ takes.
 Similarly, as for probabilistic circuits we write the randomness used by a probabilistic algorithm explicitly as a bitstring provided as an auxiliary input.
 
 \textbf{(Probabilities and distributions)}
@@ -39,6 +41,14 @@ happens \textit{almost surely} or with \textit{high probability} if $\Pr[E_n] \g
 
 \begin{todo}
   \textbf{TODO:} Non-negligible function and probability
+\end{todo}
+
+\begin{todo}
+  \textbf{TODO:} Define a protocol?
+\end{todo}
+
+\begin{todo}
+  \textbf{TODO:} Define a protocol running time of the protocol
 \end{todo}
 
 \textbf{(Interactive protocols)} We are often interested in situations where two probabilistic algorithms interact with each other according to some protocol.
