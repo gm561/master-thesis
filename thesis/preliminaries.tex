@@ -2,33 +2,30 @@ In this section we set up notation and terminology used in the thesis.
 %
 \section{Notation and Definitions}
 \textbf{(Algorithms, Bitstrings and Circuits)}
-We define a Boolean circuit as a directed acyclic graph with input vertices and vertices implementing logical functions \textit{and}, \textit{or}, and \textit{not}.
+We define a \textit{Boolean circuit} as a directed acyclic graph with input vertices and vertices implementing logical functions \textit{and}, \textit{or}, and \textit{not}.
 We denote Boolean circuits using capital letters from the Greek and English alphabet.
-
-We define a \textit{probabilistic circuit} as a Boolean circuit $C_{m,n} : \{0,1\}^{m} \times \{0,1\}^{n} \rightarrow \{0,1\}^{*}$,
-For input $x \in \{0,1\}^{m}$ we write to denote $C_{m,n}(x;r)$ where $r \in \{0,1\}^{n}$ is called auxiliary input.
-If a probabilistic circuit does not take input $x$, we slightly abuse notation and write $C_{n}(r)$.
-Similarly we use $\{C_n\}$ to denote a family of probabilist circuits that takes only auxiliary input.
-\begin{todo}
-  \textbf{TODO:} What $n$ denotes?
-\end{todo}
-
-We make sure that it is clear from the context that probabilist circuits with only auxiliary input
+We define a \textit{probabilistic circuit} as a Boolean circuit $C_{m,n} : \{0,1\}^{m} \times \{0,1\}^{n} \rightarrow \{0,1\}^{*}$.
+We write $C_{m,n}(x;r)$ to denote a probabilistic circuit where $x \in \{0,1\}^{m}$ is an input and $r \in \{0,1\}^{n}$ is called auxiliary input.
+If a probabilistic circuit does not take input $x$, we abuse notation and write $C_{n}(r)$.
+Similarly, we use $\{C_n\}_{n \in \N}$ to denote a family of probabilist circuits that takes only auxiliary input.
+We make sure that it is clear from the context that probabilistic circuits with only auxiliary input
 are not confused with circuits that do not take auxiliary input.
-
-For a (probabilist) circuit $C$ we write $\mathit{Size}(C)$ to denote the total number of vertices of $C$.
+For a (probabilistic) circuit $C$ we write $\mathit{Size}(C)$ to denote the total number of vertices of $C$.
 
 We define a \textit{two phase circuit} $C := (C_1, C_2)$ as a circuit where in the first phase a circuit $C_1$ is used and in the second phase a circuit $C_2$.
 If $C_1$ and $C_2$ are probabilistic circuits we write $C(\delta) := (C_1, C_2)(\delta)$ to denote that in both phases $C_1$ and $C_2$ take
 as auxiliary input the same bitstring $\delta$.
 
+\begin{todo}
+  \textbf{TODO:} Does it hold for search problems and for algorithms with not a single bit of output.
+\end{todo}
 It is well known \cite{Arora:2009:CCM:1540612} that a probabilistic polynomial time algorithm can be represented as a circuit of polynomial size.
 Moreover, it can be computed in polynomial time and logarithmic space.
-Therefore, whenever we state a theorem about circuits we can also apply it to polynomial time algorithms.
+Therefore, whenever we state a theorem about circuits it can be also generalized for the polynomial time algorithms.
 
 We write $\mathit{poly}(\alpha_1, \dots, \alpha_n)$ to denote a polynomial on variables $\alpha_1, \dots, \alpha_n$.
 For an algorithm $A$ we write $\mathit{Time}(A)$ to denote the number of steps it takes to execute $A$.
-We say that the algorithm $A$ runs in polynomial time if number of steps required to evaluate $A$ is bounded by $poly(|x|)$, where $|x|$ denotes
+We say that $A$ runs in \textit{polynomial time} if number of steps required to evaluate $A$ is bounded by $poly(|x|)$, where $|x|$ denotes
 the length of the input that $A$ takes.
 Similarly, as for probabilistic circuits we write the randomness used by a probabilistic algorithm explicitly as a bitstring provided as an auxiliary input.
 
@@ -40,24 +37,29 @@ Moreover, we use $\mu_{\delta}^k$ to denote the probability distribution over $k
 where each element of a $k$-tuple is drawn independently according to $\mu_{\delta}$.
 Finally, let $u \leftarrow \mu_{\delta}^k$ denote that a $k$-tuple $u$ is chosen according to $\mu_{\delta}^k$.
 
-Let $(\Omega, \cF, \Pr)$ be a probability space and $n \in \N$. We say that an event $E_n \in \cF$
-happens \textit{almost surely} or with \textit{high probability} if $\Pr[E_n] \geq 1 - 2^{-n} \mathit{poly}(n)$.
+Let $(\Omega, \cF, \Pr)$ be a probability space and $n \in \N$.
+Let $E_n \in \cF$ denote an event that probability depends on $n$.
+We say that $E_n$ happens \textit{almost surely} or with \textit{high probability} if $\Pr[E_n] \geq 1 - 2^{-n} \mathit{poly}(n)$.
 
-\begin{todo}
-  \textbf{TODO:} Non-negligible function and probability
-define computational security
-\end{todo}
-\begin{todo}
-  \textbf{TODO:} Define a protocol?
-\end{todo}
-\begin{todo}
-  \textbf{TODO:} Define a protocol running time of the protocol
-\end{todo}
-\begin{todo}
- \textbf{TODO}: efficiently computable function
-\end{todo}
+\textbf{(Functions)} We call a function $f: \N \rightarrow \R$ \textit{negligible} if for every polynomial $\poly(n)$
+there exists $n_0 \in \N$ such that for all $n \in \N : n > n_0$ the following holds
+\begin{align*}
+f(n) < \frac{1}{\poly(n)}.
+\end{align*}
+On the other hand, we say that function $f: \N \rightarrow \R$ is \textit{non-negligible} if
+there exists a polynomial $\poly(n)$ if such that for some $n_0 \in \N$ and for all $n \in \N : n > n_0$ we have
+\begin{align*}
+  f(n) \geq \frac{1}{\poly(n)}.
+\end{align*}
+We say that a function $f$ is \textit{efficiently computable} if there exists a polynomial time algorithm computing $f$.
 
-\textbf{(Interactive protocols)} We are often interested in situations where two probabilistic algorithms interact with each other according to some protocol.
+\textbf{(Interactive protocols)}
+Let $\{A_n\}_{n \in \N}$ and $\{B_n\}_{n \in \N}$ be families of circuits and $A_n : \{0,1\}^{*} \rightarrow \{0,1\}^{*}$ and $B_n : \{0,1\}^{*} \rightarrow \{0,1\}^{*}$.
+An \textit{interactive protocol} is defined by a $\{A_n\}_{n \in \N}$ and $\{B_n\}_{n \in \N}$ where
+for random bitstrings $\rho_A \in \{0,1\}^{n}$, $\rho_B \in \{0,1\}^{n}$ in the first round $m_0 := A_n(\rho_A)$ and $m_1 := B_n(\rho_B, m_1)$.
+In general in $k$-th round $A_n(\rho_A, m_1, m_2, \cdots, m_{k-1})$ and $B_n(\rho_B, m_1, m_2, \cdots, m_{k-1}, m_{k})$.
+
+We are often interested in situations where two probabilistic algorithms interact with each other according to some protocol.
 We limit ourselves to the cases where algorithms interact by means of messages representable by bitstrings.
 A protocol execution between two probabilistic algorithms $A$ and $B$ is denoted by $\langle A, B \rangle$.
 The output of $A$ in a protocol execution is denoted by $\langle A, B \rangle_A$ and of $B$ by $\langle A, B \rangle_B$.
@@ -65,18 +67,18 @@ A sequence of all messages sent by $A$ and $B$ in the protocol execution is call
 is denoted by $\langle A, B \rangle_{\mathit{trans}}$.
 
 \textbf{(Oracle algorithms)}
-\begin{todo}
-  \textbf{TODO:} set up notation
-\end{todo}
+We use notions of \textit{oracle circuits} following the standard definition included in the literature \cite{Goldreich:2004:FCV:975541}.
+If a circuit $A$ gain oracle access to a circuit $B$ then we write $A^{B}$. If additionally $B$ access yet another oracle circuit $B$ we often omit this
+in notation and write $A^{B}$ instead of $A^{B^C}$. We make sure that it is clear from the context which oracle is accessed by $B$.
 
 \begin{definition}[Polynomial time sampleable distribution]
-We say that a distribution is polynomial time sampleable if it can be approximated by polynomial time algorithm
-up to exponential factor.
+We say that a distribution is polynomial time sampleable if it can be approximated by an algorithm running in time $\mathit{poly}(\log|\cD|, \log|cR|)$
+up to an exponential factor.
 \end{definition}
 
 \begin{definition}[Pairwise independent family of efficient hash functions]
 Let $\cD$ and $\cR$ be finite sets and $\cH$ be a family of functions mapping values from $\cD$ to values in $\cR$.
-We say that $\cH$ is an \textnormal{efficient family of pairwise independent hash functions}
+We say that $\cH$ is a \textnormal{family of pairwise independent efficient hash functions}
 if $\cH$ has the following properties.
 
 \textbf{(Pairwise independent)} For $\forall x \neq y \in \mathcal{D}$ and $\forall \alpha, \beta \in \cR$, it holds
@@ -95,7 +97,7 @@ We note that the pairwise independence property is equivalent to
 \begin{displaymath}
 \underset{\hash \la0 \cH}{\Pr}[hash(x) = \alpha \land hash(y) = \beta] = \frac{1}{|\cR|^2}.
 \end{displaymath}
-It is well know \cite{Carter:1977:UCH:800105.803400} that there exists a family of hash functions meeting the above criteria.
+It is well know \cite{Carter:1977:UCH:800105.803400} that there exists families of functions meeting the above criteria.
 
 %%% Local Variables:
 %%% mode: latex
