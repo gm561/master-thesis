@@ -30,6 +30,9 @@ We say that $A$ runs in \textit{polynomial time} if the number of steps required
 the length of the input that $A$ takes.
 Similarly, as for probabilistic circuits we write the randomness used by a probabilistic algorithm explicitly as a bitstring provided as an auxiliary input.
 
+For a tuple $x^{(l)}$ and an element $x_{l+1}$ we use $x^{(l)} \circ x_{l+1}$ to denote the concatenation of $x^{(l)}$ and $x_{(l+1)}$ which results in
+$x^{(l+1)} := (x_1, \dotsc, x_l, x_{l+1})$.
+%
 \textbf{(Probabilities and distributions)}
 For a finite set $\cR$ we write $r \xleftarrow{\$} \cR$ to denote that $r$ is chosen from $\cR$ uniformly at random.
 For $\delta \in \R : 0 \leq \delta \leq 1$ we write $\mu_{\delta}$ to denote the Bernoulli distribution where outcome $1$ occurs with
