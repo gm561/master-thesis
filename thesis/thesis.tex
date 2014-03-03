@@ -349,23 +349,20 @@ The proof presented in Chapter \ref{ch:main_result} applies also to the dynamic 
 % The definition presented in \ref{def:dwvp} applies also to information theoretic secure constructions.
 
 \section{Previous results}
-Different types of dynamic interactive weakly verifiable puzzles has been analyzed in a series of papers \cite{canetti2004hardness},
+Different types of weakly verifiable cryptographic primitives have been analyzed in a series of papers \cite{canetti2004hardness},
 \cite{Dodis:2009:SAI:1530441.1530450} and \cite{DBLP:journals/corr/abs-1002-3534}.
-This section give the short overview of the techniques used in these works, but also is aimed to give more intuition and insight into
-a problem of hardness amplification of dynamic interactive weakly verifiable puzzles.
+This section give the short overview of the techniques used in these works, but is also aimed to give more intuition and insight into
+the problem of hardness amplification of dynamic interactive weakly verifiable puzzles.
 \label{st:previous_results}
 \subsection{Results of R.Canetti, S.Halevi, and M.Steiner}
 The notion of \textit{weakly verifiable puzzles} has been coined by R.Canetti, S.Halevi and M.Steiner in the paper
 \textit{Hardness amplification of weakly verifiable puzzles} \cite{canetti2004hardness}.
-In comparison to Definition \ref{def:dwvp}, the puzzles considered in \cite{canetti2004hardness} are non-dynamic and non-interactive.
-Moreover, the number of verification queries is limited to one.
-First we give a definition of weakly verifiable puzzles following the one contained in the paper of R.Canetti, S.Halevi and M.Steiner.
-We compare it to Definition \ref{def:dwvp}.
-We state the main theorem as in \cite{canetti2004hardness} and give the intuition behind the proof of this theorem.
-The main proof of this Thesis uses many ideas from the proof of R.Canetti, S.Halevi and M.Steiner.
+In comparison to Definition \ref{def:dwvp}, the puzzles considered in \cite{canetti2004hardness} are neither dynamic nor interactive.
+Moreover, the number of verification queries asked by solver algorithm is limited to one.
+We start by providing the definition of weakly verifiable puzzles following the one contained in the paper of R.Canetti, S.Halevi and M.Steiner \cite{canetti2004hardness}.
+We compare it to Definition \ref{def:dwvp} and state the main theorem included in this paper. Finally, we give an intuition behind a proof of this theorem.
+It is noteworthy that the main proof of this Thesis contained in Chapter \ref{ch:main_result} uses many ideas from the proof of R.Canetti, S.Halevi and M.Steiner.
 %
-% note we can not use $k$ as the length of the random bitstring as it is bounded by poly(k)
-% (it seems not to be a huge different if I define a polynomial family of circuits)
 \begin{definition}[Weakly Verifiable Puzzles]
   \label{def:wvp}
 A \textnormal{weakly verifiable puzzle} is defined by a pair of probabilistic polynomial time algorithms.
@@ -432,23 +429,23 @@ to solve a single puzzle with probability at least $\delta(1 \frac {1}{q})$.
 \begin{codeblock}
   \textbf{Algorithm:} $\mathit{KHS\text{--}solver}^{S,V,G}(p, n, k, q, \delta)$
   \medskip\hrule
-  \textbf{Oracle:} A solver $S$ for $P^{(k)}$, verifier and generator $V$,$G$ for $P$\\
+  \textbf{Oracle:} A solver $S$ for $P^{(k)}$, a verification algorithm $V$ for $P$, a puzzle--generator algorithm $G$ for $P$\\
   \textbf{Input:}  A bistring $p \in \{0,1\}^{*}$, parameters $n, k, q, \delta$.
   \medskip\hrule
   $\mathit{prefix} := \emptyset$\\
   \For $i = 1$ \To $n-1$ \Do \\
   \IndI $p^* := \mathit{ExtendPrefix(prefix, i)}$\\
-  \IndI \If $(p^* = \bot)$ \Then \Return $\mathit{OnlinePhase}(prefix, i, n, k, q)$ \\
-  \IndI \Else $prefix := prefix \circ p^*$\\
-  $ a^{(n)} := A(prefix \circ p)$ \\
+  \IndI \If $(p^* = \bot)$ \Then \Return $\mathit{OnlinePhase}(\mathit{prefix}, i, n, k, q)$ \\
+  \IndI \Else $\mathit{prefix} := \mathit{prefix} \circ p^*$\\
+  $ a^{(n)} := A(\mathit{prefix} \circ p)$ \\
   \Return $a_n$
 \end{codeblock}
 %
 \begin{codeblock}
-  \textbf{Algorithm:} $\mathit{OnlinePhase(prefix, p, v, n, k, q, \delta)}$
+  \textbf{Algorithm:} $\mathit{OnlinePhas^{A, G, V}e(\mathit{prefix}, p, v, n, k, q, \delta)}$
   \medskip \hrule
-  \textbf{Oracle:} A solver $A$ for $P^{(n)}$, a verification algorithm $V$ for $P$.\\
-  \textbf{Input:} A $(n-i)$--tuple of puzzles $\mathit{prefix}$, a bitstring $p \in \{0,1\}^{*}$, parameters $v, n, k, q, \delta$.
+  \textbf{Oracle:} A solver algorithm $A$ for $P^{(n)}$, a puzzle--generation algorithm $G$ for $P$, a~verification algorithm $V$ for~$P$.\\
+  \textbf{Input:} A $(n-i)$--tuple of puzzles $\mathit{prefix}$, a bitstring $p \in \{0,1\}^{*}$, \\ parameters $v, n, k, q, \delta$.
   \medskip\hrule
   \Repeat $K_i := \frac{6q \ln (6q)}{\delta^{n-v+1}}$ \\
   \IndI $((p_{v+1}, \dotsc, p_{n}),(c_{v+1}, \dots, c_n)) := G^{(n-v)}(1^k)$\\
@@ -458,37 +455,64 @@ to solve a single puzzle with probability at least $\delta(1 \frac {1}{q})$.
 \end{codeblock}
 %
 \begin{codeblock}
-  \textbf{Algorithm:} $\mathit{ExtendPrefix(prefix, i, n, k, q, \delta)}$
+  \textbf{Algorithm:} $\mathit{ExtendPrefix^{A, G,V}(prefix, i, n, k, q, \delta)}$
   \medskip \hrule
-  \textbf{Oracle:}  A generator algorithm $G$ and a verification algorithm $V$ for $P$.\\
+  \textbf{Oracle:} A solver algorithm $A$ for $P^{(n)}$, a generator--algorithm $G$ for $P$, a~verification algorithm $V$ for~$P$.\\
   \textbf{Input:} A $(n-i)$--tuple of puzzles $\mathit{prefix}$, parameters $i, n, k, q, \delta$.
   \medskip\hrule
   \Repeat $\Big\lceil \frac{6q}{\delta^{n-v+1}} \ln (\frac{18qn}{\delta}) \Big\rceil$ times \Do \\
   \IndI $(p^*, c^*) := G(1^k) $\\
-  \IndI $\bar{\mu}_i := \mathit{EstimateResSuccProb}^{V,G}(\mathit{prefix} \circ p^*, i)$\\
+  \IndI $\bar{\mu}_i := \mathit{EstimateResSuccProb}^{G,V}(\mathit{prefix} \circ p^*, i)$\\
   \IndI \If $\bar{\mu}_i \geq \delta^{n-i}$ \Then \Return $p^*$ \\
   \Return $\bot$
 \end{codeblock}
 %
 \begin{codeblock}
-  \textbf{Algorithm:} $\mathit{EstimateResSuccProb}^{V,P}(\mathit{prefix}, i, n, k, q, \delta)$
+  \textbf{Algorithm:} $\mathit{EstimateResSuccProb}^{A, G,V}(\mathit{prefix}, i, n, k, q, \delta)$
   \medskip \hrule
-  \textbf{Oracle:} Verification algorithm $V$ for $P$, Generation algorithm $G$ for $P$\\
+  \textbf{Oracle:} A solver algorithm for $P^{(n)}$, a verification algorithm $V$ for $P$, a generation algorithm $G$ for~$P$\\
   \textbf{Input:} A $(n-i)$--tuple of puzzles $\mathit{prefix}$, parameters $i, n, k, q, \delta$.
   \medskip\hrule
   $successes := 0$ \\
   \Repeat $M_i := \frac{84q^2}{\delta^{n-i}} \ln(\frac{18qn \cdot N_i}{\delta})$ times \\
   \IndI $((p_{i+1}, \cdots, p_n), (c_{i+1}, \cdots, c_n)) := G^{(n-i)}(1^k)$\\
+  \IndI $a^{(n)} := A(prefix, p_{i+1}, \cdots, p_{n})$\\
   \IndI \If $\forall_{1 \leq i \leq n} : V(p_i, c_i, a_i) = 1$ \Then $\mathit{successes := successes + 1}$ \\
   \Return $successes / M_i$
 \end{codeblock}
 %
-\begin{todo}
-  \textbf{TODO:} Give the intuition for CHS proof, the matrix and the repetition
-\end{todo}
+%TODO: does this intuition works when $A$ is not deterministic i.e. cells then depends on the randomness of $A$.
+We give now the intuition why the above algorithm works. The detail proof is contained in \cite{canetti2004hardness}.
+First we make the following observation. Let us consider the $n$-fold repetition of $P$ and build a matrix
+such that the columns are labeled with all possible puzzles that can occur on the first position. The rows corresponds
+to all possible tuple $(p_2, \dotsc, p_n)$.  A cell of the matrix contains a binary $n$-tuple such that
+$i$-th bit equals to one if the puzzle on the $i$-th position is solved correctly by the algorithm $A$.
+We make the following claim
+\begin{observation}
+\label{obs:wvp_matrix}
+For an algorithm $A$ that solves $n$-fold repetition of $P$ with probability at least $\delta^{n}$.
+The matrix $M$ defined as above has either a column with $\delta^{(n-1)}$ fractions of entries that are all one vectors or
+a conditional probability that an entry of the form $(1, 1)$ given the entry $(\cdot, 1)$ is at least $\delta$.
+\end{observation}
 %
+% /TODO put proof in appendix ? but the proof is trivial!
 %
-% the matrix with entries, the combinatorial observation.
+We see that the algorithm $\mathit{CHS\text{-}solver}$ uses exactly the intuition contained in Observation \ref{obs:wvp_matrix}.
+It start with the first position and tries to find fix a puzzle such that success probability of $A$ on the remaining $(n-1)$
+position is at least $\delta^{(n-1)}$. If it is possible to find such a puzzle then we fix a puzzle on this position and move to the
+next position. If it fails to find such a puzzle, then we assume that there is no column that contains $\delta^{(n-1)}$ fraction
+of entries on which $A$ succeeds with the first puzzle fixed. Thus, we following the intuition of Observation \ref{obs:wvp_matrix}
+we assume that conditional probability of solving the first puzzle given that all puzzles on all remaining position are solve correctly
+is at least $\delta$.
+
+Obviously, the algorithm $\mathit{CHS\text{-}solver}$ may still fail, as it may happen that it does not find a column in
+the with high fraction of puzzles solved successfully, although such a column exists.
+It may also happen that no such column exists but the algorithm fails to find an entry of the form $(\cdot, 1)$.
+Finally, it is also possible that an estimate returned by $\mathit{EstimateResSuccProb}$ is incorrect.
+
+It is not hard to show that all this events happens with low probability. Therefore, with high probability
+the algorithm $\mathit{CHS\text{--}solver}$ solves the puzzle correctly with probability at least $\delta$.
+%
 \subsection{Results of Y.Dodis, R.Impagliazzo, R.Jaiswal, V.Kabanets}
 \subsection{Results of T.Holenstein and G.Scheonebeck}
 \section{Limitations of Security Amplification}
