@@ -349,8 +349,9 @@ The proof presented in Chapter \ref{ch:main_result} applies also to the dynamic 
 % The definition presented in \ref{def:dwvp} applies also to information theoretic secure constructions.
 
 \section{Previous results}
-Different types of dynamic interactive weakly verifiable puzzles has been analyzed in a series of papers \cite{canetti2004hardness}, \cite{} and \cite{}.
-This section give the short overview of the techniqcs used in these works, but also is aimed to give more intuition and insight into
+Different types of dynamic interactive weakly verifiable puzzles has been analyzed in a series of papers \cite{canetti2004hardness},
+\cite{Dodis:2009:SAI:1530441.1530450} and \cite{DBLP:journals/corr/abs-1002-3534}.
+This section give the short overview of the techniques used in these works, but also is aimed to give more intuition and insight into
 a problem of hardness amplification of dynamic interactive weakly verifiable puzzles.
 \label{st:previous_results}
 \subsection{Results of R.Canetti, S.Halevi, and M.Steiner}
@@ -379,8 +380,9 @@ The \textit{success probability} of $S$ is the probability that the answer $a$ i
   \underset{\substack{\rho \in \{0,1\}^{*}, \pi \in \{0,1\}^{*} \\ (p,c):=G(1^l, \rho) \\ a := S(a,\pi)}}{\Pr}\Big[ V(p, a,c) = 1\Big].
 \end{align*}
 \end{definition}
-
+%
 \begin{definition}[$n$-fold repetition of Weakly Verifiable Puzzles]
+  \label{def:n-fold-rep}
   Let $n \in \N$, and a weakly verifiable puzzle $P$ be fixed.
   We define $n$-fold repetition of $P$ as a weakly verifiable puzzle where the puzzle generation algorithm
   $G^{(n)}$ takes as input $1^k$ and uses $G(1^k)$ to generate $n$ independent instances of puzzles.
@@ -388,31 +390,104 @@ The \textit{success probability} of $S$ is the probability that the answer $a$ i
   Finally, the verification algorithm $V^{(n)}$ takes as input an answer $(a_1, \dotsc, a_k)$, $p^{(n)}$ and $c^{(n)}$ and outputs $b \in \{0,1\}$
   such that $b = 1$ if and only if for all $1 \leq i \leq n$ we have $V(a_i, c_i, p_i) = 1$.
  \end{definition}
+%
+We compare the above definition with Definition \ref{def:dwvp}. First we note that clearly instead of the polynomial time, probabilistic algorithms
+we can use the language of polynomial size circuits, as any polynomial time algorithm can be translated into a circuit of polynomial size.
+Next, we see that in Definition \ref{def:wvp} the algorithm are parameterized by a bitstring $1^k$ meaning that the length of random bitstring
+taken by $G$ is bounded by $poly(k)$. Without loss of generality, for a fixed $k$, we can model the algorithm $G$ as a polynomial size circuit
+that does not take as input the bistring $1^k$ but instead just a randomness used by $G$. Thus, the security parameters from Definition \ref{def:wvp} and
+Definition \ref{def:dwvp} are not equal as in Definition \ref{def:dwvp} the security parameter bounds the length of the random bistring taken by the circuit that defines
+puzzles.
+Next, in Definition \ref{def:wvp} a verification algorithm takes as input $a$, $p$, $c$. Again, without loss of generality we can assume that
+bitstrings $p$ and $c$ are hard-coded in the circuit $\Gamma_V$ from Definition \ref{def:dwvp}.
+Moreover, the $n$-fold repetition of Weakly Verifiable Puzzles is solved successfully if and only if all $n$ puzzles are solves successfully.
+In this Thesis we are interested in more general situation when whether some repetition of puzzles is solved successfully is decided by some monotone function
+$g: \{0,1\}^{n} \rightarrow \{0,1\}$. In this way, a solver for some $n$ wise repetition of puzzles has to solve successfully puzzles only one some coordinates.
+Clearly, without loss of generality we can assume that $g$ is such that all coordinates have to be solved successfully which is the case considered in
+Definition \ref{def:n-fold-rep}.
+%
 The main theorem proved in \cite{canetti2004hardness} states that it is possible to turn a good solver for the $n$-fold repetition of
 Weakly Verifiable Puzzles to a good solver for a single Weakly Verifiable Puzzle.
 %
 \begin{theorem}[Hardness amplification for Weakly Verifiable Puzzles]
+  \label{th:wvp_chs}
 For an efficiently computable functions $n:\N \rightarrow \N$ and $q: \N \rightarrow \N$ and $\delta \rightarrow (0,1)$
 and a fixed problem poser $P$ as in Definition \ref{def:wvp}. Additionally, let running times of a generation algorithm $G$ be $T_G$
 and of the verification algorithm $V$ be $T_V$. If $S^{(k)}$ is a solver for the product of $P^{(k)}$ that has success probability $\delta^{(n)}$
-and running time $T$,  then there exists a solver $S$ for $G$ with success probability $\delta(1-\frac{1}{q})$ with running time
+and running time $T$,  then there exists a solver $S$ for $G$ with success probability $\delta(1-\frac{1}{q})$ with the running time
 $O(\frac{nq^3}{\delta^{2n-1}}(T + nT_G + nT_V))$.
 \end{theorem}
-\begin{todo}
-  \textbf{TODO:} Comparison of our definition and the definition of CHS
-  -- mention there is no g
-  -- compare circuits with the algorithms
-\end{todo}
 
-\begin{todo}
-  \textbf{TODO:} Write down the algorithm of CHS.
-\end{todo}
+For a tuple $x^{(n)}$ and an element $x_{n+1}$ we use $x^{(n)} \circ x_{n+1}$ to denote the concatenation of $x^{(x)}$ and $x_{(n+1)}$ which results in
+$x^{(n+1)} := (x_1, \dotsc, x_n, x_{n+1})$.
 
+The following algorithm is used in \cite{canetti2004hardness} to prove Theorem \cite{th:wvp_chs}.
+It uses a solver $A$ for a $n$-fold repetition of $P$ that succeeds with probability at least $\delta^{(n)}$
+to solve a single puzzle with probability at least $\delta(1 \frac {1}{q})$.
+%
+\begin{todo}
+  \textbf{TODO:} what is $q$? what is $p$ describe paratmteres that you use KHS algo with.
+\end{todo}
+%
+\begin{codeblock}
+  \textbf{Algorithm:} $\mathit{KHS\text{--}solver}^{S,V,G}(p, n, k, q, \delta)$
+  \medskip\hrule
+  \textbf{Oracle:} A solver $S$ for $P^{(k)}$, verifier and generator $V$,$G$ for $P$\\
+  \textbf{Input:}  A bistring $p \in \{0,1\}^{*}$, parameters $n, k, q, \delta$.
+  \medskip\hrule
+  $\mathit{prefix} := \emptyset$\\
+  \For $i = 1$ \To $n-1$ \Do \\
+  \IndI $p^* := \mathit{ExtendPrefix(prefix, i)}$\\
+  \IndI \If $(p^* = \bot)$ \Then \Return $\mathit{OnlinePhase}(prefix, i, n, k, q)$ \\
+  \IndI \Else $prefix := prefix \circ p^*$\\
+  $ a^{(n)} := A(prefix \circ p)$ \\
+  \Return $a_n$
+\end{codeblock}
+%
+\begin{codeblock}
+  \textbf{Algorithm:} $\mathit{OnlinePhase(prefix, p, v, n, k, q, \delta)}$
+  \medskip \hrule
+  \textbf{Oracle:} A solver $A$ for $P^{(n)}$, a verification algorithm $V$ for $P$.\\
+  \textbf{Input:} A $(n-i)$--tuple of puzzles $\mathit{prefix}$, a bitstring $p \in \{0,1\}^{*}$, parameters $v, n, k, q, \delta$.
+  \medskip\hrule
+  \Repeat $K_i := \frac{6q \ln (6q)}{\delta^{n-v+1}}$ \\
+  \IndI $((p_{v+1}, \dotsc, p_{n}),(c_{v+1}, \dots, c_n)) := G^{(n-v)}(1^k)$\\
+  \IndI $a^{(n)} := A(\mathit{prefix}, p, p_{v+1}, \dotsc, p_n)$\\
+  \IndI \If $\forall_{v+1 \leq i \leq n} V(p_i, c_i, a_i) = 1$ \Then \Return $a_v$\\
+  \Return $\bot$
+\end{codeblock}
+%
+\begin{codeblock}
+  \textbf{Algorithm:} $\mathit{ExtendPrefix(prefix, i, n, k, q, \delta)}$
+  \medskip \hrule
+  \textbf{Oracle:}  A generator algorithm $G$ and a verification algorithm $V$ for $P$.\\
+  \textbf{Input:} A $(n-i)$--tuple of puzzles $\mathit{prefix}$, parameters $i, n, k, q, \delta$.
+  \medskip\hrule
+  \Repeat $\Big\lceil \frac{6q}{\delta^{n-v+1}} \ln (\frac{18qn}{\delta}) \Big\rceil$ times \Do \\
+  \IndI $(p^*, c^*) := G(1^k) $\\
+  \IndI $\bar{\mu}_i := \mathit{EstimateResSuccProb}^{V,G}(\mathit{prefix} \circ p^*, i)$\\
+  \IndI \If $\bar{\mu}_i \geq \delta^{n-i}$ \Then \Return $p^*$ \\
+  \Return $\bot$
+\end{codeblock}
+%
+\begin{codeblock}
+  \textbf{Algorithm:} $\mathit{EstimateResSuccProb}^{V,P}(\mathit{prefix}, i, n, k, q, \delta)$
+  \medskip \hrule
+  \textbf{Oracle:} Verification algorithm $V$ for $P$, Generation algorithm $G$ for $P$\\
+  \textbf{Input:} A $(n-i)$--tuple of puzzles $\mathit{prefix}$, parameters $i, n, k, q, \delta$.
+  \medskip\hrule
+  $successes := 0$ \\
+  \Repeat $M_i := \frac{84q^2}{\delta^{n-i}} \ln(\frac{18qn \cdot N_i}{\delta})$ times \\
+  \IndI $((p_{i+1}, \cdots, p_n), (c_{i+1}, \cdots, c_n)) := G^{(n-i)}(1^k)$\\
+  \IndI \If $\forall_{1 \leq i \leq n} : V(p_i, c_i, a_i) = 1$ \Then $\mathit{successes := successes + 1}$ \\
+  \Return $successes / M_i$
+\end{codeblock}
+%
 \begin{todo}
   \textbf{TODO:} Give the intuition for CHS proof, the matrix and the repetition
 \end{todo}
-
-
+%
+%
 % the matrix with entries, the combinatorial observation.
 \subsection{Results of Y.Dodis, R.Impagliazzo, R.Jaiswal, V.Kabanets}
 \subsection{Results of T.Holenstein and G.Scheonebeck}
