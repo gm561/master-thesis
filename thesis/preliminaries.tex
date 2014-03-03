@@ -1,17 +1,18 @@
-In this section we set up notation and terminology used in the thesis.
+In this chapter we set up notation and terminology used in the Thesis.
 %
 \section{Notation and Definitions}
 \textbf{(Algorithms, Bitstrings and Circuits)}
 We define a \textit{Boolean circuit} as a directed acyclic graph with input vertices and vertices implementing logical functions \textit{and}, \textit{or}, and \textit{not}.
-We denote Boolean circuits using capital letters from the Greek and English alphabet.
+We denote Boolean circuits using capital letters from the Greek or English alphabet.
 We define a \textit{probabilistic circuit} as a Boolean circuit $C_{m,n} : \{0,1\}^{m} \times \{0,1\}^{n} \rightarrow \{0,1\}^{*}$.
-We write $C_{m,n}(x;r)$ to denote a probabilistic circuit where $x \in \{0,1\}^{m}$ is an input and $r \in \{0,1\}^{n}$ is called auxiliary input.
-If a probabilistic circuit does not take input $x$, we abuse notation and write $C_{n}(r)$.
+Additionally, we write $C_{m,n}(x;r)$ which should be understood as a probabilistic circuit taking as input  $x \in \{0,1\}^{m}$
+and auxiliary input $r \in \{0,1\}^{n}$.
+If a probabilistic circuit does not take any input, we abuse notation and write $C_{n}(r)$.
 Similarly, we use $\{C_n\}_{n \in \N}$ to denote a family of probabilist circuits that takes only auxiliary input.
 We make sure that it is clear from the context that probabilistic circuits with only auxiliary input
 are not confused with circuits that do not take auxiliary input.
 For a (probabilistic) circuit $C$ we write $\mathit{Size}(C)$ to denote the total number of vertices of $C$.
-
+A \textit{(probabilistic) polynomial size circuit} is a (probabilistic) circuit of size polynomial in the number of input vertices (including auxiliary input).
 We define a \textit{two phase circuit} $C := (C_1, C_2)$ as a circuit where in the first phase a circuit $C_1$ is used and in the second phase a circuit $C_2$.
 If $C_1$ and $C_2$ are probabilistic circuits we write $C(\delta) := (C_1, C_2)(\delta)$ to denote that in both phases $C_1$ and $C_2$ take
 as auxiliary input the same bitstring $\delta$.
@@ -25,7 +26,7 @@ Therefore, whenever we state a theorem about circuits it can be also generalized
 
 We write $\mathit{poly}(\alpha_1, \dots, \alpha_n)$ to denote a polynomial on variables $\alpha_1, \dots, \alpha_n$.
 For an algorithm $A$ we write $\mathit{Time}(A)$ to denote the number of steps it takes to execute $A$.
-We say that $A$ runs in \textit{polynomial time} if number of steps required to evaluate $A$ is bounded by $poly(|x|)$, where $|x|$ denotes
+We say that $A$ runs in \textit{polynomial time} if the number of steps required to evaluate $A$ is bounded by $poly(|x|)$, where $|x|$ denotes
 the length of the input that $A$ takes.
 Similarly, as for probabilistic circuits we write the randomness used by a probabilistic algorithm explicitly as a bitstring provided as an auxiliary input.
 
@@ -37,8 +38,8 @@ Moreover, we use $\mu_{\delta}^k$ to denote the probability distribution over $k
 where each element of a $k$-tuple is drawn independently according to $\mu_{\delta}$.
 Finally, let $u \leftarrow \mu_{\delta}^k$ denote that a $k$-tuple $u$ is chosen according to $\mu_{\delta}^k$.
 
-Let $(\Omega, \cF, \Pr)$ be a probability space and $n \in \N$.
-Let $E_n \in \cF$ denote an event that probability depends on $n$.
+Let $(\Omega_n, \cF_n, \Pr)$ be a probability space and $n \in \N$.
+Let $E_n \in \cF_n$ denote an event that probability depends on $n$.
 We say that $E_n$ happens \textit{almost surely} or with \textit{high probability} if $\Pr[E_n] \geq 1 - 2^{-n} \mathit{poly}(n)$.
 
 \textbf{(Functions)} We call a function $f: \N \rightarrow \R$ \textit{negligible} if for every polynomial $\poly(n)$
@@ -46,33 +47,33 @@ there exists $n_0 \in \N$ such that for all $n \in \N : n > n_0$ the following h
 \begin{align*}
 f(n) < \frac{1}{\poly(n)}.
 \end{align*}
-On the other hand, we say that function $f: \N \rightarrow \R$ is \textit{non-negligible} if
-there exists a polynomial $\poly(n)$ if such that for some $n_0 \in \N$ and for all $n \in \N : n > n_0$ we have
+On the other hand, we say that a function $f: \N \rightarrow \R$ is \textit{non-negligible} if
+there exists a polynomial $\poly(n)$ such that for some $n_0 \in \N$ and for all $n \in \N : n > n_0$ we have
 \begin{align*}
   f(n) \geq \frac{1}{\poly(n)}.
 \end{align*}
 We say that a function $f$ is \textit{efficiently computable} if there exists a polynomial time algorithm computing $f$.
 
 \textbf{(Interactive protocols)}
-Let $\{A_n\}_{n \in \N}$ and $\{B_n\}_{n \in \N}$ be families of circuits and $A_n : \{0,1\}^{*} \rightarrow \{0,1\}^{*}$ and $B_n : \{0,1\}^{*} \rightarrow \{0,1\}^{*}$.
+We are often interested in situations where two probabilistic circuits interact with each other according to some protocol.
+We limit ourselves to the cases where circuits interact by means of messages representable by bitstrings.
+Let $\{A_n\}_{n \in \N}$ and $\{B_n\}_{n \in \N}$ be families of circuits such that $A_n : \{0,1\}^{*} \rightarrow \{0,1\}^{*}$ and $B_n : \{0,1\}^{*} \rightarrow \{0,1\}^{*}$.
 An \textit{interactive protocol} is defined by a $\{A_n\}_{n \in \N}$ and $\{B_n\}_{n \in \N}$ where
-for random bitstrings $\rho_A \in \{0,1\}^{n}$, $\rho_B \in \{0,1\}^{n}$ in the first round $m_0 := A_n(\rho_A)$ and $m_1 := B_n(\rho_B, m_1)$.
-In general in $k$-th round $A_n(\rho_A, m_1, m_2, \cdots, m_{k-1})$ and $B_n(\rho_B, m_1, m_2, \cdots, m_{k-1}, m_{k})$.
-
-We are often interested in situations where two probabilistic algorithms interact with each other according to some protocol.
-We limit ourselves to the cases where algorithms interact by means of messages representable by bitstrings.
-A protocol execution between two probabilistic algorithms $A$ and $B$ is denoted by $\langle A, B \rangle$.
+for random bitstrings $\rho_A \in \{0,1\}^{n}$, $\rho_B \in \{0,1\}^{n}$ in the first round $m_0 := A_n(\rho_A)$ and in the second round $m_1 := B_n(\rho_B, m_1)$.
+In general in the $k$-th round we have $m_k := A_n(\rho_A, m_1, m_2, \cdots, m_{k-1})$ and in the $k+1$-th round $B_n(\rho_B, m_1, m_2, \cdots, m_{k-1}, m_{k})$.
+A protocol execution between two probabilistic circuits $A$ and $B$ is denoted by $\langle A, B \rangle$.
 The output of $A$ in a protocol execution is denoted by $\langle A, B \rangle_A$ and of $B$ by $\langle A, B \rangle_B$.
 A sequence of all messages sent by $A$ and $B$ in the protocol execution is called a communication transcript and
 is denoted by $\langle A, B \rangle_{\mathit{trans}}$.
 
 \textbf{(Oracle algorithms)}
 We use notions of \textit{oracle circuits} following the standard definition included in the literature \cite{Goldreich:2004:FCV:975541}.
-If a circuit $A$ gain oracle access to a circuit $B$ then we write $A^{B}$. If additionally $B$ access yet another oracle circuit $B$ we often omit this
-in notation and write $A^{B}$ instead of $A^{B^C}$. We make sure that it is clear from the context which oracle is accessed by $B$.
+If a circuit $A$ gain oracle access to a circuit $B$, we write $A^{B}$. If additionally $B$ gain oracle access to a circuit $C$
+we write $A^{B^{}C}$. However, to simplify notation we often write $A^{B}$ instead of $A^{B^C}$.
+We make sure that it is clear from the context which oracle is accessed by $B$.
 
 \begin{definition}[Polynomial time sampleable distribution]
-We say that a distribution is polynomial time sampleable if it can be approximated by an algorithm running in time $\mathit{poly}(\log|\cD|, \log|cR|)$
+We say that a distribution is \textnormal{polynomial time sampleable} if it can be approximated by an algorithm running in time $\mathit{poly}(\log|\cD|, \log|cR|)$
 up to an exponential factor.
 \end{definition}
 
