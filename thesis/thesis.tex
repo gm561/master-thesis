@@ -111,19 +111,19 @@ Overview of the content of the succeeding chapters.
 \chapter{Weakly Verifiable Cryptographic Primitives}
 This chapter gives an overview of dynamic interactive weakly verifiable puzzles.
 We start by formulating the definition of dynamic interactive weakly verifiable puzzles.
-To familiarize reader with this notion, in Section \ref{section:wvp_examples} we describe
-a series of well known cryptographic primitives that are captured by this notion.
+To familiarize Reader with this notion and provide more intuition, in Section \ref{section:wvp_examples}, we describe
+a~series of well known cryptographic primitives that are captured by this notion.
 The Section \ref{st:previous_results} is devoted to the previous research concerning weakly verifiable puzzles.
 
 \section{Dynamic Interactive Weakly Verifiable Puzzles}
 \label{section:wvp}
-We consider the following definition of \textit{dynamic interactive weakly verifiable puzzles}.
+We define \textit{dynamic interactive weakly verifiable puzzles} as follows.
 \begin{definition}[Dynamic Interactive Weakly Verifiable Puzzle.]
   \label{def:dwvp}
   A \textnormal{dynamic interactive weakly verifiable puzzle (DIWVP)} is defined by a family of probabilistic circuits $\{P_n\}_{n \in \N}$.
   A circuit belonging to $\{P_n\}_{n \in \N}$ is called a problem poser.
   A solver $C_n := (C_1, C_2)$ for $P_n$ is a probabilistic two phase circuit.
-  We write $P_n(\pi)$ to denote the execution of $P_n$ with the randomness fixed to $\pi \in \{0,1\}^n$, and $C_n(\rho) := (C_1,C_2)(\rho)$
+  We write $P_n(\pi)$ to denote the execution of $P_n$ with the randomness fixed to $\pi \in \{0,1\}^n$ and $C_n(\rho) := (C_1,C_2)(\rho)$
   to denote the execution of both $C_1$ and $C_2$ with the randomness fixed to $\rho \in \{0,1\}^{*}$.
 
   In the first phase, the problem poser $P_n(\pi)$ and the solver $C_1(\rho)$ interact.
@@ -131,24 +131,24 @@ We consider the following definition of \textit{dynamic interactive weakly verif
   The circuit $C_1(\rho)$ produces no output.
   The circuit $\Gamma_{V}$ takes as input $q \in Q$, an answer $y \in \{0,1\}^*$
   and outputs a bit. We say that an answer $(q,y)$ is a correct solution if and only if $\Gamma_V(q,y) = 1$.
-  The circuit $\Gamma_H$ on input $q \in Q$ outputs a hint such that $\Gamma_V(q,\Gamma_H(q)) = 1$.
+  The circuit $\Gamma_H$ on input $q \in Q$ outputs a hint such that $\Gamma_V(q,\Gamma_H(q))~=~1$.
 
-  In the second phase, $C_2$ takes as input $x := \langle P_n(\pi), C_1(\rho) \rangle_{\mathit{trans}}$,
+  In the second phase, $C_2$ takes as input $x := \langle P_n(\pi), C_1(\rho) \rangle_{\mathit{trans}}$
   and has oracle access to $\Gamma_V$ and $\Gamma_H$.
   The execution of $C_2$ with the input $x$ and the randomness fixed to $\rho$
   is denoted by $C_2(x, \rho)$. The queries of $C_2$ to $\Gamma_V$ and $\Gamma_H$ are called verification queries and hint queries respectively.
-  We say that the circuit $C_2$ \textnormal{succeeds} if and only if it makes a verification query $(q,y)$ such that $\Gamma_V(q,y) = 1$,
+  We say that the circuit $C_2$ \textnormal{succeeds} if and only if it makes a verification query $(q,y)$ such that $\Gamma_V(q,y)~=~1$
   and it has not previously asked for a hint query on $q$.
 \end{definition}
 
-If for a certain DIWVP the number of hint queries is greater than zero, we say that such
-a puzzle is \textit{dynamic}. Conversely, if a problem poser is not allowed to ask any hint queries, then such a puzzle
-is called \textit{non-dynamic}.
+We use the term weakly verifiable to emphasize that there is no easy way
+for a solver to check correctness of a solution, except asking a verification query.
 
-We say that DIWVP is \textit{interactive} if in the first phase the number of messages exchanged between a problem poser and a problem
-solver is greater than one.
+We call a puzzle \textit{dynamic} if the number of hint queries is greater than zero.
+Furthermore, we say that a puzzle is \textit{interactive} if in the first
+phase the number of messages exchanged between a problem poser and a problem solver is greater than one.
 
-Definition \ref{def:dwvp} generalizes and combines previous approaches of
+Definition \ref{def:dwvp} generalizes and combines previous approaches that studies
 \textit{weakly verifiable puzzles} \cite{canetti2004hardness},
 \textit{dynamic weakly verifiable puzzles} \cite{Dodis:2009:SAI:1530441.1530450}
 and \textit{interactive weakly verifiable puzzles} \cite{DBLP:journals/corr/abs-1002-3534}.
@@ -165,10 +165,6 @@ Definition \ref{def:dwvp} embraces also a case where a problem poser and a probl
 We use the well know fact \cite{LectureNotesCT} that polynomial time algorithms can be transform into equivalent family of Boolean circuits of polynomial size.
 
 \input{examples}
-% why is it hard to automatically check the solution for CAPTCHAs
-%todo define information theoretic security
-% \subsection{Information theoretically secure constructions}
-% The definition presented in \ref{def:dwvp} applies also to information theoretic secure constructions.
 \input{previous}
 \section{Limitations of Security Amplification}
 \input{interactive_proof/interactive_proof}
