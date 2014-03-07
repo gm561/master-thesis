@@ -111,7 +111,7 @@ The protocol consists of two phases. In the commit phase, circuits $S_1$ and $R_
 As the result $S_1$ commits to $b$ and $R_n$ generates a verification circuit $\Gamma_V$.
 The circuit $\Gamma_V$ takes as input a bit $b' \in \{0,1\}$ and a bitstring $y \in \{0,1\}^{*}$ and outputs a bit.
 In the reveal phase the circuit $S_2$ takes as input a transcript communication transcript from the first phase
-$\lange S_1, R_n \rangle_{\mathit{trans}}$, the bitstring $\rho_s$ and returns $(b', y)$.
+$\langle S_1, R_n \rangle_{\mathit{trans}}$, the bitstring $\rho_s$ and returns $(b', y)$.
 We require a bit commitment protocol to have the following properties:
 \begin{enumerate}[]
 \item{\textnormal{\textbf{(Correctness)}}} For a fixed $b \in \{0,1\}$ we have
