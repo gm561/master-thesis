@@ -31,10 +31,11 @@ We show how MAC is captured by notion of dynamic interactive weakly verifiable p
 For fixed $n$ the sender corresponds to a problem poser, the adversary to a problem solver, and
 the key is a bitstring $\pi \in \{0,1\}^{n}$ taken as auxiliary input by a problem poser.
 In the first phase, which is non interactive, the problem poser outputs a hint circuit
-$\Gamma_H$ that given a message computes a tag and a verification circuit $\Gamma_V$ that on input $m \in \cM$ and $t \in \cT$
-outputs one if and only if $f(m, k) = t$, where both $\Gamma_H$ and $\Gamma_V$ have hard-coded $\pi$.
+$\Gamma_H$  and a verification circuit $\Gamma_V$ where both circuits have hard-coded $\pi$.
+The circuit $\Gamma_H$ takes as input a message and outputs a tag for this message.
+The circuit $\Gamma_V$ that as input $m \in \cM$ and $t \in \cT$ and outputs a bit $1$ if and only if $f(m, \pi) = t$.
 
-In the second phase the adversary takes no input ($x^*$ is empty string) and is given oracle access to $\Gamma_H$ and $\Gamma_V$.
+In the second phase an adversary takes no input ($x^*$ is empty string) and is given oracle access to $\Gamma_H$ and $\Gamma_V$.
 A task of finding by an adversary a valid tag $t \in \cT$ for a message $m \in \cM$ such that a hint for $m$ has no been asked before
 corresponds to asking a successful verification query by a problem poser to $\Gamma_V$.
 %
@@ -73,18 +74,20 @@ We say that $A$ \textnormal{succeeds} if it finds a signature $s \in S$ for a me
 and the oracle $S$ has not been queried for a signature of $q$.
 The public key encryption scheme is \textnormal{secure} if there is no polynomial time adversary that succeeds with non-negligible probability.
 \end{definition}
-
-We will show now that a public key signature scheme defined as above can be represented as a dynamic interactive weakly verifiable puzzle.
-Let a problem poser correspond to entity that generates $k_{pub}$ and $k_{priv}$, and a problem solver to an adversary.
+%
+We will show now that a public key signature scheme defined as above can be represented as a dynamic weakly verifiable puzzle.
+Let a problem poser correspond to entity that generates $k_{pub}$ and $k_{priv}$ and a problem solver to an adversary.
 In the first phase, the problem poser uses algorithm $G(1^n)$ to obtain $k_{pub}$, $k_{priv}$ and sends to the adversary the public key $k_{pub}$.
 Then the problem poser generates a hint circuit $\Gamma_H$ and a verification circuit $\Gamma_V$.
-The hint circuit takes as input $q \in \cQ$ and outputs a signature for $q$. The verification circuit
-takes as input $s \in S$ and $q \in Q$ and checks whether $s \in S$ is a valid signature for $q \in \cQ$.
+The hint circuit $\Gamma_H$ takes as input $q \in \cQ$ and outputs a signature for $q$. The verification circuit
+$\Gamma_V$ takes as input $s \in S$ and $q \in \cQ$ and checks whether $s \in S$ is a valid signature for $q \in \cQ$.
 In the second phase, the problem solver takes as input a transcript of message from the first round which consists solely of a single message $k_{pub}$.
 Additionally, it is given oracle access to $\Gamma_V$ and $\Gamma_H$.
-It is clear that if the adversary asks a successful verification query $(q,s)$, then it also breaks the security of a public key signature scheme.
+It is clear that if the adversary asks a successful verification query $(q,s)$,
+then it also forges a signature.
 
-Thus, public key signature schemes are types of puzzles that are dynamic but are not interactive as in the first phase only a single message is sent.
+Thus, a game of forging a signature of a public key signature schemes is a weakly verifiable puzzle that
+is dynamic but not interactive as in the first phase only a single message is sent.
 %
 \subsection{Bit Commitments}
 Let us consider the following \textit{bit commitment protocol} that involves two parties a \textit{sender} and a \textit{receiver}.
@@ -103,16 +106,19 @@ where $S_n = (S_1, S_2)$ is a two phase probabilistic circuit, and $R_n$ is a pr
 We call $S_n$ a sender and $R_n$ a receiver. The circuit $S_1$, used in the commit phase,
 takes as input a pair $(b, \rho_S)$ where $b \in \{0,1\}$ is interpreted as a bit to which $S_n$
 commits, and $\rho_S \in \{0,1\}^{n}$ is the randomness used by the algorithm $S_n$.
-The receiver $R_n$ takes only auxiliary input $\rho_R \in \{0,1\}^{n}$ that is the randomness used by $R_n$.
+The receiver $R_n$ takes only auxiliary input $\rho_R \in \{0,1\}^{*}$ that is the randomness used by $R_n$.
 The protocol consists of two phases. In the commit phase, circuits $S_1$ and $R_n$ engage in the protocol execution.
-As the result $S_1$ commits to $b$ and generates a circuit $\Gamma_V: \{0,1\} \times \{0,1\}^{*} \rightarrow \{0,1\}$
-that takes as input a bit $b' \in \{0,1\}$ and a bitstring $y \in \{0,1\}^{*}$ and outputs a bit.
-In the reveal phase the circuit $S_2$ returns $(b', y)$.
-We require bit commitment protocol to have the following properties:
+As the result $S_1$ commits to $b$ and $R_n$ generates a verification circuit $\Gamma_V$.
+The circuit $\Gamma_V$ takes as input a bit $b' \in \{0,1\}$ and a bitstring $y \in \{0,1\}^{*}$ and outputs a bit.
+In the reveal phase the circuit $S_2$ takes as input a transcript communication transcript from the first phase
+$\lange S_1, R_n \rangle_{\mathit{trans}}$, the bitstring $\rho_s$ and returns $(b', y)$.
+We require a bit commitment protocol to have the following properties:
 \begin{enumerate}[]
 \item{\textnormal{\textbf{(Correctness)}}} For a fixed $b \in \{0,1\}$ we have
   \begin{align*}
-    \underset{\substack{\Gamma_V := \langle S_1, R \rangle_{R} \\ (b',y) := S_2(\rho_S)}}{\Pr}\Big[\Gamma_V('b,y) = 1 \Big] \geq 1 - \epsilon(n),
+    \underset{\substack{\rho_S \in \{0,1\}^{*}, \rho_R \in \{0,1\}^{n} \\
+        \Gamma_V := \langle S_1(b,\rho_S), R_n(\rho_r) \rangle_{R_n} \\
+        (b',y) := S_2(\langle S_1(b,\rho_s), R_n(\rho_R) \rangle,\rho_S)}}{\Pr}\Big[\Gamma_V(b',y) = 1 \Big] \geq 1 - \epsilon(n),
   \end{align*}
 where $\epsilon(n)$ is a negligible function of $n$.
 \item{\textnormal{\textbf{(Hiding)}}}
@@ -124,16 +130,22 @@ where $\epsilon(n)$ is a negligible function of $n$.
 \item{\textnormal{\textbf{(Binding)}}}
   For every polynomial size circuit $S_n$ we have
   \begin{align*}
-    \underset{\substack{\Gamma_V := \langle S_1, R \rangle_{R} \\ (b',y) := S_2(\rho_S)}}{\Pr}[\Gamma_V(0,y_0) = 1 \land Gamma_V(1,y_1) = 1] \leq \epsilon(k),
+    \underset{\substack{\Gamma_V := \langle S_1, R \rangle_{R} \\ (b',y) := S_2(\rho_S)}}{\Pr}[\Gamma_V(0,y_0) = 1 \land \Gamma_V(1,y_1) = 1] \leq \epsilon(k),
   \end{align*}
   where $\epsilon(k)$ is a negligible function in $k$.
 \end{enumerate}
 \end{definition}
 
-The bit commitment protocols can be generalized as dynamic interactive weakly verifiable puzzles for a
-case where the number of hint queries amounts to zero and the number of the verification queries is at most one.
+\begin{todo}
+  \textbf{TODO:} This is not clear ... access to the oracle etc.\\
+  \textbf{TODO:} Why it is not possible to verify -- i.e. the sender does not even
+  know the function that is used by the receiver to validate decommitment.
+\end{todo}
+
+The bit commitment protocols can be generalized as an interactive weakly verifiable puzzle as follows.
+The number of hint queries amounts to zero and the number of the verification queries is at most one.
 The sender corresponds to a problem solver, and the receiver is a problem poser.
-Additionally, we require the problem solver to ask a verification query only on $q := \lnot b$ where $b$
+Additionally, we require the problem solver to ask a verification query $(b',y)$ only on $b' := \lnot b$ where $b$
 is a bit to which the problem solver is committed after the first phase.
 The first phase corresponds to the commit phase.
 The second phase is the reveal phase where the problem poser tries to find a bitstring $y$ such that $\Gamma_V(\lnot b, y) = 1$.

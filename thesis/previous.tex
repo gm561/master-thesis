@@ -203,10 +203,10 @@ included in \cite{Dodis:2009:SAI:1530441.1530450}.
   A \textnormal{dynamic weakly verifiable puzzle} (DWVP) is defined by a distribution $\cD$ on pairs $(x, \alpha)$
   where $\alpha \in \{0,1\}^{*}$ is an advice used to generate and evaluate responses to $x \in \{0,1\}^{*}$.
   Furthermore, we consider a set $\cQ$ of indices and a probabilistic polynomial--time computable relation $R$ such that
-  $R(\alpha, q, r) = 1$ if and only if $r$ is a correct answer to $q \in Q$ on the set of puzzle determined by $\alpha$.
+  $R(\alpha, q, r) = 1$ if and only if $r$ is a correct answer to $q \in \cQ$ on the set of puzzle determined by $\alpha$.
   Finally, let $H(\alpha, q)$ be a probabilistic polynomial--time computable \textnormal{hint} function.
 
-  A solver $S$ takes as input $x$ and can ask hint queries on $q \in Q$ which are answered using $H(\alpha, q)$ and verification queries $(q,r)$
+  A solver $S$ takes as input $x$ and can ask hint queries on $q \in \cQ$ which are answered using $H(\alpha, q)$ and verification queries $(q,r)$
   checking whether $R(\alpha,q,r) = 1$. We say that $S$ succeeds if and only if it makes a verification query on $(q,r)$ such that it
   has not previously asked for a hint query on this $q$. We write $P := (\cD, R, H)$ to denote a DWVP with a distribution
   $\cD$ of pairs $(x, \alpha)$, and $R$, $H$ being a verification and hint relations respectively.
@@ -363,6 +363,29 @@ the approach similar to the one presented in Section \ref{subsec:chs}. Namely, w
 choosing this position on random as in \cite{Dodis:2009:SAI:1530441.1530450}.
 
 \subsection{Results of T.Holenstein and G.Scheonebeck}
+The interactive weakly verifiable puzzles have been studied in \cite{DBLP:journals/corr/abs-1002-3534}.
+An example of interactive weakly verifiable puzzles are bit commitments and CAPTCHAs.
+Additionally, in \cite{DBLP:journals/corr/abs-1002-3534} a more general case is introduced when
+which puzzles of the $n$-fold repetition should be solved is determined by a monotone function.
+
+Interactive weakly verifiable puzzles has been defined in \cite{DBLP:journals/corr/abs-1002-3534} as follows:
+\begin{definition}
+An \textit{interactive weakly verifiable puzzle} is defined by a protocol given by two algorithms $P$ and $S$,
+where $P$, called the problem poser, produces as output a verification circuit $\Gamma$. The algorithm $S$ called the problem solver
+produces no output.
+Furthermore, the \textnormal{success probability} of algorithm $S$ in solving a wealky verifiable puzzle is $(P,S)$ is:
+\begin{align*}
+  \Pr\Big[y := \langle P,S \rangle_{S}; \Gamma(y) = 1 \Big].
+\end{align*}
+\end{definition}
+\begin{definition}[$k$-wise direct product of interactive weakly verifiable puzzles]
+Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function, and $(P,S)$ be a fixed interactive weakly verifiable puzzle.
+The $k$-wise direct product of $(P,S)$ is an interactive weakly verifiable puzzles in which the sender and the receiver
+sequentially create $k$ instance of $(P,S)$, which yields circuits $\Gamma^{(1)}, \docs, \Gamma^{(k)}$ for $P$.
+Finally, $P^{(g)}$ outputs the circuit $\Gamma^{(g)}(y_1, \dotsc, y_k) := g(\Gamma^{(1)}(y_1), \dotsc, \Gamma^{(k)}(y_k))$.
+\end{definition}
+
+
 
 %%% Local Variables:
 %%% mode: latex
