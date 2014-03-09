@@ -364,33 +364,31 @@ choosing this position on random as in \cite{Dodis:2009:SAI:1530441.1530450}.
 \end{todo}
 
 \subsection{Results of T.Holenstein and G.Scheonebeck}
-The interactive weakly verifiable puzzles like CAPTCHAs and bit commitment have been studied
-by T.Holenstein and H.Schoenebeck in \cite{DBLP:journals/corr/abs-1002-3534}.
-Furthermore, they consider even more general where coordinates which a solver for
-a $n$-fold repetition of puzzles should solved successfully in order to solve the $n$-wise direct product
-successfully is determined by a binary monotone function.
+The hardness amplification of interactive weakly verifiable puzzles has been studied by T.Holenstein and H.Schoenebeck in \cite{DBLP:journals/corr/abs-1002-3534}.
+We will give now an overview of this work and compare it with our results.
 
 The following definition of an \textit{interactive weakly verifiable puzzle} closely follow the one from \cite{DBLP:journals/corr/abs-1002-3534}.
 \begin{definition}
-An \textit{interactive weakly verifiable puzzle} is defined by a protocol given by two algorithms $P$ and $S$,
-where $P$, called the problem poser, produces as output a verification circuit $\Gamma$. The algorithm $S$ called the problem solver
-produces no output.
-Furthermore, the \textnormal{success probability} of algorithm $S$ in solving a wealky verifiable puzzle is $(P,S)$ is:
+An \textit{interactive weakly verifiable puzzle} is defined by a protocol given by two probabilistic algorithms $P$ and $S$,
+where $P$. The algorithm $P$ is called the problem poser and produces as output a verification circuit $\Gamma$.
+The algorithm $S$, called the problem solver, produces no output.
+Furthermore, the \textnormal{success probability} of the algorithm $S$ in solving an interactive weakly verifiable puzzle defined by $(P,S)$ is:
 \begin{align*}
-  \Pr\Big[y := \langle P,S \rangle_{S}; \Gamma(y) = 1 \Big].
+  \underset{\substack{\rho, \pi \\ \Gamma^{(g)} := \langle P(\rho), S(\pi) \rangle_{P}}}{\Pr}\Big[\Gamma^{(g)}(\langle P(\rho),S(\pi) \rangle_{S}) = 1 \Big].
 \end{align*}
 \end{definition}
-\begin{definition}[$k$-wise direct product of interactive weakly verifiable puzzles]
-Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function, and $(P,S)$ be a fixed interactive weakly verifiable puzzle.
-The $k$-wise direct product of $(P,S)$ is an interactive weakly verifiable puzzles in which the sender and the receiver
-sequentially create $k$ instance of $(P,S)$, which yields circuits $\Gamma^{(1)}, \dotsc, \Gamma^{(k)}$ for $P$.
+\begin{definition}\textbf{($\boldsymbol{k}$-wise direct product of interactive weakly verifiable puzzles)}
+Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function and $(P,S)$ be a fixed interactive weakly verifiable puzzle.
+The $k$-wise direct product of $(P,S)$ defined by $(P^{(g)}, S^{(g)})$ is an interactive weakly verifiable puzzles in which the sender and the receiver
+sequentially interact in $k$ rounds where in each round $(P,S)$ is used to generate an instance of interactive weakly verifiable puzzle.
+As the result circuits $\Gamma^{(1)}, \dotsc, \Gamma^{(k)}$ for $P$ are generated.
 Finally, $P^{(g)}$ outputs the circuit $\Gamma^{(g)}(y_1, \dotsc, y_k) := g(\Gamma^{(1)}(y_1), \dotsc, \Gamma^{(k)}(y_k))$.
 \end{definition}
 
 Similarly as in Definition \ref{def:dwvp} the puzzles considered in \cite{DBLP:journals/corr/abs-1002-3534} have
 an interactive phase. Furthermore, a monotone binary function is used to determine whether the $k$-wise repetition
-has been successfully solved. Unlike, puzzles in Definition \ref{def:dwvp}, the puzzles studies by T.Holenstein and G.Schoenebeck
-are non-dynamic.
+has been successfully solved. Unlike, puzzles in Definition \ref{def:dwvp}, the puzzles studied by T.Holenstein and G.Schoenebeck
+are non-dynamic. Thus, only a verification circuit $\Gamma$ is product after the interactive phase and no hint circuit is generated.
 
 The following hardness amplification theorem is proved in \cite{DBLP:journals/corr/abs-1002-3534}.
 \begin{theorem}
@@ -411,20 +409,33 @@ and $\Time (\mathit{Gen}) = \poly(k, \frac{1}{\epsilon}, n)$ with oracle calls t
 \end{theorem}
 
 First, we notice that the above definition does not impose any restrictions on the time complexity of the poser and the solver.
-Furthermore, in the previous sections we considered solvers for the $n$-wise direct product that were compared with the algorithms that either
+Thus, the above definition is actually a polynomial time reduction of a solver for $k$-wise direct product of $(P,S)$ to
+a solver for single $(P,S)$.
+Furthermore, in the previous sections we considered solvers for the $k$-wise direct product that were compared with the algorithms that either
 solves all puzzles (as in \cite{canetti2004hardness}) or allowed a fraction of puzzles to be solved incorrectly (\cite{Dodis:2009:SAI:1530441.1530450}).
-In the above definition a monotone function $g$ is considered which generalizes the previous approaches as in \cite{canetti2004hardness}
-the function $g$ is a multiplication of all bits, and in \cite{Dodis:2009:SAI:1530441.1530450} $g$ is a threshold function that takes value
-one if and only if a given fraction of puzzles is solved successfully.
-Furthermore, we emphasize that a monotone restriction on $g$ is essential. Otherwise, for instance in case of $g(b) := 1 - b$ an algorithm that
+In the above definition a more general case is considered where we use a binary monotone function $g$
+(more precisely we allow only functions that are binary monotonously non-decreasing).
+
+We emphasize that the monotone restriction on $g$ is essential. For $g(b) := 1 - b$ an algorithm that
 deliberately gives incorrect solutions satisfies $g$ with probability $1$ whereas an algorithm that solves a puzzle successfully with probability
 $\gamma > 0$ succeeds only with probability $1 - \gamma$.
-A desirable property is that an algorithm that solves puzzles with the higher probability is not worser than an algorithm that success probability is lower.
+A desirable property for the algorithms of $k$-wise direct product
+is that for an algorithm that solves puzzles on all coordinates with the higher probability
+is not worser than an algorithm that success probability on these coordinates is lower.
 
-The proof of T.Holenstein and G.Schoenebeck is similar to the one presented in Section \ref{subsec:chs}.
-Similarly, in chapter \ref{ch:main_result} we use the technique to fix consecutive coordinates such that according invariant is maintained.
-First in order to estimate how much better a solver circuit $C$ for $n$-wise direct product performs when
-a puzzle on the first position is fixed a notion of a surplus $S_{\pi^*, b}$ is introduces:
+The proof technique used by T.Holenstein and G.Schoenebeck is similar to the one presented in Section \ref{subsec:chs}.
+In this Thesis, in chapter \ref{ch:main_result}, we use also the same technique to fix puzzles on consecutive coordinates of the $n$-wise direct product.
+
+\begin{todo}
+  \textbf{TODO:} Compare to the work of CHS i.e. what we use there to compare the puzzles
+\end{todo}
+
+\begin{todo}
+  \textbf{TODO:} Oracle access as black box access
+\end{todo}
+
+In order to estimate how much better a solver circuit $C$ for the $n$-wise direct product performs when
+a puzzle on the first position is fixed a notion of a surplus $S_{\pi^*, b}$ is introduced:
 \begin{align*}
 S_{\pi^*, b} := \Pr_{\pi^{(k)}} [ c \in \cG_b | \pi_1 = \pi^* ] - \Pr_{u \leftarrow \mu_{\delta}^{k}} [u \in \cG_b],
 \end{align*}
@@ -448,13 +459,9 @@ Thus, it is enough to show that if it is not possible to find an estimate that i
 if we place an input puzzle on this position and we can find remaining $k-1$ puzzle such that
 $c \in \cG_1 \setminus \cG_0$ then this puzzle is solved with substantial probability.
 The whole proof is given in \cite{DBLP:journals/corr/abs-1002-3534}, and requires some probability manipulations.
-Here, we give a present a simplified version where we assume that once we find a good position on which we can place the input puzzle then
-we can always find remaining $k-1$ puzzles.
-% \begin{align*}
-%   \Pr_r\Big[ \Gamma^*(D(x^*,r)) = 1\Big] = \Pr_r\Big[\Gamma^*(D(x^*,r)) \neq \bot \Big]
-% \end{align*}
 
-Out proof of hardness amplification for dynamic interactive weakly verifiable puzzles closely follows the one given in \cite{DBLP:journals/corr/abs-1002-3534}.
+%cite tell more what is used in our proof which technique do we use.
+Our proof of the hardness amplification for dynamic interactive weakly verifiable puzzles closely follows the one given in \cite{DBLP:journals/corr/abs-1002-3534}.
 \begin{todo}
   \textbf{TODO:} Why do we consider fixing 0/1 on the first position
   \textbf{TODO:} How the technique is generalized to approach of CHS \\
