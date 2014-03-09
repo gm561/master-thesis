@@ -365,18 +365,20 @@ choosing this position on random as in \cite{Dodis:2009:SAI:1530441.1530450}.
 
 \subsection{Results of T.Holenstein and G.Scheonebeck}
 The hardness amplification of interactive weakly verifiable puzzles has been studied by T.Holenstein and H.Schoenebeck in \cite{DBLP:journals/corr/abs-1002-3534}.
-We will give now an overview of this work and compare it with our results.
+We will give now an overview of this work and compare it with our approach.
 
 The following definition of an \textit{interactive weakly verifiable puzzle} closely follow the one from \cite{DBLP:journals/corr/abs-1002-3534}.
 \begin{definition}
-An \textit{interactive weakly verifiable puzzle} is defined by a protocol given by two probabilistic algorithms $P$ and $S$,
-where $P$. The algorithm $P$ is called the problem poser and produces as output a verification circuit $\Gamma$.
+An \textit{interactive weakly verifiable puzzle} is defined by a protocol given by two probabilistic algorithms $P$ and $S$.
+The algorithm $P$ is called the problem poser and produces as output a verification circuit $\Gamma$.
 The algorithm $S$, called the problem solver, produces no output.
 Furthermore, the \textnormal{success probability} of the algorithm $S$ in solving an interactive weakly verifiable puzzle defined by $(P,S)$ is:
 \begin{align*}
   \underset{\substack{\rho, \pi \\ \Gamma^{(g)} := \langle P(\rho), S(\pi) \rangle_{P}}}{\Pr}\Big[\Gamma^{(g)}(\langle P(\rho),S(\pi) \rangle_{S}) = 1 \Big].
 \end{align*}
 \end{definition}
+We are intrested in the hardness amplification of interactive weakly verifiable puzzles. Thus, similarly as in the previous sections
+we define the $k$-wise direct product of puzzles.
 \begin{definition}\textbf{($\boldsymbol{k}$-wise direct product of interactive weakly verifiable puzzles)}
 Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function and $(P,S)$ be a fixed interactive weakly verifiable puzzle.
 The $k$-wise direct product of $(P,S)$ defined by $(P^{(g)}, S^{(g)})$ is an interactive weakly verifiable puzzles in which the sender and the receiver
@@ -388,7 +390,7 @@ Finally, $P^{(g)}$ outputs the circuit $\Gamma^{(g)}(y_1, \dotsc, y_k) := g(\Gam
 Similarly as in Definition \ref{def:dwvp} the puzzles considered in \cite{DBLP:journals/corr/abs-1002-3534} have
 an interactive phase. Furthermore, a monotone binary function is used to determine whether the $k$-wise repetition
 has been successfully solved. Unlike, puzzles in Definition \ref{def:dwvp}, the puzzles studied by T.Holenstein and G.Schoenebeck
-are non-dynamic. Thus, only a verification circuit $\Gamma$ is product after the interactive phase and no hint circuit is generated.
+are non-dynamic. Thus, only a verification circuit $\Gamma$ is generated and no hint circuit is ever used.
 
 The following hardness amplification theorem is proved in \cite{DBLP:journals/corr/abs-1002-3534}.
 \begin{theorem}
@@ -401,7 +403,7 @@ If $C$ is such that
 \end{align*}
 then, $D$ satisfies almost surely,
 \begin{align*}
-  \Pr\Big[ \Gamma^{(1)}(\langle P^{(1)}, D\rangle_{D}) = 1\Big] \geq \delta + \frac{\epsilon}{6k}.
+  \Pr\Big[ \Gamma(\langle P, D\rangle_{D}) = 1\Big] \geq \delta + \frac{\epsilon}{6k}.
 \end{align*}
 Additionally, $\mathit{Gen}$ and $D$ only require oracle access to $g$ and $C$.
 Furthermore, $\mathit{Size}(D) \leq \mathit{Size}(C) \cdot \frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$,
@@ -409,29 +411,26 @@ and $\Time (\mathit{Gen}) = \poly(k, \frac{1}{\epsilon}, n)$ with oracle calls t
 \end{theorem}
 
 First, we notice that the above definition does not impose any restrictions on the time complexity of the poser and the solver.
-Thus, the above definition is actually a polynomial time reduction of a solver for $k$-wise direct product of $(P,S)$ to
-a solver for single $(P,S)$.
+We consider a general approach where $\mathit{Gen}$ is used to define a polynomial time reduction between a solver for the $k$-wise
+direct product of puzzles to a solver for a single puzzle.
 Furthermore, in the previous sections we considered solvers for the $k$-wise direct product that were compared with the algorithms that either
-solves all puzzles (as in \cite{canetti2004hardness}) or allowed a fraction of puzzles to be solved incorrectly (\cite{Dodis:2009:SAI:1530441.1530450}).
-In the above definition a more general case is considered where we use a binary monotone function $g$
-(more precisely we allow only functions that are binary monotonously non-decreasing).
+solves all puzzles (\cite{canetti2004hardness}) or allowed a fraction of puzzles to be solved incorrectly (\cite{Dodis:2009:SAI:1530441.1530450}).
+In the above definition a more general case is considered where we use a binary monotone function $g$.
+More precisely we are interested functions that are binary monotonously non-decreasing.
 
 We emphasize that the monotone restriction on $g$ is essential. For $g(b) := 1 - b$ an algorithm that
-deliberately gives incorrect solutions satisfies $g$ with probability $1$ whereas an algorithm that solves a puzzle successfully with probability
+deliberately gives incorrect answers satisfies $g$ with probability $1$ whereas an algorithm that solves a puzzle successfully with probability
 $\gamma > 0$ succeeds only with probability $1 - \gamma$.
-A desirable property for the algorithms of $k$-wise direct product
-is that for an algorithm that solves puzzles on all coordinates with the higher probability
-is not worser than an algorithm that success probability on these coordinates is lower.
+A desirable property for the solver for the $k$-wise direct product of IWVP is that
+an algorithm that solves puzzles on all coordinates with the higher probability
+does not the $k$--wise direct product with probability lower than an algorithm
+that success probability on these coordinates is lower.
 
 The proof technique used by T.Holenstein and G.Schoenebeck is similar to the one presented in Section \ref{subsec:chs}.
-In this Thesis, in chapter \ref{ch:main_result}, we use also the same technique to fix puzzles on consecutive coordinates of the $n$-wise direct product.
+In chapter \ref{ch:main_result} we use very similar approach and fix puzzles on consecutive coordinates of the $n$-wise direct product.
 
 \begin{todo}
   \textbf{TODO:} Compare to the work of CHS i.e. what we use there to compare the puzzles
-\end{todo}
-
-\begin{todo}
-  \textbf{TODO:} Oracle access as black box access
 \end{todo}
 
 In order to estimate how much better a solver circuit $C$ for the $n$-wise direct product performs when
