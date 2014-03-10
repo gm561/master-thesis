@@ -79,16 +79,19 @@ and the oracle $S$ has not been queried for a signature of $q$.
 The public key encryption scheme is \textnormal{secure} if there is no polynomial time adversary that succeeds with non-negligible probability.
 \end{definition}
 %
+\begin{todo}
+  \textbf{TODO:} define as game
+\end{todo}
 We will show now that a public key signature scheme defined as above can be represented as a dynamic weakly verifiable puzzle.
-Let a problem poser correspond to entity that generates $k_{pub}$ and $k_{priv}$ and a problem solver to an adversary.
+Let the problem poser correspond to an entity that generates $k_{pub}$,$k_{priv}$ and the problem solver to an adversary.
 In the first phase, the problem poser uses algorithm $G(1^n)$ to obtain $k_{pub}$, $k_{priv}$ and sends to the adversary the public key $k_{pub}$.
 Then the problem poser generates a hint circuit $\Gamma_H$ and a verification circuit $\Gamma_V$.
 The hint circuit $\Gamma_H$ takes as input $q \in \cQ$ and outputs a signature for $q$. The verification circuit
 $\Gamma_V$ takes as input $s \in S$ and $q \in \cQ$ and checks whether $s \in S$ is a valid signature for $q \in \cQ$.
-In the second phase, the problem solver takes as input a transcript of message from the first round which consists solely of a single message $k_{pub}$.
+In the second phase, the problem solver takes as input a transcript of the messages from the first round which consists solely of $k_{pub}$.
 Additionally, it is given oracle access to $\Gamma_V$ and $\Gamma_H$.
 It is clear that if the adversary asks a successful verification query $(q,s)$,
-then it also forges a signature.
+then it also successfully forges a signature of $q$.
 
 Thus, a game of forging a signature of a public key signature schemes is a weakly verifiable puzzle that
 is dynamic but not interactive as in the first phase only a single message is sent.
@@ -98,31 +101,33 @@ Let us consider the following \textit{bit commitment protocol} that involves two
 We suppose that the sender and the receiver are polynomial time probabilistic algorithms.
 The protocol consists of a \textit{commit phase} and a \textit{reveal phase}.
 In the commit phase the sender and the receiver interact, as the result the sender commits to a value $b \in \{0,1\}$.
-In the reveal phase the sender opens the commitment by sending to the receiver a pair $(y,b')$ where $y \in \{0,1\}^{*}$ and $b' \in \{0,1\}$.
-We require that after the commit phase it is hard for the receiver to correctly guess $b$. Additionally, in the \textit{reveal phase}
-it should be hard for the sender to persuade the receiver that it was committed to the value $\lnot b$.
+We require that after the commit phase it is hard for the receiver to correctly guess $b$.
+In the reveal phase the sender opens the commitment by sending to the receiver a pair $(y,b')$ where $y \in \{0,1\}^{*}$ is an information
+that helps the receiver to verify that the sender committed to the value $b' \in \{0,1\}$.
+A desirable property of bit commitment protocol is that in the reveal phase it should be hard for the sender to find $y$ such that the receiver
+is convinced that the sender was committed to the value $\lnot b$.
 
 We base the following definition of \textit{bit commitment protocol} on \cite{LectureNotesComThCrypto}.
 \begin{definition}[Bit Commitment Protocol]
   \label{def:bit_commitment}
 For a security parameter $n~\in~\N$ a \textnormal{bit commitment protocol} is defined by a pair $(S_n, R_n)$
-where $S_n = (S_1, S_2)$ is a two phase probabilistic circuit, and $R_n$ is a probabilistic circuit.
-We call $S_n$ a sender and $R_n$ a receiver. The circuit $S_1$, used in the commit phase,
-takes as input a pair $(b, \rho_S)$ where $b \in \{0,1\}$ is interpreted as a bit to which $S_n$
+where $S_n = (S_1, S_2)$ is a two phase probabilistic circuit, and $R$ is a probabilistic circuit.
+We call $S_n$ the sender and $R$ the receiver. The circuit $S_1$ takes as input a pair $(b, \rho_S)$
+where $b \in \{0,1\}$ is interpreted as a bit to which $S_n$
 commits, and $\rho_S \in \{0,1\}^{n}$ is the randomness used by the algorithm $S_n$.
-The receiver $R_n$ takes only auxiliary input $\rho_R \in \{0,1\}^{*}$ that is the randomness used by $R_n$.
-The protocol consists of two phases. In the commit phase, circuits $S_1$ and $R_n$ engage in the protocol execution.
+The receiver $R$ takes only auxiliary input $\rho_R \in \{0,1\}^{*}$ that is the randomness used by $R$.
+The protocol consists of two phases. In the \textnormal{commit phase}, circuits $S_1$ and $R$ engage in the protocol execution.
 As the result $S_1$ commits to $b$ and $R_n$ generates a verification circuit $\Gamma_V$.
 The circuit $\Gamma_V$ takes as input a bit $b' \in \{0,1\}$ and a bitstring $y \in \{0,1\}^{*}$ and outputs a bit.
-In the reveal phase the circuit $S_2$ takes as input a transcript communication transcript from the first phase
-$\langle S_1, R_n \rangle_{\mathit{trans}}$, the bitstring $\rho_s$ and returns $(b', y)$.
+In the \textnormal{reveal phase} the circuit $S_2$ takes as input a communication transcript from the commitment phase
+$\langle S_1, R \rangle_{\mathit{trans}}$, the bitstring $\rho_s$ and returns $(b', y)$.
 We require a bit commitment protocol to have the following properties:
 \begin{enumerate}[]
 \item{\textnormal{\textbf{(Correctness)}}} For a fixed $b \in \{0,1\}$ we have
   \begin{align*}
-    \underset{\substack{\rho_S \in \{0,1\}^{*}, \rho_R \in \{0,1\}^{n} \\
-        \Gamma_V := \langle S_1(b,\rho_S), R_n(\rho_r) \rangle_{R_n} \\
-        (b',y) := S_2(\langle S_1(b,\rho_s), R_n(\rho_R) \rangle,\rho_S)}}{\Pr}\Big[\Gamma_V(b',y) = 1 \Big] \geq 1 - \epsilon(n),
+    \underset{\substack{\rho_S \in \{0,1\}^{n}, \rho_R \in \{0,1\}^{*} \\
+        \Gamma_V := \langle S_1(b,\rho_S), R(\rho_R) \rangle_{R} \\
+        (b',y) := S_2(\langle S_1(b,\rho_s), R(\rho_R) \rangle_{\mathit{trans}},\rho_S)}}{\Pr}\Big[\Gamma_V(b',y) = 1 \Big] \geq 1 - \epsilon(n),
   \end{align*}
 where $\epsilon(n)$ is a negligible function of $n$.
 \item{\textnormal{\textbf{(Hiding)}}}
@@ -131,24 +136,30 @@ where $\epsilon(n)$ is a negligible function of $n$.
   \end{todo}
   Probability over random coins of $S_n$ and $R_n$ that any polynomial size circuit
   can guess bit $b$ correctly after the commit phase is at most $\frac{1}{2} + \epsilon(n)$ where $\epsilon(n)$ is a negligible function of $n$.
+  \begin{todo}
+    \textbf{TODO:} What is $y_0$ and $y_1$
+  \end{todo}
 \item{\textnormal{\textbf{(Binding)}}}
   For every polynomial size circuit $S_n$ we have
   \begin{align*}
-    \underset{\substack{\Gamma_V := \langle S_1, R \rangle_{R} \\ (b',y) := S_2(\rho_S)}}{\Pr}[\Gamma_V(0,y_0) = 1 \land \Gamma_V(1,y_1) = 1] \leq \epsilon(k),
+    \underset{\substack{
+        \rho_S \in \{0,1\}^{n}, \rho_R \in \{0,1\}^{*} \\
+        \Gamma_V := \langle S_1(b,\rho_S), R(\rho_R) \rangle_{R} \\ (b',y) := S_2(\rho_S)}}{\Pr}[\Gamma_V(0,y_0) = 1 \land \Gamma_V(1,y_1) = 1] \leq \epsilon(k),
   \end{align*}
-  where $\epsilon(k)$ is a negligible function in $k$.
+  where $\epsilon(n)$ is a negligible function in $n$.
 \end{enumerate}
 \end{definition}
 
 \begin{todo}
   \textbf{TODO:} This is not clear ... access to the oracle etc.\\
   \textbf{TODO:} Why it is not possible to verify -- i.e. the sender does not even
-  know the function that is used by the receiver to validate decommitment.
+  know the function that is used by the receiver to validate decommitment.\\
+  \textbf{TODO} $Q=1$
 \end{todo}
 
 The bit commitment protocols can be generalized as an interactive weakly verifiable puzzle as follows.
 The number of hint queries amounts to zero and the number of the verification queries is at most one.
-The sender corresponds to a problem solver, and the receiver is a problem poser.
+The sender corresponds to the problem solver, and the receiver is the problem poser.
 Additionally, we require the problem solver to ask a verification query $(b',y)$ only on $b' := \lnot b$ where $b$
 is a bit to which the problem solver is committed after the first phase.
 The first phase corresponds to the commit phase.
@@ -157,13 +168,15 @@ The second phase is the reveal phase where the problem poser tries to find a bit
 \subsection{Automated Turing Tests}
 The goal of \textit{Automated Turing Tests} is to distinguish humans from computers which
 is frequently used to prevent computer programs from accessing resources for humans.
-An example is \textit{CAPTCHA} defined first in \cite{von2003captcha}.
+An example is \textit{CAPTCHA} defined in \cite{von2003captcha}.
 Loossly speaking, CAPTCHA is a test that human can solve with probability close to 1, but it is hard to write a computer program
 that has a success probability comparable to the one achieved by humans.
 An example of CAPTACHA is an image depicting a distorted text. Most humans guess the text which is displayed on the image correctly, but it might be hard to write
-a program for which it would also be easy. We note that the definition of hardness has not been particular well defined ,
-and bases on opinions AI community opinions that distinguish between hard and easy AI problems \cite{von2003captcha}.
-
+a program for which it would also be easy. We note that the definition of hardness has not been particular well defined
+and bases on opinions of AI community.
+\begin{todo}
+  \textbf{TODO:} Is it dynamic non-interactive?
+\end{todo}
 CAPTCHAs based on guessing the distorted text are weakly verifiable puzzles.
 In the first round the problem poser and problem solver engage in interactive protocol, such that
 after the execution of the protocol the problem poser has a way to verify the solution.
@@ -176,8 +189,8 @@ AI problems.
 
 As it is not know how good the possible algorithm can be to recognize CAPTCHA it is likely that the gap between human
 performance and a performance of computer programs may be small. Therefore, it is of interest to find a way to amplify this gap.
-It turns out that it is indeed possiThe first ble which for not dynamic puzzles was proved in \cite{DBLP:journals/corr/abs-1002-3534}.
-The proof presented in Chapter \ref{ch:main_result} applies also to the dynamic context.
+It turns out that it is indeed possible which for not dynamic puzzles was proved in \cite{DBLP:journals/corr/abs-1002-3534}.
+The proof we give in Chapter \ref{ch:main_result} applies also to the dynamic context.
 
 \begin{todo}
   \textbf{TODO:} Give an optimization problem for gap amplification
