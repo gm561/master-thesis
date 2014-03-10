@@ -38,11 +38,12 @@ as auxiliary input the same bitstring $\delta$.
 %Therefore, whenever we state a theorem about circuits it can be also generalized for the polynomial time algorithms.
 
 For an algorithm $A$ we write $\mathit{Time}(A)$ to denote the number of steps it takes to execute $A$.
-We say that $A$ runs in \textit{polynomial time} if $\mathit{Time}(A)$ is bounded by some $poly(|x|)$, where $|x|$ denotes the length of the input that $A$ takes.
+We say that $A$ runs in \textit{polynomial time} if $\mathit{Time}(A)$ is bounded by some $poly(|x|)$ where $|x|$ denotes the length of the input that $A$ takes.
 
 Similarly, as for probabilistic circuits we often write randomness used by a probabilistic algorithm explicitly
-as a bitstring provided as an auxiliary input. Exemplary, for a probabilistic algorithm $B$ we write $B(x;r)$
-where $x$ is input of $B$ and $r$ denotes a randomness taken as auxiliary input.
+as a bitstring provided as an auxiliary input.
+% Exemplary, for a probabilistic algorithm $B$ we write $B(x;r)$
+% where $x$ is the input taken by $B$ and $r$ denotes randomness taken as auxiliary input.
 
 We denote a tuple $(x_1, \dotsc, x_l)$ by $x^{(l)}$.
 Furthermore, for tuples $x^{(l)}$, $y^{(k)}$ we use $x^{(l)} \circ y^{(k)}$ to denote the concatenation of $x^{(l)}$ and $y^{(k)}$ which results in
@@ -62,14 +63,14 @@ We say that $E_n$ happens \textit{almost surely} or with \textit{high probabilit
 
 \textbf{(Interactive protocols)}
 We are often interested in situations where two probabilistic circuits interact with each other according to some protocol.
-We limit ourselves to cases where circuits interact by means of messages representable by bitstrings.
+We limit ourselves to cases where messages are representable by bitstrings.
 Let $\{A_n\}_{n \in \N}$ and $\{B_n\}_{n \in \N}$ be families of circuits such that $A_n : \{0,1\}^{*} \rightarrow \{0,1\}^{*}$ and $B_n : \{0,1\}^{*} \rightarrow \{0,1\}^{*}$.
 An \textit{interactive protocol} is defined by $\{A_n\}_{n \in \N}$ and $\{B_n\}_{n \in \N}$ where
 for random bitstrings $\rho_A \in \{0,1\}^{n}$, $\rho_B \in \{0,1\}^{n}$ in the first round $m_0 := A_n(\rho_A)$ and in the second round $m_1 := B_n(\rho_B, m_1)$.
 In general in the $(2k\!-\!1)$-th round we have $m_{2k-2} := A_n(\rho_A, m_1, \cdots, m_{2k-3})$ and in the $2k$-th round $m_{2k-1} := B_n(\rho_B, m_1, \cdots, m_{2k-2})$.
-A protocol execution between two probabilistic circuits $A$ and $B$ is denoted by $\langle A, B \rangle$.
-The output of $A$ in a protocol execution is denoted by $\langle A, B \rangle_A$ and of $B$ by $\langle A, B \rangle_B$.
-A sequence of all messages send by $A$ and $B$ in the protocol execution is called a \textit{communication transcript} and
+The protocol execution between two probabilistic circuits $A$ and $B$ is denoted by $\langle A, B \rangle$.
+The output of $A$ in the protocol execution is denoted by $\langle A, B \rangle_A$ and of $B$ by $\langle A, B \rangle_B$.
+A~sequence of all messages send by $A$ and $B$ in the protocol execution is called a \textit{communication transcript} and
 is denoted by $\langle A, B \rangle_{\mathit{trans}}$.
 
 % \begin{todo}
@@ -83,14 +84,15 @@ we write $A^{B^C}$. However, to shorter notation, we often write $A^{B}$ instead
 we make sure that it is clear from the context which oracle is accessed by~$B$.
 
 In many situations when studying time complexity of algorithms with oracle access we count oracle call as a single step.
-We underline this explicitly by writing that an algorithm has a certain time complexity \textit{with oracle calls}.
-On the other hand, in some situations we are interested in giving a more fine graded bounds on the running time of algorithms
-that take into account the time of oracle access. In these situations we write time needed to call an oracle explicitly
-and compute running time of an algorithm with regard to time needed for accessing oracle.
+We emphasize this by writing that an algorithm has a certain time complexity \textit{with oracle calls}.
+On the other hand, in some situations we are interested in giving a more rigorous bounds on running time of algorithms
+that take into account time need for oracle access. In these situations we compute running time of an algorithm
+explicitly with regard to time needed for accessing oracle.
 
 \begin{todo}
   \textbf{TODO:} Exponential factor in what?\\
   \textbf{TODO:} Cite someone?
+  \textbf{TODO:} Define statistical distance etc.\\
 \end{todo}
 \begin{definition}[Polynomial time sampleable distribution]
 We say that a distribution is \textnormal{polynomial time sampleable} if it can be approximated by an algorithm running in time $\mathit{poly}(\log|\cD|, \log|\cR|)$

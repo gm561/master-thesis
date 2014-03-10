@@ -3,9 +3,6 @@
 In this section we give examples of cryptographic constructions that motivates studies of different types of weakly verifiable puzzles.
 
 \subsection{Message Authentication Codes}
-\begin{todo}
-  \textbf{TODO:} Define as game
-\end{todo}
 Let us consider a setting in which two parties a \textit{sender} and a \textit{receiver} communicate over an insecure channel.
 Messages of the sender may be intercepted, modified, and replaced by a third party called an \textit{adversary}.
 The receiver needs a way to ensure that received messages have been indeed sent by the sender and have not been modified by the adversary.
@@ -30,7 +27,11 @@ We give the following formal definition of \textit{Message Authentication Code} 
   with oracle access to $H$ that with non-negligible probability outputs a message $m \in \cM$
   as well as a corresponding tag $t \in \cT$ such that $f(m, k) = t$, and $\Gamma_H$ has not been queried for a tag of message $m$.
 \end{definition}
-%
+
+\begin{todo}
+  \textbf{TODO:} Define as game
+\end{todo}
+
 We show how MAC is captured by notion of dynamic weakly verifiable puzzles where at most one verification query is asked.
 For fixed $f$ and $n \in \N$ the sender corresponds to the problem poser, the adversary to the problem solver,
 and the key is a bitstring $\pi \in \{0,1\}^{n}$ taken as auxiliary input by the problem poser.
