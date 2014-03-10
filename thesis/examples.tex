@@ -1,10 +1,13 @@
 \section{Examples}
 \label{section:wvp_examples}
-In this section we give examples of cryptographic constructions that are different types of weakly verifiable puzzles.
+In this section we give examples of cryptographic constructions that motivates studies of different types of weakly verifiable puzzles.
 
 \subsection{Message Authentication Codes}
-We consider the setting in which two parties a \textit{sender} and a \textit{receiver} communicate over an insecure channel.
-The messages of the sender may be intercepted, modified, and replaced by a third party called an \textit{adversary}.
+\begin{todo}
+  \textbf{TODO:} Define as game
+\end{todo}
+Let us consider a setting in which two parties a \textit{sender} and a \textit{receiver} communicate over an insecure channel.
+Messages of the sender may be intercepted, modified, and replaced by a third party called an \textit{adversary}.
 The receiver needs a way to ensure that received messages have been indeed sent by the sender and have not been modified by the adversary.
 The solution is to use \textit{message authentication codes}.
 
@@ -14,36 +17,37 @@ Furthermore, we assume that the sender and the receive share a secrete key to wh
 The sender appends to every message a tag which is computed as a function of the key and the message.
 The receiver, using the key, has a way to check whether an appended tag is valid for a received message.
 The receiver accepts a message if the tag is valid, otherwise it rejects.
-We require that it is hard for the adversary to find a tag and a message that is accepted by the receiver with non-negligible probability.
+We require that it is hard for the adversary to find a tag and a message, not sent before, that is accepted by the receiver with non-negligible probability.
 We give the following formal definition of \textit{Message Authentication Code} based on \cite{LectureNotesCrypo} and \cite{Goldreich:2004:FCV:975541}.
-\begin{definition}[Message Authentication Codes]
-  Let $\cM$ be a set of messages, $\cK$ a set of keys and $\cT$ a set of tags where $n \in \N$.
+\begin{definition}[Message Authentication Code]
+  \label{def:mac}
+  Let $\cM$ be a set of messages, $\cK$ a set of keys and $\cT$ a set of tags.
   We define the \textnormal{message authentication code (MAC)} as an efficiently computable function $\cM \times \cK \rightarrow \cT$.
   Furthermore, we say that MAC is \textit{secure} if it satisfies the following condition:
 
-  Let $k \xleftarrow{\$} \cK$ be fixed and $\Gamma_H$ be a polynomial size circuit that takes as input a message $m \in \cM$ and outputs a tag $t \in \cT$
-  such that $f(m,k) = t$ where a key $k$ is hard-coded in $\Gamma_H$. We say that MAC is secure if there is no probabilistic polynomial time algorithm
-  with oracle access to $\Gamma_H$ that with non-negligible probability outputs a message $m \in \cM$
+  Let $k \xleftarrow{\$} \cK$ be fixed and $H$ be a polynomial size circuit that takes as input a message $m \in \cM$ and outputs a tag $t \in \cT$
+  such that $f(m,k) = t$. We say that MAC is secure if there is no probabilistic polynomial time algorithm
+  with oracle access to $H$ that with non-negligible probability outputs a message $m \in \cM$
   as well as a corresponding tag $t \in \cT$ such that $f(m, k) = t$, and $\Gamma_H$ has not been queried for a tag of message $m$.
 \end{definition}
 %
-We show how MAC is captured by notion of dynamic interactive weakly verifiable puzzles.
-For fixed $n$ the sender corresponds to a problem poser, the adversary to a problem solver, and
-the key is a bitstring $\pi \in \{0,1\}^{n}$ taken as auxiliary input by a problem poser.
+We show how MAC is captured by notion of dynamic weakly verifiable puzzles where at most one verification query is asked.
+For fixed $f$ and $n \in \N$ the sender corresponds to the problem poser, the adversary to the problem solver,
+and the key is a bitstring $\pi \in \{0,1\}^{n}$ taken as auxiliary input by the problem poser.
 In the first phase, which is non interactive, the problem poser outputs a hint circuit
-$\Gamma_H$  and a verification circuit $\Gamma_V$ where both circuits have hard-coded $\pi$.
-The circuit $\Gamma_H$ takes as input a message and outputs a tag for this message.
+$\Gamma_H$ and a verification circuit $\Gamma_V$ where both circuits have hard-coded $\pi$.
+The circuit $\Gamma_H$ takes as input a message and outputs a tag for this message and corresponds to the circuit $H$ from Definition \ref{def:mac}.
 The circuit $\Gamma_V$ that as input $m \in \cM$ and $t \in \cT$ and outputs a bit $1$ if and only if $f(m, \pi) = t$.
-
-In the second phase an adversary takes no input ($x^*$ is empty string) and is given oracle access to $\Gamma_H$ and $\Gamma_V$.
-A task of finding by an adversary a valid tag $t \in \cT$ for a message $m \in \cM$ such that a hint for $m$ has no been asked before
+In the second phase the problem solver takes no input ($x^*$ is empty string) and is given oracle access to $\Gamma_H$ and $\Gamma_V$.
+We consider a case where at most on verification query is asked.
+Thus, a task of finding by an adversary a valid tag $t \in \cT$ for a message $m \in \cM$ such that a hint for $m$ has not been asked before
 corresponds to asking a successful verification query by a problem poser to $\Gamma_V$.
 %
 \subsection{Public Key Signature Scheme}
 % \begin{todo}
 %   \textbf{TODO:} Add introduction that gives intuition about the Public Key Signature Schemes
 % \end{todo}
-First we give a definition of public key encryption scheme, and what it means for such a scheme to be secure.
+First, we give a definition of public key encryption scheme, and what it means for such a scheme to be secure.
 These definitions are based on \cite{Goldreich:2004:FCV:975541}.
 
 \begin{definition}[Public key signature scheme]
@@ -53,7 +57,7 @@ $V$ -- the verification algorithm,
 $S$ -- the signing algorithm,
 such that the following conditions are satisfied:
 \begin{enumerate}[-]
-  \item $G(1^n)$ outputs a pair of bitstrings $k_{priv} \in \{0,1\}^{n}$ and $k_{pub} \in \{0,1\}^{n}$ where $n$ is a security parameter.
+  \item $G(1^n)$ outputs a pair of bitstrings $k_{priv} \in \{0,1\}^{n}$ and $k_{pub} \in \{0,1\}^{n}$ where $n \in \N$ is a security parameter.
     We call $k_{priv}$ a private key and $k_{pub}$ a public key.
   \item The signing algorithm $S$ takes as input $k_{priv} \in \{0,1\}^{n}$, $q \in \cQ$ and outputs a signature $s \in S$.
   \item The verification algorithm $V$ takes as input $k_{pub} \in \{0,1\}^{n}$, $q \in \cQ$, and $s \in S$ and outputs a bit $b \in \{0,1\}$.

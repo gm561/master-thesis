@@ -23,8 +23,8 @@ We define a \textit{probabilistic circuit} as a Boolean circuit $C_{m,n} : \{0,1
 We write $C_{m,n}(x;r)$ to denote a probabilistic circuit taking as input  $x \in \{0,1\}^{m}$ and as auxiliary input $r \in \{0,1\}^{n}$.
 If a probabilistic circuit does not take any input, we slightly abuse notation and write $C_{n}(r)$.
 Similarly, we use $\{C_n\}_{n \in \N}$ to denote a family of probabilistic circuits that takes only auxiliary input.
-We make sure that it is clear from the context that probabilistic circuits with only auxiliary input
-are not confused with deterministic Boolean circuits.
+We make sure that it is clear from the context that probabilistic circuits and families of probabilistic circuits with only auxiliary input
+are not confused with deterministic Boolean circuits and families of Boolean circuits respectively.
 For a (probabilistic) circuit $C$ we write $\mathit{Size}(C)$ to denote the total number of vertices of $C$.
 A \textit{(probabilistic) polynomial size circuit} is a (probabilistic) circuit of size polynomial in the number of input vertices
 (including auxiliary input vertices if the circuit is probabilistic).
@@ -39,11 +39,10 @@ as auxiliary input the same bitstring $\delta$.
 
 For an algorithm $A$ we write $\mathit{Time}(A)$ to denote the number of steps it takes to execute $A$.
 We say that $A$ runs in \textit{polynomial time} if $\mathit{Time}(A)$ is bounded by some $poly(|x|)$, where $|x|$ denotes the length of the input that $A$ takes.
-Similarly, as for probabilistic circuits we often write randomness used by a probabilistic algorithm explicitly as a bitstring provided as an auxiliary input.
 
-\begin{todo}
-  \textbf{TODO:} Time of oracle access
-\end{todo}
+Similarly, as for probabilistic circuits we often write randomness used by a probabilistic algorithm explicitly
+as a bitstring provided as an auxiliary input. Exemplary, for a probabilistic algorithm $B$ we write $B(x;r)$
+where $x$ is input of $B$ and $r$ denotes a randomness taken as auxiliary input.
 
 We denote a tuple $(x_1, \dotsc, x_l)$ by $x^{(l)}$.
 Furthermore, for tuples $x^{(l)}$, $y^{(k)}$ we use $x^{(l)} \circ y^{(k)}$ to denote the concatenation of $x^{(l)}$ and $y^{(k)}$ which results in
@@ -70,16 +69,12 @@ for random bitstrings $\rho_A \in \{0,1\}^{n}$, $\rho_B \in \{0,1\}^{n}$ in the 
 In general in the $(2k\!-\!1)$-th round we have $m_{2k-2} := A_n(\rho_A, m_1, \cdots, m_{2k-3})$ and in the $2k$-th round $m_{2k-1} := B_n(\rho_B, m_1, \cdots, m_{2k-2})$.
 A protocol execution between two probabilistic circuits $A$ and $B$ is denoted by $\langle A, B \rangle$.
 The output of $A$ in a protocol execution is denoted by $\langle A, B \rangle_A$ and of $B$ by $\langle A, B \rangle_B$.
-A sequence of all messages send by $A$ and $B$ in the protocol execution is called a communication transcript and
+A sequence of all messages send by $A$ and $B$ in the protocol execution is called a \textit{communication transcript} and
 is denoted by $\langle A, B \rangle_{\mathit{trans}}$.
 
-\begin{todo}
-  \textbf{TODO:} Time complexity of the interactive protocol.
-\end{todo}
-
-\begin{todo}
-  \textbf{TODO:} Oracle access as black box access
-\end{todo}
+% \begin{todo}
+%   \textbf{TODO:} Time complexity of the interactive protocol. is it needed?
+% \end{todo}
 
 \textbf{(Oracle algorithms)}
 We use notion of \textit{oracle circuits} following the standard definition included in the literature \cite{Goldreich:2004:FCV:975541}.
@@ -87,8 +82,14 @@ If a circuit $A$ gains oracle access to a circuit $B$, we write $A^{B}$. If addi
 we write $A^{B^C}$. However, to shorter notation, we often write $A^{B}$ instead, and
 we make sure that it is clear from the context which oracle is accessed by~$B$.
 
+In many situations when studying time complexity of algorithms with oracle access we count oracle call as a single step.
+We underline this explicitly by writing that an algorithm has a certain time complexity \textit{with oracle calls}.
+On the other hand, in some situations we are interested in giving a more fine graded bounds on the running time of algorithms
+that take into account the time of oracle access. In these situations we write time needed to call an oracle explicitly
+and compute running time of an algorithm with regard to time needed for accessing oracle.
+
 \begin{todo}
-  \textbf{TODO:} Exponential factor in what?
+  \textbf{TODO:} Exponential factor in what?\\
   \textbf{TODO:} Cite someone?
 \end{todo}
 \begin{definition}[Polynomial time sampleable distribution]
@@ -97,6 +98,7 @@ up to an exponential factor.
 \end{definition}
 
 \begin{definition}[Pairwise independent family of efficient hash functions]
+  \label{def:hash_pair_ind}
 Let $\cD$ and $\cR$ be finite sets and $\cH$ be a family of functions mapping values from $\cD$ to values in $\cR$.
 We say that $\cH$ is a \textnormal{family of pairwise independent efficient hash functions}
 if $\cH$ has the following properties.
@@ -117,7 +119,7 @@ We note that the pairwise independence property is equivalent to
 \begin{displaymath}
 \underset{\hash \la0 \cH}{\Pr}[hash(x) = \alpha \land hash(y) = \beta] = \frac{1}{|\cR|^2}.
 \end{displaymath}
-It is well know \cite{Carter:1977:UCH:800105.803400} that there exists families of functions meeting the above criteria.
+It is well know \cite{Carter:1977:UCH:800105.803400} that there exists families of functions meeting the criteria stated in Definition \ref{def:hash_pair_ind}.
 
 %%% Local Variables:
 %%% mode: latex
