@@ -253,16 +253,25 @@ We write $P^{(n)} := (D^{(n)}, H^{(n)}, R^{(n)})$ to denote the $n$-wise direct 
 In contrast to the $n$-fold repetition of puzzles defined in previous section, here we
 require a solver to succeed only on a fraction of puzzles.
 
-\begin{todo}
-  \textbf{TODO:} Give an intuition how the MAC or SIG is captured by this notion
-\end{todo}
+Dynamic weakly verifiable puzzles generalize breaking message authentication codes and public signature schemes.
+In case of MAC the adversary takes $x$ which is an empty string.
+For the public signature schemes $x$ is the public key.
 
-We define the \textit{success probability} of a solver $S$ for DWVP as
-\begin{todo}
-  \textbf{TODO:} Define success probability
-\end{todo}
+We write $\cH_{\mathit{hint}}, \cV_{verif} \leftarrow S(x; \delta)$
+to denote the execution of the solver $S$ with input $x \in \{0,1\}^{*}$ and using randomness $\delta \in \{0,1\}^{*}$
+where $\cH_{hint}$ is the set of all hint queries asked by $S$ and by $\cV_{verif}$ is
+a set of all pairs $(q,a)$ of verification queries asked in the execution of $S$.
 
-\begin{theorem}
+With no loss of generality we make an assumption that the solver does not make
+hint queries on the successful verification queries.
+We define the \textit{success probability} of a solver $S$ for $P := (G,V)$ as
+\begin{align*}
+  \underset{\substack{\delta \in \{0,1\}^{*} \\(x,\alpha) \leftarrow \cD \\ (\cH_{hint}, \cV_{verif}) \leftarrow S(x,\delta))}}
+  {\Pr}\big[\exists (q,a) \in \cV_{verif} : q \notin \cH_{hint} \land V(q,a) := 1 \big]
+\end{align*}
+
+\begin{theorem}\textbf{(Hardness amplification for dynamic weakly verifiable puzzle).}
+\label{lemma:dwvp}
 Let $S^{(n)}$ be a probabilistic algorithm for the $P^{(n)}$ that succeeds with
 probability at least $\epsilon$, where $\epsilon \geq (800/\gamma\delta) \cdot (h+v) \cdot e^{-\gamma^2\delta n/40}$, and $h$ and $v$
 denote the number of hint and verification queries asked by $S^{(n)}$ respectively.
@@ -272,47 +281,48 @@ Furthermore, the running time $\mathit{poly}(h,v,\frac{1}{\epsilon}, t, \omega, 
 $\omega$ is time needed to ask a single hint query.
 \end{theorem}
 
-It is worth seeing why the approach presented in the previous section that works well for WVP
-can not be applied in the setting of dynamic weakly verifiable puzzles
-(moving aside for a moment the issue of solving only a fraction of puzzle successfully).
+It is worth seeing why the approach presented in the previous section that works well for $n$-fold repetition of WVP
+can not be applied in the setting of the $k$-wise direct product of DWVP (moving aside for a moment the issue of solving only a fraction of puzzle successfully).
 For DWVP the algorithm $\mathit{CHS\text{--}solver}$ breaks in the $\mathit{OnlinePhase}$ where
 the solver $S^{(n)}$ can be called multiple times.
 It is possible that in one of these runs $S^{(n)}$ asks a hint query on $q$
-for which in one of the later runs a verification query $(q,r)$
-that would make $\mathit{CHS\text{--}solver}$ successfully solves the input puzzle.
-However, as earlier a hint query on this $q$ has been asked it can not be successful verification query.
+for which in one of the later runs a verification query $(q,r)$ is asked
+for which algorithm would return an answear for the input puzzle
+(in other words the condition $\forall_{v+1 \leq i \leq n} V(p_i, c_i, a_i) = 1$ is satisfied).
+However, the fact that a hint query on this $q$ has been asked makes it impossible to ask a successful verification query on this $q$.
 Thus, we can not dismiss a situation where the success probability of $S^{(n)}$ decreases with the number of iterations.
 
-The solution proposed in \cite{Dodis:2009:SAI:1530441.1530450} is to partition the set $Q$ into a set of \textit{attacking queries} $Q_{\mathit{attack}}$
-and a set of \textit{advice queries} $Q_{\mathit{adv}}$. The idea is to allow a solver for the $n$-wise direct product to ask hint
-queries only on $q \in Q_{\mathit{adv}}$, and to halt the execution whenever a hint query is asked on $q \in Q_{\mathit{attack}}$.
+The solution proposed in \cite{Dodis:2009:SAI:1530441.1530450} is to partition the set $\cQ$ into a set of \textit{attacking queries} $\cQ_{\mathit{attack}}$
+and a set of \textit{advice queries} $\cQ_{\mathit{adv}}$. The idea is to allow a solver for the $n$-wise direct product to ask hint
+queries only on $q \in \cQ_{\mathit{adv}}$, and to halt the execution whenever a hint query is asked on $q \in \cQ_{\mathit{attack}}$.
 
 It is possible, for a solver $S$ that asks at most $h$ hint queries and $v$ verification queries,
-to find a function $Q \rightarrow \{0,1,\dotsc 2(h+v)\}$ such that the success probability of $S$ with respect to
-$Q_{\mathit{attack}}$ and $Q_{\mathit{adv}}$ is multiplied by $O(\frac{1}{h+v})$.
+to find a function $\cQ \rightarrow \{0,1,\dotsc 2(h+v)\}$ such that the success probability of $S$ with respect to
+$\cQ_{\mathit{attack}}$ and $\cQ_{\mathit{adv}}$ is multiplied by $\frac{1}{8(h+v)}$.
 If $h$ and $v$ are not too big, then the success probability of $S$ can still be substantial.
+More formally, for a function $\hash:\cQ \rightarrow \{0,1,\dotsc, 2(h+v)\!-\!1 \}$
+we define $\cQ_{\mathit{attack}} := \{q \in \cQ : \hash(q) = 0 \}$ and $\cQ_{adv} := \{q \in \cQ: \hash(q) \neq 0\}$
 
-Additionally, we define a canonical success probability with respect to a $\hash$ function as
-\begin{todo}
-  \textbf{TODO:} Define success probability and canonical success probability
-\end{todo}
-
-More formally, in \cite{Dodis:2009:SAI:1530441.1530450} the following lemma is proved.
+In \cite{Dodis:2009:SAI:1530441.1530450} the following lemma is proved.
 \begin{lemma}
+  \label{lemma:hash_function_previous}
 Let $S$ be a solver for DWVP which success probability is at least $\epsilon$, the running time is at most $t$,
 and the number of hint and verification queries is at most $h$ and $v$ respectively.
 There exists a probabilistic algorithm that runs in time $poly(h,v,\frac{1}{\epsilon},t)$
-that outputs a function $\hash : Q \rightarrow \{0,1, \dotsc, 2(h+v)\}$ such that the canonical
-success probability of $S$ with respect to $\hash$ is at least $\frac{\epsilon}{8(h+v)}$.
+that outputs a function $\hash : \cQ \rightarrow \{0,1, \dotsc, 2(h+v)\}$
+that partitions $\cQ$ to $\cQ_{attack}$ and $\cQ_{adv}$ such that
+with probability at least $\frac{\epsilon}{8(h+v)}$ the first successful verification query $(q',a)$ asked by $S$ is such that $q' \in \cQ_{attack}$
+and all previous hint and verification queries has been asked on $q \in \cQ_{adv}$.
 \end{lemma}
 A function $\hash$ can be found by using a natural sampling technique.
-We follow the same approach of domain partitioning in Section \ref{st:domain_partition}.
+We follow exactly the same approach of the partitioning the domain in the main proof of this Thesis in Section \ref{st:domain_partition}.
 
 Let $H_{\alpha}(q)$ denote a polynomial time probabilistic algorithm that takes as input $q$,
 has hard-coded $\alpha$ and outputs $H(\alpha, q)$.
-Similarly, we use $R_{\alpha}(q,r)$ to denote a polynomial time algorithm that computes relations
+Similarly, we use $R_{\alpha}(q,r)$ to denote a polynomial time probabilistic algorithm that computes relations
 $R(\alpha, q, r)$ and has hard-coded bitstring $\alpha$.
-The following algorithm is give oracle access to $H_{\alpha}(q)$ and $R_{\alpha}(q,r)$
+The following algorithm is used in \cite{Dodis:2009:SAI:1530441.1530450} in the proof of lemma \ref{lemma:dwvp}.
+It gains oracle access to $R_{\alpha}$ and $H_{\alpha}$ as well as a function $\hash$ from Lemma \ref{lemma:hash_function_previous}.
 %
 \begin{codeblock}
   \textbf{Algorithm:} $\mathit{DWVP\text{--}solver}^{S^{(n)}, \hash, H_{\alpha}^{(n)}, R_{\alpha}^{(n)}}(x)$
@@ -343,10 +353,9 @@ The following algorithm is give oracle access to $H_{\alpha}(q)$ and $R_{\alpha}
   \Return $\bot$
 \end{codeblock}
 
-\begin{todo}
-  \textbf{TODO:} explain that hints can be auto generated.
-\end{todo}
-
+% \begin{todo}
+%   \textbf{TODO:} explain that hints can be auto generated.
+% \end{todo}
 %The above algorithm substantially differs from the one used in \cite{canetti2004hardness}.
 In the above algorithm we execute multiple times a solver $S^{(n)}$ for the $k$-wise direct product of DWVPs.
 In each iteration the position for $x \in \{0,1\}^{*}$ is chosen uniformly at random.
@@ -363,23 +372,21 @@ never asks a hint query that could prevent a verification query to succeed.
 If a verification query is asked on $q$ such that $hash(q) \neq 0$ we answer such a verification
 query with $0$.
 
-\begin{todo}
-  \textbf{TODO:} define input puzzle
-\end{todo}
-
 Finally, in case when $S^{(n)}$ asks a verification query using index $q$ such that $hash(q) = 0$, then
 we use a soft decision system to decide whether to ask a verification query.
 The idea is that if there are many puzzles among the ones generated by the algorithm is solved correctly
 then it is likely that also the input puzzle is solved successfully. We also have to discount
 $\gamma\delta n$ to take into account that we require not all puzzles to be solved successfully.
 The detail calculations provided in \cite{Dodis:2009:SAI:1530441.1530450} shows that this approach
-yields a demanded result. More details can be found in \cite{Dodis:2009:SAI:1530441.1530450, impagliazzo2007chernoff}.
+yields a demanded result.
+We do not give a more detail description of the proof of \cite{Dodis:2009:SAI:1530441.1530450} as
+in Chapter \ref{ch:main_result}, except the domain partitioning, we use a different prove technique.
 
-In case of weakly verifiable primitives like CAPTCHAs we want to distinguish between humans and computers.
-We assume that most people have slightly higher probability of solving these kind of puzzles than the best algorithms.
-Still, it may happen that humans do not solve all puzzles. Therefore, we would like to introduce a threshold function
-such that on average solutions of humans are treated as solved successfully but the ones of computer programs are classified
-as not successful. This is a motivation to study the situations where only some fractions of puzzles is solved successfully.
+In case of weakly verifiable primitives like CAPTCHAs we assume that most people have at least slightly higher probability of solving
+these kind of puzzles than the best computer programs. Still, it may happen that humans do not solve all puzzles.
+This is a motivation to introduce a threshold function such that on average solutions of humans are treated as solved successfully
+but the ones of computer programs on average are classified as not successful.
+This is a motivation to study the situations where only a fraction of puzzles is solved successfully.
 
 In Chapter \ref{ch:main_result} we consider a weakly verifiable puzzles that are interactive and dynamic.
 We use a very similar technique to partition domain $Q$ into advice and hint queries as presented in \cite{Dodis:2009:SAI:1530441.1530450}.
@@ -389,10 +396,6 @@ that determine on which coordinates the solver has to succeed in order to succes
 To show the hardness amplification for the $n$-wise direct product with the domain partitioned we use
 the approach similar to the one presented in Section~\ref{subsec:chs}. Namely, we try to find a good position for the input puzzle instead of
 choosing the position uniformly on random as in \cite{Dodis:2009:SAI:1530441.1530450}.
-
-\begin{todo}
-  \textbf{TODO:} Give more intuition behind the proof i.e. why it works? why it is complicated.
-\end{todo}
 
 \subsection{Results of T.Holenstein and G.Scheonebeck}
 \begin{todo}
