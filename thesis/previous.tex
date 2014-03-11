@@ -67,12 +67,12 @@ notion, but for dynamic puzzles, is defined as $k$-wise repetition of puzzles. I
   where for each $1 \leq i \leq n$ a pair $(p_i, c_i)$ is an independent instance of a weakly verifiable puzzle defined by $G$ and $V$ with security parameter $k$.
   Finally, the verification algorithm $V^{(n)}$ takes as input $p^{(n)}$, $c^{(n)}$, an answer $a^{(n)}$, and outputs $b \in \{0,1\}$
   such that $b = 1$ if and only if for all $1 \leq i \leq n$ we have $V(p_i, c_i, a_i) = 1$.
-  We write $P^{(n)} := (G^n, V^n)$ to denote the $n$--fold repetition of $P$.
+  We write $P^{(n)} := (G^{(n)}, V^{(n)})$ to denote the $n$--fold repetition of $P$.
  \end{definition}
 %
 Let us lay down some terminology.
-For $P^{(n)}(G^n,V^n)$ we define a \textit{puzzle on $i$-th coordinate} as $i$-th puzzle of the $n$-fold repetition
-(the puzzle that corresponds to $G^i$,  $V^i$).
+For $P^{(n) } := (G^{(n)},V^{(n)})$ we define a \textit{puzzle on $i$-th coordinate} as $i$-th puzzle of the $n$-fold repetition
+(the puzzle that corresponds to $G^{(n)}_i$,  $V^{(xn)}_i$).
 The $n$-fold repetition of weakly verifiable puzzles is solved successfully if and only if all $n$ puzzles are solved successfully.
 In contrast, in Chapter \ref{ch:main_result} we are interested in a more general situation where a monotone function $g: \{0,1\}^{n} \rightarrow \{0,1\}$ is used to decide
 which coordinates of the $n$-fold repetition of puzzles have to be solved correctly. A precise definition is given in Section \ref{st:main_theorem}.
@@ -97,11 +97,7 @@ the perfect hardness amplification. We note that in the analysis of running time
 we explicitly take into account time needed for oracle calls to $S^{(n)}, V, G$.
 
 We denote by $p \in \{0,1\}^{*}$ a bitstring output by $G$ and taken as input by $\mathit{CHS\text{--}solver}$.
-To make the notation shorter in the following code excerpts we do not write randomness used by $G$ explicitly.
-
-\begin{todo}
-  \textbf{TODO:} $p$ is an input puzzle.
-\end{todo}
+To make notation shorter in the following code excerpts we do not write randomness used by $G$ explicitly.
 
 \begin{codeblock}
   \textbf{Algorithm:} $\mathit{CHS\text{--}solver}^{S^{(n)},V,G}(p, n, k, q, \delta)$
@@ -163,26 +159,31 @@ A detail proof of Theorem \ref{thm:wvp_chs} is presented in \cite{canetti2004har
 We limit ourselves to providing an intuition why the above algorithm transforms a good solver
 for the $n$--wise direct product of $P$ to a good solver for $P$.
 
-Let us consider the $n$-fold repetition of $P$, and for simplicity a deterministic solver $S^{(n)}$ for $P^{(n)}$.
+Let us consider the $n$-fold repetition of $P$, and for simplicity a deterministic solver $S^{(n)}$ for $P^{(n)} := (G^{(n)}, V^{(n)})$.
 Furthermore, we write $p^{(n)}, c^{(n)}$ to denote the output of $G^{(n)}$.
 We define a matrix $M$ as follows. The columns of $M$ are labeled with all possible bitstrings $p_1$
-whereas the rows are labeled with all possible tuples $(p_2, \dotsc, p_n)$ where $G^{(n)}$ is executed with different randomness.
+whereas the rows are labeled with all possible tuples $(p_2, \dotsc, p_n)$ output by algorithm $G^{(n)}$
+executed with different randomness.
 A cell of $M$ contains a binary $n$-tuple such that the $i$-th bit equals $1$ if and only if $V_i(p_i, c_i, a_i) = 1$ where
- $a^{(n)} := S^{(n)}(p^{(n)})$ and $p^{(n)}$ is a tuple of bitstring inferred by a column and row of the cell.
+ $a^{(n)} := S^{(n)}(p^{(n)})$ and $p^{(n)}$ is a tuple of bitstring inferred by a column and a row of the cell.
 We make the following observation.
 %
 \begin{observation}
 \label{obs:wvp_matrix}
-For a deterministic polynomial time algorithm $S^{(n)}$ that successfully solves the $n$-fold repetition of $P$ with probability at least $\delta^{n}$,
+For a deterministic polynomial time algorithm $S^{(n)}$ that successfully solves the $n$-fold repetition of $P$ with probability at least $\delta^{n}$
 the matrix $M$ defined as above has either a column with $\delta^{(n-1)}$ fractions of cells that are all one vectors, or
 a conditional probability that a cell is of the form $1^n$ given that the last $(n-1)$ bits of the cell are equal 1 is at least $\delta$.
 \end{observation}
 %
 % /TODO put the proof in appendix? but the proof is trivial!
 %
+\begin{todo}
+  \textbf{TODO:} The correspondens between the probabilities and puzzle bitstring $p^*$.
+\end{todo}
+%
 We show, at least intuitively using Observation \ref{obs:wvp_matrix}, how the algorithm $\mathit{CHS\text{--}solver}$ can be used to solve $P$
 with substantial probability given oracle access to $S^{(n)}$ for $P^{(n)}$.
-The algorithm starts with the first position and tries to fix a puzzle such that the success probability of $S^{(n)}$ on the remaining $(n-1)$
+The algorithm starts with the first position and tries to fix a puzzle on this position such that the success probability of $S^{(n)}$ on the remaining $(n-1)$
 position is at least $\delta^{(n-1)}$. If it is possible to find $p^*$ such that this condition is satisfied, then we fix $p^*$
 on this position and repeat the whole procedure again in the consecutive iteration for the next position.
 If $\mathit{CHS\text{--}solver}$ fails to find a bitstring $p^*$, then we assume that there is no column of $M$ that contains $\delta^{(n-1)}$ fraction
