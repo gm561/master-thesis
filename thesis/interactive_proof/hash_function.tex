@@ -11,6 +11,7 @@ We define the following experiment $\CanonicalSuccess$ in which the set $Q$ is p
 We say that a solver circuit \textit{succeeds} in the experiment $\CanonicalSuccess$
 if it asks a successful verification query $(q_j, y_j)$ such that $\hash(q_j) = 0$, and no hint query $q_i$ is asked before $(q_j, y_j)$ such that $\hash(q_i) = 0$.
 %
+
 \begin{codeblock}
   \textbf{Experiment} $\CanonicalSuccess^{P, C, \hash}(\pi, \rho)$
   \medskip \hrule
@@ -41,33 +42,33 @@ We define the \textit{canonical success probability} of a solver circuit $C$ for
 For fixed $\hash$ and $P$ a \textit{canonical success} of $C$ for bistrings $\pi$, $\rho$ is a situation where
 $\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1$.
 
-We show that if a solver circuit $C$ for $P$ often succeeds in the experiment $\Success$,
+We show now that if a solver circuit $C$ for $P$ often succeeds in the experiment $\Success$,
 then there exists a function $\hash$ such that $C$ also often succeeds in the experiment $\CanonicalSuccess$.
 %
-\begin{lemma}\textbf{(\boldmath{Success probability in solving DWVP with respect to a function $\hash$.)}}
+\begin{lemma}\textbf{(\boldmath{Success probability in solving dynamic interactive weakly verifiable puzzle with respect to a function $\hash$.)}}
 \label{lemma:hash_function_probability}
-For fixed $P_n$ let $C$ be a solver for $P_n$ with the success probability at least $\gamma$, asking at most $h$ hint queries and $v$ verification queries.
-Let $\cH$ be a family of pairwise independent efficient hash functions $Q \rightarrow \{0,1, \dots,2(h+v)-1\}$.
-There exists a probabilistic algorithm FindHash that takes as input parameters $\gamma$, $n$, $h$, $v$, and has oracle access to $C$ and $P_n$.
-Furthermore, FindHash runs in time $\mathit{poly}(h,v,\frac{1}{\gamma},n)$,
-and with high probability outputs a function $\hash \in \cH$
+For a fixed problem poser $P_n$ let $C$ be a solver for $P_n$ with the success probability at least $\gamma$,
+asking at most $h$ hint queries and $v$ verification queries.
+Moreover, let $\cH$ be a family of pairwise independent efficient hash functions $Q \rightarrow \{0,1, \dots,2(h+v)-1\}$.
+Then there exists a probabilistic algorithm FindHash that takes as input parameters $\gamma$, $n$, $h$, $v$, and has oracle access to $C$ and $P_n$.
+Furthermore, FindHash runs in time $\poly(h,v,\frac{1}{\gamma},n)$ and with high probability outputs a function $\hash \in \cH$
 such that the canonical success probability of $C$ with respect to $\hash$ is at least $\frac{\gamma}{16(h+v)}$.
 \end{lemma}
 %
-\begin{proof}[\ref{lemma:hash_function_probability}]
+\begin{proof}[of Lemma \ref{lemma:hash_function_probability}]
 We fix a problem poser $P$ and a solver $C$ for $P$ in the whole proof of Lemma \ref{lemma:hash_function_probability}.
 For $k,l \in \{1, \dotsc, (h+v)\}$ and $\alpha,\beta \in \{0,1,\dotsc,2(h+v)-1\}$ by the pairwise independence property,
-for every $q_k, q_l \in Q$ such that $q_k \neq q_l$ we have
+we have that for every $q_k, q_l \in Q$ such that $q_k \neq q_l$ the following holds
 \begin{align}
  \label{eq:hash_pr}
  \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_k) = \alpha \mid \hash(q_l) = \beta] &=
  \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_k) = \alpha] \notag\\ &= \frac{1}{2(h+v)}.
 \end{align}
 %
-We write $\cP_{\Success}$ to denote a set containing all $(\pi,\rho)$ for which $\Success^{P, C}(\pi, \rho) = 1$.
+We write $\cP_{\Success}$ to denote a set containing all $(\pi,\rho)$ for which $\Success^{P, C}(\pi, \rho)~=~1$.
 Let us fix $(\pi^*, \rho^*) \in \cP_{\mathit{Success}}$. We are interested in the probability over
 a choice of function $\hash$ of the event $\CanonicalSuccess^{P,C,\hash}(\pi^*, \rho^*) = 1$.
-Let $(q_j, y_j)$ denote the first query such that $\Gamma_V(q_j, y_j) = 1$. We have
+Let $(q_j, y_j)$ denote the first query such that $\Gamma_V(q_j, y_j) = 1$, then we have
 \begin{align}
   \label{ineq:prob_hash_success}
   \underset{\hash \leftarrow \cH}{\Pr}&\left[\CanonicalSuccess^{P,C,\hash}(\pi^*, \rho^*) = 1\right] \notag\\
@@ -79,8 +80,8 @@ Let $(q_j, y_j)$ denote the first query such that $\Gamma_V(q_j, y_j) = 1$. We h
   \IndII &\stackrel{(\ref{eq:hash_pr})}{=} \frac{1}{2(h+v)} \left( 1 -  \sum_{i < j}\underset{\hash \leftarrow \cH}{\Pr}[\hash(q_i) = 0] \right) \notag\\
   \IndII &\overset{(\ref{eq:hash_pr})}{\geq} \frac{1}{4(h+v)},
 \end{align}
-where in $(*)$ we used the union bound. Let us denote the set of those $(\pi,\rho)$ for which
- $\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1$ by $\cP_{\mathit{Canonical}}$.
+where in $(*)$ we used the union bound.
+Let us denote the set of those $(\pi,\rho)$ for which $\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1$ by $\cP_{\mathit{Canonical}}$.
 If for $\pi$, $\rho$ the circuit $C$ succeeds canonically, then for the same $\pi$, $\rho$ we also have $\Success^{P, C}(\pi, \rho) = 1$.
 Hence, $\cP_{\mathit{Canonical}} \subseteq \cP_{\mathit{Success}}$, and we conclude
 \begin{align}
