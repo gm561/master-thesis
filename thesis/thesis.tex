@@ -133,7 +133,22 @@ that can be used to partition the domain on which hint and verification queries 
 Next, we give a proof of hardness amplification under the assumption that the domain is partitioned to advice and attacking queries.
 Finally, in Section \ref{st:put_together} we combine these steps which yields the desired result.
 %
+% \section{Main theorem}
+% \label{st:main_theorem}
+\subsection{Direct product of interactive weakly verifiable puzzles}
 \input{interactive_proof/interactive_proof}
+
+% section{Domain partitioning}
+\input{interactive_proof/hash_function}
+
+% section{Amplification proof for partitioned domain}
+\input{interactive_proof/proof}
+
+% subsection{Putting it together}
+\input{interactive_proof/proofMainThm}
+
+\section{Discussion}
+
 %
 \appendix
 \input{appendix}
