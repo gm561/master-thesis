@@ -113,7 +113,7 @@
 This chapter gives an overview of weakly verifiable cryptograph primitives.
 We start by formulating a definition of a \textit{dynamic interactive weakly verifiable puzzle} in Section \ref{section:wvp}.
 To provide the Reader more intuition in Section \ref{section:wvp_examples} we describe a~series of well known cryptographic primitives
-that are weakly verifiable. The Section \ref{st:previous_results} is devoted to the previous research concerning different types of weakly verifiable puzzles.
+that are weakly verifiable. Section \ref{st:previous_results} is devoted to the previous research concerning different types of weakly verifiable puzzles.
 %
 \input{def_diwvp}
 \input{examples}
@@ -122,6 +122,16 @@ that are weakly verifiable. The Section \ref{st:previous_results} is devoted to 
 \section{Limitations of Security Amplification}
 %
 % the main theorem
+\chapter{Hardness amplification for dynamic interactive weakly verifiable puzzles}
+\label{ch:main_result}
+In the previous chapter we defined a very general notion of dynamic interactive weakly verifiable puzzles.
+The focus of this chapter is on giving a constructive proof of hardness amplification for this type of puzzles.
+First in Section \ref{st:main_theorem} we formulate the main theorem which is then proved in the succeeding steps.
+We start with providing an algorithm that finds an efficiently computable function
+that can be used to partition the domain on which hint and verification queries are asked.
+Next, we give a proof of security amplification under the assumption that the domain is well partitioned.
+Finally, in Section \ref{st:put_together} we combine these both steps which yields the desirable result.
+%
 \input{interactive_proof/interactive_proof}
 
 \appendix

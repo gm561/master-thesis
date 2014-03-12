@@ -57,12 +57,12 @@ such that the following conditions are satisfied:
   \item The verification algorithm $V$ takes as input $k_{pub} \in \{0,1\}^{n}$, $q \in \cQ$, and $s \in \cS$ and outputs a bit $b \in \{0,1\}$.
   \item For every $k_{priv}$, $k_{pub}$ output by $G$ and every $q \in \cQ$ it holds
     \begin{align*}
-      \Pr[V(k_{pub}, q, S(k_{priv}, q))] = 1,
+      \Pr[V(k_{pub}, q, S(k_{priv}, q))] = 1
     \end{align*}
     where the probability is over random coins of $V$ and $S$.
 \end{enumerate}
 \end{definition}
-We say that $s \in \cS$ is a \textit{valid} signature for $q \in \cQ$ if and only if $V(k_{pub}, q, s) = 1$.
+We say that $s \in \cS$ is a \textit{valid signature} for $q \in \cQ$ if and only if $V(k_{pub}, q, s) = 1$.
 %
 %TODO efficiency of the algorithms
 %
@@ -76,14 +76,18 @@ We will show now that a public key signature scheme defined as above can be repr
 Let the problem poser correspond to an entity that generates $k_{pub}$, $k_{priv}$ and the solver to the adversary.
 In the first phase, the problem poser uses algorithm $G(1^n)$ to obtain $k_{pub}$, $k_{priv}$ and sends to the adversary the public key $k_{pub}$.
 Then the problem poser generates a hint circuit $\Gamma_H$ and a verification circuit $\Gamma_V$.
-The hint circuit $\Gamma_H$ takes as input $q \in \cQ$ and outputs a signature for $q$. The verification circuit
-$\Gamma_V$ takes as input $s \in \cS$ and $q \in \cQ$ and checks whether $s \in \cS$ is a valid signature for $q \in \cQ$.
+The hint circuit $\Gamma_H$ takes as input $q \in \cQ$ and outputs a valid signature for $q$. The verification circuit
+$\Gamma_V$ takes as input $s \in \cS$ and $q \in \cQ$ and outputs 1 if and only if $s \in \cS$ is a valid signature for $q \in \cQ$.
 In the second phase, the problem solver takes as input a transcript of the messages from the first round which consists solely of $k_{pub}$.
 Additionally, it is given oracle access to $\Gamma_V$ and $\Gamma_H$.
-It is clear that if the adversary asks a successful verification query $(q,s)$, then it succeeds also in finding a signature for $q$.
+The adversary can ask a number of hint and verification queries.
+It is clear that if the adversary asks a successful verification query $(q,s)$, then it finds also a valid signature for $q$.
 
 Thus, finding a valid signature by the adversary of a public key signature schemes is a weakly verifiable puzzle that
 is dynamic but non-interactive as in the first phase only a single message is sent.
+% \begin{todo}
+%   \textbf{TODO:} Why it is weakly verifiable?! It makes sense only when many many queries is asked to the verification oracle.
+% \end{todo}
 %
 \subsection{Bit Commitments}
 Let us consider the following \textit{bit commitment protocol} that involves two parties a \textit{sender} and a \textit{receiver}.
@@ -101,33 +105,33 @@ We base the following definition of a \textit{bit commitment protocol} on \cite{
 \begin{definition}[Bit Commitment Protocol]
   \label{def:bit_commitment}
 A \textnormal{bit commitment protocol} is defined by a pair $(S_n, R)$
-where $S_n = (S_1, S_2)$ is a two phase probabilistic circuit, $R$ is a probabilistic circuit, and
+where $S = (S_1, S_2)$ is a two phase probabilistic circuit, $R$ is a probabilistic circuit, and
 $n~\in~\N$ is a security parameter.
-We call $S_n$ the sender and $R$ the receiver. The circuit $S_1$ takes as input a pair $(b, \rho_S)$
-where $b \in \{0,1\}$ is interpreted as a bit to which $S_n$ commits, and $\rho_S \in \{0,1\}^{n}$ is the randomness used by the algorithm $S_n$.
-The receiver $R$ takes as auxiliary input a bitstring $\rho_R \in \{0,1\}^{*}$ that is the randomness used by $R$.
-The protocol consists of two phases. In the \textnormal{commit phase}, circuits $S_1$ and $R$ engage in the protocol execution.
-As the result $S_1$ commits to $b$ and $R$ generates a circuit $V$.
+We call $S$ the sender and $R_n$ the receiver. The circuit $S_1$ takes as input a pair $(b, \rho_S)$
+where $b \in \{0,1\}$ is interpreted as a bit to which $S$ commits, and $\rho_S \in \{0,1\}^{n}$ is the randomness used by the algorithm $S$.
+The receiver $R_n$ takes as auxiliary input a bitstring $\rho_R \in \{0,1\}^{*}$ that is the randomness used by $R_n$.
+The protocol consists of two phases. In the \textnormal{commit phase}, circuits $S_1$ and $R_n$ engage in the protocol execution.
+As the result $S_1$ commits to $b$ and $R_n$ generates a circuit $V$.
 The circuit $V$ takes as input a bit $b' \in \{0,1\}$ and a bitstring $y \in \{0,1\}^{*}$ and outputs a bit.
 In the \textnormal{reveal phase} the circuit $S_2$ takes as input a communication transcript from the commitment phase
-$\langle S_1, R \rangle_{\mathit{trans}}$, the bitstring $\rho_s$ and returns $(b', y)$.
+$\langle S_1, R_n \rangle_{\mathit{trans}}$, the bitstring $\rho_s$ and returns $(b', y)$.
 We require a bit commitment protocol to have the following properties:
 \begin{enumerate}[]
 \item{\textnormal{\textbf{(Correctness)}}} For a fixed $b \in \{0,1\}$ we have
   \begin{align*}
-    \underset{\substack{\rho_S \in \{0,1\}^{n}, \rho_R \in \{0,1\}^{*} \\
-        \Gamma_V := \langle S_1(b,\rho_S), R(\rho_R) \rangle_{R} \\
-        (b',y) := S_2(\langle S_1(b,\rho_s), R(\rho_R) \rangle_{\mathit{trans}},\rho_S)}}{\Pr}\Big[V(b',y) = 1 \Big] \geq 1 - \epsilon(n),
+    \underset{\substack{\rho_S \in \{0,1\}^{*}, \rho_R \in \{0,1\}^{n} \\
+        \Gamma_V := \langle S_1(b,\rho_S), R_n(\rho_R) \rangle_{R} \\
+        (b',y) := S_2(\langle S_1(b,\rho_s), R_n(\rho_R) \rangle_{\mathit{trans}},\rho_S)}}{\Pr}\Big[V(b',y) = 1 \Big] \geq 1 - \epsilon(n),
   \end{align*}
 where $\epsilon(n)$ is a negligible function of $n$.
 \item{\textnormal{\textbf{(Hiding)}}}
   % \begin{todo}
   %   \textbf{TODO:} Describe it using equations, define somehow the guess of R? Maybe as a last message in the first phase of communication
   % \end{todo}
-  Probability over random coins of $S_n$ and $R_n$ that any polynomial size circuit
+  Probability over random coins of $S$ and $R_n$ that any polynomial size circuit
   can guess bit $b$ correctly after the commit phase is at most $\frac{1}{2} + \epsilon(n)$ where $\epsilon(n)$ is a negligible function of $n$.
 \item{\textnormal{\textbf{(Binding)}}}
-  For every circuit $S_n := (S_1, S_2)$ such that $S_1$ and $S_2$ are of size $\poly(n)$ we have
+  For every circuit $S := (S_1, S_2)$ such that $S_1$ and $S_2$ are of size $\poly(n)$ we have
   \begin{align*}
     \underset{\substack{
         \rho_S \in \{0,1\}^{n}, \rho_R \in \{0,1\}^{*} \\
@@ -142,25 +146,25 @@ The number of hint queries amounts to zero, and the number of the verification q
 which means that the puzzle is non--dynamic.
 The receiver is the problem poser. The solver corresponds to the sender trying to break the binding property.
 
-In the first phase the problem solver parses the auxiliary input such that the first bit $b$ is the bit to which
-the problem solver. The remaining part of the auxiliary input is the randomness used by the problem solver.
-Then the solver interacts with the problem poser.
-After, the first phase the problem poser generates a circuit $\Gamma_V$ that takes as input a $y_0$, $y_1$ and outputs
+In the first phase the solver parses the auxiliary input such that the first bit $b$ is the bit to which
+it commits. The remaining part of the auxiliary input is the randomness used by the solver.
+The solver interacts with the problem poser.
+After, the first phase the problem poser generates a circuit $\Gamma_V$ that takes as input $y_0$, $y_1$ and outputs
 1 if and only if $V(0,y_0) = 1 \land V(1,y_1) = 1$.
 For the bit commitment protocols $|Q| = 1$, thus we do not write on which $q \in Q$ the solver asks a verification query.
 
 In the second phase, the solver is given oracle access to $\Gamma_V$ and is allowed to ask at most one verification query.
-We emphasize that the solver has only black box access to $\Gamma_V$. Therefore, it has no efficiently way to check whether
+We emphasize that the solver has only black box access to $\Gamma_V$. Therefore, it has no efficient way to check whether
 the solution is successful except asking a verification query.
 
 Finally, we notice that for the problem poser and the solver defined as above asking a successful verification query
-corresponds to breaking the binding property of bit commitment protocol.
+corresponds to breaking the binding property of the bit commitment protocol.
 
 \subsection{Automated Turing Tests}
 The goal of \textit{Automated Turing Tests} is to distinguish humans from computers.
 An example of such a test is \textit{CAPTCHA} formally defined in \cite{von2003captcha}.
-Loosely speaking, CAPTCHA is a test for which it is hard to write a computer program that has a success
-probability comparable or higher to the one achieved by most of humans.
+Loosely speaking, CAPTCHA is a test for which it is hard to write a computer program that success
+probability is comparable or higher to the one achieved by most of humans.
 An example is an image depicting a distorted text.
 We note that the definition of hardness is defined by and bases on the opinions of AI community \cite{von2003captcha}.
 
@@ -170,17 +174,18 @@ such that after its execution the problem poser sends to the solver an image con
 Furthermore, the problem poser generates a circuit $\Gamma_V$ that takes as input a bitstring $y$ and outputs 1 if and only if $y$ correctly encodes the
 text depicted on the distorted image.
 
-The problem poser in the second round takes as input a distorted image, has oracle access to $\Gamma_V$ and can ask at most a single verification query.
+The problem poser in the second phase takes as input a distorted image, has oracle access to $\Gamma_V$ and can ask at most a single verification query.
+In general, checking whether a solution is correct is as hard as finding a correct solution. Thus, CAPTCHAs are weakly verifiable.
 
 Standard CAPTCHAs are non-dynamic, as the problem solver does not gain access to the hint oracle.
 %However, Definition \cite{def:dwvp} captures also the types AI problems, .
 
-As it is not know how good the possible algorithm can be to recognize CAPTCHA it is likely that the gap between human
-performance and a performance of computer programs may be small. Therefore, it is of interest to find a way to amplify this gap.
+It is not know how good an algorithm for recognizing CAPTCHA can be. Thus, it is likely that a gap between human
+performance and a performance of a computer program may be small. Therefore, it is of interest to find a way to amplify this gap.
 Actually, in \cite{DBLP:journals/corr/abs-1002-3534} it has been shown that it is possible for parallel repetition.
 The solver is given $n$ independent puzzles. The verifier accepts when the solver succeeds on at least $\delta n$ fraction of puzzles.
-It turns out that we can create weakly verifiable puzzles for which success probability of a computer program is at most $\epsilon$ and
-which is substantially easier for humans that succeeds with at least probability $1 - \epsilon$ where $\epsilon \in (0,1)$.
+It turns out that in this way we can construct weakly verifiable puzzles for which success probability of a computer program is at most $\epsilon$ and
+which is still easy for humans that succeeds with at least probability $1 - \epsilon$ where $\epsilon \in (0,1)$.
 
 In Chapter \ref{ch:main_result} we give a more general proof than the one in \cite{DBLP:journals/corr/abs-1002-3534} that
 applies also to dynamic context.
