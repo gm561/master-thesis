@@ -9,8 +9,7 @@ Therefore, if $C$ makes a verification query $(q,y)$ such that $\hash(q) = 0$, t
 We denote the $i$-th query of $C$ by $q_i$ if it is a hint query, and by $(q_i, y_i)$ if it is a verification query.
 We define the following experiment $\CanonicalSuccess$ in which the set $Q$ is partitioned using a function $\hash$.
 We say that a solver circuit \textit{succeeds} in the experiment $\CanonicalSuccess$
-if it asks a successful verification query $(q_j, y_j)$ such that $\hash(q_j) = 0$,
-and no hint query $q_i$ is asked before $(q_j, y_j)$ such that $\hash(q_i) = 0$.
+if it asks a successful verification query $(q_j, y_j)$ such that $\hash(q_j) = 0$, and no hint query $q_i$ is asked before $(q_j, y_j)$ such that $\hash(q_i) = 0$.
 %
 \begin{codeblock}
   \textbf{Experiment} $\CanonicalSuccess^{P, C, \hash}(\pi, \rho)$
@@ -19,8 +18,7 @@ and no hint query $q_i$ is asked before $(q_j, y_j)$ such that $\hash(q_i) = 0$.
   \IndII a function $\hash: Q \rightarrow \{0, \dots, 2(h+v) - 1\}$.\\
   \textbf{Input:}  Bitstrings $\pi \in \{0,1\}^n$, $\rho \in \{0,1\}^*$. \\
   \textbf{Output:} A bit $b \in \{0,1\}$.
-
-  \medskip\hrule\medskip
+  \medskip\hrule
   \Run $\langle P(\pi), C_1(\rho) \rangle$ \\
   \IndI $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$ \\
   \IndI $x := \langle P(\pi), C_1(\rho) \rangle_{\mathit{trans}}$ \\ \\
@@ -48,11 +46,9 @@ then there exists a function $\hash$ such that $C$ also often succeeds in the ex
 %
 \begin{lemma}\textbf{(\boldmath{Success probability in solving DWVP with respect to a function $\hash$.)}}
 \label{lemma:hash_function_probability}
-For fixed $P_n$ let $C$ be a solver for $P_n$ with success probability at least $\gamma$,
-asking at most $h$ hint queries and $v$ verification queries.
-Let $\cH$ be an efficient family of pairwise independent hash functions $Q \rightarrow \{0,1, \dots,2(h+v)-1\}$.
-There exists a probabilistic algorithm FindHash that takes as input
-parameters $\gamma$, $n$, $h$, $v$, and has oracle access to $C$ and $P_n$.
+For fixed $P_n$ let $C$ be a solver for $P_n$ with the success probability at least $\gamma$, asking at most $h$ hint queries and $v$ verification queries.
+Let $\cH$ be a family of pairwise independent efficient hash functions $Q \rightarrow \{0,1, \dots,2(h+v)-1\}$.
+There exists a probabilistic algorithm FindHash that takes as input parameters $\gamma$, $n$, $h$, $v$, and has oracle access to $C$ and $P_n$.
 Furthermore, FindHash runs in time $\mathit{poly}(h,v,\frac{1}{\gamma},n)$,
 and with high probability outputs a function $\hash \in \cH$
 such that the canonical success probability of $C$ with respect to $\hash$ is at least $\frac{\gamma}{16(h+v)}$.
@@ -60,12 +56,12 @@ such that the canonical success probability of $C$ with respect to $\hash$ is at
 %
 \begin{proof}[\ref{lemma:hash_function_probability}]
 We fix a problem poser $P$ and a solver $C$ for $P$ in the whole proof of Lemma \ref{lemma:hash_function_probability}.
-For $k,l \in \{1, \dotsc, (h+v)\}$ and $\alpha,\beta \in \{0,1,\dotsc,2(h+v)-1\}$ by the pairwise independence property, we have
+For $k,l \in \{1, \dotsc, (h+v)\}$ and $\alpha,\beta \in \{0,1,\dotsc,2(h+v)-1\}$ by the pairwise independence property,
+for every $q_k, q_l \in Q$ such that $q_k \neq q_l$ we have
 \begin{align}
-  \label{eq:hash_pr}
- \forall q_k \neq q_l \in Q : \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_k) = \alpha \mid \hash(q_l) = \beta] &=
- \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_k) = \alpha] \notag\\
- &= \frac{1}{2(h+v)}.
+ \label{eq:hash_pr}
+ \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_k) = \alpha \mid \hash(q_l) = \beta] &=
+ \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_k) = \alpha] \notag\\ &= \frac{1}{2(h+v)}.
 \end{align}
 %
 We write $\cP_{\Success}$ to denote a set containing all $(\pi,\rho)$ for which $\Success^{P, C}(\pi, \rho) = 1$.

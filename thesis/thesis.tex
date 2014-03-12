@@ -124,16 +124,17 @@ that are weakly verifiable. Section \ref{st:previous_results} is devoted to the 
 % the main theorem
 \chapter{Hardness amplification for dynamic interactive weakly verifiable puzzles}
 \label{ch:main_result}
-In the previous chapter we defined a very general notion of dynamic interactive weakly verifiable puzzles.
-The focus of this chapter is on giving a constructive proof of hardness amplification for this type of puzzles.
-First in Section \ref{st:main_theorem} we formulate the main theorem which is then proved in the succeeding steps.
+In the previous chapter we outlined the former studies of different types of weakly verifiable puzzles and defined
+a more general notions of dynamic interactive weakly verifiable puzzles.
+The focus of this chapter is on giving a constructive proof of hardness amplification for DIWVP.
+First, in Section \ref{st:main_theorem} we formulate the main theorem which is then proved in the succeeding steps.
 We start with providing an algorithm that finds an efficiently computable function
 that can be used to partition the domain on which hint and verification queries are asked.
-Next, we give a proof of security amplification under the assumption that the domain is well partitioned.
-Finally, in Section \ref{st:put_together} we combine these both steps which yields the desirable result.
+Next, we give a proof of hardness amplification under the assumption that the domain is partitioned to advice and attacking queries.
+Finally, in Section \ref{st:put_together} we combine these steps which yields the desired result.
 %
 \input{interactive_proof/interactive_proof}
-
+%
 \appendix
 \input{appendix}
 
