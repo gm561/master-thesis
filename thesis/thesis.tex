@@ -122,20 +122,18 @@ that are weakly verifiable. Section \ref{st:previous_results} is devoted to the 
 \section{Limitations of Security Amplification}
 %
 % the main theorem
-\chapter{Hardness amplification for dynamic interactive weakly verifiable puzzles}
+\chapter{Hardness amplification for weakly verifiable puzzles}
 \label{ch:main_result}
 In the previous chapter we gave an overview of the former studies of different types of weakly verifiable puzzles.
-We also defined a more general notions of a dynamic interactive weakly verifiable puzzle.
-The focus of this chapter is on giving a constructive proof of hardness amplification for dynamic interactive weakly verifiable puzzles.
-In Section \ref{st:main_theorem} we formulate the hardness amplification theorem
-which is then proved in the succeeding sections.
-We begin with constructing an algorithm that finds an efficiently computable function
-that is used to partition the domain on which hint and verification queries are asked.
-Next, we give a proof of hardness amplification under the assumption that the domain is well partitioned.
-Finally, in Section \ref{st:put_together} we combine these steps which yields the desired result.
+We also defined a~more general notion of a~dynamic interactive weakly verifiable puzzle.
+The focus of this chapter is on a constructive proof of hardness amplification for dynamic interactive weakly verifiable puzzles.
+In Section \ref{st:main_theorem} we formulate the theorem which is then proved in the succeeding sections.
+We begin with constructing an algorithm that finds an efficiently computable function that is used
+to partition the domain of hint and verification queries. Next, we give a proof of hardness amplification
+under the assumption that the domain is well partitioned. Finally, in Section \ref{st:put_together}
+we finish the proof by combining the previous steps.
 %
-% \section{Main theorem}
-% \label{st:main_theorem}
+% section{Main theorem}
 \input{interactive_proof/interactive_proof}
 %
 % section{Domain partitioning}

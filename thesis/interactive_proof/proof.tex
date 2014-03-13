@@ -156,6 +156,13 @@ The estimate of this probability is calculated by the algorithm EstimateFunction
   \Return $\frac{1}{N} \sum_{i=1}^{N} g_i$
 \end{codeblock}
 %
+For fixed $\pi^{(k)}$, $\rho$, and $hash$ we say that the circuit $\widetilde{C} := (C_1, \widetilde{C}_2)$ \textit{succeeds on the $i$-th coordinate}
+if for $x := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{\mathit{trans}}$, $(\Gamma_V^{(g)}, \Gamma_H^{(k)}) := \langle P^{(g)}(\pi), C_1(\rho) \rangle_{P^{(g)}}$ and
+$(q, y^{(k)}) := \widetilde{C}_2(x, \rho)$ we have
+\begin{align*}
+  \Gamma_V^i(q, y_i) = 1.
+\end{align*}
+%
 \begin{lemma}
   \label{lemma:estimate_of_g}
   The algorithm $\text{EstimateFunctionProbability}^{g}(b, k, \epsilon, \delta, n)$ outputs an estimate $\widetilde{g}_b$
@@ -173,9 +180,6 @@ such that for each $1 \leq i \leq N$ the random variable $K_i$ takes value $g_i$
 \end{align*}
 \end{proof}
 %
-\begin{todo}
-  \textbf{TODO:} It is undefined what does it mean to solve a single puzzle of the k--wise direct product succesfully
-\end{todo}
 The algorithm $\text{EvalutePuzzles}^{P^{(1)}, \widetilde{C}, \hash}(\pi^{(k)}, \rho, n, k)$
 evaluates which of the $k$ puzzles of the $k$-wise direct product of $P^{(1)}$ are solved successfully by $\widetilde{C}(\rho) := (C_1,\widetilde{C}_2)(\rho)$.
 To decide whether the $i$-th puzzle of the $k$-wise direct product is solved successfully we need to gain access to the verification circuit

@@ -6,7 +6,7 @@ of $0$ for $\hash$ contains $q \in \cQ$ on which $C$ is not allowed to ask hint 
 and the first successful verification query $(q,y)$ of $C$ is such that $\hash(q) = 0$.
 Therefore, if $C$ makes a verification query $(q,y)$ such that $\hash(q) = 0$, then we know that no hint query is ever asked on this $q$.
 
-We denote the $i$-th query of $C$ by $q_i$ if it is a hint query, and by $(q_i, y_i)$ if it is a verification query.
+We denote the $i$-th query of $C$ by $q_i$ if it is a hint query and by $(q_i, y_i)$ if it is a verification query.
 Let us define the following experiment $\CanonicalSuccess$ in which $\cQ$ is partitioned using a function $\hash$.
 We say that a solver circuit \textit{succeeds} in the experiment $\CanonicalSuccess$
 if it asks a successful verification query $(q_j, y_j)$ such that $\hash(q_j) = 0$,
@@ -16,13 +16,13 @@ and no hint query $q_i$ has been asked before $(q_j, y_j)$ such that $\hash(q_i)
   \textbf{Experiment} $\CanonicalSuccess^{P, C, \hash}(\pi, \rho)$
   \medskip \hrule
   \textbf{Oracle:} A problem poser $P$, a solver circuit $C = (C_1, C_2)$ for $P$,\\
-  \IndII a function $\hash: \cQ \rightarrow \{0, \dots, 2(h+v) - 1\}$.\\
+  \IndII a function $\hash: \cQ \rightarrow \{0, 1, \dotsc, 2(h+v) - 1\}$.\\
   \textbf{Input:}  Bitstrings $\pi \in \{0,1\}^n$, $\rho \in \{0,1\}^*$. \\
   \textbf{Output:} A bit $b \in \{0,1\}$.
   \medskip\hrule
   \Run $\langle P(\pi), C_1(\rho) \rangle$ \\
   \IndI $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$ \\
-  \IndI $x := \langle P(\pi), C_1(\rho) \rangle_{\mathit{trans}}$ \\ \\
+  \IndI $x := \langle P(\pi), C_1(\rho) \rangle_{\trans}$ \\ \\
   \Run $C_2^{\Gamma_V, \Gamma_H} (x, \rho)$ \\
   \IndI \If $C_2^{\Gamma_V, \Gamma_H} (x, \rho)$ does not succeed for any verification query \Then \\
   \IndII \Return $0$ \\
@@ -68,7 +68,7 @@ we have that for every $q_k, q_l \in \cQ$ such that $q_k \neq q_l$ the following
 %
 We write $\cP_{\Success}$ to denote a set containing all $(\pi,\rho)$ for which $\Success^{P, C}(\pi, \rho)~=~1$.
 Let us fix $(\pi^*, \rho^*) \in \cP_{\mathit{Success}}$. We are interested in the probability over
-a choice of function $\hash$ of the event $\CanonicalSuccess^{P,C,\hash}(\pi^*, \rho^*) = 1$.
+a choice of $\hash$ of the event $\CanonicalSuccess^{P,C,\hash}(\pi^*, \rho^*) = 1$.
 Let $(q_j, y_j)$ denote the first verification query such that $\Gamma_V(q_j, y_j) = 1$, we have
 \begin{align}
   \label{ineq:prob_hash_success}
