@@ -1,14 +1,14 @@
 %
-\subsection{Amplification proof for partitioned domain}
+\subsection{Hardness amplification proof with partitioned query domain}
 \label{st:amplification_proof}
 Let $C = (C_1, C_2)$ be a solver circuit for a dynamic interactive weakly verifiable puzzle as in Definition \ref{def:dwvp}.
 We write $C_2^{(\cdot, \cdot)}$ to emphasize that $C_2$ does not obtain direct access to hint and verification circuits.
-Instead, whenever $C_2$ ask hint or verification queries, it is answered explicitly
+Instead, whenever $C_2$ asks a hint or verification query, it is answered explicitly
 as in the following code excerpt of the circuit $\widetilde{C}_2$.
 \begin{codeblock}
   \textbf{Circuit} $\widetilde{C}_2^{\Gamma_H, C_2, \hash} (x, \rho)$
   \medskip \hrule
-  \textbf{Oracle:} A hint circuit $\Gamma_H$, a circuit $C_2$, \\ \IndII a function $\hash : Q \rightarrow \{0,1,\dots, 2(h+v)-1\}$. \\
+  \textbf{Oracle:} A hint circuit $\Gamma_H$, a circuit $C_2$, \\ \IndII a function $\hash : \cQ \rightarrow \{0,1,\dots, 2(h+v)-1\}$. \\
   \textbf{Input:} Bitstrings $x \in \{0,1\}^{*}$, $\rho \in \{0,1\}^{*}$. \\
   \textbf{Output:} A pair $(q, y)$ where $q \in \cQ$ and $y \in \{0,1\}^{*}$.
   \medskip\hrule
@@ -70,7 +70,7 @@ Using this observation, we conclude that
         x := \langle P(\pi), C_1(\rho) \rangle_{\mathit{trans}} \\
         (\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}
       }}}
-    {\mathbb{E}}\mkern13mu[\Gamma_V(\widetilde{C}_2^{\Gamma_H, C_2, \hash}(x, \rho)) = 1] \\
+    {\mathbb{E}}\mkern13mu\big[\Gamma_V(\widetilde{C}_2^{\Gamma_H, C_2, \hash}(x, \rho)) = 1\big] \\
   &\IndII =
   \mkern33mu
     \underset{
@@ -79,17 +79,17 @@ Using this observation, we conclude that
         x := \langle P(\pi), C_1(\rho) \rangle_{\mathit{trans}} \\
         (\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}
       }}}
-    {\Pr}\mkern13mu[\Gamma_V(\widetilde{C}_2^{\Gamma_H, C_2, \hash}(x, \rho)) = 1]
+    {\Pr}\mkern13mu\big[\Gamma_V(\widetilde{C}_2^{\Gamma_H, C_2, \hash}(x, \rho)) = 1\big]
 \end{align*}
 \end{proof}
 %
 %
 \begin{lemma}\textbf{(Hardness amplification for a dynamic interactive weakly verifiable puzzle with respect to \boldmath{$\hash$}.)}
   \label{lemma:sec_amp_for_p_hash}
-  Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function and $P_n^{(1)}$ a fixed problem poser
-  as in Definition \ref{def:dwvp} and $\widetilde{C} := (C_1, \widetilde{C}_2)$ a circuit
+  Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function, $P_n^{(1)}$ a fixed
+  problem poser and $\widetilde{C} := (C_1, \widetilde{C}_2)$ a circuit
   with oracle access to a function $\hash: \cQ \rightarrow \{0,1,\dots, 2(h+v-1)\}$
-  and a solver circuit $C := (C_1, C_2)$ for $P_{kn}^{(g)}$ which asks at most $h$ hint queries and $v$ verification queries.
+  and a solver $C := (C_1, C_2)$ for $P_{kn}^{(g)}$ which asks at most $h$ hint queries and $v$ verification queries.
   There exists an algorithm Gen that takes as input parameters $\varepsilon$, $\delta$, $n$, $k$,
   has oracle access to $P_n^{(1)}$,  $\widetilde{C}$, $\hash$, $g$,
   and outputs a circuit $D := (D_1, D_2)$ such that the following holds: \\
@@ -118,12 +118,12 @@ Using this observation, we conclude that
 \end{lemma}
 %
 Before we give the proof of Lemma \ref{lemma:sec_amp_for_p_hash} we have to define additional algorithms.
-First, in the following code excerpt an algorithm $\Gen$ from Lemma \ref{lemma:sec_amp_for_p_hash} is defined.
+First, in the following code excerpt the algorithm $\Gen$ from Lemma \ref{lemma:sec_amp_for_p_hash} is defined.
 The procedures used by $\Gen$ are defined on the succeeding code excerpts.
 \begin{codeblock}
   \textbf{Algorithm} $\Gen^{P^{(1)}, \widetilde{C}, g, \mathit{hash}}(\epsilon, \delta, n, k)$
   \medskip \hrule
-  \textbf{Oracle:} A poser $P^{(1)}$, a solver circuit $\widetilde{C}$ for $P^{(g)}$, functions $g: \{0,1\}^{k} \rightarrow \{0,1\}$, $hash:\cQ \rightarrow \{0,1, \dots, 2(h + v) - 1\}$. \\
+  \textbf{Oracle:} A poser $P^{(1)}$, a circuit $\widetilde{C}$ for $P^{(g)}$, functions $g: \{0,1\}^{k} \rightarrow \{0,1\}$, $hash:\cQ \rightarrow \{0,1, \dots, 2(h + v) - 1\}$. \\
   \textbf{Input:}  Parameters $\epsilon$, $\delta$, $n$, $k$.\\
   \textbf{Output:} A circuit $D$.
   \medskip\hrule
@@ -132,16 +132,16 @@ The procedures used by $\Gen$ are defined on the succeeding code excerpts.
   \IndI $\widetilde{S}_{\pi^*,0} := \text{EstimateSurplus}^{P^{(1)},  \widetilde{C}, g, hash}(\pi^*, 0, k, \epsilon, \delta,n)$\\
   \IndI $\widetilde{S}_{\pi^*,1} := \text{EstimateSurplus}^{P^{(1)},  \widetilde{C}, g, hash}(\pi^*, 1, k, \epsilon, \delta,n)$\\
   \IndI \If $ \exists b \in \{0,1\}: \widetilde{S}_{\pi^*,b} \geq (1 - \frac{3}{4k}) \epsilon$ \Then \\
-  \IndII Let $C_1'$ have oracle access to $\widetilde{C}$, and have hard-coded $\pi^*$ \\
+  \IndII Let $C_1'$ have oracle access to $\widetilde{C}$, and have hard-coded $\pi^*$. \\
   \IndII Let $\widetilde{C}_2'$ have oracle access to $\widetilde{C}$, and have hard-coded $\pi^*$. \\
   \IndII $\widetilde{C}' := (C_1', \widetilde{C}_2')$ \\
   \IndII $g'(b_2, \dots, b_k) := g(b, b_2, \dots, b_k)$\\
   \IndII\Return $Gen^{P^{(1)}, \widetilde{C}', g', hash}(\epsilon, \delta, n, k-1)$ \\
-  // \textit{all estimates are lower than $(1-\frac{3}{4k})\varepsilon$}\\
+  \textit{// all estimates are lower than $(1-\frac{3}{4k})\varepsilon$}\\
   \Return $D^{P^{(1)}, \widetilde{C}, hash, g}$
 \end{codeblock}
 We are interested in the probability that for $u \leftarrow \mu_{\delta}^k$ and a bit $b$ we have $g(b,u_2, \dotsc, u_k) = 1$.
-The estimate of this probability is calculated by EstimateFunctionProbability.
+The estimate of this probability is calculated by the algorithm EstimateFunctionProbability.
 %
 \begin{codeblock}
   \textbf{Algorithm} $\text{EstimateFunctionProbability}^{g}(b, k, \epsilon, \delta, n)$
@@ -163,7 +163,7 @@ The estimate of this probability is calculated by EstimateFunctionProbability.
 \end{lemma}
 %
 \begin{proof}
-We fix the notation as in the code excerpt of the algorithm EstimateFunctionProbability.
+We fix notation as in the code excerpt of the algorithm EstimateFunctionProbability.
 Let us define independent and identically distributed binary random variables $K_1, K_2, \dots, K_N$
 such that for each $1 \leq i \leq N$ the random variable $K_i$ takes value $g_i$. We use the Chernoff bound to obtain
 \begin{align*}
@@ -173,12 +173,15 @@ such that for each $1 \leq i \leq N$ the random variable $K_i$ takes value $g_i$
 \end{align*}
 \end{proof}
 %
+\begin{todo}
+  \textbf{TODO:} It is undefined what does it mean to solve a single puzzle of the k--wise direct product succesfully
+\end{todo}
 The algorithm $\text{EvalutePuzzles}^{P^{(1)}, \widetilde{C}, \hash}(\pi^{(k)}, \rho, n, k)$
-evaluates which of the $k$ puzzles of the $k$-wise direct product defined by $P^{(g)}$ are solved successfully by $\widetilde{C}(\rho) := (C_1,\widetilde{C}_2)(\rho)$.
+evaluates which of the $k$ puzzles of the $k$-wise direct product of $P^{(1)}$ are solved successfully by $\widetilde{C}(\rho) := (C_1,\widetilde{C}_2)(\rho)$.
 To decide whether the $i$-th puzzle of the $k$-wise direct product is solved successfully we need to gain access to the verification circuit
 for the puzzle generated in the $i$-th round of the interaction between $P^{(g)}$ and $\widetilde{C}$.
-Therefore, the algorithm EvalutePuzzles runs $k$ times $P^{(1)}$ to simulate the interaction with
-$C_1(\rho)$ each time with a fresh random bitstring $\pi_i \in \{0,1\}^{n}$ where $1 \leq i \leq k$.
+Therefore, the algorithm EvalutePuzzles runs $k$ times $P^{(1)}(\pi_u)$ to simulate the interaction with
+$C_1(\rho)$ where in each round of interaction a fresh random bitstring $\pi_i \in \{0,1\}^{n}$ is used.
 
 Let us introduce some additional notation.
 We denote by $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i$ the execution of the $i$-th round of the sequential interaction.
@@ -243,7 +246,7 @@ The algorithm EstimateSurplus returns an estimate $\widetilde{S}_{\pi^*, b}$ for
   \IndI $(c_1, \dots, c_k) := \text{EvalutePuzzles}^{P^{(1)}, \widetilde{C}, \hash}((\pi^*, \pi_2, \dots, \pi_k), \rho, n, k)$\\
   \IndI $\widetilde{s}_{\pi^*,b}^i := g(b, c_{2}, \dots, c_k)$\\
   $\widetilde{g}_b := \text{EstimateFunctionProbability}^{g}(b, k, \epsilon, \delta, n)$ \\
-  \textbf{return} $\Bigl(\frac{1}{N} \sum_{i=1}^N \widetilde{s}_{\pi^*,b}^i \Bigr) - \widetilde{g}_b$\\
+  \textbf{return} $\Bigl(\frac{1}{N} \sum_{i=1}^N \widetilde{s}_{\pi^*,b}^i \Bigr) - \widetilde{g}_b$
 \end{codeblock}
 %
 \begin{lemma}
@@ -289,7 +292,7 @@ We define the following solver circuit $C' = (C_1', C_2')$ for the $(k-1)$--wise
   \Return $(q, y_2, \dots, y_k)$
 \end{codeblock}
 %
-We are ready to define the solver circuit $D = (D_1, D_2)$ for $P^{(1)}$.
+We are ready to define the solver circuit $D = (D_1, D_2)$ for $P^{(1)}$ output by $\Gen$.
 %
 \begin{codeblock}
   \textbf{Circuit} $D_1^{\widetilde{C}}(r)$
@@ -338,19 +341,18 @@ In the latter case $g$ is a constant function, and the statement is vacuously tr
 
 For the general case, we consider two possibilities.
 Namely, either Gen in one of the iterations finds an estimate $\widetilde{S}_{\pi, b} \geq (1-\frac{3}{4k}\epsilon)$,
-or in all iterations estimates it fails to find an estimate with high surplus, and the circuit~$D$ is returned.
+or in all iterations it fails to find an estimate with high surplus. In the latter case Gen outputs the circuit~$D$.
 
-In the former case we define a new monotone function
-$g'(b_2, \dots, b_k) := g(b, b_2, \dots, b_k)$ and a new circuit $\widetilde{C}' = (C_1', \widetilde{C}_2')$
-with oracle access to $\widetilde{C} := (C_1, \widetilde{C}_2)$.
+In the former case we define a new monotone function $g': \{0,1\}^{k-1} \rightarrow \{0,1\}$ such that $g'(b_2, \dots, b_k) := g(b, b_2, \dots, b_k)$
+and a new circuit $\widetilde{C}' = (C_1', \widetilde{C}_2')$ with oracle access to $\widetilde{C} := (C_1, \widetilde{C}_2)$.
 By Lemma \ref{lemma:surplus_estimate} it follows that $S_{\pi^*,b} \geq \widetilde{S}_{\pi^*, b} - \frac{\epsilon}{4k} \geq (1 - \frac{1}{k})\epsilon$ almost surely.
 Therefore, the circuit $\widetilde{C}'$ succeeds in solving the $(k-1)$-wise direct product of puzzles with probability
 at least $\Pr_{u \leftarrow \mu^{(k-1)}_{\delta}}[g'(u_1,\dots, u_{k-1} )] + (1 - \frac{1}{k})\epsilon$.
 In this case $\widetilde{C}'$ satisfies the conditions of Lemma \ref{lemma:sec_amp_for_p_hash}
 for the $(k-1)$-wise direct product of puzzles. Therefore,
 the recursive call to Gen with access to $g'$ and $\widetilde{C}$ returns a circuit $D = (D_1, D_2)$
-that with high probability satisfies
-\begin{multline}
+that satisfies with high probability
+\begin{align}
   \underset{
     \mathclap{
       \substack{
@@ -358,9 +360,9 @@ that with high probability satisfies
         x := \langle P^{(1)}(\pi), D_1^{\widetilde{C}}(\rho) \rangle_{\mathit{trans}} \\
         (\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi), D_1^{\widetilde{C}}(\rho) \rangle_{P^{(1)}}}}}
   {\Pr}[\Gamma_V(D_2^{P^{(1)}, \widetilde{C}, \hash, g, \Gamma_H}(x, \rho)) = 1]
-  \geq \delta + \Bigl(1 - \frac{1}{k}\Bigr)\frac{\epsilon}{6(k-1)} =
-  \delta + \frac{\epsilon}{6k}.
-\end{multline}
+  &\geq \delta + \Bigl(1 - \frac{1}{k}\Bigr)\frac{\epsilon}{6(k-1)} \notag\\
+  &= \delta + \frac{\epsilon}{6k}.
+\end{align}
 %
 
 The only point remaining concerns the behavior of Gen when none of the estimates is greater than $(1-\frac{3}{4k})\epsilon$.
@@ -375,30 +377,30 @@ $k$ puzzles the success probability of $\widetilde{C}$ is higher.
 Therefore, it is likely that the first puzzle is correctly solved unusually often.
 It remains to prove that this intuition is indeed correct.
 
-We fix the notation used in the code excerpt of the circuit $D_2$.
-We consider a single iteration of the outer loop of $D_2$, in which values $\pi_2, \dotsc, \pi_k$ are fixed.
-Additionally, we write $\pi_1$ to denote the randomness of the problem poser
-and define $c_1 := \Gamma_V(q,y_1)$, where $\Gamma_V$ is the verification circuit generated
-by $P^{(1)}(\pi_1)$ in the first phase when interacting with $D_1(r)$.
-Finally, we introduce the additional notation $\cG_{b} := \{ (b_1, b_2, \dots, b_k) : g(b, b_2, \dots, b_k) = 1 \}$ and $c = (c_1, c_2, \dotsc, c_k)$.
-Using the new notation the following holds
+We fix notation as in the code excerpt of $D_2$. Let us consider a single iteration of the outer loop of $D_2$, in which values $\pi_2, \dotsc, \pi_k$ are fixed.
+We write $\pi_1$ to denote randomness used by the problem poser and define $c_1 := \Gamma_V(q,y_1)$ where $\Gamma_V$ is the verification circuit generated
+by $P^{(1)}(\pi_1)$ in the first phase when interacting with $D_1(r)$. We note that the problem solver does not know $\pi_1$ and has only oracle access to $\Gamma_V$.
+
+Let us introduce additional notation. We write $c := (c_1, c_2, \dotsc, c_k)$, and for $b \in \{0,1\}$
+we define a set $\cG_{b}~:=~\{(b_1, b_2, \dots, b_k) : g(b, b_2, \dots, b_k) = 1 \}$.
+Using this notation the following holds
 \begin{align}
   \label{eqs:set_g}
   \underset{u \leftarrow \mu_{\delta}^k}{\Pr}[u \in \cG_b] = \underset{u \leftarrow \mu_{\delta}^k}{\Pr}[g(b, u_2, \dots, u_k) = 1]\notag\\
  \underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_b] = \underset{\pi^{(k)}, \rho}{\Pr}[g(b, c_2, \dots, c_k) = 1].
 \end{align}
-We fix the randomness $\pi_1$ of the problem poser $P^{(1)}$ to $\pi^*$ and use \eqref{eq:s_pi_b}, \eqref{eqs:set_g} to obtain
+Let us fix randomness $\pi_1$ of the problem poser $P^{(1)}$ to $\pi^*$. We use \eqref{eq:s_pi_b} and \eqref{eqs:set_g} to obtain
 \begin{multline}
 \label{eq:diff_s01}
 \underset{u \leftarrow \mu_{\delta}^k}{\Pr}[u \in \cG_1] - \underset{u \leftarrow \mu_{\delta}^k}{\Pr}[u \in \cG_0] \\
  = \underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_1 \mid \pi_1 = \pi^*] - \underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_0 \mid \pi_1 = \pi^*] - (S_{\pi^*, 1} - S_{\pi^*,0})
 \end{multline}
-We know that the function $g$ is monotone, hence it holds $\cG_0 \subseteq \cG_1$, and we write \eqref{eq:diff_s01} as
+By monotonicity of $g$ it holds $\cG_0 \subseteq \cG_1$, and we write \eqref{eq:diff_s01} as
 \begin{align}
   \label{eq:diff_s01_next}
   \underset{u \leftarrow \mu_{\delta}^k}{\Pr}[u \in \cG_1 \setminus \cG_0] = \underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] - (S_{\pi^*,1} - S_{\pi^*,0}).
 \end{align}
-Still having $\pi_1 = \pi^*$ fixed we multiply both sides of \eqref{eq:diff_s01_next} by
+We multiply both sides of \eqref{eq:diff_s01_next} by
 \begin{align*}
 \underset{
   \mathclap{
@@ -431,7 +433,7 @@ which yields
 {\Pr}\mkern13mu[\Gamma_V(D_2(x^*, r)) = 1](S_{\pi^*,1} - S_{\pi^*,0})
 \frac{1}{\underset{u \leftarrow \mu_{\delta}^k}{\Pr}[ u \in \cG_1 \setminus\cG_0]}.
 \end{align}
-We analyze the first summand of \eqref{eq:pr_d_succ_0}. First, we have
+Let us study the first summand of \eqref{eq:pr_d_succ_0}. First, we have
 \begin{align}
   \label{eq:pr_gamma_v_0}
   \IndII &\underset{
@@ -449,11 +451,10 @@ We analyze the first summand of \eqref{eq:pr_d_succ_0}. First, we have
   \underset{\mathclap{\substack{r \\ x^* = \langle P^{(1)}(\pi^*), D_1(r) \rangle_{\mathit{trans}}}}}{\Pr}[D_2(x^*,r) \neq \bot] \notag\\
   &\IndI \stackrel{(*)}{=}
   \underset{\pi^{(k)}, \rho}{\Pr}[c_1 = 1 \mid c \in \cG_1 \setminus \cG_0, \pi_1 = \pi^*]
-  \underset{\mathclap{\substack{r \\ x^* = \langle P^{(1)}(\pi^*), D_1(r) \rangle_{\mathit{trans}}}}} {\Pr}[D_2(x^*,r) \neq \bot],
+  \underset{\mathclap{\substack{r \\ x^* = \langle P^{(1)}(\pi^*), D_1(r) \rangle_{\mathit{trans}}}}} {\Pr}[D_2(x^*,r) \neq \bot]
 \end{align}
-where in $(*)$ we use the observation that the event $D_2(x^*, r) \neq \bot$ happens if and only if the circuit $D_2(x^*, r)$ finds $\pi^{(k)}$
-such that $c \in \cG_1 \setminus \cG_0$. Furthermore, conditioned on $c \in \cG_1 \setminus \cG_0$
-we have that $\Gamma_V(D_2(x^*,r)) = 1$ occurs if and only if $c_1 = 1$.
+where in $(*)$ we use the observation that $D_2(x^*, r) \neq \bot$ occurs if and only if $D_2(x^*, r)$ finds $\pi^{(k)}$ such that $c \in \cG_1 \setminus \cG_0$.
+Furthermore, conditioned on $c \in \cG_1 \setminus \cG_0$ we have that $\Gamma_V(D_2(x^*,r)) = 1$ occurs if and only if $c_1 = 1$.
 Inserting \eqref{eq:pr_gamma_v_0} to the numerator of the first summand of (\ref{eq:pr_d_succ_0}) yields
 \begin{align}
 \IndI &\underset{
@@ -469,12 +470,12 @@ Inserting \eqref{eq:pr_gamma_v_0} to the numerator of the first summand of (\ref
   \underset{\pi^{(k)}, \rho}{\Pr}[c_1 = 1 \mid c \in \cG_1 \setminus \cG_0, \pi_1 = \pi^*]
   \underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*].
 \end{align}
-We consider the following two cases. If $\Pr_{\pi^{(k)}, \rho}[ c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] \leq \frac{\epsilon}{6k}$ then
+We consider the following two cases. First, if $\Pr_{\pi^{(k)}, \rho}[ c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] \leq \frac{\epsilon}{6k}$ then
 \begin{align}
   \label{ineq:case_0}
   \underset{\pi^{(k)}, \rho}{\Pr}[c_1 = 1 \mid c \in \cG_1 \setminus \cG_0, \pi_1 = \pi^*] \underset{\pi^{(k)}, \rho}{\Pr}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] \leq \frac{\epsilon}{6k}.
 \end{align}
-When $\Pr_{\pi^{(k)}, \rho}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] > \frac{\epsilon}{6k}$ the circuit $D_2$ outputs $\bot$
+In case when $\Pr_{\pi^{(k)}, \rho}[c \in \cG_1 \setminus \cG_0 \mid \pi_1 = \pi^*] > \frac{\epsilon}{6k}$ the circuit $D_2$ outputs $\bot$
 if and only if it fails in all $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$ iterations to find $\pi^{(k)}$ such that $c \in \cG_1 \setminus \cG_0$
 which happens with probability
 \begin{align}
@@ -485,9 +486,9 @@ which happens with probability
       r \\
       x^* := \langle P^{(1)}(\pi^*), D_1(r) \rangle_{\mathit{trans}}}}}
 {\Pr}[D_2(x^*,r) = \bot]
-\leq (1 - \frac{\epsilon}{6k})^{\frac{6k}{\epsilon}\log(\frac{6k}{\epsilon})} \leq \frac{\epsilon}{6k}.
+\leq \Big(1 - \frac{\epsilon}{6k}\Big)^{\frac{6k}{\epsilon}\log(\frac{6k}{\epsilon})} \leq \frac{\epsilon}{6k}.
 \end{align}
-We conclude that in both cases by \eqref{ineq:case_0} and \eqref{ineq:case_1} we have
+We conclude that in both aforementioned cases using \eqref{ineq:case_0} and \eqref{ineq:case_1} the following holds
 \begin{align}
   \label{ineq:first_part}
   &\underset{
@@ -504,7 +505,7 @@ We conclude that in both cases by \eqref{ineq:case_0} and \eqref{ineq:case_1} we
   &\IndII \stackrel{(\ref{eq:s_pi_b})}{=}
    \underset{\pi^{(k)}, \rho}{\Pr}[g(c) = 1 \mid \pi_1 = \pi^*] -  \underset{u \leftarrow \mu_{\delta}^{(k)}}{\Pr}[u \in \cG_0]  - S_{\pi^*,0} - \frac{\epsilon}{6k}.
 \end{align}
-We insert \eqref{ineq:first_part} to \eqref{eq:pr_d_succ_0} and calculate the expected value of over $\pi^*$ which yields
+We insert \eqref{ineq:first_part} into \eqref{eq:pr_d_succ_0} and calculate the expected value of over $\pi^*$ which yields
 \begin{align}
   \label{ineq:ex_pr_gamma}
 \underset{
@@ -537,9 +538,9 @@ Therefore, under the assumption that Gen does not recurse with high probability 
 \end{align}
 Let us define a set
 \begin{align}
-  \cW = \left\{ \pi :  \left(S_{\pi,0} \leq (1 - \frac{1}{2k})\epsilon\right) \land \left( S_{\pi,1} \leq (1-\frac{1}{2k})\epsilon \right) \right\},
+  \cW = \left\{ \pi :  \left(S_{\pi,0} \leq (1 - \frac{1}{2k})\epsilon\right) \land \left( S_{\pi,1} \leq (1-\frac{1}{2k})\epsilon \right) \right\}.
 \end{align}
-and use $\overline{\cW}$ to denote the complement of $\cW$.
+Additionally, let $\overline{\cW}$ denote the complement of $\cW$.
 We bound the numerator of the second summand in (\ref{ineq:ex_pr_gamma})
 \begin{align}
   \label{ineq:second_eq}

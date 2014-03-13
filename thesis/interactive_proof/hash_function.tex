@@ -7,10 +7,10 @@ and the first successful verification query $(q,y)$ of $C$ is such that $\hash(q
 Therefore, if $C$ makes a verification query $(q,y)$ such that $\hash(q) = 0$, then we know that no hint query is ever asked on this $q$.
 
 We denote the $i$-th query of $C$ by $q_i$ if it is a hint query, and by $(q_i, y_i)$ if it is a verification query.
-We define the following experiment $\CanonicalSuccess$ in which the set $\cQ$ is partitioned using a function $\hash$.
+Let us define the following experiment $\CanonicalSuccess$ in which $\cQ$ is partitioned using a function $\hash$.
 We say that a solver circuit \textit{succeeds} in the experiment $\CanonicalSuccess$
 if it asks a successful verification query $(q_j, y_j)$ such that $\hash(q_j) = 0$,
-and no hint query $q_i$ is asked before $(q_j, y_j)$ such that $\hash(q_i) = 0$.
+and no hint query $q_i$ has been asked before $(q_j, y_j)$ such that $\hash(q_i) = 0$.
 %
 \begin{codeblock}
   \textbf{Experiment} $\CanonicalSuccess^{P, C, \hash}(\pi, \rho)$
@@ -43,7 +43,8 @@ For fixed $\hash$ and $P$ a \textit{canonical success} of $C$ for bistrings $\pi
 $\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1$.
 
 We show now that if a solver circuit $C$ for $P$ often succeeds in the experiment $\Success$,
-then there exists a function $\hash$ such that $C$ also often succeeds in the experiment $\CanonicalSuccess$.
+then there exists a function $\hash$ such that $C$ also often succeeds in the experiment $\CanonicalSuccess$
+provided that the number of hint and verification queries is not too large.
 %
 \begin{lemma}\textbf{(\boldmath{Success probability in solving dynamic interactive weakly verifiable puzzle with respect to a function $\hash$.)}}
 \label{lemma:hash_function_probability}
@@ -68,13 +69,13 @@ we have that for every $q_k, q_l \in \cQ$ such that $q_k \neq q_l$ the following
 We write $\cP_{\Success}$ to denote a set containing all $(\pi,\rho)$ for which $\Success^{P, C}(\pi, \rho)~=~1$.
 Let us fix $(\pi^*, \rho^*) \in \cP_{\mathit{Success}}$. We are interested in the probability over
 a choice of function $\hash$ of the event $\CanonicalSuccess^{P,C,\hash}(\pi^*, \rho^*) = 1$.
-Let $(q_j, y_j)$ denote the first query such that $\Gamma_V(q_j, y_j) = 1$, then we have
+Let $(q_j, y_j)$ denote the first verification query such that $\Gamma_V(q_j, y_j) = 1$, we have
 \begin{align}
   \label{ineq:prob_hash_success}
   \underset{\hash \leftarrow \cH}{\Pr}&\left[\CanonicalSuccess^{P,C,\hash}(\pi^*, \rho^*) = 1\right] \notag\\
-  \IndII &\overset{\hphantom{\eqref{eq:hash_pr}}}{=} \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_j) = 0 \land (\forall i < j : \hash(q_i) \neq 0)] \notag\\
-  \IndII &\overset{\hphantom{\eqref{eq:hash_pr}}}{=} \underset{\hash \leftarrow \cH}{\Pr}[
-  \forall i < j : \hash(q_i) \neq 0 \mid \hash(q_j) = 0] \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_j) = 0] \notag\\
+  \IndII &\overset{\hphantom{\eqref{eq:hash_pr}}}{=} \underset{\hash \leftarrow \cH}{\Pr}\big[\hash(q_j) = 0 \land (\forall i < j : \hash(q_i) \neq 0)\big] \notag\\
+  \IndII &\overset{\hphantom{\eqref{eq:hash_pr}}}{=} \underset{\hash \leftarrow \cH}{\Pr}\big[
+  \forall i < j : \hash(q_i) \neq 0 \mid \hash(q_j) = 0\big] \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_j) = 0] \notag\\
   \IndII &\overset{(\ref{eq:hash_pr})}{=} \frac{1}{2(h+v)}\left(1 -\underset{\hash \leftarrow \cH}{\Pr}[\exists i < j : \hash(q_i) = 0 \mid \hash(q_j) = 0] \right) \notag\\
   \IndII &\stackrel{\substack{\hphantom{\eqref{eq:hash_pr}}\\(*)}}{\geq} \frac{1}{2(h+v)} \left( 1 - \sum_{i < j} \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_i) = 0 | \hash(q_j) = 0] \right) \notag\\
   \IndII &\stackrel{(\ref{eq:hash_pr})}{=} \frac{1}{2(h+v)} \left( 1 -  \sum_{i < j}\underset{\hash \leftarrow \cH}{\Pr}[\hash(q_i) = 0] \right) \notag\\
@@ -136,7 +137,7 @@ and $\cH_{\mathit{Bad}}$ be a family of functions $\hash \in \cH$ such that
 \end{align}
 Let $N$ denote the number of iterations of the inner loop of FindHash.
 We consider a single iteration of the outer loop of FindHash in which $\hash$ is fixed.
-Let us define independent, identically distributed, binary random variables $X_1, \dots, X_{N}$ such that
+Let us define independent and identically distributed binary random variables $X_1, \dots, X_{N}$ such that
 \begin{align*}
   X_i =
   \begin{cases}
@@ -146,20 +147,23 @@ Let us define independent, identically distributed, binary random variables $X_1
 \end{align*}
 We turn now to the case where $\hash \in \cH_{\Bad}$ and show that it is unlikely that $\hash \in \cH_{\Bad}$
 is returned by FindHash.
-From \eqref{eq:hash_bad} it follows that $\mathbb{E}_{{\pi}, \rho}[X_i] \leq \frac{\gamma}{16(h+v)}$.
-Therefore, for any fixed $\hash \in \cH_{\Bad}$ using the Chernoff bound we get
-\begin{align*}
+From \eqref{eq:hash_bad} it follows that $\mathbb{E}_{{\pi}, \rho}[X_i]~\leq~\frac{\gamma}{16(h+v)}$.
+In inequalities \eqref{ineq:hash_bad_upper} and \eqref{ineq:hash_good_upper} in steps denoted
+with $(*)$ we used the trivial facts that $h + v \geq 1$ and $\gamma \leq 1$.
+For any fixed $\hash \in \cH_{\Bad}$ using the Chernoff bound we get
+\begin{align}
+  \label{ineq:hash_bad_upper}
   \underset{\pi,\rho}{\Pr} \left[\frac{1}{N} \sum_{i=1}^{N} X_i \geq \frac{\gamma}{12(h+v)} \right]
-  &\leq \underset{\pi, \rho}{\Pr}\left[\frac{1}{N} \sum_{i=1}^{N} X_i \geq \bigl(1 + \frac{1}{3}\bigr) \mathbb{E}[X_i]\right] \\
-  &\leq e^{-{\frac{\gamma}{16(h+v)}} N / 27} \leq e^{-\frac{2}{27}\frac{(h+v)}{\gamma}n} \stackrel{(*)}{\leq} e^{-\frac{2}{27}n},
-\end{align*}
-where in $(*)$ we used the trivial facts that $h + v \geq 1$ and $\gamma \leq 1$.
+  &\leq \underset{\pi, \rho}{\Pr}\left[\frac{1}{N} \sum_{i=1}^{N} X_i \geq \bigl(1 + \frac{1}{3}\bigr) \mathbb{E}[X_i]\right] \notag\\
+  &\leq e^{-{\frac{\gamma}{16(h+v)}} N / 27} \leq e^{-\frac{2}{27}\frac{(h+v)}{\gamma}n} \stackrel{(*)}{\leq} e^{-\frac{2}{27}n}
+\end{align}
 The probability that $\hash \in \cH_{\Good}$, when picked, is not returned amounts
-\begin{align*}
+\begin{align}
+  \label{ineq:hash_good_upper}
   \underset{\pi, \rho}{\Pr}\left[\frac{1}{N} \sum_{i=1}^{N} X_i \leq \frac{\gamma}{12(h+v)}\right]
-  &\leq \underset{\pi, \rho}{\Pr}\left[\frac{1}{N} \sum_{i=1}^{N} X_i \leq \bigl(1 - \frac{1}{3}\bigr)\mathbb{E}[X_i]\right] \\
-  &\leq e^{-{\frac{\gamma}{8(h+v)}} N / 18} \leq e^{-\frac{2}{9} \frac{(h+v)}{\gamma}n} \stackrel{(*)}{\leq} e^{-\frac{2}{9}n},
-\end{align*}
+  &\leq \underset{\pi, \rho}{\Pr}\left[\frac{1}{N} \sum_{i=1}^{N} X_i \leq \bigl(1 - \frac{1}{3}\bigr)\mathbb{E}[X_i]\right] \notag\\
+  &\leq e^{-{\frac{\gamma}{8(h+v)}} N / 18} \leq e^{-\frac{2}{9} \frac{(h+v)}{\gamma}n} \stackrel{(*)}{\leq} e^{-\frac{2}{9}n}
+\end{align}
 where we once more used the Chernoff bound.
 We now show that the probability of picking $\hash \in \cH_{\mathit{Good}}$ is at least $\frac{\gamma}{8(h+v)}$.
 To obtain a contradiction suppose that
@@ -167,7 +171,7 @@ To obtain a contradiction suppose that
   \label{ass:hash_max_prob}
 \underset{\hash \leftarrow \cH}{\Pr}[\hash \in \cH_{\mathit{Good}}] < \frac{\gamma}{8(h+v)}.
 \end{align}
-Using \eqref{ass:hash_max_prob} we conclude that it is possible to bound the probability of canonical success as follows
+Using \eqref{ass:hash_max_prob} we conclude that it is possible to bound the probability of the~canonical success as follows
 \begin{align*}
   &\underset{\substack{\hash \leftarrow \cH \\ \pi, \rho}}{\Pr}[\CanonicalSuccess^{P,C,\hash}(\pi, \rho) = 1] \\
   &\IndI = \underset{\substack{ \hash \leftarrow \cH \\ \pi, \rho}}{\Pr}[\CanonicalSuccess^{P,C,\hash}(\pi, \rho) = 1 \mid \hash \in \cH_{\mathit{Good}}]
@@ -179,7 +183,7 @@ Using \eqref{ass:hash_max_prob} we conclude that it is possible to bound the pro
   & \IndI  \stackrel{\substack{ (\ref{eq:hash_good}) \\ (\ref{ass:hash_max_prob})}}{<} \frac{\gamma}{8(h+v)} + \frac{\gamma}{8(h+v)} = \frac{\gamma}{4(h+v)},
 \end{align*}
 which contradicts (\ref{ineq:hash_high_prob}).
-Therefore, we conclude that the probability of choosing a $\hash \in \cH_{\mathit{Good}}$ amounts at least $\frac{\gamma}{8(h+v)}$.
+Therefore, we conclude that the probability of choosing $\hash \in \cH_{\mathit{Good}}$ amounts at least $\frac{\gamma}{8(h+v)}$.
 
 We show that FindHash picks in one of its iteration $\hash \in \cH_{\mathit{Good}}$ almost surely.
 Let $K$ denote the random variable that takes value equal to the number of iterations of

@@ -124,31 +124,31 @@ that are weakly verifiable. Section \ref{st:previous_results} is devoted to the 
 % the main theorem
 \chapter{Hardness amplification for dynamic interactive weakly verifiable puzzles}
 \label{ch:main_result}
-In the previous chapter we outlined the former studies of different types of weakly verifiable puzzles and defined
-a more general notions of dynamic interactive weakly verifiable puzzles.
-The focus of this chapter is on giving a constructive proof of hardness amplification for DIWVP.
-First, in Section \ref{st:main_theorem} we formulate the main theorem which is then proved in the succeeding steps.
-We start with providing an algorithm that finds an efficiently computable function
-that can be used to partition the domain on which hint and verification queries are asked.
-Next, we give a proof of hardness amplification under the assumption that the domain is partitioned to advice and attacking queries.
+In the previous chapter we gave an overview of the former studies of different types of weakly verifiable puzzles.
+We also defined a more general notions of a dynamic interactive weakly verifiable puzzle.
+The focus of this chapter is on giving a constructive proof of hardness amplification for dynamic interactive weakly verifiable puzzles.
+In Section \ref{st:main_theorem} we formulate the hardness amplification theorem
+which is then proved in the succeeding sections.
+We begin with constructing an algorithm that finds an efficiently computable function
+that is used to partition the domain on which hint and verification queries are asked.
+Next, we give a proof of hardness amplification under the assumption that the domain is well partitioned.
 Finally, in Section \ref{st:put_together} we combine these steps which yields the desired result.
 %
 % \section{Main theorem}
 % \label{st:main_theorem}
-\subsection{Direct product of interactive weakly verifiable puzzles}
 \input{interactive_proof/interactive_proof}
-
+%
 % section{Domain partitioning}
 \input{interactive_proof/hash_function}
-
+%
 % section{Amplification proof for partitioned domain}
 \input{interactive_proof/proof}
-
+%
 % subsection{Putting it together}
 \input{interactive_proof/proofMainThm}
-
+%
 \section{Discussion}
-
+%
 %
 \appendix
 \input{appendix}
