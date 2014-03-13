@@ -369,25 +369,20 @@ that satisfies with high probability
 \end{align}
 %
 
-The only point remaining concerns the behavior of Gen when none of the estimates is greater than $(1-\frac{3}{4k})\epsilon$.
-Assume that...
-\\
-\textbf{TODO : Give more intuitoin (and the correct one with references to the equations)}
-\\
+We consider now a case when none of the estimates is greater than $(1-\frac{3}{4k})\epsilon$.
 Intuitively this means that $\widetilde{C}$ does not succeed on the remaining $k-1$
-puzzles with much higher probability than an algorithm that correctly solves each puzzle with probability $\delta$.
-However, from the assumptions of Lemma \ref{lemma:sec_amp_for_p_hash} we know that on all
+puzzles with much higher probability than an algorithm that successfully solves each puzzle with probability $\delta$.
+From the assumptions of Lemma \ref{lemma:sec_amp_for_p_hash} we know that on all
 $k$ puzzles the success probability of $\widetilde{C}$ is higher.
 Therefore, it is likely that the first puzzle is correctly solved unusually often.
 It remains to prove that this intuition is indeed correct.
 
 We fix notation as in the code excerpt of $D_2$. Let us consider a single iteration of the outer loop of $D_2$, in which values $\pi_2, \dotsc, \pi_k$ are fixed.
-We write $\pi_1$ to denote randomness used by the problem poser and define $c_1 := \Gamma_V(q,y_1)$ where $\Gamma_V$ is the verification circuit generated
-by $P^{(1)}(\pi_1)$ in the first phase when interacting with $D_1(r)$. We note that the problem solver does not know $\pi_1$ and has only oracle access to $\Gamma_V$.
-
-Let us introduce additional notation. We write $c := (c_1, c_2, \dotsc, c_k)$, and for $b \in \{0,1\}$
-we define a set $\cG_{b}~:=~\{(b_1, b_2, \dots, b_k) : g(b, b_2, \dots, b_k) = 1 \}$.
-Using this notation the following holds
+We write $\pi_1$ to denote randomness used by the problem poser in generation of the input puzzle.
+Furthermore, we define $c_1 := \Gamma_V(q,y_1)$ where $\Gamma_V$ is the verification circuit generated
+by $P^{(1)}(\pi_1)$ in the first phase when interacting with $D_1(r)$.
+We write $c := (c_1, c_2, \dotsc, c_k)$, and for $b \in \{0,1\}$ we define a set $\cG_{b}~:=~\{(b_1, b_2, \dots, b_k) : g(b, b_2, \dots, b_k) = 1 \}$.
+Using this notation we express
 \begin{align}
   \label{eqs:set_g}
   \underset{u \leftarrow \mu_{\delta}^k}{\Pr}[u \in \cG_b] = \underset{u \leftarrow \mu_{\delta}^k}{\Pr}[g(b, u_2, \dots, u_k) = 1]\notag\\
@@ -579,8 +574,9 @@ We bound the numerator of the second summand in (\ref{ineq:ex_pr_gamma})
   \mathclap{
   \substack{r \\ x := \langle P^{(1)}(\pi^*), D_1(r) \rangle_{\mathit{trans}}
     \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D_1 (r) \rangle_{P^{(1)}} }}}
-{\Pr}\mkern13mu[\Gamma_V(D_2^{\widetilde{C}}(x^*, r)) = 1]
-(\bigl(1 - \frac{1}{2k}\bigr)\epsilon - S_{\pi^*,0})  \mid \pi^* \in \cW \Bigr] \Pr_{\pi^*}[\pi^* \in \cW] \notag\\
+{\Pr}\mkern13mu\big[\Gamma_V(D_2^{\widetilde{C}}(x^*, r)) = 1\big]
+\big(\bigl(1 - \frac{1}{2k}\bigr)\epsilon - S_{\pi^*,0}\big)  \mid \pi^* \in \cW \Bigr] \notag\\
+% \Pr_{\pi^*}[\pi^* \in \cW] \notag\\
 &\IndII \leq \frac{\epsilon}{6k} + (1 - \frac{1}{2k})\epsilon = (1 - \frac{1}{3k}) \epsilon.
 \end{align}
 We observe that
