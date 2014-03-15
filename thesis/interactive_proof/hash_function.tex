@@ -51,7 +51,7 @@ provided that the number of hint and verification queries is not too large.
 For a fixed problem poser $P_n$ let $C$ be a solver for $P_n$ with the success probability at least $\gamma$,
 asking at most $h$ hint queries and $v$ verification queries.
 Moreover, let $\cH$ be a family of pairwise independent efficient hash functions $\cQ \rightarrow \{0,1, \dots,2(h+v)-1\}$.
-Then there exists a probabilistic algorithm FindHash that takes as input parameters $\gamma$, $n$, $h$, $v$, and has oracle access to $C$ and $P_n$.
+There exists a probabilistic algorithm FindHash that takes as input parameters $\gamma$, $n$, $h$, $v$, and has oracle access to $C$ and $P_n$.
 Furthermore, FindHash runs in time $\poly(h,v,\frac{1}{\gamma},n)$ and with high probability outputs a function $\hash \in \cH$
 such that the canonical success probability of $C$ with respect to $\hash$ is at least $\frac{\gamma}{16(h+v)}$.
 \end{lemma}
@@ -149,13 +149,13 @@ We turn now to the case where $\hash \in \cH_{\Bad}$ and show that it is unlikel
 is returned by FindHash.
 From \eqref{eq:hash_bad} it follows that $\mathbb{E}_{{\pi}, \rho}[X_i]~\leq~\frac{\gamma}{16(h+v)}$.
 In inequalities \eqref{ineq:hash_bad_upper} and \eqref{ineq:hash_good_upper} in steps denoted
-with $(*)$ we used the trivial facts that $h + v \geq 1$ and $\gamma \leq 1$.
+with $(*)$ we use the trivial facts $h + v \geq 1$ and $\gamma \leq 1$.
 For any fixed $\hash \in \cH_{\Bad}$ using the Chernoff bound we get
 \begin{align}
   \label{ineq:hash_bad_upper}
   \underset{\pi,\rho}{\Pr} \left[\frac{1}{N} \sum_{i=1}^{N} X_i \geq \frac{\gamma}{12(h+v)} \right]
   &\leq \underset{\pi, \rho}{\Pr}\left[\frac{1}{N} \sum_{i=1}^{N} X_i \geq \bigl(1 + \frac{1}{3}\bigr) \mathbb{E}[X_i]\right] \notag\\
-  &\leq e^{-{\frac{\gamma}{16(h+v)}} N / 27} \leq e^{-\frac{2}{27}\frac{(h+v)}{\gamma}n} \stackrel{(*)}{\leq} e^{-\frac{2}{27}n}
+  &\leq e^{-{\frac{\gamma}{16(h+v)}} N / 27} \leq e^{-\frac{2}{27}\frac{(h+v)}{\gamma}n} \stackrel{(*)}{\leq} e^{-\frac{2}{27}n}.
 \end{align}
 The probability that $\hash \in \cH_{\Good}$, when picked, is not returned amounts
 \begin{align}
@@ -165,7 +165,7 @@ The probability that $\hash \in \cH_{\Good}$, when picked, is not returned amoun
   &\leq e^{-{\frac{\gamma}{8(h+v)}} N / 18} \leq e^{-\frac{2}{9} \frac{(h+v)}{\gamma}n} \stackrel{(*)}{\leq} e^{-\frac{2}{9}n}
 \end{align}
 where we once more used the Chernoff bound.
-We now show that the probability of picking $\hash \in \cH_{\mathit{Good}}$ is at least $\frac{\gamma}{8(h+v)}$.
+We show now that the probability of picking $\hash \in \cH_{\mathit{Good}}$ is at least $\frac{\gamma}{8(h+v)}$.
 To obtain a contradiction suppose that
 \begin{align}
   \label{ass:hash_max_prob}
@@ -182,8 +182,7 @@ Using \eqref{ass:hash_max_prob} we conclude that it is possible to bound the pro
   \underset{\substack{\hash \leftarrow \cH \\ \pi, \rho}}{\Pr}[\CanonicalSuccess^{P,C,\hash}(\pi, \rho) = 1 \mid \hash \notin \cH_{\mathit{Good}}] \\
   & \IndI  \stackrel{\substack{ (\ref{eq:hash_good}) \\ (\ref{ass:hash_max_prob})}}{<} \frac{\gamma}{8(h+v)} + \frac{\gamma}{8(h+v)} = \frac{\gamma}{4(h+v)},
 \end{align*}
-which contradicts (\ref{ineq:hash_high_prob}).
-Therefore, we conclude that the probability of choosing $\hash \in \cH_{\mathit{Good}}$ amounts at least $\frac{\gamma}{8(h+v)}$.
+which contradicts (\ref{ineq:hash_high_prob}). Hence, we conclude that the probability of choosing $\hash \in \cH_{\mathit{Good}}$ amounts at least $\frac{\gamma}{8(h+v)}$.
 
 We show that FindHash picks in one of its iteration $\hash \in \cH_{\mathit{Good}}$ almost surely.
 Let $K$ denote the random variable that takes value equal to the number of iterations of

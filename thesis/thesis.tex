@@ -96,16 +96,42 @@
 \mainmatter
 
 \chapter{Introduction}
+Studying security amplification is a significant issue in cryptography.
+In absence of good proofs for lower bounds we are often interested in studying
+whether under the assumption that a certain problem $P$ is hard does it imply the hardness
+of a problem $Q$. Furthermore, we are often interest in building a secure cryptographic primitives
+from weak ones. Most notable example is building one way function from a weak one way function.
+
+In this Thesis we study \textit{weakly verifiable puzzles} that generalize
+many commonly encountered cryptographic primitives like message authentication codes, bit commitment protocols and CAPTCHAs, just to name a few.
+The characteristic property of weakly verifiable puzzles is that it may be hard to verify correctness of a solution.
+A notable example is CAPTCHA where a problem of checking whether solution is correct is comparable hard to find a correct solution.
+
+\begin{todo}
+  \textbf{TODO:} Model problems as games
+\end{todo}
+
+The weakly verifiable puzzles has been studies before.
+In this Thesis we combine the previous works and show that it is possible to hardness of weakly verifiable puzzles.
+
 % use term \textit{puzzle} to denote somewhat-hard automatically-generated computational a problems
 \section{Security Amplification Theorems}
 % Introduction to security amplification theorems and hardness implication statements.
 % Example of classical results. Problems captured by weakly verifiable puzzles.
 % Contribution of this thesis.
+
 \section{Weakly verifiable puzzles}
+
 \section{Contribution of the Thesis}
+
 \section{Organization of the Thesis}
-% Overview of the content of the succeeding chapters.
-%
+In the next chapter we lay down notation and terminology used in the Thesis.
+In Chapter \ref{ch:intro_weakly} we given an overview of cryptographic primitives that
+are weakly verifiable, and which security amplification is proved in this Thesis.
+Furthermore, we give outline of earlier studies of weakly verifiable puzzles, and
+show the contribution of this Thesis.
+Finally, in Chapter \ref{ch:main_result} we formulate and prove the main theorem of this Thesis.
+
 \chapter{Preliminaries}
 \input{preliminaries}
 
@@ -132,7 +158,7 @@ In Section \ref{st:main_theorem} we formulate the theorem which is then proved i
 We begin with constructing an algorithm that finds an efficiently computable function that is used
 to partition the domain of hint and verification queries. Next, we give a proof of hardness amplification
 under the assumption that the domain is well partitioned. Finally, in Section \ref{st:put_together}
-we finish the proof by combining the previous steps.
+we complete the proof by combining the previous steps.
 %
 % section{Main theorem}
 \input{interactive_proof/interactive_proof}
