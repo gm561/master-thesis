@@ -117,6 +117,30 @@ The characteristic property of weakly verifiable puzzles is that we do not insis
 solver is efficient. An example is CAPTCHA where a problem of checking whether a solution is correct is comparable hard to finding a correct solution.
 We give a single proof of hardness amplification for all these primitives.
 
+In general there are two methods to amplify hardness.
+The first one is sequentially repetition where a protocol is repeated such that one round starts after the previous is finished.
+It has been observed that sequential repetition amplifies hardness of weakly verifiable puzzles by \cite{von2003captcha}.
+However, this approach is costly as it increase number of rounds creating additional communication burden.
+
+Therefore, the approach that is more useful from practical point of view is the hardness amplification by means of the
+parallel repetition where all puzzles are send at once. We state that it has been shown that parallel repetition
+does not always amplify hardness \cite{bellare1997does}.
+
+Commonly when proving the reduction statements of the form
+\begin{align*}
+  P \implies Q
+\end{align*}
+where $P$ is a statement that certain problem is hard, and $Q$ is a certain problem which hardness is implied by $P$.
+We use logically equivalent statement
+\begin{align*}
+  \lnot Q \implies \lnot P.
+\end{align*}
+This means that we under the assumption that a problem $Q$ is easy, we try to prove that problem $P$ is easy.
+This approach is also taken by us in this Thesis where in order to show hardness amplification for parallel repetition,
+we assume that there exists an algorithm that solves direct product of puzzle with substantial probability.
+Under this assumption we show that there exists a solver for a single puzzle with access to the solver for direct product of puzzles that
+probability of solving a single puzzle is also substantial.
+
 \section{Weakly verifiable puzzles}
 Security of cryptographic primitives is often defined by
 a game in which an adversary has access to certain resources, but must not solve a certain problem.
@@ -166,6 +190,7 @@ Then, in Chapter \ref{ch:intro_weakly} we define a dynamic interactive weakly ve
 given an overview of cryptographic primitives that game based security definition can be modeled as
 a puzzle. Furthermore, we give an outline of earlier studies of weakly verifiable puzzles, and
 compare it to the puzzles studied in this Thesis.
+
 Finally, in Chapter \ref{ch:main_result} we formulate and prove the main theorem of this Thesis that
 shows that it is possible to amplify hardness of dynamic interactive weakly verifiable puzzles.
 
@@ -211,6 +236,7 @@ we complete the proof by combining the previous steps.
 \input{interactive_proof/proofMainThm}
 %
 \section{Discussion}
+\subsection{Optimality of the result}
 %
 %
 \appendix
