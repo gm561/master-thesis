@@ -96,35 +96,32 @@
 \mainmatter
 
 \chapter{Introduction}
-\section{Security Amplification Theorems}
-The cryptography is a science where not much is known about the computational lower bounds of certain problems
+\section{Hardness Amplification Theorems}
+Cryptography is a science where not much is known about the computational lower bounds of certain problems
 as many of them would lead to proving (or disproving) that $P \neq NP$.
 However, certain problems seems to be more likely to be hard than others.
-Thus, we often suppose that a certain problem $P$ is hard and under this assumption
-study hardness of a problem $Q$.
+Thus, we often study hardness of a problem $Q$ under the assumption that a problem $P$ is hard.
 
 An arising question is whether it is possible to turn a problem $P$ that is only mildly hard to solve into a problem $Q$
 that solving is much harder. The statements of this types are called hardness amplification.
 One of the most well known results is by Yao who proved that it is indeed possible to build a strongly secure one way function
-from a one way function that is only weakly secure. The proof of Yao requires inverting correctly certain number of weak one-way function
-which yields a function that is one-way.
+from a one way function that is only weakly secure. The proof of Yao requires inverting a certain number of weak one-way function
+which yields a strong one-way function.
 
-We are interested in a question whether it is possible to achieve a similar result holds also for other basic cryptographic constructions
-like signature schemes, message authentication codes, bit commitment protocols, or artificial intelligence problems, just to name a few.
+In this Thesis we study a question whether it is possible to achieve a similar result also for basic cryptographic constructions
+like signature schemes, message authentication codes, or bit commitment protocols, just to name a few.
+We define a \textit{weakly verifiable puzzle} that generalize many commonly encountered cryptographic primitives.
+The characteristic property of weakly verifiable puzzles is that one do not require that verifying the correctness of a solution by solver is efficient.
+An example is CAPTCHA where a problem of checking whether a solution is correct is comparably hard to finding a correct solution.
 
-In this Thesis we study \textit{weakly verifiable puzzles} that generalize many commonly encountered cryptographic primitives.
-The characteristic property of weakly verifiable puzzles is that we do not insist that verifying the correctness of a solution by a problem
-solver is efficient. An example is CAPTCHA where a problem of checking whether a solution is correct is comparable hard to finding a correct solution.
-We give a single proof of hardness amplification for all these primitives.
-
-In general there are two methods to amplify hardness.
-The first one is sequentially repetition where a protocol is repeated such that one round starts after the previous is finished.
+There are two general approaches to amplify hardness.
+The first one is sequential repetition where a protocol is repeated such that one round starts after the previous is finished.
 It has been observed that sequential repetition amplifies hardness of weakly verifiable puzzles by \cite{von2003captcha}.
-However, this approach is costly as it increase number of rounds creating additional communication burden.
+However, this approach is inefficient as it increase number of rounds creating additional communication burden.
 
-Therefore, the approach that is more useful from practical point of view is the hardness amplification by means of the
-parallel repetition where all puzzles are send at once. We state that it has been shown that parallel repetition
-does not always amplify hardness \cite{bellare1997does}.
+The more useful approach both from the practical and theoretical point of view is the hardness amplification by means of the
+parallel repetition where all puzzles are send at once.
+We emphasize that it has been shown that parallel repetition does not always amplify hardness \cite{bellare1997does}.
 
 Commonly when proving the reduction statements of the form
 \begin{align*}
@@ -135,9 +132,9 @@ We use logically equivalent statement
 \begin{align*}
   \lnot Q \implies \lnot P.
 \end{align*}
-This means that we under the assumption that a problem $Q$ is easy, we try to prove that problem $P$ is easy.
-This approach is also taken by us in this Thesis where in order to show hardness amplification for parallel repetition,
-we assume that there exists an algorithm that solves direct product of puzzle with substantial probability.
+Thus, we under the assumption that a problem $Q$ is easy, we try to prove that problem $P$ is easy.
+This approach is also taken by us in this Thesis where in order to show hardness amplification for parallel repetition of weakly verifiable puzzles,
+we assume existence of an algorithm that directly solves the product of puzzle with substantial probability.
 Under this assumption we show that there exists a solver for a single puzzle with access to the solver for direct product of puzzles that
 probability of solving a single puzzle is also substantial.
 
