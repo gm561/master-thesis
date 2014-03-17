@@ -113,12 +113,12 @@ In this Thesis we study a question whether it is possible to achieve a similar r
 like signature schemes, message authentication codes, or bit commitment protocols, just to name a few.
 We define a \textit{weakly verifiable puzzle} that generalize many commonly encountered cryptographic primitives.
 The characteristic property of weakly verifiable puzzles is that one do not require that verifying the correctness of a solution by solver is efficient\footnote{
-The word \textit{weakly} for weakly verifiable puzzles is used in a different meaning than in case of a weak one--way functions.
-It refers to lack of inefficient solver algorithms for verifying the correctness of the puzzle.}.
+The word \textit{weakly} in the context of weakly verifiable puzzles is used in a different meaning than for a weak one--way function.
+It refers to lack of inefficient solver algorithms for verifying the correctness of solution.}.
 An example is CAPTCHA where a problem of checking whether a solution is correct by a solver is comparably hard to finding a correct solution.
 On the other hand, the problem poser has access to some secret information such that verifying correctness of the solution is easy.
 
-There are two general approaches to amplify hardness. Both base on solving a several weakly hard problems which should yields a construction that is strongly hard.
+There are two general approaches to amplify hardness. Both base on solving a several weakly hard problems which should yield a construction that is strongly hard.
 First, one can try to use sequential repetition where a protocol is repeated in rounds that start one after another.
 It has been observed that sequential repetition amplifies hardness of weakly verifiable puzzles by \cite{von2003captcha}.
 However, this approach may be inefficient as it increases the number of rounds creating additional communication burden.
