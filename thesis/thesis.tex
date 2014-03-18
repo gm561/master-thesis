@@ -205,14 +205,15 @@ that are weakly verifiable. Section \ref{st:previous_results} is devoted to the 
 % the main theorem
 \chapter{Hardness amplification for weakly verifiable puzzles}
 \label{ch:main_result}
-In the previous chapter we gave an overview of the former studies of different types of weakly verifiable puzzles.
-We also defined a~more general notion of a~dynamic interactive weakly verifiable puzzle.
-The focus of this chapter is on a constructive proof of hardness amplification for dynamic interactive weakly verifiable puzzles.
-In Section \ref{st:main_theorem} we formulate the theorem which is then proved in the succeeding sections.
-We begin with constructing an algorithm that finds an efficiently computable function that is used
-to partition the domain of hint and verification queries. Next, we give a proof of hardness amplification
-under the assumption that the domain is well partitioned. Finally, in Section \ref{st:put_together}
-we complete the proof by combining the previous steps.
+In the previous chapter we defined a notion of a~dynamic interactive weakly verifiable puzzle
+and gave an overview of the former studies of different types of weakly verifiable puzzles.
+The focus of this chapter is on giving a constructive proof of hardness amplification for dynamic interactive weakly verifiable puzzles.
+In Section \ref{st:main_theorem_def} we formulate the main theorem which is then proved in the succeeding sections.
+We begin, in Section \ref{st:domain_partition}, by constructing an algorithm that finds an efficiently computable function used
+to partition the domain of hint and verification queries. Then, in Section \ref{st:amplification_proof} we prove
+hardness amplification of dynamic interactive weakly verifiable puzzles under the assumption that for partitioned domains
+the success probability of a solver for the product of puzzles is still substantial.
+Finally, in Section \ref{st:put_together} we complete the proof by combining the previous steps.
 %
 % section{Main theorem}
 \input{interactive_proof/interactive_proof}
