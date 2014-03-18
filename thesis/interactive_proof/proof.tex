@@ -115,14 +115,14 @@ Using this observation, we conclude that
   \end{align*}
   Furthermore, $D$
   asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hint queries and no verification queries.
-  Finally, $\mathit{Time}(\mathit{Gen}) = \mathit{poly}(k, \frac{1}{\varepsilon}, n)$ with oracle access to $\widetilde{C}$.
+  Finally, $\mathit{Time}(\mathit{Gen}) = \mathit{poly}(k, \frac{1}{\varepsilon}, n)$ with oracle calls.
 \end{lemma}
-The circuit $D$ from Lemma \ref{lemma:sec_amp_for_p_hash} instead of asking verification queries outputs a pair $(q, y)$
-such that $\hash(q) = 0$.
+We note that the circuit $D$ from Lemma \ref{lemma:sec_amp_for_p_hash} instead of asking verification queries outputs a pair $(q, y)$
+such that $\hash(q) = 0$ or $\bot$.
 
 Before we give the proof of Lemma \ref{lemma:sec_amp_for_p_hash} we define additional algorithms.
 First, in the following code listing the algorithm $\Gen$ from Lemma \ref{lemma:sec_amp_for_p_hash} is defined.
-The procedures used by $\Gen$ are defined on the succeeding code listings.
+The procedures used by $\Gen$ are presented on the succeeding code listings.
 \begin{codeblock}
   \textbf{Algorithm} $\Gen^{P^{(1)}, \widetilde{C}, g, \mathit{hash}}(\epsilon, \delta, n, k)$
   \medskip \hrule
@@ -187,7 +187,7 @@ The algorithm $\text{EvalutePuzzles}^{P^{(1)}, \widetilde{C}, \hash}(\pi^{(k)}, 
 evaluates which of the $k$ puzzles of the $k$-wise direct product of $P^{(1)}$ are solved successfully by $\widetilde{C}(\rho) := (C_1,\widetilde{C}_2)(\rho)$.
 To decide whether the $i$-th puzzle of the $k$-wise direct product is solved successfully we need to gain access to the verification circuit
 for the puzzle generated in the $i$-th round of the interaction between $P^{(g)}$ and $\widetilde{C}$.
-Therefore, the algorithm EvalutePuzzles runs $k$ times $P^{(1)}(\pi_u)$ to simulate the interaction with
+Therefore, the algorithm EvalutePuzzles runs $k$ times $P^{(1)}(\pi_i)$ to simulate the interaction with
 $C_1(\rho)$ where in each round of interaction a fresh random bitstring $\pi_i \in \{0,1\}^{n}$ is used.
 
 Let us introduce some additional notation.
@@ -282,8 +282,8 @@ We define the following solver circuit $C' = (C_1', C_2')$ for the $(k-1)$--wise
   \IndII a solver circuit $\widetilde{C} = (C_1, \widetilde{C}_2)$ for $P^{(g)}$, \\
   \IndII a function $\hash: \cQ \rightarrow \{0,1,\dots, 2(h+v)-1\}$. \\
   \textbf{Input:}  A transcript of $k-1$ rounds of interaction \\
-  \IndII $x^{(k-1)} := (x_2, \dotsc, x_{k}) \in \{0,1\}^{*}$, a bitstring $\rho \in \{0,1\}^{*}$\\
-  \textbf{Hard-coded:} A bitstring $\pi^* \in \{0,1\}^{n}$
+  \IndII $x^{(k-1)} := (x_2, \dotsc, x_{k}) \in \{0,1\}^{*}$, a bitstring $\rho \in \{0,1\}^{*}$.\\
+  \textbf{Hard-coded:} A bitstring $\pi^* \in \{0,1\}^{n}$.
   \medskip\hrule
   Simulate $\langle P^{(1)}(\pi^*), C_1(\rho) \rangle^{1}$ \\
   \IndI $(\Gamma_H^*, \Gamma_V^*) := \langle P^{(1)}(\pi^*), C_1(\rho) \rangle^{1}_{P^{(1)}}$ \\
@@ -339,10 +339,10 @@ First, let us consider the case where $k=1$. The function $g: \{0,1\} \rightarro
 In the latter case, when $g$ is a constant function, Lemma \ref{lemma:sec_amp_for_p_hash} is vacuously true.
 If $g$ is the identity function, then the circuit $D$ returned by Gen directly uses $\widetilde{C}$ to find a solution.
 From the assumptions of Lemma \ref{lemma:sec_amp_for_p_hash} it follows that $\widetilde{C}$ succeeds with probability at least
-$\delta + \epsilon$. Hence, $D$ trivially satisfies Lemma \ref{lemma:sec_amp_for_p_hash}.
+$\delta + \epsilon$. Hence, $D$ trivially satisfies Lemma~\ref{lemma:sec_amp_for_p_hash}.
 
 For the general case, we consider two possibilities.
-Namely, either Gen in one of the iterations finds an estimate with high surplus such that $\widetilde{S}_{\pi, b} \geq (1-\frac{3}{4k})\epsilon$,
+Namely, either Gen in one of the iterations finds an estimate with high surplus such that $\widetilde{S}_{\pi, b} \geq (1-\frac{3}{4k})\epsilon$ and recurses,
 or in all iterations it fails and outputs the circuit~$D$.
 
 If it is possible to find an estimate with high surplus, then we introduce a new monotone function $g': \{0,1\}^{k-1} \rightarrow \{0,1\}$
@@ -371,11 +371,14 @@ Therefore, the recursive call to Gen with access to $g'$ and $\widetilde{C}$ ret
 \end{align}
 %
 Let us bring our attention to the case where none of the estimates is greater than $(1-\frac{3}{4k})\epsilon$.
-Under the assumption that the estimate is accurate enough, it means that $\widetilde{C}$ does not succeed on the remaining $k-1$
-puzzles with much higher probability than an algorithm that solves each puzzle independently with success probability $\delta$.
-However, from the assumptions of Lemma~\ref{lemma:sec_amp_for_p_hash} we know that on all $k$ puzzles the success probability
-of $\widetilde{C}$ is higher. Hence, we suspect that the first puzzle is correctly solved unusually often.
-It remains to show that this intuition is indeed correct.
+If all surpluses $S_{\pi,0}$ and $S_{\pi,1}$ were lower than $(1-\frac{1}{k})\epsilon$, then it would mean that $\widetilde{C}$
+does not succeed on the remaining $k-1$ puzzles with much higher probability than an algorithm that solves each puzzle
+independently with success probability $\delta$. However, from the assumptions of Lemma~\ref{lemma:sec_amp_for_p_hash}
+we know that on all $k$ puzzles the success probability of $\widetilde{C}$ is higher.
+Hence, we suspect that the first puzzle is correctly solved unusually often.
+It remains to show that the fact that $\Gen$ fails to find a surplus estimate that is large implies that
+with high probability there are only few surpluses greater than $(1-\frac{1}{k})\epsilon$ and their influence
+is can be neglected. Additionally, we have to show that the circuit $D$ finds outputs an answer almost surely.
 
 We fix notation as in the code listing of the circuit $D_2$.
 Let us consider a single iteration of the outer loop of $D_2$ where values $\pi_2, \dotsc, \pi_k$ are fixed.
@@ -513,7 +516,7 @@ We conclude that in both aforementioned cases using \eqref{ineq:start_for_case},
   &\IndII \stackrel{(\ref{eq:s_pi_b})}{=}
    \underset{\pi^{(k)}, \rho}{\Pr}[g(c) = 1 \mid \pi_1 = \pi^*] -  \underset{u \leftarrow \mu_{\delta}^{(k)}}{\Pr}[u \in \cG_0]  - S_{\pi^*,0} - \frac{\epsilon}{6k}.
 \end{align}
-We insert \eqref{ineq:first_part} into \eqref{eq:pr_d_succ_0} and calculate the expected value of over $\pi^*$ which yields
+We insert \eqref{ineq:first_part} into \eqref{eq:pr_d_succ_0} and calculate the expected value over $\pi^*$ which yields
 \begin{align}
   \label{ineq:ex_pr_gamma}
 \underset{
@@ -625,10 +628,12 @@ We observe that
  &\stackrel{\eqref{eq:gu_rel}}{\geq} \frac{\epsilon + \delta\Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_1 \setminus \cG_0] - (1 - \frac{1}{6k})\epsilon}
 {\Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_1 \setminus \cG_0]} \geq \delta + \frac{\epsilon}{6k}.
 \end{align}
-Clearly, the running time of Gen is $poly(k, \frac{1}{\epsilon}, n)$.
-This finishes the proof of Lemma \ref{lemma:sec_amp_for_p_hash}.
+Clearly, the running time of $\Gen$ is $poly(k, \frac{1}{\epsilon}, n)$ with oracle calls.
+Furthermore, the algorithm $\Gen$ outputs a circuit $D$ such that it satisfies
+with probability at least $1 - \poly(k, \frac{1}{\epsilon}, n) \cdot 2^n$
+the statement of Lemma \ref{lemma:sec_amp_for_p_hash}.
+This concludes the proof of Lemma~\ref{lemma:sec_amp_for_p_hash}.
 \end{proof}
-
 %
 %%% Local Variables:
 %%% mode: latex

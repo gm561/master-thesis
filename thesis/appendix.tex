@@ -13,3 +13,20 @@ we have the following inequalities for $0 \leq \delta \leq 1$ and $\mathbb{E}[X]
 \Pr[|X - \mathbb{E}[X]| \geq \delta \mathbb{E}[X]] \leq 2 e^{- \mathbb{E}[X] \delta^2 / 3}.
 \end{gather}
 \end{lemma}
+
+\section{Proof of Lemma \ref{lemma:sec_amp_for_p_hash} under simplifing assumptions}
+We give a proof of Lemma \ref{lemma:sec_amp_for_p_hash} where we assume that circuit $D$ never outputs $\bot$ (equivalently it finds
+$c \in \cG_1 \setminus \cG_0$) and that for all surpluses we have $S_{\pi,b} \leq (1 - \frac{1}{k})\epsilon$.
+The following calculations are intended to give Reader more intuition.
+We have
+\begin{align*}
+  \underset{\pi, r}{\Pr}[\Gamma_V(D_2(x,r)) = 1] &= \underset{}{\Pr}[\Gamma_V(D_2(x^*,r)) = 1 \mid D(x,r) \neq \bot] \underset{}{\Pr}[D(x,r) \neq \bot] \\
+  &= \Pr[c_1 \mid c \in \cG_1 \setminus \cG_0] \\
+  &= \frac{\underset{}{\Pr}[c_1 = 1 \land c \in \cG_1 \setminus \cG_0]}{\underset{}{\Pr}[c \in \cG_1 \setminus \cG_0]} \\
+  &= \mathbb{E}[\frac{\underset{}{\Pr}[c_1 = 1 \land c \in \cG_1 \setminus \cG_0] ( \underset{}{\Pr}[c \in \cG_0 \setminus \cG_1] - (S_{\pi,1} - S_{\pi,0}))}
+  {\underset{}{\Pr}[c \in \cG_0 \setminus \cG_1] \underset{}{\Pr}[u \in \cG_1 \setminus \cG_0]}]  \\
+  &\geq \frac{\underset{}{\Pr}[c_1 = 1 \land c \in \cG_1 \setminus \cG_0] - (S_{\pi,1} - S_{\pi,0})}{\underset{}{\Pr}[u \in \cG_1 \setminus \cG_0]} \\
+  &\geq \frac{\delta \underset{}{\Pr}[u \in \cG_1 \setminus \cG_0] + \epsilon - (S_{\pi,1} - S_{\pi,0})}{\underset{}{\Pr}[u \in \cG_1 \setminus \cG_0]} \\
+  &\geq \delta + \frac{\epsilon}{k}
+\end{align*}
+where in $(*)$ and $(**)$.

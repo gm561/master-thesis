@@ -46,7 +46,7 @@ We show now that if a solver circuit $C$ for $P$ often succeeds in the experimen
 then there exists a function $\hash$ such that $C$ also often succeeds in the experiment $\CanonicalSuccess$
 provided that the number of hint and verification queries is not too large.
 %
-\begin{lemma}\textbf{(\boldmath{Success probability in solving dynamic interactive weakly verifiable puzzle with respect to a function $\hash$.)}}
+\begin{lemma}\textbf{(\boldmath{Success probability in solving a dynamic interactive weakly verifiable puzzle with respect to a function $\hash$.)}}
 \label{lemma:hash_function_probability}
 For a fixed problem poser $P_n$ let $C$ be a solver for $P_n$ with the success probability at least $\gamma$,
 asking at most $h$ hint queries and $v$ verification queries.
@@ -101,7 +101,7 @@ Hence, $\cP_{\mathit{Canonical}} \subseteq \cP_{\mathit{Success}}$, and we concl
 &\IndI =
 \underset{(\pi, \rho) \in \cP_{\mathit{Success}}}
 {\mathbb{E}}\left[\underset{\hash \leftarrow \cH}{\Pr}[\CanonicalSuccess^{P,C,\hash}(\pi, \rho) = 1] \right] \cdot \gamma \notag\\
-&\hphantom{as}\stackrel{(\ref{ineq:prob_hash_success})}{\geq} \frac{\gamma}{4(h+v)}.
+&\hphantom{aaa}\stackrel{(\ref{ineq:prob_hash_success})}{\geq} \frac{\gamma}{4(h+v)}. %use phantom space to align text in the equation
 \end{align}
 %
 \begin{codeblock}
@@ -148,7 +148,7 @@ Let us define independent and identically distributed binary random variables $X
 We turn now to the case where $\hash \in \cH_{\Bad}$ and show that it is unlikely that $\hash \in \cH_{\Bad}$
 is returned by FindHash.
 From \eqref{eq:hash_bad} it follows that $\mathbb{E}_{{\pi}, \rho}[X_i]~\leq~\frac{\gamma}{16(h+v)}$.
-In inequalities \eqref{ineq:hash_bad_upper} and \eqref{ineq:hash_good_upper} in steps denoted
+In the following inequalities \eqref{ineq:hash_bad_upper} and \eqref{ineq:hash_good_upper} in steps denoted
 with $(*)$ we use the trivial facts $h + v \geq 1$ and $\gamma \leq 1$.
 For any fixed $\hash \in \cH_{\Bad}$ using the Chernoff bound we get
 \begin{align}
@@ -194,7 +194,7 @@ We use $\underset{\hash \leftarrow \cH}{\Pr}[\hash \in \cH_{\textit{Good}}] \geq
     &\leq e^{-\frac{\gamma}{8(h+v)} \frac{32(h+v)^2}{\gamma^2}n} \\
     &\leq e^{-\frac{4(h+v)}{\gamma}n} \leq e^{-n}.
 \end{align*}
-It is clear that running time of FindHash is $\mathit{poly}(n,h,v,\gamma)$ with oracle calls.
+It is clear that the running time of FindHash is $\mathit{poly}(n,h,v,\gamma)$ with oracle calls.
 This finishes the proof of Lemma \ref{lemma:hash_function_probability}.
 \end{proof}
 
