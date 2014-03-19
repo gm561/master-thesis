@@ -1,17 +1,17 @@
 \chapter{Appendix}
 \section{Basic Inequalities}
 \begin{lemma}[Chernoff Bounds]
-For independent, identically distributed Bernoulli random variables $X_1, \dots, X_n$ with $X := \sum_{i=1}^n X_i$
-with $\Pr[X_i = 1] = p_i$ and $\Pr[X_i = 0] = 1 - p_i$ for all $ 1 \leq  i \leq n$.
-we have the following inequalities for $0 \leq \delta \leq 1$ and $\mathbb{E}[X] = \sum_{i=1}^{n} p_i$:
+For independent and identically distributed Bernoulli random variables $X_1, \dotsc, X_n$ with $X := \sum_{i=1}^n X_i$
+and $\Pr[X_i = 1] = p_i$ for all $ 1 \leq  i \leq n$ the following inequalities hold
 \begin{gather}
 \label{ineq:ch0}
 \Pr[X \geq (1+\delta) \mathbb{E}[X]] \leq e^{- \mathbb{E}[X] \delta^2/3} \\
 \label{ineq:ch1}
 \Pr[X \leq (1-\delta) \mathbb{E}[X]] \leq e^{- \mathbb{E}[X] \delta^2/2} \\
 \label{ineq:ch2}
-\Pr[|X - \mathbb{E}[X]| \geq \delta \mathbb{E}[X]] \leq 2 e^{- \mathbb{E}[X] \delta^2 / 3}.
+\Pr[|X - \mathbb{E}[X]| \geq \delta \mathbb{E}[X]] \leq 2 e^{- \mathbb{E}[X] \delta^2 / 3},
 \end{gather}
+where $0 \leq \delta \leq 1$.
 \end{lemma}
 \vspace*{\fill}
 \pagebreak
@@ -28,9 +28,10 @@ We give a proof of Lemma \ref{lemma:sec_amp_for_p_hash} where for the sake of si
 \forall \pi \in \{0,1\}^{n} : S_{\pi, b} \leq (1 - \frac{1}{k}).
 \end{gather}
 Loosely speaking, in \eqref{pr:always_d} we assume that for every $\pi$ circuit $D$ outputs an answer,
-and in \eqref{pr:low_surpluses} we make an assumption that all surpluses are low.
+and in \eqref{pr:low_surpluses} we make the assumption that all surpluses are low.
 In the complete proof of Lemma \ref{lemma:sec_amp_for_p_hash} this assumptions fail only slightly such that it is still possible
-to obtain the desired result. The following calculations are intended to give the Reader more intuition.
+to obtain the desired result. However, the calculations are fairly lengthy.
+The following simplified calculations are intended to give the Reader better intuition about the full proof.
 We have
 \begin{align*}
 \underset{
@@ -44,7 +45,7 @@ We have
   \substack{\pi, \rho \\ x := \langle P^{(1)}(\pi), D_1(\rho) \rangle_{\trans}
     \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi), D_1 (\rho) \rangle_{P^{(1)}} }}}
 {\Pr}[\Gamma_V(D_2(x^*,\rho)) = 1 \mid D_2(x,\rho) \neq \bot] \\
-  &\overset{\hphantom{a}(*)\hphantom{a}}{=} \underset{\pi^{(k)}}{\Pr}[c_1 \mid c \in \cG_1 \setminus \cG_0] \\
+  &\overset{\hphantom{a}(*)\hphantom{a}}{=} \underset{\pi^{(k)}}{\Pr}[c_1 = 1 \mid c \in \cG_1 \setminus \cG_0] \\
   &\overset{\hphantom{\eqref{eq:diff_s01_next}}}{=} \frac{\Pr_{\pi^{(k)}}[c_1 = 1 \land c \in \cG_1 \setminus \cG_0]}{\Pr_{\pi^{(k)}}[c \in \cG_1 \setminus \cG_0]} \\
   &\overset{\eqref{eq:diff_s01_next}}{=} \underset{\pi^*}{\mathbb{E}}\left[\frac{\Pr_{\pi^{(k-1)}}[c_1^* = 1 \land c \in \cG_1 \setminus \cG_0]
     \big(\Pr_{\pi^{(k-1)}}[c \in \cG_0 \setminus \cG_1] - (S_{\pi^*,1} - S_{\pi^*,0})\big)}
