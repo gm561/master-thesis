@@ -174,7 +174,7 @@ As a result we prove that it is possible to amplify hardness of weakly verifiabl
 can ask a limited number of hint and verification queries, an instance of a puzzle is created in an interactive protocol,
 and a monotone binary function is used to decide which puzzles of the parallel repetition of weakly verifiable puzzles
 have to be successfully solved (this generalize a case where only a fraction of puzzles has to be solved successfully).
-
+%
 \section{Organization of the Thesis}
 In Chapter \ref{ch:preliminaries} we lay down notation and terminology used in the Thesis.
 
@@ -189,7 +189,7 @@ Namely, we show that it is possible to amplify hardness of dynamic interactive w
 \chapter{Notation and Definitions}
 \label{ch:preliminaries}
 \input{preliminaries}
-
+%
 \chapter{Weakly Verifiable Cryptographic Primitives}
 \label{ch:intro_weakly}
 This chapter gives an overview of weakly verifiable cryptographic primitives.
@@ -199,15 +199,22 @@ that are weakly verifiable. Section \ref{st:previous_results} is devoted to the 
 %
 \input{def_diwvp}
 \input{examples}
+%
+\chapter{Previous Results}
+\label{st:previous_results}
+In the previous chapter we defined a notion of a~dynamic interactive weakly verifiable puzzle
+and described cryptographic primitives that motivates studies of weakly verifiable puzzles.
+Different types of weakly verifiable puzzles have been studied in a series of works
+\cite{canetti2004hardness, Dodis:2009:SAI:1530441.1530450, DBLP:journals/corr/abs-1002-3534}.
+This section is intended to give a short overview of the techniques used in these papers
+and aims to provide some intuition and insight into the problem of the hardness amplification
+for dynamic interactive weakly verifiable puzzles.
 \input{previous}
 %
-%\section{Limitations of Security Amplification}
 %
-% the main theorem
 \chapter{Hardness Amplification for Weakly Verifiable Puzzles}
 \label{ch:main_result}
-In the previous chapter we defined a notion of a~dynamic interactive weakly verifiable puzzle
-and gave an overview of the former studies of different types of weakly verifiable puzzles.
+In the previous chapter we gave an overview of the former studies of different types of weakly verifiable puzzles.
 The focus of this chapter is on giving a constructive proof of hardness amplification for dynamic interactive weakly verifiable puzzles.
 In Section \ref{st:main_theorem_def} we formulate the main theorem which is then proved in the succeeding sections.
 We begin, in Section \ref{st:domain_partition}, by constructing an algorithm that finds an efficiently computable function used

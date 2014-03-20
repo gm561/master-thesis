@@ -1,29 +1,24 @@
-\section{Previous Results}
-\label{st:previous_results}
-Different types of weakly verifiable cryptographic primitives have been studied in a series of works
-\cite{canetti2004hardness, Dodis:2009:SAI:1530441.1530450, DBLP:journals/corr/abs-1002-3534}.
-This section is intended to give a short overview of techniques used in these works
-and aims to provide some intuition and insight into the problem of hardness amplification
-of dynamic interactive weakly verifiable puzzles.
-\subsection{Results of Canetti, Halevi, and Steiner}
+%
+\section{Weakly Verifiable Puzzles}
 \label{subsec:chs}
-The notion of a \textit{weakly verifiable puzzle} has been coined by Canetti, Halevi, and Steiner in the work
+The notion of the \textit{weakly verifiable puzzles} has been coined by Canetti, Halevi, and Steiner in the paper
 \textit{Hardness amplification of weakly verifiable puzzles} \cite{canetti2004hardness}.
 In comparison to Definition \ref{def:dwvp} the puzzles considered in \cite{canetti2004hardness} are neither dynamic nor interactive.
 Moreover, the number of verification queries is limited to one.
-This constitutes a simplified case to the one considered in this Thesis.
+This constitutes a special case to of Definition \ref{def:dwvp}.
 In this section we provide the definition of weakly verifiable puzzles (WVP) that closely follows the one contained in \cite{canetti2004hardness}
 and state the theorem of hardness amplification of weakly verifiable puzzles in a similar vein as in \cite{canetti2004hardness}.
 Finally, we give an intuition behind the proof of this theorem.
 It is noteworthy that the main proof of this Thesis, contained in Chapter \ref{ch:main_result},
-uses many ideas from the work of Canetti, Halevi, and Steiner \cite{canetti2004hardness}.
+uses many ideas of the work of Canetti, Halevi, and Steiner \cite{canetti2004hardness}.
 %
-\begin{definition}[Weakly Verifiable Puzzles]
+\subsection{Definition of weakly verifiable puzzles}
+\begin{definition}[Weakly Verifiable Puzzles, \cite{canetti2004hardness}]
   \label{def:wvp}
 A \textnormal{weakly verifiable puzzle} is defined by a pair of polynomial time algorithms:
 a probabilistic puzzle--generation algorithm $G$ and a deterministic verification algorithm $V$.
 We write $G(1^k; \rho)$ to denote that $G$ takes as input a bitstring $1^k$, where $k$ is a security parameter,
-and as auxiliary input a bitstring $\rho \in \{0,1\}^{*}$ which is the randomness used by~$G$.
+and the randomness $\rho \in \{0,1\}^{*}$.
 The algorithm $G$ outputs a bitstring $p \in \{0,1\}^{*}$ and a check information $c \in \{0,1\}^{*}$.
 The \textnormal{verifier} $V$ is a deterministic algorithm that takes as input $p$, $c$, an answer $a \in \{0,1\}^{*}$
 and outputs $b \in \{0,1\}$.
@@ -37,8 +32,8 @@ and define the \textnormal{success probability} of $S$ in solving a puzzle defin
 We write $P := (G,V)$ to denote a weakly verifiable puzzle $P$ defined by algorithms $G$ and $V$.
 \end{definition}
 We compare the above definition with Definition \ref{def:dwvp}.
-First, we note that in Definition \ref{def:dwvp} we use the language of probabilistic circuits. This is a more general approach
-as probabilistic polynomial time algorithms can be converted into families of polynomial size circuits.
+First, we note that in Definition \ref{def:dwvp} we use the language of probabilistic circuits.
+This is more general than probabilistic polynomial time algorithms.
 Next, we see that in Definition \ref{def:wvp} the algorithm $G$ is parameterized by
 a bitstring $1^k$ meaning that the length of a random bitstring taken by $G$ is bounded by $poly(k)$.
 For a fixed $k$, without loss of generality, we can model the algorithm $G(1^k; \rho)$ as a polynomial size probabilistic circuit
@@ -52,14 +47,15 @@ The puzzles considered in Definition \ref{def:wvp} are non--dynamic. Thus, there
 element for a hint circuit $\Gamma_H$ from Definition~\ref{def:dwvp}.
 Finally, the puzzles described in Definition~\ref{def:wvp} are non--interactive.
 
+\subsection{Hardness amplification for weakly verifiable puzzles}
 We will formulate now the definition of the $n$-fold repetition of weakly verifiable puzzles along the lines of \cite{canetti2004hardness}.
 Later in this Thesis, for other types of weakly verifiable puzzles, we use the notion of a $k$-wise direct product of puzzles instead\footnote{We
 note that the terminology used to name the parallel repetition of weakly verifiable puzzles is not consistent.
 In \cite{canetti2004hardness} the notion of the \textit{$n$-fold direct product of puzzles} is used whereas in \cite{Dodis:2009:SAI:1530441.1530450}
 a similar construction that captures dynamic puzzles is named the \textit{$k$-wise repetition of puzzles}.
-In this Thesis we tend to use the latter formulation.}.
+In this Thesis we use the latter name.}.
 %
-\begin{definition}[$n$-fold repetition of weakly verifiable puzzles]
+\begin{definition}\textbf{($n$-fold repetition of weakly verifiable puzzles, \cite{canetti2004hardness}.)}
   \label{def:n-fold-rep}
   Let $n~\in~\N$ and a weakly verifiable puzzle $P = (G,V)$ be fixed.
   We define the $n$-fold repetition of $P$ as a weakly verifiable puzzle where the puzzle--generation algorithm
@@ -70,9 +66,10 @@ In this Thesis we tend to use the latter formulation.}.
   such that $b = 1$ if and only if for all $1 \leq i \leq n$ we have $V(p_i, c_i, a_i) = 1$.
  \end{definition}
 %
-Let us lay down some notation and terminology. We write $P^{(n)} := (G^{(n)}, V^{(n)})$ to denote the $n$--fold repetition of $P$.
+Let us give some notation and terminology. We write $P^{(n)} := (G^{(n)}, V^{(n)})$ to denote the $n$--fold repetition of $P$.
 For $P^{(n) } := (G^{(n)},V^{(n)})$ when writing a \textit{puzzle on the $i$-th coordinate} we refer to the $i$-th puzzle of the $n$--fold repetition of WVP
 (this puzzle corresponds to the one generated by $G^{(n)}_i$,  $V^{(xn)}_i$).
+
 The $n$-fold repetition of weakly verifiable puzzles is solved successfully if and only if all $n$ puzzles are solved successfully.
 In contrast, in Chapter \ref{ch:main_result} we are interested in a more general situation where a monotone function $g: \{0,1\}^{n} \rightarrow \{0,1\}$ is used to decide
 which coordinates of the $n$-fold repetition of puzzles have to be solved correctly. A precise definition is given in Section \ref{st:main_theorem}.
@@ -80,7 +77,7 @@ Clearly, we can assume that $g$ is such that all coordinates have to be solved s
 
 The main theorem proved in \cite{canetti2004hardness} states that it is possible to turn a good solver for $P^{(n)}$ to a good solver for $P$.
 %
-\begin{theorem}[Hardness amplification of weakly verifiable puzzles]
+\begin{theorem}[Hardness amplification of weakly verifiable puzzles, \cite{canetti2004hardness}]
   \label{thm:wvp_chs}
 Let $n:\N \rightarrow \N$ and $\delta: \N \rightarrow (0,1)$ be efficiently computable functions and $q \in \N$ a \textit{slackness parameter}.
 Moreover, let $P = (G,V)$ be a weakly verifiable puzzle. We denote the running time of the
@@ -90,13 +87,13 @@ and the running time is $T$, then there exists a solver $S$ for $G$ with oracle 
 probability is at least $\delta(1-\frac{1}{q})$ and the running time is $O\Big(\frac{nq^3}{\delta^{2n-1}}(T + nT_G + nT_V)\Big)$.
 \end{theorem}
 %
-The following algorithm is used by R.Cannetti, S.Halevi, and M.Steiner in the proof of Theorem \ref{thm:wvp_chs}.
+The following algorithm is used in \cite{canetti2004hardness} to prove Theorem \ref{thm:wvp_chs}.
 It transforms $S^{(n)}$ for $P^{(n)}$ with success probability at least $\delta^{n}$ to a solver for a single puzzle $P$ with probability
 at least $\delta(1  - \frac{1}{q})$. The slackness parameter $q$ is introduced as it is not possible to achieve
 the perfect hardness amplification. We note that in the analysis of the running time of $\mathit{CHS\text{--}solver}$
-we explicitly take into account time needed for oracle calls to $S^{(n)}, V, G$.
+we explicitly take into account the time needed for the oracle calls to $S^{(n)}, V, G$.
 
-Let us denote by $p \in \{0,1\}^{*}$ a bitstring output by $G$, and then taken as input by $\mathit{CHS\text{--}solver}$.
+Let us denote by $p \in \{0,1\}^{*}$ an output of $G$, which is taken as input by $\mathit{CHS\text{--}solver}$.
 To make notation shorter in the following code excerpts we do not write randomness used by $G$ explicitly.
 
 \begin{codeblock}
@@ -155,8 +152,8 @@ To make notation shorter in the following code excerpts we do not write randomne
 \end{codeblock}
 %
 %TODO: does this intuition works when $A$ is not deterministic i.e. cells then depends on the randomness of $A$.
-A detail proof of Theorem \ref{thm:wvp_chs} is presented in \cite{canetti2004hardness}.
-We limit ourselves to providing an intuition why the above algorithm transforms a good solver
+A detailed proof of Theorem \ref{thm:wvp_chs} is presented in \cite{canetti2004hardness}.
+We limit ourselves to providing the intuition why the CHS--solver transforms a good solver
 for the $n$--wise direct product of $P$ to a good solver for $P$.
 
 Let us consider the $n$-fold repetition of $P$, and for simplicity a deterministic solver $S^{(n)}$ for $P^{(n)} := (G^{(n)}, V^{(n)})$.
@@ -180,7 +177,7 @@ with substantial probability given oracle access to $S^{(n)}$ for $P^{(n)}$.
 The algorithm starts with the first position and tries to fix a bitstring $p^*$ on this position such that the success probability of $S^{(n)}$ on the remaining $(n-1)$
 position is at least $\delta^{(n-1)}$. If it is possible to find $p^*$ such that this condition is satisfied, then we fix $p^*$
 on this position and repeat the whole procedure again in the consecutive iteration for the next position.
-If $\mathit{CHS\text{--}solver}$ fails to find a bitstring $p^*$, then we assume that there is no column of $M$ that contains $\delta^{(n-1)}$ fraction
+If $\mathit{CHS\text{--}solver}$ fails to find a bitstring $p^*$, then we assume that there is no column of $M$ that contains a $\delta^{(n-1)}$ fraction
 of cells that are of the form $1^n$. We use Observation~\ref{obs:wvp_matrix} to conclude that the conditional probability of
 solving the first puzzle given that all puzzles on the remaining position are solved successfully is at least~$\delta$.
 We place the input puzzle $p$ on this position and note that all remaining puzzles are generated by $\mathit{CHS\text{--}solver}$.
@@ -203,7 +200,7 @@ although it succeeds only on some coordinates of the $n$-fold repetition of $P$.
 It turns out that it is possible to use a similar technique of fixing puzzles on consecutive positions of the $n$-fold repetition of
 puzzles to prove the hardness amplification in this more general setting.
 %
-\subsection{Results of Dodis,  Impagliazzo,  Jaiswal,  Kabanets}
+\section{Dynamic Interactive Weakly Verifiable Puzzles}
 \label{subsec:dijk}
 Some of the cryptographic constructions presented in Section~\ref{section:wvp_examples}
 are not only weakly verifiable but also dynamic (MAC and SIG). This type of puzzles are defined and studied in \cite{Dodis:2009:SAI:1530441.1530450}.
@@ -211,6 +208,7 @@ We give a short overview of this work, state the definition of a \textit{dynamic
 the one included in \cite{Dodis:2009:SAI:1530441.1530450}. Finally, we provide intuition for the proof of the hardness amplification of DWVP
 included in \cite{Dodis:2009:SAI:1530441.1530450}.
 
+\subsection{Definition of interactive weakly verifiable puzzles}
 \begin{definition}[Dynamic Weakly Verifiable Puzzle.]
   \label{def:dwvp_dodis}
   A \textnormal{dynamic weakly verifiable puzzle} (DWVP) is defined by a distribution $\cD$ on pairs $(x, \alpha)$
@@ -269,6 +267,7 @@ We define the \textit{success probability} of a solver $S$ for $P := (G,V)$ as
   {\Pr}\big[\exists (q,a) \in \cV_{verif} : q \notin \cH_{hint} \land V(q,a) := 1 \big]
 \end{align*}
 
+\subsection{Hardness amplification for dynamic weakly verifiable puzzles}
 \begin{theorem}\textbf{(Hardness amplification for dynamic weakly verifiable puzzles).}
 \label{lemma:dwvp}
 Let $S^{(n)}$ be a probabilistic algorithm for $P^{(n)}$ that succeeds with
@@ -395,7 +394,7 @@ To show the hardness amplification for the $n$-wise direct product with the doma
 the approach similar to the one presented in Section~\ref{subsec:chs}. Namely, we try to find a good position for the input puzzle instead of
 choosing the position uniformly on random as in \cite{Dodis:2009:SAI:1530441.1530450}.
 
-\subsection{Results of Holenstein and Scheonebeck}
+\section{Interactive Weakly Verifiable Puzzles}
 % \begin{todo}
 %   \textbf{TODO:} Justify why you do not give a more detail description of the
 %   algorithm as in the previous sections . \\
@@ -406,6 +405,7 @@ choosing the position uniformly on random as in \cite{Dodis:2009:SAI:1530441.153
 The hardness amplification of interactive weakly verifiable puzzles has been studied by T.Holenstein and G.Schoenebeck in \cite{DBLP:journals/corr/abs-1002-3534}.
 We will give now an overview of this work and compare it with our approach.
 
+\subsection{Definition of interactive weakly verifiable puzzles}
 The following definition of an \textit{interactive weakly verifiable puzzle} closely follow the one from \cite{DBLP:journals/corr/abs-1002-3534}.
 \begin{definition}
 An \textit{interactive weakly verifiable puzzle} is defined by a protocol given by two probabilistic algorithms $P$ and $S$.
@@ -431,6 +431,7 @@ Furthermore, a monotone binary function is used to determine whether the $k$-wis
 has been successfully solved. Unlike, puzzles in Definition \ref{def:dwvp}, the puzzles studied by T.Holenstein and G.Schoenebeck
 are non-dynamic. Thus, only a verification circuit $\Gamma$ is generated and no hint circuit is ever used.
 
+\subsection{Hardness amplification for interactive weakly verifiable puzzles}
 The following hardness amplification theorem is proved in \cite{DBLP:journals/corr/abs-1002-3534}.
 \begin{theorem}
 There exists an algorithm $\mathit{Gen}(C,g,\epsilon, \delta, n)$ which takes as input a solver circuit $C$ for the $k$-wise
