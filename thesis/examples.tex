@@ -3,42 +3,46 @@
 In this section we give examples of cryptographic constructions that motivate studies of different types of weakly verifiable puzzles.
 
 \subsection{Message authentication codes}
-Let us consider a setting in which two parties a \textit{sender} and a \textit{receiver} communicate over an insecure channel.
+\textit{Message authentication codes} describe in this section are
+an example of dynamic non-interactive weakly verifiable puzzles.
+
+Let us consider a setting in which two parties, a \textit{sender} and a \textit{receiver}, communicate over an insecure channel.
 Messages of the sender may be intercepted, modified, and replaced by a third party called an \textit{adversary}.
-The receiver needs a way to ensure that received messages have been indeed sent by the sender and have not been modified by the adversary.
+The receiver needs a way to ensure that the received messages were indeed sent by the sender and were not modified by the adversary.
 The solution is to use \textit{message authentication codes}.
 
-Loosely speaking, the message authentication codes may be explained as follows.
+Loosely speaking, message authentication codes can be explained as follows.
 Let the sender, receiver, and adversary be polynomial time algorithms and messages be represented as bitstrings.
-Furthermore, we assume that the sender and the receive share a secrete key to which the adversary has no access.
+Furthermore, we assume that the sender and the receiver share a secret key to which the adversary has no access.
 The sender appends to every message a tag which is computed as a function of the key and the message.
 The receiver, using the key, has a way to check whether an appended tag is valid for a received message.
 The receiver accepts a message if the tag is valid, otherwise it rejects.
-We require that it is hard for the adversary to find a tag and a message, not sent before, that is accepted by the receiver with non-negligible probability.
-We give the following formal definition of a \textit{message authentication code} based on \cite{LectureNotesCrypo} and \cite{Goldreich:2004:FCV:975541}.
-\begin{definition}[Message Authentication Code]
+We require that it is hard for the adversary to find a tag and a message that was not sent before and is
+accepted by the receiver with the non-negligible probability. We give the following formal definition
+of \textit{message authentication codes} based on \cite{LectureNotesCrypo} and \cite{Goldreich:2004:FCV:975541}.
+\begin{definition}[Message Authentication Codes]
   \label{def:mac}
   Let $\cM$ be a set of messages, $\cK$ a set of keys and $\cT$ a set of tags.
-  We define the \textnormal{message authentication code (MAC)} as an efficiently computable function $\cM \times \cK \rightarrow \cT$.
+  We define the \textnormal{message authentication code (MAC)} as an efficiently computable function $f:\cM \times \cK \rightarrow \cT$.
   Furthermore, we say that MAC is \textit{secure} if it satisfies the following condition:
 
-  Let $k \xleftarrow{\$} \cK$ be fixed and $H$ be a polynomial size circuit that takes as input a message $m \in \cM$ and outputs a tag $t \in \cT$
+  Let $k \xleftarrow{\$} \cK$ and $H$ be a polynomial size circuit with hard-coded $k$ that takes as input a message $m \in \cM$ and outputs a tag $t \in \cT$
   such that $f(m,k) = t$. We say that MAC is secure if there is no probabilistic polynomial time algorithm
   with oracle access to $H$ that with non-negligible probability outputs a message $m \in \cM$
-  as well as a corresponding tag $t \in \cT$ such that $f(m, k) = t$, and $H$ has not been queried for a tag of $m$.
+  as well as a corresponding tag $t \in \cT$ such that $f(m, k) = t$, and $H$ has not been queried for $m$.
 \end{definition}
 
-We show how MAC is captured by a notion of dynamic weakly verifiable puzzles where at most one verification query is asked.
-For fixed $f$ and $n \in \N$ the sender corresponds to the problem poser, the adversary to the problem solver,
-and the key is a bitstring $\pi \in \{0,1\}^{n}$ taken as auxiliary input by the problem poser.
+We show how MAC is captured by the notion of a dynamic weakly verifiable puzzle where at most one verification query is asked.
+For fixed $f$ and $n \in \N$ the sender corresponds to the problem poser, the adversary to the solver,
+and the key to a randomness $\pi \in \{0,1\}^{n}$ used by the problem poser.
 In the first phase, which is non--interactive, the problem poser outputs a hint circuit
 $\Gamma_H$ and a verification circuit $\Gamma_V$ where both circuits have hard-coded $\pi$.
 The circuit $\Gamma_H$ takes as input a message and outputs a tag for this message and corresponds to the circuit $H$ from Definition \ref{def:mac}.
-The circuit $\Gamma_V$ that as input $m \in \cM$ and $t \in \cT$ and outputs a bit $1$ if and only if $f(m, \pi) = t$.
+The circuit $\Gamma_V$ takes as input $m \in \cM$ and $t \in \cT$ and outputs $1$ if and only if $f(m, \pi) = t$.
 In the second phase, the problem solver takes no input ($x^*$ is empty string) and is given oracle access to $\Gamma_H$ and $\Gamma_V$.
 We consider a case where at most on verification query is asked.
-Thus, a task of finding by an adversary a valid tag $t \in \cT$ for a message $m \in \cM$ such that a hint for $m$ has not been asked before
-corresponds to asking a successful verification query by a problem poser to $\Gamma_V$.
+Thus, the task of an adversary to find a valid tag $t \in \cT$ for a message $m \in \cM$ such that a hint for $m$ has not been asked before
+corresponds to asking a successful verification query by a problem solver to $\Gamma_V$.
 %
 \subsection{Public key signature schemes}
 First, we give a definition of a \textit{public key encryption scheme}, and what it means for such a scheme to be secure.
