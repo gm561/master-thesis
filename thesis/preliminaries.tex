@@ -40,10 +40,10 @@ If a probabilistic circuit takes as input only the randomness, we slightly abuse
 We make sure that it is clear from the context that probabilistic circuits that take as input only the randomness
 are not confused with deterministic Boolean circuits. We use $\{C_n\}_{n \in \N}$ to denote a family of probabilistic circuits.
 For a (probabilistic) circuit $C$ we write $\mathit{Size}(C)$ to denote the total number of vertices of $C$.
-A \textit{family of (probabilistic) polynomial size circuits} is a family of (probabilistic) circuits where
+W define a \textit{family of (probabilistic) polynomial size circuits} as a family of (probabilistic) circuits where
 the size of a circuit is polynomial in the number of input vertices.
 
-Sometimes we talk about interactive protocols consisting of two phases.
+Sometimes we talk about interactive protocols consisting of two phases where two probabilistic circuits interact with each other.
 In this settings we define a \textit{two-phase circuit} $C := (C_1, C_2)$ as a circuit
 where in the first phase a circuit $C_1$ is used and in the second phase a circuit $C_2$.
 If $C_1$ and $C_2$ are probabilistic circuits we write $C(\delta) := (C_1, C_2)(\delta)$
@@ -90,7 +90,8 @@ there exists $n_0 \in \N$ such that for all $n \in \N : n > n_0$ there exists $p
 \textbf{Interactive protocols.}
 We are often interested in situations where two probabilistic circuits interact with
 each other according to some protocol by means of messages representable by bitstrings.
-Let $\{A_n\}_{n \in \N}$ and $\{B_n\}_{n \in \N}$ be families of circuits such that $A_n : \{0,1\}^{*} \rightarrow \{0,1\}^{*}$ and $B_n : \{0,1\}^{*} \rightarrow \{0,1\}^{*}$.
+Let $\{A_n\}_{n \in \N}$ and $\{B_n\}_{n \in \N}$ be families of circuits such that $A_n : \{0,1\}^{*} \rightarrow \{0,1\}^{*}$ and $B_n : \{0,1\}^{*} \rightarrow \{0,1\}^{*}$
+where a tuple $(a_1, \dotsc, a_l)$ taken as input by $A_n$ is encoded as a bitstring in $\{0,1\}^{*}$, we use analogously technique for $B_n$.
 An \textit{interactive protocol} is defined by $\{A_n\}_{n \in \N}$ and $\{B_n\}_{n \in \N}$ where
 for random bitstrings $\rho_A \in \{0,1\}^{n}$, $\rho_B \in \{0,1\}^{n}$ in the first round a message $m_0 := A_n(\rho_A)$ is sent and in the second round a message $m_1 := B_n(\rho_B, m_0)$.
 In general in the $(2k\!-\!1)$-th round we have $m_{2k-2} := A_n(\rho_A, m_1, \cdots, m_{2k-3})$ and in the $2k$-th round $m_{2k-1} := B_n(\rho_B, m_1, \cdots, m_{2k-2})$.
@@ -99,9 +100,8 @@ The protocol execution between two probabilistic circuits $A$ and $B$ is denoted
 The output of $A$ in the protocol execution is denoted by $\langle A, B \rangle_A$ and of $B$ by $\langle A, B \rangle_B$.
 The sequence of all messages sent by $A$ and $B$ in the protocol execution is called a \textit{communication transcript} and
 is denoted by $\langle A, B \rangle_{\mathit{trans}}$.
-
 The time complexity of the protocol depends on the size of $A_n$ and $B_n$.
-For example, a protocol runs in the polynomial time if the size of $A_n$ and $B_n$ are bounded by some $\p(n)$.
+For example, we say that a protocol runs in the polynomial time if the size of $A_n$ and $B_n$ are bounded by some $\p(n)$.
 
 \textbf{Oracle algorithms.}
 We use the notion of \textit{oracle circuits} following the standard definition in the literature \cite{Goldreich:2004:FCV:975541}.
