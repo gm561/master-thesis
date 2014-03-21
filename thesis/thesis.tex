@@ -96,96 +96,8 @@
 \mainmatter
 
 \chapter{Introduction}
-\section{Hardness Amplification Theorems}
-An important question in cryptography is whether it is possible to turn a certain problem
-that is only mildly hard into a problem that solving is substantially harder.
-An example is the well known hardness amplification result by Yao \cite{Goldreich:2000:FCB:519078}
-which states that it is possible to build a strong one--way function from a function that is only weakly one-way.
-
-In this Thesis we study hardness amplification of \textit{weakly verifiable puzzles}.
-This notion generalize numerous basic cryptographic primitives like signature schemes,
-message authentication codes, or bit commitment protocols, just to name a few.
-The characteristic property of a weakly verifiable puzzle is that one does not require that verifying the correctness of a solution
-by a puzzle solver is efficient\footnote{We note that the word \textit{weakly} in the context of weakly verifiable
-puzzles is used in a different meaning than for a weak one--way function.}.
-On the other hand, we assume that an algorithm that generates an instance of a weakly verifiable puzzle
-has access to secret information which makes the task of verifying correctness of a solution easy.
-An example is CAPTCHA where a problem of checking whether a solution is correct by a solver is comparably hard to finding a correct solution.
-Whereas, the poser knows the text from which the CAPTCHA is generated and can trivially verify whether a solution is correct.
-
-There are two main approaches to amplify hardness that base on combining several weakly hard problems into
-a construction that is strongly hard. First, one can try to use \textit{sequential repetition} where a protocol is repeated
-in rounds that start one after another. It has been observed that sequential repetition amplifies hardness
-of weakly verifiable puzzles \cite{von2003captcha}. However, this approach may be inefficient as it increases
-the number of rounds creating additional communication burden.
-
-A more useful technique both from the practical and theoretical point is to amplify hardness using \textit{parallel repetition}
-where several independent weakly hard problems are sent in one round.
-However, it has been shown that in some settings parallel repetition may fail to amplify hardness \cite{bellare1997does}.
-Therefore, some studies are required to prove that parallel repetition amplifies hardness
-of weakly verifiable puzzles.
-
-Proving hardness amplification requires showing that the following implication holds
-\begin{align*}
-  A \implies B
-\end{align*}
-where $A$ is a statement that a problem $P$ is hard, and $B$ denotes that a problem $Q$ is hard.
-It turns out that it is often sensible to consider a logically equivalent statement
-\begin{align*}
-  \lnot B \implies \lnot A.
-\end{align*}
-Thus, under the assumption that $Q$ is easy, we try to prove that $P$ is easy.
-This approach is used in the Thesis. More precisely, we assume existence of an algorithm that successfully
-solves the parallel repetition of weakly verifiable puzzles with substantial probability, and
-under this assumption we construct an algorithm that solves a single puzzle with substantial probability.
-
-\section{Weakly Verifiable Puzzles}
-Breaking security is often defined as a game in which an adversary has to solve a certain problem.
-It turns out that for some cryptographic primitives a task of winning a game by an adversary
-is equivalent to solving a weakly verifiable puzzle.
-
-The proof of Yao for amplifying hardness of one--way functions relies to the great extent on the fact that it is possible
-for an adversary to easily verify correctness of a solution. Therefore, to show hardness amplification
-for weakly verifiable puzzles a different approach has to be developed.
-
-Weakly verifiable puzzles have been introduced and studied by Cannetti, Halevi, and Steiner \cite{canetti2004hardness}.
-They show how to amplify hardness of the parallel repetition of weakly verifiable puzzles.
-
-In some cryptographic settings it is enough to solve only a fraction of puzzles included in the parallel repetition of weakly verifiable puzzles.
-A significant example are hard artificial intelligence problems like CAPTCHAs where the goal is to distinguish a human from a computer program.
-A human has on average an advantage over computer programs in recognizing a distorted text. However, we can not exclude a situation where he or she also makes mistakes.
-
-The proof of hardness amplification where a threshold function is used to decide what fraction of weakly verifiable puzzles has to be solved correctly
-in order to successfully solve the parallel repetition of weakly verifiable puzzles is given by Impagliazzo, Jaiswal, and Kabanets \cite{impagliazzo2007chernoff}.
-A similar proof by Dodis, Impagliazzo, Jaiswal, and Kabanets \cite{Dodis:2009:SAI:1530441.1530450} additionally
-takes into account settings where an adversary can ask a limited number of queries that verify correctness of a solution.
-Furthermore, an adversary can obtain limited number of hints. The puzzles defined in this way captures
-some standard security definitions of cryptographic primitives like message authentication codes and signature schemes.
-
-Holenstein and Schoenebeck \cite{DBLP:journals/corr/abs-1002-3534} give a more natural proof for hardness amplification
-of weakly verifiable puzzles where only a fraction of puzzles has to be solved correctly.
-Furthermore, the puzzles considered by them generalize to games such as breaking the binding property of bit commitment protocols
-where an instance of a puzzle is generated in an interactive phase.
-
-\section{Contribution of the Thesis}
-In this Thesis we apply the proof technique presented in \cite{DBLP:journals/corr/abs-1002-3534}
-in the context of weakly verifiable puzzles as in \cite{Dodis:2009:SAI:1530441.1530450}.
-As a result we prove that it is possible to amplify hardness of weakly verifiable puzzles where an adversary
-can ask a limited number of hint and verification queries, an instance of a puzzle is created in an interactive protocol,
-and a monotone binary function is used to decide which puzzles of the parallel repetition of weakly verifiable puzzles
-have to be successfully solved (this generalize a case where only a fraction of puzzles has to be solved successfully).
-%
-\section{Organization of the Thesis}
-In Chapter \ref{ch:preliminaries} we lay down notation and terminology used in the Thesis.
-
-Next, in Chapter \ref{ch:intro_weakly} we define a \textit{dynamic interactive weakly verifiable puzzle} and
-give an overview of cryptographic primitives that are generalized by this notion.
-Furthermore, we give an outline of earlier studies of weakly verifiable puzzles and compare
-it with the results contained in this Thesis.
-
-Finally, in Chapter \ref{ch:main_result} we formulate and prove the main theorem of this Thesis.
-Namely, we show that it is possible to amplify hardness of dynamic interactive weakly verifiable puzzles.
-%
+\label{ch:introduction}
+\input{introduction}
 \chapter{Notation and Definitions}
 \label{ch:preliminaries}
 \input{preliminaries}
@@ -193,24 +105,16 @@ Namely, we show that it is possible to amplify hardness of dynamic interactive w
 \chapter{Weakly Verifiable Cryptographic Primitives}
 \label{ch:intro_weakly}
 This chapter gives an overview of weakly verifiable cryptographic primitives.
-We start by giving a definition of a \textit{dynamic interactive weakly verifiable puzzle} in Section \ref{section:wvp}.
-To provide more intuition in Section \ref{section:wvp_examples} we describe a~series of well known cryptographic primitives
-that are weakly verifiable. Section \ref{st:previous_results} is devoted to the previous research concerning different types of weakly verifiable puzzles.
+First, we introduce a definition of a \textit{dynamic interactive weakly verifiable puzzle} in Section \ref{section:wvp}.
+Then, in Section \ref{section:hardness_amplification_diwvp} we define the direct product of puzzles and state the hardness
+amplification theorem which is the primary focus of this thesis. To provide more intuition in Section \ref{section:wvp_examples}
+we describe a~series of well known cryptographic primitives that are weakly verifiable.
 %
 \input{def_diwvp}
 \input{examples}
 %
 \chapter{Previous Results}
-\label{st:previous_results}
-In the previous chapter we defined a notion of a~dynamic interactive weakly verifiable puzzle
-and described cryptographic primitives that motivates studies of weakly verifiable puzzles.
-Different types of weakly verifiable puzzles have been studied in a series of works
-\cite{canetti2004hardness, Dodis:2009:SAI:1530441.1530450, DBLP:journals/corr/abs-1002-3534}.
-This section is intended to give a short overview of the techniques used in these papers
-and aims to provide some intuition and insight into the problem of the hardness amplification
-for dynamic interactive weakly verifiable puzzles.
 \input{previous}
-%
 %
 \chapter{Hardness Amplification for Weakly Verifiable Puzzles}
 \label{ch:main_result}

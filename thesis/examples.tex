@@ -3,7 +3,7 @@
 In this section we give examples of cryptographic constructions that motivate studies of different types of weakly verifiable puzzles.
 
 \subsection{Message authentication codes}
-\textit{Message authentication codes}, described in this section, are an example of dynamic non-interactive weakly verifiable puzzles.
+Message authentication codes are an example of dynamic non-interactive weakly verifiable puzzles.
 
 Let us consider a setting in which two parties, a \textit{sender} and a \textit{receiver}, communicate over an insecure channel.
 Messages of the sender may be intercepted, modified, and replaced by a third party called an \textit{adversary}.
@@ -14,27 +14,30 @@ Loosely speaking, message authentication codes can be explained as follows.
 Let the sender, receiver, and adversary be polynomial time algorithms and messages be represented as bitstrings.
 Furthermore, we assume that the sender and the receiver share a secret key to which the adversary has no access.
 The sender appends to every message a tag which is computed as a function of the key and the message.
-The receiver, using the key, has a way to check whether an appended tag is valid for a received message.
+The receiver, using the key, has a way to efficiently check whether an appended tag is valid for a received message.
 The receiver accepts a message if the tag is valid, otherwise it rejects.
 We require that it is hard for the adversary to find a tag and a message that was not sent before and is
 accepted by the receiver with the non-negligible probability. We give the following formal definition
-of \textit{message authentication codes} based on \cite{LectureNotesCrypo} and \cite{Goldreich:2004:FCV:975541}.
+of \textit{message authentication codes} based on \cite{LectureNotesCrypo, Goldreich:2004:FCV:975541}.
+%
 \begin{definition}[Message Authentication Codes]
   \label{def:mac}
   Let $\cM$ be a set of messages, $\cK$ a set of keys and $\cT$ a set of tags.
-  We define the \textnormal{message authentication code (MAC)} as an efficiently computable function $f:\cM \times \cK \rightarrow \cT$.
+  We define the \textit{message authentication code} (MAC) as an efficiently computable function $f:\cM \times \cK \rightarrow \cT$.
   Furthermore, we say that MAC is \textit{secure} if it satisfies the following condition:
 
-  Let $k \xleftarrow{\$} \cK$ and $H$ be a polynomial size circuit with hard-coded key $k$ that takes as input a message $m \in \cM$ and outputs a tag $t \in \cT$
+  Let $k$ be chosen uniformly at random from $K$ and $H$ be a polynomial size circuit with hard-coded $k$
+  that takes as input a message $m \in \cM$ and outputs a tag $t \in \cT$
   such that $f(m,k) = t$. We say that MAC is secure if there is no probabilistic polynomial time algorithm
   with oracle access to $H$ that with non-negligible probability outputs a message $m \in \cM$
-  as well as a corresponding tag $t \in \cT$ such that $f(m, k) = t$, and $H$ has not been queried for $m$.
+  as well as a corresponding tag $t \in \cT$ such that $f(m, k) = t$, and $H$ has not been queried on $m$.
 \end{definition}
 
 %TODO this still can be improved
-We show how MAC is captured by the notion of a dynamic weakly verifiable puzzle where at most one verification query is asked.
+We will show now how a task of breaking the security of MAC is captured by the notion of a dynamic weakly verifiable puzzle where at most one verification query is asked.
 For fixed $f$ and $n \in \N$ the sender corresponds to the problem poser and the adversary to the solver.
-Furthermore, the key is a randomness $\pi \in \{0,1\}^{n}$ used by the problem poser, and the set $\cQ$ is a set of messages $\cM$.
+Furthermore, the key corresponds to the randomness $\pi \in \{0,1\}^{n}$ used by the problem poser.
+The set $\cQ$ is a set of messages $\cM$.
 
 In the first phase, which is non-interactive, neither the problem poser nor the solver send any messages.
 Moreover, the problem poser outputs a hint circuit $\Gamma_H$ and a verification circuit $\Gamma_V$ where both circuits have hard-coded $\pi$.

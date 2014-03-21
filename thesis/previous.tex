@@ -1,11 +1,19 @@
+\label{st:previous_results}
+The focus of this chapter is on the previous research concerning different types of weakly verifiable puzzles
+that have been studied in a series of works \cite{canetti2004hardness, Dodis:2009:SAI:1530441.1530450, DBLP:journals/corr/abs-1002-3534}.
+We give a short overview of the techniques used in these papers and aim to provide some intuition and insight into
+the problem of the hardness amplification for dynamic interactive weakly verifiable puzzles.
+First, we introduce the notion of a \textit{weakly verifiable puzzles} which are non-interactive and non-dynamic puzzles studied in
+\cite{canetti2004hardness}. Then, in Section \ref{section:dijk} we bring our focus on dynamic non-interactive puzzles studies in \cite{Dodis:2009:SAI:1530441.1530450}.
+Finally, in Section \ref{section:iwvp} we give an overview of results of Holenstein and Schoenebeck \cite{DBLP:journals/corr/abs-1002-3534} where
+non-dynamic and interactive weakly verifiable puzzles have been studied.
 %
 \section{Weakly Verifiable Puzzles}
 \label{subsec:chs}
-The notion of the \textit{weakly verifiable puzzles} has been coined by Canetti, Halevi, and Steiner in the paper
+he notion of the \textit{weakly verifiable puzzles} has been coined by Canetti, Halevi, and Steiner in the paper
 \textit{Hardness amplification of weakly verifiable puzzles} \cite{canetti2004hardness}.
 In comparison to Definition \ref{def:dwvp} the puzzles considered in \cite{canetti2004hardness} are neither dynamic nor interactive.
-Moreover, the number of verification queries is limited to one.
-This constitutes a special case to of Definition \ref{def:dwvp}.
+Moreover, the number of verification queries is limited to one. This constitutes a special case to of Definition \ref{def:dwvp}.
 In this section we provide the definition of weakly verifiable puzzles (WVP) that closely follows the one contained in \cite{canetti2004hardness}
 and state the theorem of hardness amplification of weakly verifiable puzzles in a similar vein as in \cite{canetti2004hardness}.
 Finally, we give an intuition behind the proof of this theorem.
@@ -201,7 +209,7 @@ It turns out that it is possible to use a similar technique of fixing puzzles on
 puzzles to prove the hardness amplification in this more general setting.
 %
 \section{Dynamic Interactive Weakly Verifiable Puzzles}
-\label{subsec:dijk}
+\label{section:dijk}
 Some of the cryptographic constructions presented in Section~\ref{section:wvp_examples}
 are not only weakly verifiable but also dynamic (MAC and SIG). This type of puzzles are defined and studied in \cite{Dodis:2009:SAI:1530441.1530450}.
 We give a short overview of this work, state the definition of a \textit{dynamic weakly verifiable puzzle} that closely follows
@@ -395,6 +403,7 @@ the approach similar to the one presented in Section~\ref{subsec:chs}. Namely, w
 choosing the position uniformly on random as in \cite{Dodis:2009:SAI:1530441.1530450}.
 
 \section{Interactive Weakly Verifiable Puzzles}
+\label{section:iwvp}
 % \begin{todo}
 %   \textbf{TODO:} Justify why you do not give a more detail description of the
 %   algorithm as in the previous sections . \\
@@ -457,14 +466,6 @@ Furthermore, in the previous sections we considered solvers for the $k$-wise dir
 solves all puzzles (\cite{canetti2004hardness}) or allowed a fraction of puzzles to be solved incorrectly (\cite{Dodis:2009:SAI:1530441.1530450}).
 In the above definition a more general case is considered where we use a binary monotone function $g$.
 More precisely we are interested functions that are binary monotonously non-decreasing.
-
-We emphasize that the monotone restriction on $g$ is essential. For $g(b) := 1 - b$ an algorithm that
-deliberately gives incorrect answers satisfies $g$ with probability $1$ whereas an algorithm that solves a puzzle successfully with probability
-$\gamma > 0$ succeeds only with probability $1 - \gamma$.
-A desirable property for the solver for the $k$-wise direct product of interactive weakly verifiable puzzles is that
-an algorithm that solves puzzles on all coordinates with the higher probability
-does not solve the $k$--wise direct product with probability lower than an algorithm
-that success probability on these coordinates is lower.
 
 The proof technique used by T.Holenstein and G.Schoenebeck is similar to the one presented in Section \ref{subsec:chs}.
 In chapter \ref{ch:main_result} we use very similar approach and fix puzzles on consecutive coordinates of the $n$-wise direct product.
