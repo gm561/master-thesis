@@ -1,12 +1,20 @@
-\section{Examples}
-\label{section:wvp_examples}
-In this section we give examples of cryptographic constructions that motivate studies of different types of weakly verifiable puzzles.
+%
+In the previous chapter we defined dynamic interactive weakly verifiable puzzles(DIWVPs), the $k$-wise direct product of DIWVP,
+and stated the hardness amplification theorem for DIWVP.
+In this chapter we give an overview of well known cryptographic primitives that can be seen as different types of weakly verifiable puzzles.
+First, in Section \ref{section:mac} we describe message authentication codes which game based security definition can be seen being a dynamic weakly verifiable puzzle.
+In Section \ref{section:pks} we describe public key signature schemes and give
+the chosen-message attack security definition of public key signature schemes which is an example of dynamic weakly verifiable puzzle.
+Then, in Section \ref{section:bc} we focus on bit commitment protocols that binding property can be seen as interactive weakly verifiable puzzle.
+Finally, in Section \ref{section:att} we describe a problem of solving CAPTCHAs that can be considered to be a weakly verifiable puzzle.
 
-\subsection{Message authentication codes}
-Message authentication codes are an example of dynamic non-interactive weakly verifiable puzzles.
+\section{Message Authentication Codes}
+\label{section:mac}
+In this section we describe message authentication codes (MAC) and conclude that the game based definition of MAC
+security can be seen being a dynamic non-interactive weakly verifiable puzzle.
 
-Let us consider a setting in which two parties, a \textit{sender} and a \textit{receiver}, communicate over an insecure channel.
-Messages of the sender may be intercepted, modified, and replaced by a third party called an \textit{adversary}.
+Let us consider the setting in which two parties, a \textit{sender} and a \textit{receiver}, communicate over an \textit{insecure channel} where
+messages of the sender may be intercepted, modified, and deleted by a third party called an \textit{adversary}.
 The receiver needs a way to ensure that the received messages were indeed sent by the sender and were not modified by the adversary.
 The solution is to use \textit{message authentication codes}.
 
@@ -16,45 +24,46 @@ Furthermore, we assume that the sender and the receiver share a secret key to wh
 The sender appends to every message a tag which is computed as a function of the key and the message.
 The receiver, using the key, has a way to efficiently check whether an appended tag is valid for a received message.
 The receiver accepts a message if the tag is valid, otherwise it rejects.
-We require that it is hard for the adversary to find a tag and a message that was not sent before and is
-accepted by the receiver with the non-negligible probability. We give the following formal definition
-of \textit{message authentication codes} based on \cite{LectureNotesCrypo, Goldreich:2004:FCV:975541}.
+We require that it is hard for the adversary to find a tag and a message that was not sent before and
+with the non-negligible probability is accepted by the receiver.
+
+Below we give the formal definition of a \textit{message authentication code} based on \cite{LectureNotesCrypo, Goldreich:2004:FCV:975541}.
 %
-\begin{definition}[Message Authentication Codes]
+\begin{definition}[Message Authentication Code]
   \label{def:mac}
   Let $\cM$ be a set of messages, $\cK$ a set of keys and $\cT$ a set of tags.
-  We define the \textit{message authentication code} (MAC) as an efficiently computable function $f:\cM \times \cK \rightarrow \cT$.
-  Furthermore, we say that MAC is \textit{secure} if it satisfies the following condition:
+  A \textit{Message authentication code} (MAC) is defined by an efficiently computable function $f:\cM \times \cK \rightarrow \cT$.
+  We say that MAC is \textit{secure} if $f$ satisfies the following condition:
 
-  Let $k$ be chosen uniformly at random from $K$ and $H$ be a polynomial size circuit with hard-coded $k$
-  that takes as input a message $m \in \cM$ and outputs a tag $t \in \cT$
-  such that $f(m,k) = t$. We say that MAC is secure if there is no probabilistic polynomial time algorithm
+  Let $k$ be chosen uniformly at random from $\cK$ and $H$ be a polynomial size circuit with hard-coded $k$
+  that takes as input a message $m \in \cM$ and outputs a tag $t \in \cT$ such that $f(m,k) = t$.
+  We say that MAC is secure if there is no probabilistic polynomial time algorithm
   with oracle access to $H$ that with non-negligible probability outputs a message $m \in \cM$
   as well as a corresponding tag $t \in \cT$ such that $f(m, k) = t$, and $H$ has not been queried on $m$.
 \end{definition}
 
-%TODO this still can be improved
-We will show now how a task of breaking the security of MAC is captured by the solving a dynamic weakly verifiable puzzle
+We describe how a task of breaking the security of MAC can be seen as solving a dynamic weakly verifiable puzzle
 where at most one verification query is asked.
 For fixed $f$ and $n \in \N$ the sender corresponds to the problem poser and the adversary to the solver.
-Furthermore, the key corresponds to the randomness $\pi \in \{0,1\}^{n}$ used by the problem poser.
-The set $\cQ$ is a set of messages $\cM$.
+Furthermore, the key $k_{\pi}$ depends on the randomness $\pi \in \{0,1\}^{n}$ used by the problem poser.
+The set $\cQ$ is the set of messages $\cM$.
 
 In the first phase, which is non-interactive, neither the problem poser nor the solver send any messages.
 The problem poser outputs a hint circuit $\Gamma_H$ and a verification circuit $\Gamma_V$ where both circuits
 have hard-coded $\pi$.
 The circuit $\Gamma_H$ corresponds to the circuit $H$ from Definition \ref{def:mac} and takes as input
-a message $m$ and outputs a tag $t$ such that $f(m, \pi) = t$.
-The circuit $\Gamma_V$ takes as input $m \in \cM$ and $t \in \cT$ and outputs $1$ if and only if $f(m, \pi) = t$.
+a message $m$ and outputs a tag $t$ such that $f(m, k_{\pi}) = t$.
+The circuit $\Gamma_V$ takes as input $m \in \cM$ and $t \in \cT$ and outputs $1$ if and only if $f(m, k_{\pi}) = t$.
 In the second phase, the solver takes no input ($x$ is empty string), is given oracle access to $\Gamma_H$ and $\Gamma_V$ and
 can ask at most one verification query.
 
-Thus, the task of the adversary to find a valid tag $t \in \cT$ for a message $m \in \cM$ such that the hint query for $m$
-has not been asked before corresponds to asking a successful verification query by a problem solver to $\Gamma_V$.
+Thus, the task of the adversary to find a valid tag $t \in \cT$ for some message $m \in \cM$ such that the hint query for $m$
+has not been asked before corresponds to making a successful verification query by a problem solver to $\Gamma_V$.
 %
-\subsection{Public key signature schemes}
-In this section we study \textit{public key signature schemes} that game base security can be shown to be equivalent
-to dynamic, non-interactive weakly verifiable puzzles.
+\section{Public Key Signature Schemes}
+\label{section:pks}
+In this section we describe \textit{public key signature schemes} which the game base security definition
+for the chosen message attack can be seen as a dynamic, non-interactive weakly verifiable puzzle.
 
 First, we give a definition of \textit{public key encryption schemes}, and what it means for such schemes to be secure.
 The definitions are based on \cite{Goldreich:2004:FCV:975541}.
@@ -74,7 +83,7 @@ such that the following conditions are satisfied:
     \begin{align*}
       \Pr[V(k_{pub}, q, S(k_{priv}, q))] = 1
     \end{align*}
-    where the probability is over the randomness of $V$ and $S$.
+    where the probability is over the randomness $S$.
 \end{enumerate}
 \end{definition}
 We say that $s \in \cS$ is a \textit{valid signature} for $q \in \cQ$ if and only if $V(k_{pub}, q, s) = 1$.
@@ -83,16 +92,16 @@ It seems that a game of breaking security of the public key signature scheme is 
 to efficiency check the correctness of the solution. However, we will show that this situation sill can be modeled as a dynamic interactive weakly verifiable puzzle
 where the solver has access to the verification circuit and can ask a polynomial number of verification queries.
 %
-\begin{definition}\textbf{(Security of a public key signature scheme with respect to a chosen message attack)}
+\begin{definition}\textbf{(Security of a public key signature scheme with respect to a chosen message attack.)}
   \label{def:sec_sig}
-Let $H$ be a circuit that has hard-coded $k_{priv}$ and takes as input $q$ and outputs $S(k_{priv}, q)$.
-Let an \textit{adversary} $A$ be a probabilistic polynomial time algorithm that takes as input $k_{pub}$ and has oracle access to $H$.
+Let $H$ be a polynomial size circuit that has hard-coded $k_{priv}$ and takes as input $q$ and outputs $S(k_{priv}, q)$.
+An \textit{adversary} $A$ is a probabilistic polynomial time algorithm that takes as input $k_{pub}$ and has oracle access to $H$.
 We say that $A$ \textit{succeeds} if it finds a valid signature $s \in \cS$ for a message $q \in \cQ$ and the oracle $H$ has not been queried for a signature of $q$.
 The public key encryption scheme is \textit{secure} if there is no polynomial time adversary that succeeds with non-negligible probability.
 \end{definition}
 %
-We will describe how a task of breaking the security of the public key signature scheme defined
-as above can be represented as a dynamic weakly verifiable puzzle.
+We will describe how a task of breaking the security of the public key signature scheme can be
+seen as a dynamic non-interactive weakly verifiable puzzle.
 
 The problem poser correspond to $G$ and the solver to the adversary. The set $Q$ is a set of messages.
 In the first phase, the problem poser obtains $k_{pub}$, $k_{priv}$ and sends $k_{pub}$ to the solver.
@@ -100,34 +109,35 @@ Then, the problem poser generates a hint circuit $\Gamma_H$ and a verification c
 The hint circuit $\Gamma_H$ corresponds to the circuit $H$ from Definition \ref{def:sec_sig} and takes as input $q \in \cQ$ and outputs a valid signature for $q$.
 The verification circuit $\Gamma_V$ takes as input $s \in \cS$ and $q \in \cQ$ and outputs $1$ if and only if $s \in \cS$ is a valid signature for $q \in \cQ$.
 In the second phase, the solver takes as input a transcript of the messages from the first round which consists solely of $k_{pub}$.
-Additionally, it is given oracle access to $\Gamma_V$ and $\Gamma_H$. It can make the polynomial number of queries to $\Gamma_H$ and $\Gamma_V$.
-Whenever an adversary calls $V$ this can me simulated as a verification query to $\Gamma_V$.
+Additionally, the solver is given oracle access to $\Gamma_V$ and $\Gamma_H$ and can make the polynomial number of queries to $\Gamma_H$ and $\Gamma_V$.
+An adversary calls to $V$ can be simulated by making a verification query to $\Gamma_V$.
 It is clear that if the solver asks a successful verification query $(q,s)$,
 then there exists an adversary that also finds a valid signature for $q$.
 
-Thus, a task of finding a valid signature by the adversary in a public key signature scheme is a weakly verifiable puzzle that
+Thus, a task of finding a valid signature by the adversary in a public key signature scheme can be seen as a weakly verifiable puzzle that
 is dynamic but non-interactive as in the first phase only a single message is sent.
 
-\subsection{Bit commitments}
-In this section we describe a \textit{bit commitment protocol}
-for which a task of breaking the binding property can be modeled as an interactive, non-dynamic weakly verifiable puzzle where $|\cQ| = 1$.
+\section{Bit Commitment Protocols}
+\label{section:bc}
+In this section we describe \textit{bit commitment protocols}. A task of breaking the binding property of
+a bit commitment protocol can be seen as an interactive, non-dynamic weakly verifiable puzzle where $|\cQ| = 1$.
 
-Let us consider the following \textit{bit commitment protocol} that involves two parties, a \textit{sender} and a \textit{receiver}.
+Loosely speaking, we consider the following \textit{bit commitment protocol} that involves two parties, a \textit{sender} and a \textit{receiver}.
 We suppose that the sender and the receiver are polynomial time probabilistic algorithms.
 The protocol consists of a \textit{commit phase} and a \textit{reveal phase}.
 In the commit phase the sender and the receiver interact, as the result the sender commits to a value $b \in \{0,1\}$.
 We require that after the commit phase it is hard for the receiver to correctly guess $b$.
 In the reveal phase the sender opens the commitment by sending to the receiver a pair $(b', y)$ where $y \in \{0,1\}^{*}$
 should convince the receiver that the sender committed in the commit phase to the value $b' \in \{0,1\}$.
-A desirable property of a bit commitment protocol is that in the reveal phase it should be hard for
+A desirable property of a bit commitment protocol is that in the reveal phase it is hard for
 the sender to find two bitstrings $y_0$ and $y_1$ such that the receiver recognizes both $(0,y_0)$ and $(1, y_1)$ to be valid decommitments.
 
-We base the following definition of a \textit{bit commitment protocol} on \cite{LectureNotesComThCrypto}.
+We base the following formal definition of a \textit{bit commitment protocol} on \cite{LectureNotesComThCrypto}.
 \begin{definition}[Bit Commitment Protocol]
   \label{def:bit_commitment}
 A \textit{bit commitment protocol} is defined by families of circuits $\{S_n\}_{n \in \N}$ and $\{R_n\}_{n \in \N}$
 where $S_n = (S_1, S_2)$ is a two-phase probabilistic circuit, $R_n$ is a probabilistic circuit, and
-$n~\in~\N$ is a security parameter. We call $S_n$ the sender and $R_n$ the receiver.
+$n~\in~\N$ is a security parameter. We call $S_n$ the \textit{sender} and $R_n$ the \textit{receiver}.
 The circuit $S_1$ takes as input a pair $(b, \rho_S)$ where $b \in \{0,1\}$ is interpreted as a bit to which $S$ commits, and $\rho_S \in \{0,1\}^{*}$ is the randomness used by $S$.
 The receiver $R_n$ uses the randomness $\rho_R \in \{0,1\}^{*}$.
 The protocol consists of two phases. In the \textit{commit phase}, $S_1$ and $R_n$ engage in the protocol execution.
@@ -159,26 +169,27 @@ where $\epsilon(n)$ is a negligible function of $n$.
 \end{definition}
 
 Breaking the binding property of a bit commitment protocol can be seen as a problem of solving
-an interactive weakly verifiable puzzle. The number of hint queries is zero, and the number of the verification queries is at most one.
-This means that the puzzle is non--dynamic.
+an interactive weakly verifiable puzzle.
 The receiver corresponds the problem poser and the solver to the sender that tries to break the binding property of the bit commitment protocol.
+The number of hint queries is zero, and the number of the verification queries is at most one. Thus, we conclude that the puzzle is non-dynamic.
 
-In the first phase, the solver uses its randomness to choose a bit to which it commits. Then, the solver interacts with the problem poser.
+In the first phase, the solver uses its randomness to choose a bit to which it commits. Then, it engage in interaction with the problem poser.
 
-When the interaction in the commit phase is completed the problem poser generates a circuit $\Gamma_V$
-that takes as input $y_0 \in \{0,1\}^{*}$, $y_1 \in \{0,1\}^{*}$ and outputs $1$
+When the interaction in the commit phase is completed the problem poser generates circuits $\Gamma_V$, $\Gamma_H$.
+The circuit $\Gamma_H$ takes as input $y_0 \in \{0,1\}^{*}$, $y_1 \in \{0,1\}^{*}$ and outputs $1$
 if and only if $V(0,y_0) = 1 \land V(1,y_1) = 1$. The hint circuit $\Gamma_H$ outputs $\bot$ for any query.
-Thus, without loss of generality we assume that the solver does not ask any verification queries.
-For the bit commitment protocols $|\cQ| = 1$, and we do not write explicitly on which $q \in \cQ$ the solver asks a verification query.
+Thus, without loss of generality, we assume that the solver does not ask any verification queries.
+Furthermore, for the bit commitment protocols $|\cQ| = 1$, thus we do not write explicitly on which $q \in \cQ$ the solver asks a verification query.
 
 In the second phase, the solver is given oracle access to $\Gamma_V$ and is allowed to ask at most one verification query.
-We emphasize that the solver has only black box access to $\Gamma_V$. Therefore, it has no efficient way to check whether
+We emphasize that the solver has only oracle access to $\Gamma_V$. Therefore, it has no efficient way to check whether
 the solution is successful except asking a verification query.
 
-Finally, we notice that for the problem poser and the solver defined as above a task of asking a successful verification query
+Finally, we conclude that for the problem poser and the solver defined as above a task of making a successful verification query
 corresponds to breaking the binding property of the bit commitment protocol.
 
-\subsection{Automated Turing tests}
+\section{Automated Turing Tests}
+\label{section:att}
 In this section we describe CAPTCHAs which can be seen as non-dynamic
 and non-interactive weakly verifiable puzzles.
 
@@ -188,26 +199,31 @@ Loosely speaking, CAPTCHA is a test for which it is hard to write a computer pro
 probability is comparable to or higher than the one achieved by humans. An example is an image
 depicting a distorted text where the goal is to guess the text used to generate the image.
 
-CAPTCHAs based on guessing the distorted text can be seen as a problem os solving a weakly verifiable puzzles.
+A task of solving a CAPTCHA based on guessing the distorted text can be seen as a non-dynamic,
+non-interactive weakly verifiable puzzle.
 In the first round the problem poser sends the solver an image containing the distorted text.
 Then, the problem poser generates circuits $\Gamma_V$ and $\Gamma_H$.
 The circuit $\Gamma_V$ takes as input a bitstring $y$ and outputs $1$
 if and only if $y$ correctly encodes the text depicted on the distorted image.
 A hint circuit $\Gamma_H$ outputs $\bot$ in response to every query.
-Therefore, without loss of generality we assume that the solver makes no hint queries.
+Therefore, without loss of generality, we assume that the solver makes no hint queries.
 
 In the second phase, the solver takes as input the image with the distorted text, has oracle access to $\Gamma_V$
-and can ask at most a single verification query. In general, checking whether a solution is correct is
-as hard as finding a correct solution.
-Therefore, guessing a text depicted on the image is weakly verifiable non-interactive and non-dynamic puzzle.
+and can ask at most a single verification query. In general, for CAPTCHAs checking the correct of a solution is
+comparably hard to finding a correct solution.
+Thus we conclude that a task of correctly guessing a text depicted on the image can be seen as a weakly verifiable non-interactive and non-dynamic puzzle.
 
-It is not known how good an algorithm for recognizing CAPTCHA can be. Thus, it is likely that a gap between human
-performance and a performance of a computer program may be small. Therefore, it is of interest to find a way to amplify this gap.
+It is not known how good an algorithm for solving CAPTCHAs can be. Thus, it is likely that a gap between the human
+performance and a performance of the best computer programs may be small. We are interested in finding a way to amplify this gap.
 In the paper \cite{DBLP:journals/corr/abs-1002-3534} it was shown that this is possible if the parallel repetition of non-dynamic
 interactive weakly verifiable puzzles is used where a solver is given $n$ independent weakly verifiable puzzles.
-The verifier accepts if the solver succeeds on at least some fraction of these puzzles.
-For well chosen $n$ it is possible to construct a weakly verifiable puzzle for which the success probability of a computer program is at most $\epsilon$ and
-which is still easy for humans that succeed with at least probability $1 - \epsilon$ where $\epsilon \in (0,1)$.
+The verifier for the parallel repetition accepts if the solver succeeds on at least some fraction of these puzzles.
+
+In Chapter \ref{ch:intro_weakly} we define the $k$-wise direct product of puzzles and state the similar theorem about hardness amplification
+for dynamic weakly verifiable puzzles as in \cite{DBLP:journals/corr/abs-1002-3534}.
+If this hardness amplification theorem was true, then it would be possible to construct a weakly verifiable puzzle
+for which is very hard for even the best computer programs but is still very easy for humans
+(under the assumption that humans have a noticeable advantage over computer programs).
 
 %%% Local Variables:
 %%% mode: latex

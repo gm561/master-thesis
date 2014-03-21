@@ -102,30 +102,27 @@
 \label{ch:preliminaries}
 \input{preliminaries}
 %
-\chapter{Weakly Verifiable Cryptographic Primitives}
+\chapter{Dynamic Interactive Weakly Verifiable Puzzles}
 \label{ch:intro_weakly}
 This chapter gives an overview of weakly verifiable cryptographic primitives.
-First, we introduce a definition of a \textit{dynamic interactive weakly verifiable puzzle} in Section \ref{section:wvp}.
+First, in Section \ref{section:wvp} we give the definition of a \textit{dynamic interactive weakly verifiable puzzle}.
 Then, in Section \ref{section:hardness_amplification_diwvp} we define the direct product of puzzles and state the hardness
-amplification theorem which is the primary focus of this thesis. To provide more intuition in Section \ref{section:wvp_examples}
-we describe a~series of well known cryptographic primitives that are weakly verifiable.
+amplification theorem for dynamic interactive weakly verifiable puzzles which is the primary focus of this thesis.
+To provide more intuition in Section \ref{section:wvp_examples} we describe a~series of well known
+cryptographic primitives that can be seen as different types of weakly verifiable puzzles.
 %
 \input{def_diwvp}
+
+\chapter{Examples of Weakly Verifiable Cryptographic Primitives}
+\label{ch:examples_wvcp}
 \input{examples}
 %
 \chapter{Previous Results}
+\label{ch:previous_results}
 \input{previous}
 %
-\chapter{Hardness Amplification for Weakly Verifiable Puzzles}
+\chapter{Hardness Amplification for Dynamic Interactive Weakly Verifiable Puzzles}
 \label{ch:main_result}
-In the previous chapter we gave an overview of the former studies of different types of weakly verifiable puzzles.
-The focus of this chapter is on giving a constructive proof of hardness amplification for dynamic interactive weakly verifiable puzzles.
-In Section \ref{st:main_theorem_def} we formulate the main theorem which is then proved in the succeeding sections.
-We begin, in Section \ref{st:domain_partition}, by constructing an algorithm that finds an efficiently computable function used
-to partition the domain of hint and verification queries. Then, in Section \ref{st:amplification_proof} we prove
-hardness amplification of dynamic interactive weakly verifiable puzzles under the assumption that for partitioned domains
-the success probability of a solver for the product of puzzles is still substantial.
-Finally, in Section \ref{st:put_together} we complete the proof by combining the previous steps.
 %
 % section{Main theorem}
 \input{interactive_proof/interactive_proof}
