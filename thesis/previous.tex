@@ -1,29 +1,31 @@
 \label{st:previous_results}
-The focus of this chapter is on the previous research concerning different types of weakly verifiable puzzles
-that have been studied in a series of works \cite{canetti2004hardness, Dodis:2009:SAI:1530441.1530450, DBLP:journals/corr/abs-1002-3534}.
-We give a short overview of the techniques used in these papers and aim to provide some intuition and insight into
-the problem of the hardness amplification for dynamic interactive weakly verifiable puzzles.
-First, we introduce the notion of a \textit{weakly verifiable puzzles} which are non-interactive and non-dynamic puzzles studied in
-\cite{canetti2004hardness}. Then, in Section \ref{section:dijk} we bring our focus on dynamic non-interactive puzzles studies in \cite{Dodis:2009:SAI:1530441.1530450}.
+In the last chapter we gave an overview of different types of cryptographic primitives that motivated studies of weakly verifiable puzzles.
+The focus of this chapter is on giving the outline of the previous research concerning different types of weakly verifiable puzzles
+We give a short overview of the techniques used in the series of papers \cite{canetti2004hardness, Dodis:2009:SAI:1530441.1530450, DBLP:journals/corr/abs-1002-3534}
+and aim to provide some intuition and insight into the problem of the hardness amplification for dynamic interactive weakly verifiable puzzles.
+First, we introduce the notion of the \textit{weakly verifiable puzzles} that are neither interactive nor dynamic and are studied in
+\cite{canetti2004hardness}. Then, in Section \ref{section:dijk} we bring our focus on the dynamic non-interactive puzzles studies in \cite{Dodis:2009:SAI:1530441.1530450}.
 Finally, in Section \ref{section:iwvp} we give an overview of results of Holenstein and Schoenebeck \cite{DBLP:journals/corr/abs-1002-3534} where
 non-dynamic and interactive weakly verifiable puzzles have been studied.
 %
 \section{Weakly Verifiable Puzzles}
 \label{subsec:chs}
-he notion of the \textit{weakly verifiable puzzles} has been coined by Canetti, Halevi, and Steiner in the paper
+The notion of \textit{weakly verifiable puzzles} has been coined by Canetti, Halevi, and Steiner in the paper
 \textit{Hardness amplification of weakly verifiable puzzles} \cite{canetti2004hardness}.
-In comparison to Definition \ref{def:dwvp} the puzzles considered in \cite{canetti2004hardness} are neither dynamic nor interactive.
-Moreover, the number of verification queries is limited to one. This constitutes a special case to of Definition \ref{def:dwvp}.
+In comparison to Definition \ref{def:dwvp} the puzzles considered in \cite{canetti2004hardness} are non-dynamic and non-interactive.
+Moreover, the number of verification queries is limited to one. This constitutes a special case of Definition \ref{def:dwvp}.
 In this section we provide the definition of weakly verifiable puzzles (WVP) that closely follows the one contained in \cite{canetti2004hardness}
 and state the theorem of hardness amplification of weakly verifiable puzzles in a similar vein as in \cite{canetti2004hardness}.
-Finally, we give an intuition behind the proof of this theorem.
-It is noteworthy that the main proof of this Thesis, contained in Chapter \ref{ch:main_result},
+Finally, we give an intuition behind the proof of this theorem. It is noteworthy that the main proof of this Thesis, contained in Chapter \ref{ch:main_result},
 uses many ideas of the work of Canetti, Halevi, and Steiner \cite{canetti2004hardness}.
 %
 \subsection{Definition of weakly verifiable puzzles}
-\begin{definition}[Weakly Verifiable Puzzles, \cite{canetti2004hardness}]
+The following definition corresponds to the definition of weakly verifiable puzzles from \cite{canetti2004hardness}
+but uses the notation and terminology used in this Thesis.
+
+\begin{definition}[Weakly Verifiable Puzzles, informal \cite{canetti2004hardness}]
   \label{def:wvp}
-A \textnormal{weakly verifiable puzzle} is defined by a pair of polynomial time algorithms:
+A \textit{weakly verifiable puzzle} is defined by a pair of polynomial time algorithms:
 a probabilistic puzzle--generation algorithm $G$ and a deterministic verification algorithm $V$.
 We write $G(1^k; \rho)$ to denote that $G$ takes as input a bitstring $1^k$, where $k$ is a security parameter,
 and the randomness $\rho \in \{0,1\}^{*}$.
