@@ -4,7 +4,7 @@
 % The final sentences explain the major implications of your work. A good abstract is concise, readable, and quantitative.
 % Length should be ~ 1-2 paragraphs, approx. 400 words.
 %
-% Absrtracts generally do not have citations.
+% Abstracts generally do not have citations.
 % Information in title should not be repeated.
 % Be explicit.
 % Use numbers where appropriate.
@@ -14,17 +14,31 @@
 % How did you do it? State methods.
 % What did you learn? State major results.
 % Why does it matter? Point out at least one significant implication.
-
+%
+%
 % 1) new hardness proof
 % 2) it is possible to start with a weak crypto primitive and obtain strong one.
 % 3) a natural puzzle fixing technique similar to the one used in the classical proofs of weak one-way function implying strong ones
 % 4) uses an arbitrary monotone function to decide the result
 % 5) compare with previous works
 % 6)
+%
+We give a proof of hardness amplification for a new type of Weakly Verifiable Puzzles that generalize the previous research.
 
-We give a new proof of hardness amplification for Dynamic Weakly Verifiable Puzzles which is more general than the previous ones.
+An important question in cryptography is whether it is possible to build cryptographic construction that is strongly hard to solve
+from a one that is only weakly hard. The well known result of this type is about building a strong one-way function using functions that
+are only weakly hard.
 
-Our proof applies to the various cryptographic primitives like hash function,
-one way functions, signature schemes and bit commitment protocols.
+The problem of hardness amplification has been studied for various variants of Weakly Verifiable Puzzles
+where a solution cannot be efficiently verified by a party that solves a puzzle.
+It has been shown \cite{Dodis:2009:SAI:1530441.1530450} that it possible to amplify hardness for Dynamic Weakly Verifiable Puzzles,
+which covers cryptographic primitives like message authentication codes and signature schemes.
+In \cite{DBLP:journals/corr/abs-1002-3534} a similar result has been proven for Interactive Weakly Verifiable Puzzles that
+embraces constructions like bit commitment protocols.
 
+In this thesis we introduce the notion of \textit{Dynamic Interactive Weakly Verifiable Puzzles}
+that generalize previous definitions of Dynamic and Interactive Weakly Verifiable Puzzles.
+Furthermore, we prove that if there is no probabilistic algorithm that solves a single puzzle with probability more than $\delta - \epsilon$,
+then there is no algorithm that solves $k$ independent instances of puzzles with probability higher than an algorithm that solves each of the $k$ puzzles
+independently with probability $\delta$ and where an arbitrary binary monotone function is used to decide which of the $k$ puzzle has to be solved.
 \end{abstract}
