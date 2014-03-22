@@ -40,53 +40,53 @@ and define the \textnormal{success probability} of $S$ in solving a puzzle defin
 We write $P := (G,V)$ to denote a weakly verifiable puzzle $P$ defined by algorithms $G$ and $V$.
 \end{definition}
 
-Let us argue that the Definition \label{def:wvp} is a special case of Definition \ref{def:dwvp}.
-First, we see that in Definition \ref{def:wvp} the algorithm $G$ takes as input $1^k$.
-That means that the length of the randomness used by $G$ is bounded by some polynomial $p(k)$.
-For a fixed $k$, without loss of generality, we can represent the algorithm $G(1^k; \rho)$ as a probabilistic circuit of polynomial size
-that takes as input only the randomness $\rho$ of length bounded by some polynomial $p(k)$.
+Let us argue that Definition \ref{def:wvp} is a special case of Definition \ref{def:dwvp}.
+First, we note that for the efficient algorithm $G$ that takes as input $1^k$ the length of the randomness used by $G$ is bounded by some polynomial $p(k)$.
+For a fixed $k$, without loss of generality, we can represent $G(1^k; \rho)$ as a probabilistic circuit of polynomial size
+that takes as input only the randomness $\rho$.
 The security parameters from Definition \ref{def:wvp} and Definition \ref{def:dwvp} are not equivalent,
 as in the later definition the security parameter limits the length of the random bistring.
 Moreover, in Definition \ref{def:wvp} a verification algorithm takes as input $p$, $c$, $a$.
 Again, without loss of generality, we can assume that bitstrings $p$ and $c$ are hard-coded
-in the circuit $\Gamma_V$ from Definition \ref{def:dwvp}. Hence, the algorithm $V$ corresponds to $\Gamma_V$.
-The puzzles considered in Definition \ref{def:wvp} are non--dynamic. Thus, there is no corresponding
-element for a hint circuit $\Gamma_H$ from Definition~\ref{def:dwvp}.
-Finally, the puzzles described in Definition~\ref{def:wvp} are non--interactive.
+in the circuit $\Gamma_V$ from Definition \ref{def:dwvp}. Hence, for fixed $p$ and $c$ the algorithm $V$
+corresponds to $\Gamma_V$. The puzzles considered in Definition \ref{def:wvp} are non--dynamic.
+Thus, there is no element corresponding to the hint circuit $\Gamma_H$.
+Finally, we note that the puzzles described in Definition~\ref{def:wvp} are non--interactive.
+%(the only message send in the first phase is the bitstring $p$).
 
 \subsection{The hardness amplification}
-We will formulate now the definition of the $n$-fold repetition of weakly verifiable puzzles along the lines of \cite{canetti2004hardness}.
-Later in this Thesis, for other types of weakly verifiable puzzles, we use the notion of a $k$-wise direct product of puzzles instead\footnote{We
-note that the terminology used to name the parallel repetition of weakly verifiable puzzles is not consistent.
-In \cite{canetti2004hardness} the notion of the \textit{$n$-fold direct product of puzzles} is used whereas in \cite{Dodis:2009:SAI:1530441.1530450}
-a similar construction that captures dynamic puzzles is named the \textit{$k$-wise repetition of puzzles}.
-In this Thesis we use the latter name.}.
+We will now give the definition of the $n$-wise direct product of weakly verifiable puzzles along the lines of \cite{canetti2004hardness}.
+% Later in this Thesis, for other types of weakly verifiable puzzles, we use the notion of a $k$-wise direct product of puzzles instead\footnote{We
+% note that the terminology used to name the parallel repetition of weakly verifiable puzzles is not consistent.
+% In \cite{canetti2004hardness} the notion of the \textit{$n$-fold direct product of puzzles} is used whereas in \cite{Dodis:2009:SAI:1530441.1530450}
+% a similar construction that captures dynamic puzzles is named the \textit{$k$-wise repetition of puzzles}.
+% In this Thesis we use the latter name.}.
 %
-\begin{definition}\textbf{($n$-fold repetition of weakly verifiable puzzles, \cite{canetti2004hardness}.)}
+\begin{definition}[$n$-wise direct product of weakly verifiable puzzles \cite{canetti2004hardness}.]
   \label{def:n-fold-rep}
   Let $n~\in~\N$ and a weakly verifiable puzzle $P = (G,V)$ be fixed.
   We define the $n$-fold repetition of $P$ as a weakly verifiable puzzle where the puzzle--generation algorithm
-  $G^{(n)}$ takes as input $1^k$, as an auxiliary input a bitstring $\rho \in \{0,1\}^{*}$
+  $G^{(n)}$ takes as input $1^{kn}$, as an auxiliary input a bitstring $\rho \in \{0,1\}^{*}$
   and outputs tuples $p^{(n)} := (p_1, \dotsc, p_n) \in \{0,1\}^{*}$ and $c^{(n)} := (c_1, \dotsc, c_k) \in \{0,1\}^{*}$
-  where for each $1 \leq i \leq n$ a pair $(p_i, c_i)$ is an independent instance of a weakly verifiable puzzle defined by $G$ and $V$ with security parameter $k$.
+  where for each $1 \leq i \leq n$ a pair $(p_i, c_i)$ is an independent instance of a weakly verifiable puzzle defined by $G$ and $V$ with the security parameter $k$.
   Finally, the verification algorithm $V^{(n)}$ takes as input $p^{(n)}$, $c^{(n)}$, an answer $a^{(n)}$, and outputs $b \in \{0,1\}$
   such that $b = 1$ if and only if for all $1 \leq i \leq n$ we have $V(p_i, c_i, a_i) = 1$.
  \end{definition}
 %
 Let us give some notation and terminology. We write $P^{(n)} := (G^{(n)}, V^{(n)})$ to denote the $n$--fold repetition of $P$.
-For $P^{(n) } := (G^{(n)},V^{(n)})$ when writing a \textit{puzzle on the $i$-th coordinate} we refer to the $i$-th puzzle of the $n$--fold repetition of WVP
+For $P^{(n) } := (G^{(n)},V^{(n)})$ when writing a \textit{puzzle on the $i$-th coordinate} we refer to the $i$-th puzzle of the $n$--fold repetition of $P$
 (this puzzle corresponds to the one generated by $G^{(n)}_i$,  $V^{(xn)}_i$).
 
-The $n$-fold repetition of weakly verifiable puzzles is solved successfully if and only if all $n$ puzzles are solved successfully.
-In contrast, in Chapter \ref{ch:main_result} we are interested in a more general situation where a monotone function $g: \{0,1\}^{n} \rightarrow \{0,1\}$ is used to decide
-which coordinates of the $n$-fold repetition of puzzles have to be solved correctly. A precise definition is given in Section \ref{st:main_theorem}.
-Clearly, we can assume that $g$ is such that all coordinates have to be solved successfully which matches the case considered in this section.
+The $n$-wise direct product of weakly verifiable puzzles is solved successfully if and only if all $n$ puzzles are solved successfully.
+In contrast, in Definition \ref{def:k_wise_direct_product} we are interested in a more general situation where a monotone function $g: \{0,1\}^{n} \rightarrow \{0,1\}$
+is used to decide which coordinates of the $n$-wise direct product of puzzles have to be solved correctly.
+Clearly, we can assume that $g$ is such that puzzles on all coordinates have to be solved successfully which matches the case considered in Definition \ref{def:n-fold-rep}.
 
 The main theorem proved in \cite{canetti2004hardness} states that it is possible to turn a good solver for $P^{(n)}$ to a good solver for $P$.
 %
-\begin{theorem}[Hardness amplification of weakly verifiable puzzles, \cite{canetti2004hardness}]
+\begin{theorem}[Hardness amplification for weakly verifiable puzzles \cite{canetti2004hardness}.]
   \label{thm:wvp_chs}
-Let $n:\N \rightarrow \N$ and $\delta: \N \rightarrow (0,1)$ be efficiently computable functions and $q \in \N$ a \textit{slackness parameter}.
+Let $n,q \in \N$ and $\delta: \N \rightarrow (0,1)$ be efficiently computable functions.
 Moreover, let $P = (G,V)$ be a weakly verifiable puzzle. We denote the running time of the
 puzzle--generation algorithm $G$ for $P$ by $T_G$ and of the verification algorithm $V$ for $P$ by $T_V$.
 If $S^{(n)}$ is a solver for the $n$--fold repetition of $P$ that success probability is at least $\delta^{n}$
@@ -95,13 +95,13 @@ probability is at least $\delta(1-\frac{1}{q})$ and the running time is $O\Big(\
 \end{theorem}
 %
 The following algorithm is used in \cite{canetti2004hardness} to prove Theorem \ref{thm:wvp_chs}.
-It transforms $S^{(n)}$ for $P^{(n)}$ with success probability at least $\delta^{n}$ to a solver for a single puzzle $P$ with probability
-at least $\delta(1  - \frac{1}{q})$. The slackness parameter $q$ is introduced as it is not possible to achieve
+It turns $S^{(n)}$ for $P^{(n)}$ with success probability at least $\delta^{n}$ into a solver for a single puzzle $P$ with probability
+at least $\delta(1  - \frac{1}{q})$. The parameter $q$ is introduced as it is not possible to achieve
 the perfect hardness amplification. We note that in the analysis of the running time of $\mathit{CHS\text{--}solver}$
-we explicitly take into account the time needed for the oracle calls to $S^{(n)}, V, G$.
+we explicitly take into account the time needed for the oracle calls to $S^{(n)}$, $V$, $G$.
 
 Let us denote by $p \in \{0,1\}^{*}$ an output of $G$, which is taken as input by $\mathit{CHS\text{--}solver}$.
-To make notation shorter in the following code excerpts we do not write randomness used by $G$ explicitly.
+To make the notation shorter in the following code excerpts we do not write the randomness used by $G$ explicitly.
 
 \begin{codeblock}
   \textbf{Algorithm:} $\mathit{CHS\text{--}solver}^{S^{(n)},V,G}(p, n, k, q, \delta)$
@@ -255,8 +255,7 @@ We write $P^{(n)} := (D^{(n)}, H^{(n)}, R^{(n)})$ to denote the $n$-wise direct 
 %
 \end{definition}
 
-In contrast to the $n$-fold repetition of puzzles defined in the previous section, here we
-require the solver to succeed only on a fraction of puzzles.
+In contrast to the $n$-fold repetition of puzzles defined in the previous section, here we require the solver to succeed only on a fraction of puzzles.
 
 Dynamic weakly verifiable puzzles generalize a games of breaking security of message authentication codes and public signature schemes.
 In case of MAC the adversary takes $x$ which is an empty string. For the public signature schemes $x$ is the public key.
@@ -511,7 +510,8 @@ In chapter \ref{ch:main_result} we use very similar approach and fix puzzles on 
 %   1) The algorithm always output an answer \\
 %   2) For every pi the surpluses $S_{\pi^*, 0}$ and $S_{\pi^*, 1}$ re less than $(1-\frac{1}{k})\epsilon$.\\
 % \end{todo}
-%%% Local Variables:
-%%% mode: latex
-%%% TeX-master: "thesis"
-%%% End:
+
+% Local Variables:
+% mode: latex
+% TeX-master: "thesis"
+% End:
