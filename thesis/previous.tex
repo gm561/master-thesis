@@ -19,7 +19,7 @@ and state the theorem of hardness amplification of weakly verifiable puzzles in 
 Finally, we give an intuition behind the proof of this theorem. It is noteworthy that the main proof of this Thesis, contained in Chapter \ref{ch:main_result},
 uses many ideas of the work of Canetti, Halevi, and Steiner \cite{canetti2004hardness}.
 %
-\subsection{Definition of weakly verifiable puzzles}
+\subsection{The definition}
 The following definition corresponds to the definition of weakly verifiable puzzles from \cite{canetti2004hardness}
 but uses the notation and terminology used in this Thesis.
 
@@ -57,7 +57,7 @@ The puzzles considered in Definition \ref{def:wvp} are non--dynamic. Thus, there
 element for a hint circuit $\Gamma_H$ from Definition~\ref{def:dwvp}.
 Finally, the puzzles described in Definition~\ref{def:wvp} are non--interactive.
 
-\subsection{Hardness amplification for weakly verifiable puzzles}
+\subsection{The hardness amplification}
 We will formulate now the definition of the $n$-fold repetition of weakly verifiable puzzles along the lines of \cite{canetti2004hardness}.
 Later in this Thesis, for other types of weakly verifiable puzzles, we use the notion of a $k$-wise direct product of puzzles instead\footnote{We
 note that the terminology used to name the parallel repetition of weakly verifiable puzzles is not consistent.
@@ -210,7 +210,7 @@ although it succeeds only on some coordinates of the $n$-fold repetition of $P$.
 It turns out that it is possible to use a similar technique of fixing puzzles on consecutive positions of the $n$-fold repetition of
 puzzles to prove the hardness amplification in this more general setting.
 %
-\section{Dynamic Interactive Weakly Verifiable Puzzles}
+\section{Dynamic Weakly Verifiable Puzzles}
 \label{section:dijk}
 Some of the cryptographic constructions presented in Section~\ref{section:wvp_examples}
 are not only weakly verifiable but also dynamic (MAC and SIG). This type of puzzles are defined and studied in \cite{Dodis:2009:SAI:1530441.1530450}.
@@ -218,7 +218,7 @@ We give a short overview of this work, state the definition of a \textit{dynamic
 the one included in \cite{Dodis:2009:SAI:1530441.1530450}. Finally, we provide intuition for the proof of the hardness amplification of DWVP
 included in \cite{Dodis:2009:SAI:1530441.1530450}.
 
-\subsection{Definition of interactive weakly verifiable puzzles}
+\subsection{The definition}
 \begin{definition}[Dynamic Weakly Verifiable Puzzle.]
   \label{def:dwvp_dodis}
   A \textnormal{dynamic weakly verifiable puzzle} (DWVP) is defined by a distribution $\cD$ on pairs $(x, \alpha)$
@@ -277,7 +277,7 @@ We define the \textit{success probability} of a solver $S$ for $P := (G,V)$ as
   {\Pr}\big[\exists (q,a) \in \cV_{verif} : q \notin \cH_{hint} \land V(q,a) := 1 \big]
 \end{align*}
 
-\subsection{Hardness amplification for dynamic weakly verifiable puzzles}
+\subsection{The hardness amplification theorem}
 \begin{theorem}\textbf{(Hardness amplification for dynamic weakly verifiable puzzles).}
 \label{lemma:dwvp}
 Let $S^{(n)}$ be a probabilistic algorithm for $P^{(n)}$ that succeeds with
@@ -416,7 +416,7 @@ choosing the position uniformly on random as in \cite{Dodis:2009:SAI:1530441.153
 The hardness amplification of interactive weakly verifiable puzzles has been studied by T.Holenstein and G.Schoenebeck in \cite{DBLP:journals/corr/abs-1002-3534}.
 We will give now an overview of this work and compare it with our approach.
 
-\subsection{Definition of interactive weakly verifiable puzzles}
+\subsection{The definition}
 The following definition of an \textit{interactive weakly verifiable puzzle} closely follow the one from \cite{DBLP:journals/corr/abs-1002-3534}.
 \begin{definition}
 An \textit{interactive weakly verifiable puzzle} is defined by a protocol given by two probabilistic algorithms $P$ and $S$.
@@ -442,7 +442,7 @@ Furthermore, a monotone binary function is used to determine whether the $k$-wis
 has been successfully solved. Unlike, puzzles in Definition \ref{def:dwvp}, the puzzles studied by T.Holenstein and G.Schoenebeck
 are non-dynamic. Thus, only a verification circuit $\Gamma$ is generated and no hint circuit is ever used.
 
-\subsection{Hardness amplification for interactive weakly verifiable puzzles}
+\subsection{The hardness amplification theorem}
 The following hardness amplification theorem is proved in \cite{DBLP:journals/corr/abs-1002-3534}.
 \begin{theorem}
 There exists an algorithm $\mathit{Gen}(C,g,\epsilon, \delta, n)$ which takes as input a solver circuit $C$ for the $k$-wise
