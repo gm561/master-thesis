@@ -1,12 +1,12 @@
 \label{st:previous_results}
 In the last chapter we gave an overview of different types of cryptographic primitives that motivated studies of weakly verifiable puzzles.
-The focus of this chapter is on giving the outline of the previous research concerning different types of weakly verifiable puzzles
-We give a short overview of the techniques used in the series of papers \cite{canetti2004hardness, Dodis:2009:SAI:1530441.1530450, DBLP:journals/corr/abs-1002-3534}
-and aim to provide some intuition and insight into the problem of the hardness amplification for dynamic interactive weakly verifiable puzzles.
-First, we introduce the notion of the \textit{weakly verifiable puzzles} that are neither interactive nor dynamic and are studied in
-\cite{canetti2004hardness}. Then, in Section \ref{section:dijk} we bring our focus on the dynamic non-interactive puzzles studies in \cite{Dodis:2009:SAI:1530441.1530450}.
-Finally, in Section \ref{section:iwvp} we give an overview of results of Holenstein and Schoenebeck \cite{DBLP:journals/corr/abs-1002-3534} where
-non-dynamic and interactive weakly verifiable puzzles have been studied.
+The focus of this chapter is on giving the outline of the previous research concerning different types of weakly verifiable puzzles.
+We give a short overview of techniques used in the series of papers \cite{canetti2004hardness, Dodis:2009:SAI:1530441.1530450, DBLP:journals/corr/abs-1002-3534}
+and provide some intuition and insight into the problem of the hardness amplification for weakly verifiable puzzles.
+First, we describe weakly verifiable puzzles studied in \cite{canetti2004hardness} that are neither interactive nor dynamic.
+Then, in Section~\ref{section:dijk} we bring our focus on the dynamic non-interactive puzzles studied in \cite{Dodis:2009:SAI:1530441.1530450}.
+Finally, in Section~\ref{section:iwvp} we give an overview of the results of Holenstein and Schoenebeck \cite{DBLP:journals/corr/abs-1002-3534}
+where non-dynamic but interactive weakly verifiable puzzles have been studied.
 %
 \section{Weakly Verifiable Puzzles}
 \label{subsec:chs}
@@ -20,15 +20,13 @@ Finally, we give an intuition behind the proof of this theorem. It is noteworthy
 uses many ideas of the work of Canetti, Halevi, and Steiner \cite{canetti2004hardness}.
 %
 \subsection{The definition}
-The following definition corresponds to the definition of weakly verifiable puzzles from \cite{canetti2004hardness}
-but uses the notation and terminology used in this Thesis.
+We give the definition of WVP that uses the notation and terminology used in this Thesis.
 
-\begin{definition}[Weakly Verifiable Puzzles, informal \cite{canetti2004hardness}]
+\begin{definition}[Weakly Verifiable Puzzles, \cite{canetti2004hardness}]
   \label{def:wvp}
 A \textit{weakly verifiable puzzle} is defined by a pair of polynomial time algorithms:
 a probabilistic puzzle--generation algorithm $G$ and a deterministic verification algorithm $V$.
-We write $G(1^k; \rho)$ to denote that $G$ takes as input a bitstring $1^k$, where $k$ is a security parameter,
-and the randomness $\rho \in \{0,1\}^{*}$.
+We write $G(1^k; \rho)$ to denote that $G$ takes as input a bitstring $1^k$, where $k$ is a security parameter and the randomness $\rho \in \{0,1\}^{*}$.
 The algorithm $G$ outputs a bitstring $p \in \{0,1\}^{*}$ and a check information $c \in \{0,1\}^{*}$.
 The \textnormal{verifier} $V$ is a deterministic algorithm that takes as input $p$, $c$, an answer $a \in \{0,1\}^{*}$
 and outputs $b \in \{0,1\}$.
@@ -41,13 +39,12 @@ and define the \textnormal{success probability} of $S$ in solving a puzzle defin
 \end{align*}
 We write $P := (G,V)$ to denote a weakly verifiable puzzle $P$ defined by algorithms $G$ and $V$.
 \end{definition}
-We compare the above definition with Definition \ref{def:dwvp}.
-First, we note that in Definition \ref{def:dwvp} we use the language of probabilistic circuits.
-This is more general than probabilistic polynomial time algorithms.
-Next, we see that in Definition \ref{def:wvp} the algorithm $G$ is parameterized by
-a bitstring $1^k$ meaning that the length of a random bitstring taken by $G$ is bounded by $poly(k)$.
-For a fixed $k$, without loss of generality, we can model the algorithm $G(1^k; \rho)$ as a polynomial size probabilistic circuit
-that does not take as input $1^k$, but just a bitstring $\rho$ of length $\mathit{poly}(k)$.
+
+Let us argue that the Definition \label{def:wvp} is a special case of Definition \ref{def:dwvp}.
+First, we see that in Definition \ref{def:wvp} the algorithm $G$ takes as input $1^k$.
+That means that the length of the randomness used by $G$ is bounded by some polynomial $p(k)$.
+For a fixed $k$, without loss of generality, we can represent the algorithm $G(1^k; \rho)$ as a probabilistic circuit of polynomial size
+that takes as input only the randomness $\rho$ of length bounded by some polynomial $p(k)$.
 The security parameters from Definition \ref{def:wvp} and Definition \ref{def:dwvp} are not equivalent,
 as in the later definition the security parameter limits the length of the random bistring.
 Moreover, in Definition \ref{def:wvp} a verification algorithm takes as input $p$, $c$, $a$.
@@ -285,8 +282,8 @@ probability at least $\epsilon$, where $\epsilon \geq (800/\gamma\delta) \cdot (
 denote the number of hint and verification queries asked by $S^{(n)}$ respectively.
 Then there exists a probabilistic algorithm $S$ that succeeds in solving $P$ with probability at least
 $1-\delta$ making $O(h(h+v)/\epsilon) \cdot \log(1/\gamma\delta)$ hint queries and at most one verification query.
-Furthermore, the running time is $\mathit{poly}(h,v,\frac{1}{\epsilon}, t, \omega, \log(1/\gamma\delta))$ where
-$\omega$ is time needed to ask a single hint query.
+Furthermore, the running time is polynomial in $h,v,\frac{1}{\epsilon}, t, \omega, \log(1/\gamma\delta)$ where
+$\omega$ is the time needed to ask a single hint query.
 \end{theorem}
 
 It is worth seeing why the approach presented in the previous section that works well for the $n$-fold repetition of WVP
@@ -316,7 +313,7 @@ In \cite{Dodis:2009:SAI:1530441.1530450} the following lemma is proved.
   \label{lemma:hash_function_previous}
 Let $S$ be a solver for DWVP which success probability is at least $\delta$, the running time is at most $t$,
 and the number of hint and verification queries is at most $h$ and $v$ respectively.
-There exists a probabilistic algorithm that runs in time $poly(h,v,\frac{1}{\delta},t)$
+There exists a probabilistic algorithm that runs in time polynomial in $h,v,\frac{1}{\delta},t$
 that outputs a function $\hash : \cQ \rightarrow \{0,1, \dotsc, 2(h+v)-1\}$
 that partitions $\cQ$ to $\cQ_{attack}$ and $\cQ_{adv}$ such that
 with probability at least $\frac{\delta}{8(h+v)}$ the first successful verification query $(q',a)$ asked by $S$ is such that $q' \in \cQ_{attack}$
@@ -458,7 +455,7 @@ then, $D$ satisfies almost surely,
 \end{align*}
 Additionally, $\mathit{Gen}$ and $D$ only require oracle access to $g$ and $C$.
 Furthermore, $\mathit{Size}(D) \leq \mathit{Size}(C) \cdot \frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$,
-and $\Time (\mathit{Gen}) = \poly(k, \frac{1}{\epsilon}, n)$ with oracle calls.
+and the running time of Gen is polynomial in $k, \frac{1}{\epsilon}, n$ with oracle calls.
 \end{theorem}
 
 First, we notice that the above definition does not impose any restrictions on the time complexity of the poser and the solver.

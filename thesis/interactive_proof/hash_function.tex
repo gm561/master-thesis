@@ -52,7 +52,7 @@ For a fixed problem poser $P_n$ let $C$ be a solver for $P_n$ with the success p
 asking at most $h$ hint queries and $v$ verification queries.
 Moreover, let $\cH$ be a family of pairwise independent efficient hash functions $\cQ \rightarrow \{0,1, \dots,2(h+v)-1\}$.
 There exists a probabilistic algorithm FindHash that takes as input parameters $\gamma$, $n$, $h$, $v$, and has oracle access to $C$ and $P_n$.
-Furthermore, FindHash runs in time $\poly(h,v,\frac{1}{\gamma},n)$ and with high probability outputs a function $\hash \in \cH$
+Furthermore, FindHash runs in time polynomial in $(h,v,\frac{1}{\gamma},n)$ and with high probability outputs a function $\hash \in \cH$
 such that the canonical success probability of $C$ with respect to $\hash$ is at least $\frac{\gamma}{16(h+v)}$.
 \end{lemma}
 %

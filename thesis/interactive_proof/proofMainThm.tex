@@ -76,8 +76,8 @@ Finally, $\widetilde{\text{Gen}}$ outputs $\widetilde{D} = (D_1, \widetilde{D}_2
 \begin{align*}
     \underset{\pi, \rho}{\Pr}\left[\Success^{P^{(1)},\widetilde{D}}(\pi, \rho) = 1\right] \geq (\delta + \frac{\varepsilon}{6k}).
 \end{align*}
-The running time of $\Gen$ $\mathit{poly(k, \frac{1}{\epsilon}, n)}$ with oracle calls.
-Thus, the overall running time of $\widetilde{\mathit{Gen}}$ is  $\mathit{poly(k,\frac{1}{\epsilon},h,v,n)}$ with oracle access.
+The running time of $\Gen$ is polynomial in $k, \frac{1}{\epsilon}, n)$ with oracle calls.
+Thus, the overall running time of $\widetilde{\mathit{Gen}}$ is  polynomial in $k,\frac{1}{\epsilon},h,v,n$ with oracle access.
 Furthermore, the circuit $\widetilde{D}$ asks at most $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})h$ hint queries and one verification query.
 Finally, we have $\mathit{Size}(\widetilde{D}) \leq \mathit{Size}(C) \cdot \frac{6k}{\epsilon}$.
 This finishes the proof of Theorem~\ref{th:sec_amp_for_dwvp}.

@@ -21,25 +21,25 @@
 % 3) a natural puzzle fixing technique similar to the one used in the classical proofs of weak one-way function implying strong ones
 % 4) uses an arbitrary monotone function to decide the result
 % 5) compare with previous works
-% 6)
 %
-We give a proof of hardness amplification for a new type of Weakly Verifiable Puzzles that generalize the previous research.
+We give a proof of hardness amplification for a new type of Weakly Verifiable Puzzles that generalize the previous approaches.
 
-An important question in cryptography is whether it is possible to build cryptographic construction that is strongly hard to solve
-from a one that is only weakly hard. The well known result of this type is about building a strong one-way function using functions that
-are only weakly hard.
+An important question in cryptography is whether it is possible to build cryptographic construction that is strongly hard
+from a one that is only weakly hard. The well known result of Yao states that it is feasible to build a strong one-way function
+from functions that are only weakly hard.
 
-The problem of hardness amplification has been studied for various variants of Weakly Verifiable Puzzles
-where a solution cannot be efficiently verified by a party that solves a puzzle.
-It has been shown \cite{Dodis:2009:SAI:1530441.1530450} that it possible to amplify hardness for Dynamic Weakly Verifiable Puzzles,
-which covers cryptographic primitives like message authentication codes and signature schemes.
-In \cite{DBLP:journals/corr/abs-1002-3534} a similar result has been proven for Interactive Weakly Verifiable Puzzles that
-embraces constructions like bit commitment protocols.
+Weakly Verifiable Puzzles can be seen as problems where a solution cannot be efficiently verified by a party that solves a puzzle.
+The problem of hardness amplification for various variants of Weakly Verifiable Puzzles has been
+studied in a series of papers \cite{canetti2004hardness, Dodis:2009:SAI:1530441.1530450, DBLP:journals/corr/abs-1002-3534}.
+Dodis, Impagliazz, Jaiswal, and Kabanets \cite{Dodis:2009:SAI:1530441.1530450} show that it possible to amplify hardness for Dynamic Weakly Verifiable Puzzles,
+which covers the case of cryptographic primitives like message authentication codes and signature schemes.
+Holenstein and Schoenebeck \cite{DBLP:journals/corr/abs-1002-3534} prove a similar result for Interactive Weakly Verifiable Puzzles that
+embraces the case of constructions like bit commitment protocols.
 
 In this thesis we introduce the notion of \textit{Dynamic Interactive Weakly Verifiable Puzzles}
-that generalize previous definitions of Dynamic and Interactive Weakly Verifiable Puzzles.
-Furthermore, we prove that if there is no probabilistic algorithm that solves a single puzzle with probability more than $\delta - \epsilon$,
-then there is no algorithm that solves $k$ independent instances of puzzles with probability higher than an algorithm that solves each of the $k$ puzzles
-independently with probability $\delta$ and where an arbitrary binary monotone function is used to decide which of the $k$ puzzle has to be solved.
+that combines the previous definitions of dynamic and interactive puzzles.
+Furthermore, we prove that if there is no efficient probabilistic algorithm that solves a single puzzle with probability higher than $\delta$,
+then there is no efficient algorithm that solves $k$ independent instances of puzzles with probability higher than an algorithm that solves each of the $k$ puzzles
+independently with probability $\delta$ and where an arbitrary binary monotone function is used to decide which of the $k$ puzzle should be solved.
 \end{abstract}
 
