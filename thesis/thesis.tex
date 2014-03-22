@@ -11,7 +11,8 @@
 %% ========
 
 %% LaTeX Font encoding -- DO NOT CHANGE
-\usepackage[OT1]{fontenc}
+%\usepackage[OT1]{fontenc}
+\usepackage[T1]{fontenc}
 
 %% Babel provides support for languages.  'english' uses British
 %% English hyphenation and text snippets like "Figure" and
@@ -24,7 +25,7 @@
 %% Input encoding 'utf8'. In some cases you might need 'utf8x' for
 %% extra symbols. Not all editors, especially on Windows, are UTF-8
 %% capable, so you may want to use 'latin1' instead.
-\usepackage[utf8]{inputenc}
+\usepackage[utf8x]{inputenc}
 
 %% This changes default fonts for both text and math mode to use Herman Zapfs
 %% excellent Palatino font.  Do not change this.
@@ -71,16 +72,14 @@
 
 %% Document information
 %% ====================
-
-\title{On amplification of weakly verifiable dynamic cryptographic primitives}
-\author{Grzegorz Makosa}
+\title{On hardness amplification for weakly verifiable dynamic cryptographic primitives}
+\author{Grzegorz M\k{a}kosa}
 \thesistype{Master Thesis}
 \advisors{Advisors: Prof. Dr. Thomas Holenstein, Dr. Robin Künzler}
 \department{Department of Computer Science}
 \date{April 8, 2014}
 
 \begin{document}
-
 \frontmatter
 
 % \begin{titlingpage}
@@ -89,7 +88,8 @@
 %     \maketitle
 %   \end{adjustwidth*}
 % \end{titlingpage}
-%\input{abstract}
+
+\input{abstract}
 
 \cleartorecto
 \tableofcontents
@@ -108,11 +108,9 @@ This chapter gives an overview of weakly verifiable cryptographic primitives.
 First, in Section \ref{section:wvp} we give the definition of a \textit{dynamic interactive weakly verifiable puzzle}.
 Then, in Section \ref{section:hardness_amplification_diwvp} we define the direct product of puzzles and state the hardness
 amplification theorem for dynamic interactive weakly verifiable puzzles which is the primary focus of this thesis.
-To provide more intuition in Section \ref{section:wvp_examples} we describe a~series of well known
-cryptographic primitives that can be seen as different types of weakly verifiable puzzles.
 %
 \input{def_diwvp}
-
+%
 \chapter{Examples of Weakly Verifiable Cryptographic Primitives}
 \label{ch:examples_wvcp}
 \input{examples}
