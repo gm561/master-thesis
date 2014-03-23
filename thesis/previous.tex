@@ -205,38 +205,37 @@ puzzles to prove hardness amplification in this more general setting.
 \label{section:dijk}
 Some of the cryptographic primitives presented in Chapter~\ref{ch:examples_wvcp}
 are not only weakly verifiable but also dynamic (MAC and SIG). This type of puzzles is defined and studied in \cite{Dodis:2009:SAI:1530441.1530450}.
-We give a short overview of this work, state the definition of a \textit{dynamic weakly verifiable puzzle} (DWVP) that closely follows
-the one included in \cite{Dodis:2009:SAI:1530441.1530450}. Finally, we describe important parts of the proof of hardness amplification of DWVPs
-included in \cite{Dodis:2009:SAI:1530441.1530450}.
+We give a short overview of this work and state the definition of a \textit{dynamic weakly verifiable puzzle} (DWVP) that closely follows
+the one included in \cite{Dodis:2009:SAI:1530441.1530450}.
+Finally, we describe important parts of the proof of hardness amplification for DWVPs included in \cite{Dodis:2009:SAI:1530441.1530450}.
 
 \subsection{The definition}
 \begin{definition}[Dynamic Weakly Verifiable Puzzle.]
   \label{def:dwvp_dodis}
   A \textit{dynamic weakly verifiable puzzle} is defined by a distribution $\cD$ on pairs $(x, \alpha)$ where
-  $\alpha \in \{0,1\}^{*}$ is a secret information and $x \in \{0,1\}^{*}$.
+  $\alpha$ is a secret information and $x$ is a bitstring.
   Furthermore, we consider a set $\cQ$ (for some set of indices $\cQ$) and a probabilistic polynomial time computable verification relation $R$ such that
   $R(\alpha, q, r) = 1$ if and only if $r \in \{0,1\}^{*}$ is a correct answer to $q \in \cQ$
   on the set determined by $\alpha$. Finally, let $H$ be a probabilistic polynomial time computable \textit{hint} function
-  that on input $\alpha, q$ outputs a bitstring $\{0,1\}^{*}$ .
+  that on input $\alpha$, $q$ outputs a bitstring $\{0,1\}^{*}$.
 
-  A solver $S$ takes as input $x$ and can ask hint queries on $q \in \cQ$ which are answered using $H(\alpha, q)$ and verification
-  queries of the form $(q,r)$ answered by means of $R(\alpha, q, r)$.
+  A solver $S$ takes as input $x$ and can make hint queries on $q \in \cQ$ which are answered using $H(\alpha, q)$ and verification
+  queries $(q,r)$ answered by means of $R(\alpha, q, r)$.
   We say that $S$ succeeds if and only if it makes a verification query on $(q,r)$ such that
   $R(\alpha,q,r) = 1$ and it has not previously asked for a hint query on this $q$.
-  We write $P := (\cD, R, H)$ to denote a DWVP with the distribution $\cD$ and $R$, $H$ being a verification and hint relations respectively.
+  We write $P := (\cD, R, H)$ to denote a DWVP with the distribution $\cD$ and $R$, $H$ being a verification and hint relations, respectively.
 \end{definition}
 %
 The above definition is a special case of Definition \ref{def:dwvp}.
 To see this we observe that instead of considering a distribution $\cD$ on pairs $(x,\alpha)$
 we can use a problem poser that outputs circuits $\Gamma_H$ and $\Gamma_V$ that corresponds relations $H$ and $V$, respectively.
 The circuit $\Gamma_H$ and $\Gamma_V$ have hard-coded $\alpha$.
-Furthermore, in the first phase, which is non-interactive, only a bitstring $x$ is sent by the problem poser to the solver.
+Furthermore, in the first phase, which is non-interactive, a bitstring $x$ is sent by the problem poser to the solver.
 The solver $S$ can be turned into a family of probabilistic polynomial size circuits with oracle access to $\Gamma_H$ and $\Gamma_V$.
 
 \subsection{The hardness amplification theorem}
-% We define the \textit{$n$-wise direct product of DWVPs} in the similar way as the $n$-wise direct product of WVPs.
-%
-\begin{definition}[$n$-wise direct product of DWVPs \cite{Dodis:2009:SAI:1530441.1530450}]
+\begin{definition}[$n$-wise direct product of DWVPs \cite{Dodis:2009:SAI:1530441.1530450}.]
+  \label{def:n-wdp-dwvp}
 For a dynamic weakly verifiable puzzle $P~:=~(\cD, R, H)$ we define the $n$-wise direct product of $P$
 as a DWVP with a distribution $\cD^{(n)}$ on tuples $(x_1, \alpha_1), \dotsc, (x_n, \alpha_n)$ where
 each $(x_i, \alpha_i)$ is drawn from the distribution $\cD$.
@@ -247,7 +246,8 @@ for $1\!\leq\!i\!\leq\!n$ at least $n - (1 - \gamma)\delta n$ is such that $R(\a
 \end{definition}
 We write $P^{(n)} := (D^{(n)}, H^{(n)}, R^{(n)})$ to denote the $n$-wise direct product of $P$.
 
-In contrast to, defined in the previous section the $n$-wise direct product of WVP, here it is enough if the solver succeeds only on a fraction of puzzles.
+In contrast to defined in the previous section the $n$-wise direct product of WVP, Definition \ref{def:n-wdp-dwvp}
+is more general in the sense that it is enough if the solver succeeds only on a fraction of puzzles.
 
 Dynamic weakly verifiable puzzles generalize games of breaking security of message authentication codes and public key signature schemes.
 In the case of MAC $x$ is an empty bitstring. For the public key signature schemes $x$ is a public key.
@@ -255,29 +255,29 @@ In the case of MAC $x$ is an empty bitstring. For the public key signature schem
 We write $(\cH_{\mathit{hint}}, \cV_{\mathit{verif}}) \leftarrow S(x; \delta)$ to denote
 the execution of $S$ with the input $x \in \{0,1\}^{*}$ and using the randomness $\delta \in \{0,1\}^{*}$
 where $\cH_{hint}$ is the set of all hint queries asked by $S$, and $\cV_{verif}$ is
-the set of all pairs $(q,r)$ of all verification queries asked in the execution of $S$.
+the set of pairs $(q,r)$ of all verification queries asked in the execution of $S$.
 
-With no loss of generality we make the assumption that the solver does not ask
-hint queries on the successful verification queries.
+With no loss of generality, we make the assumption that once the solver $S$
+made a successful verification query it does not ask any further hint and verification queries.
 We define the \textit{success probability} of a solver $S$ as
 \begin{align*}
   \underset{\substack{\delta \in \{0,1\}^{*} \\(x,\alpha) \leftarrow \cD \\ (\cH_{hint}, \cV_{verif}) \leftarrow S(x;\delta))}}
   {\Pr}\big[\exists (q,r) \in \cV_{verif} : q \notin \cH_{hint} \land R(\alpha, q, r) := 1 \big]
 \end{align*}
 
-\begin{theorem}\textbf{(Hardness amplification for dynamic weakly verifiable puzzles \cite{Dodis:2009:SAI:1530441.1530450}).}
+\begin{theorem}\textbf{(Hardness amplification for dynamic weakly verifiable puzzles \cite{Dodis:2009:SAI:1530441.1530450}.)}
 \label{lemma:dwvp}
 Let $S^{(n)}$ be a probabilistic algorithm for $P^{(n)}$ that succeeds with
 probability at least $\epsilon$, where $\epsilon \geq (800/\gamma\delta) \cdot (h+v) \cdot e^{-\gamma^2\delta n/40}$, and $h$ and $v$
 denote the number of hint and verification queries asked by $S^{(n)}$, respectively.
-Then, there exists a probabilistic algorithm $S$ that solves a puzzle defined by $P$ with probability at least $1-\delta$.
+There exists a probabilistic algorithm $S$ that solves a puzzle defined by $P$ with probability at least $1-\delta$.
 Furthermore, $S$ makes $O(h(h+v)/\epsilon) \cdot \log(1/\gamma\delta)$ hint queries and at most one verification query.
 The running time of $S$ is polynomial in $h,v,\frac{1}{\epsilon}, t, \omega, \log(1/\gamma\delta)$ where
 $\omega$ is the time needed to ask a single hint query.
 \end{theorem}
 
 It is worth seeing why the approach presented in the previous section that works well for the direct product of WVPs
-cannot be applied for the direct product of DWVPs (moving aside for a moment the issue of solving only a fraction of puzzle successfully).
+cannot be applied for the direct product of DWVPs (moving aside for a moment the issue of solving only a fraction of puzzles successfully).
 Loosely speaking, for DWVP the algorithm CHS-solver breaks in the $\mathit{OnlinePhase}$ where the solver $S^{(n)}$ can be called multiple times.
 It is possible that in one of these runs $S^{(n)}$ asks a hint query on $q$
 which prevents in one of the later runs a verification query $(q,r)$ to succeed.
@@ -345,39 +345,39 @@ The algorithm DWVP-solver has oracle oracle access to $S^{(n)}$, $R_{\alpha}$ an
   \Return $\bot$
 \end{codeblock}
 
-In each iteration of the DWVP-solver the position for $x \in \{0,1\}^{*}$ is chosen uniformly at random.
+In each iteration of the DWVP-solver the position the input puzzle is chosen uniformly at random.
 The remaining $(n-1)$ puzzles are generated by the algorithm, thus it is possible to answer
 all hint and verification queries for these puzzles.
 We assume that $\hash$ is such that the success probability of $S^{(n)}$ with respect to $\hash$ is at least $\frac{\delta}{8(h+v)}$.
 The DWVP-solver may call $S^{(n)}$ multiple times, but the function $\hash$ is used
-to partition the query domain into $\cQ_{\mathit{attack}}$ and $\cQ{\mathit{adv}}$.
-The DWVP-solver check the hint and verification queries made by $S^{(n)}$.
+to partition the query domain into $\cQ_{\mathit{attack}}$ and $\cQ_{\mathit{adv}}$. The DWVP-solver check the hint and verification queries made by $S^{(n)}$.
 If a hint query is asked on $q$ such that $hash(q) = 0$ then the current execution of $S^{(n)}$
 is aborted, and the DWVP-solver goes to the next iteration.
 In this way we ensure that the DWVP-solver never asks a hint query that could prevent a verification query from succeeding.
-If a verification query is asked on $q$ such that $hash(q) \neq 0$ we answer such a verification query with $0$.
+If a verification query is asked on $q$ such that $hash(q) \neq 0$ we answer such the query with $0$.
 
 Finally, in case where $S^{(n)}$ asks a verification query on $q$ such that $hash(q) = 0$,
-a soft decision system is used to decide whether to ask a verification query.
+a \textit{soft decision system} is used to decide whether to ask a verification query.
 The idea is that if there are many puzzles among the ones generated by the algorithm that are solved successfully,
 then it is likely that also the input puzzle is solved successfully.
 We discount $\gamma\delta n$ to take into account that not all puzzles have to be solved successfully.
 The detail calculations provided in \cite{Dodis:2009:SAI:1530441.1530450} show that this approach
 yields a demanded result.
 
-We do not give a more thorough description of the proof of \cite{Dodis:2009:SAI:1530441.1530450} as
+We do not give a more detail description of the proof of \cite{Dodis:2009:SAI:1530441.1530450} as
 in Chapter \ref{ch:main_result}, except the domain partitioning, we use a different approach.
 
 In the case of weakly verifiable primitives like CAPTCHAs we assume that most people have at least slightly higher probability of solving
-these kind of puzzles than the best computer programs. Still, it may happen that humans do not solve all puzzles.
-This is a motivation to accept solution where only a fraction of puzzles is solved successful.
+puzzles than the best computer programs. Still, it may happen that humans do not solve all puzzles.
+This is a motivation to develop an approach where only a fraction of puzzles is required to be solved successful.
 The required fraction should be adjusted so that on average solutions of humans are treated as solved successfully
 but the ones of computer programs are classified as unsuccessful.
 
 In Chapter \ref{ch:main_result} we consider a weakly verifiable puzzles that are not only dynamic but also interactive.
-We use a very similar technique to partition domain $\cQ$ into advice and hint queries as presented in \cite{Dodis:2009:SAI:1530441.1530450}.
-Instead of the requirement to succeed only on a fraction of puzzles we consider an arbitrary monotone function $g : \{0,1\}^{n} \rightarrow \{0,1\}$
-that determines on which coordinates the solver has to succeed in order to successfully solve the $k$-wise direct product of puzzles.
+We use a very similar technique to partition domain $\cQ$ into advice and attacking queries.
+Instead of the requirement to succeed only at least a fraction of puzzles we consider a more general approach where
+an arbitrary monotone function $g : \{0,1\}^{n} \rightarrow \{0,1\}$ is used to
+determine on which coordinates the solver has to succeed in order to successfully solve the $k$-wise direct product of puzzles.
 
 \section{Interactive Weakly Verifiable Puzzles}
 \label{section:iwvp}
