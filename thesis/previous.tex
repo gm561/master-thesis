@@ -361,15 +361,6 @@ We discount $\gamma\delta n$ to take into account that not all puzzles have to b
 The detail calculations provided in \cite{Dodis:2009:SAI:1530441.1530450} show that this approach
 yields a demanded result.
 
-% We do not give a more detail description of the proof of \cite{Dodis:2009:SAI:1530441.1530450} as
-% in this thesis, except the domain partitioning, we use a different approach.
-
-% In the case of weakly verifiable primitives like CAPTCHAs we assume that most people have at least slightly higher probability of solving
-% puzzles than the best computer programs. Still, it may happen that humans do not solve all puzzles.
-% This is a motivation to develop an approach where only a fraction of puzzles is required to be solved successful.
-% The required fraction should be adjusted so that on average solutions of humans are treated as solved successfully
-% but the ones of computer programs are classified as unsuccessful.
-
 In Chapter \ref{ch:main_result} we consider a weakly verifiable puzzles that are not only dynamic but also interactive.
 We use a very similar technique to partition domain $\cQ$ into advice and attacking queries.
 Instead of the requirement to succeed on at least a fraction of puzzles we consider a more general approach where
@@ -378,40 +369,39 @@ determine on which coordinates the solver has to succeed in order to successfull
 
 \section{Interactive Weakly Verifiable Puzzles}
 \label{section:iwvp}
-The hardness amplification of interactive weakly verifiable puzzles has been studied by T.Holenstein and G.Schoenebeck in \cite{DBLP:journals/corr/abs-1002-3534}.
+Hardness amplification for interactive but non-dynamic weakly verifiable puzzles
+has been studied by Holenstein and Schoenebeck in \cite{DBLP:journals/corr/abs-1002-3534}.
 We will give now an overview of this work and compare it with our approach.
 
 \subsection{The definition}
-The following definition of an \textit{interactive weakly verifiable puzzle} closely follow the one from \cite{DBLP:journals/corr/abs-1002-3534}.
-\begin{definition}
+\begin{definition}[Interactive Weakly Verifiable Puzzle \cite{DBLP:journals/corr/abs-1002-3534}.]
+  \label{def:iwvp}
 An \textit{interactive weakly verifiable puzzle} is defined by a protocol given by two probabilistic algorithms $P$ and $S$.
 The algorithm $P$ is called the problem poser and produces as output a verification circuit $\Gamma$.
 The algorithm $S$ called the problem solver produces no output.
-Furthermore, the \textnormal{success probability} of the algorithm $S$ in solving an interactive weakly verifiable puzzle defined by $(P,S)$ is:
+Furthermore, the \textit{success probability} of the algorithm $S^*$ in solving an interactive weakly verifiable puzzle defined by $(P,S)$ is:
 \begin{align*}
-  \underset{\substack{\rho, \pi \\ \Gamma^{(g)} := \langle P(\rho), S(\pi) \rangle_{P}}}{\Pr}\Big[\Gamma^{(g)}(\langle P(\rho),S(\pi) \rangle_{S}) = 1 \Big].
+  \underset{\substack{\rho, \pi \\ \Gamma^{(g)} := \langle P(\rho), S^*(\pi) \rangle_{P}}}{\Pr}\Big[\Gamma^{(g)}(\langle P(\rho),S^*(\pi) \rangle_{S^*}) = 1 \Big].
 \end{align*}
 \end{definition}
-We are intrested in the hardness amplification of interactive weakly verifiable puzzles. Thus, similarly as in the previous sections
-we define the $k$-wise direct product of puzzles.
+It is not hard to see that Definition \ref{def:iwvp} is a special case of Definition \ref{def:dwvp}.
+The puzzles in Definition \ref{def:iwvp} are non-dynamic thus $|Q| = 1$ and we can assume that $\Gamma_H$ outputs always $\bot$.
+Furthermore, the number of verification queries is limited to at most one.
+
+Similarly as in the previous sections we define the $k$-wise direct product of puzzles.
 \begin{definition}\textbf{($\boldsymbol{k}$-wise direct product of interactive weakly verifiable puzzles)}
 Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function and $(P,S)$ be a fixed interactive weakly verifiable puzzle.
-The $k$-wise direct product of $(P,S)$ defined by $(P^{(g)}, S^{(g)})$ is an interactive weakly verifiable puzzles in which the sender and the receiver
-sequentially interact in $k$ rounds where in each round $(P,S)$ is used to generate an instance of interactive weakly verifiable puzzle.
+The $k$-wise direct product of $(P,S)$ denoted by $(P^{(g)}, S^{(g)})$ is an interactive weakly verifiable puzzles in which the problem poser and the solver
+sequentially interact in $k$ rounds where in each round $(P,S)$ is used to generate an instance of the interactive weakly verifiable puzzle.
 As the result circuits $\Gamma^{(1)}, \dotsc, \Gamma^{(k)}$ for $P$ are generated.
 Finally, $P^{(g)}$ outputs the circuit $\Gamma^{(g)}(y_1, \dotsc, y_k) := g(\Gamma^{(1)}(y_1), \dotsc, \Gamma^{(k)}(y_k))$.
 \end{definition}
 
-Similarly as in Definition \ref{def:dwvp} the puzzles considered in \cite{DBLP:journals/corr/abs-1002-3534} are interactive.
-Furthermore, a monotone binary function is used to determine whether the $k$-wise repetition
-has been successfully solved. Unlike, puzzles in Definition \ref{def:dwvp}, the puzzles studied by T.Holenstein and G.Schoenebeck
-are non-dynamic. Thus, only a verification circuit $\Gamma$ is generated and no hint circuit is ever used.
-
 \subsection{The hardness amplification theorem}
 The following hardness amplification theorem is proved in \cite{DBLP:journals/corr/abs-1002-3534}.
-\begin{theorem}
+\begin{theorem}\textbf{(Hardness amplification for interactive weakly verifiable puzzles \cite{DBLP:journals/corr/abs-1002-3534}.)}
 There exists an algorithm $\mathit{Gen}(C,g,\epsilon, \delta, n)$ which takes as input a solver circuit $C$ for the $k$-wise
-direct product of $P$, a monotone function $g: \{0,1\}^{*} \rightarrow \{0,1\}$, and parameters $\epsilon,\delta,n$.
+direct product of $(P,S)$, a monotone function $g: \{0,1\}^{*} \rightarrow \{0,1\}$, and parameters $\epsilon,\delta,n$.
 The algorithm $\mathit{Gen}$ outputs a solver circuit $D$ for $P$ such that the following holds.
 If $C$ is such that
 \begin{align*}
@@ -434,9 +424,13 @@ solves all puzzles (\cite{canetti2004hardness}) or allowed a fraction of puzzles
 In the above definition a more general case is considered where we use a binary monotone function $g$.
 More precisely we are interested functions that are binary monotonously non-decreasing.
 
-The proof technique used by T.Holenstein and G.Schoenebeck is similar to the one presented in Section \ref{subsec:chs}.
-In chapter \ref{ch:main_result} we use very similar approach and fix puzzles on consecutive coordinates of the $n$-wise direct product.
+In chapter \ref{ch:main_result} we use very similar approach as Holenstein and Schoenebeck.
+Similarly as in Definition \ref{def:dwvp} the puzzles considered in \cite{DBLP:journals/corr/abs-1002-3534} are interactive.
+Furthermore, a monotone binary function is used to determine whether the $k$-wise repetition
+has been successfully solved. The difference is that we give a hardness amplification proof for puzzles that are also dynamic.
 
+% in Definition \ref{def:dwvp}, the puzzles studied by Holenstein and Schoenebeck
+% are non-dynamic. Thus, only a verification circuit $\Gamma$ is generated and no hint circuit is ever used.
 % \begin{todo}
 %   \textbf{TODO:} Compare to the work of CHS i.e. what we use there to compare the puzzles
 % \end{todo}
