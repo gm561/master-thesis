@@ -385,20 +385,19 @@ Furthermore, the \textit{success probability} of the algorithm $S^*$ in solving 
 \end{align*}
 \end{definition}
 It is not hard to see that Definition \ref{def:iwvp} is a special case of Definition \ref{def:dwvp}.
-The puzzles in Definition \ref{def:iwvp} are non-dynamic thus $|Q| = 1$ and we can assume that $\Gamma_H$ outputs always $\bot$.
-Furthermore, the number of verification queries is limited to at most one.
+The puzzles in Definition \ref{def:iwvp} are non-dynamic, thus $|Q| = 1$. Furthermore, we can assume that $\Gamma_H$ always outputs $\bot$.
+The number of verification queries is limited to at most one.
 
-Similarly as in the previous sections we define the $k$-wise direct product of puzzles.
+Similarly as in the previous sections, we define the $k$-wise direct product of puzzles.
 \begin{definition}\textbf{($\boldsymbol{k}$-wise direct product of interactive weakly verifiable puzzles)}
 Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function and $(P,S)$ be a fixed interactive weakly verifiable puzzle.
-The $k$-wise direct product of $(P,S)$ denoted by $(P^{(g)}, S^{(g)})$ is an interactive weakly verifiable puzzles in which the problem poser and the solver
-sequentially interact in $k$ rounds where in each round $(P,S)$ is used to generate an instance of the interactive weakly verifiable puzzle.
+The $k$-wise direct product of $(P,S)$ denoted by $(P^{(g)}, S^{(g)})$ is an interactive weakly verifiable puzzle where the problem poser and the solver
+sequentially interact in $k$ rounds. In each round $(P,S)$ is used to produce an instance of the interactive weakly verifiable puzzle.
 As the result circuits $\Gamma^{(1)}, \dotsc, \Gamma^{(k)}$ for $P$ are generated.
 Finally, $P^{(g)}$ outputs the circuit $\Gamma^{(g)}(y_1, \dotsc, y_k) := g(\Gamma^{(1)}(y_1), \dotsc, \Gamma^{(k)}(y_k))$.
 \end{definition}
 
 \subsection{The hardness amplification theorem}
-The following hardness amplification theorem is proved in \cite{DBLP:journals/corr/abs-1002-3534}.
 \begin{theorem}\textbf{(Hardness amplification for interactive weakly verifiable puzzles \cite{DBLP:journals/corr/abs-1002-3534}.)}
 There exists an algorithm $\mathit{Gen}(C,g,\epsilon, \delta, n)$ which takes as input a solver circuit $C$ for the $k$-wise
 direct product of $(P,S)$, a monotone function $g: \{0,1\}^{*} \rightarrow \{0,1\}$, and parameters $\epsilon,\delta,n$.
@@ -407,10 +406,11 @@ If $C$ is such that
 \begin{align*}
 \Pr\Big[\Gamma^{(g)}(\langle P^{(g)}, C \rangle_C) = 1\Big] \geq \Pr_{u \leftarrow \mu_{\delta}^{(k)}} \Big[ g(u) = 1 \Big] + \epsilon,
 \end{align*}
-then, $D$ satisfies almost surely,
+where the probability is over the randomness of $P^{(g)}$ and $C$, then $D$ satisfies almost surely
 \begin{align*}
-  \Pr\Big[ \Gamma(\langle P, D\rangle_{D}) = 1\Big] \geq \delta + \frac{\epsilon}{6k}.
+  \Pr\Big[ \Gamma(\langle P, D\rangle_{D}) = 1\Big] \geq \delta + \frac{\epsilon}{6k},
 \end{align*}
+where the probability is over the randomness of $P$ and $D$.
 Additionally, $\mathit{Gen}$ and $D$ only require oracle access to $g$ and $C$.
 Furthermore, $\mathit{Size}(D) \leq \mathit{Size}(C) \cdot \frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$,
 and the running time of Gen is polynomial in $k, \frac{1}{\epsilon}, n$ with oracle calls.
@@ -419,15 +419,12 @@ and the running time of Gen is polynomial in $k, \frac{1}{\epsilon}, n$ with ora
 First, we notice that the above definition does not impose any restrictions on the time complexity of the poser and the solver.
 We consider a general approach where $\mathit{Gen}$ is used to define a polynomial time reduction between a solver for the $k$-wise
 direct product of puzzles to a solver for a single puzzle.
-Furthermore, in the previous sections we considered solvers for the $k$-wise direct product that were compared with the algorithms that either
-solves all puzzles (\cite{canetti2004hardness}) or allowed a fraction of puzzles to be solved incorrectly (\cite{Dodis:2009:SAI:1530441.1530450}).
-In the above definition a more general case is considered where we use a binary monotone function $g$.
-More precisely we are interested functions that are binary monotonously non-decreasing.
+Furthermore, in the previous sections we considered solvers for the $k$-wise direct product that are compared with the algorithms that either
+solve all puzzles (\cite{canetti2004hardness}) or allow a fraction of puzzles to be solved incorrectly (\cite{Dodis:2009:SAI:1530441.1530450}).
+In the above definition a more general approach is considered where a binary monotone function $g$ is used.
 
 In chapter \ref{ch:main_result} we use very similar approach as Holenstein and Schoenebeck.
-Similarly as in Definition \ref{def:dwvp} the puzzles considered in \cite{DBLP:journals/corr/abs-1002-3534} are interactive.
-Furthermore, a monotone binary function is used to determine whether the $k$-wise repetition
-has been successfully solved. The difference is that we give a hardness amplification proof for puzzles that are also dynamic.
+The difference is that we give a hardness amplification proof for puzzles that are not only interactive but also dynamic.
 
 % in Definition \ref{def:dwvp}, the puzzles studied by Holenstein and Schoenebeck
 % are non-dynamic. Thus, only a verification circuit $\Gamma$ is generated and no hint circuit is ever used.
