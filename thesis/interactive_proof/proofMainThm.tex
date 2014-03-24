@@ -74,7 +74,7 @@ Now, we use the algorithm Gen as in Lemma \ref{lemma:sec_amp_for_p_hash} that yi
 \end{align}
 Finally, $\widetilde{\text{Gen}}$ outputs $\widetilde{D} = (D_1, \widetilde{D}_2)$ with oracle access to $D$, $P^{(1)}$, $hash$, $g$ such that with high probability it holds
 \begin{align*}
-    \underset{\pi, \rho}{\Pr}\left[\Success^{P^{(1)},\widetilde{D}}(\pi, \rho) = 1\right] \geq (\delta + \frac{\varepsilon}{6k}).
+    \underset{\pi, \rho}{\Pr}\left[\Success^{P^{(1)},\widetilde{D}}(\pi, \rho) = 1\right] \geq \delta + \frac{\varepsilon}{6k}.
 \end{align*}
 The running time of $\Gen$ is polynomial in $k, \frac{1}{\epsilon}, n)$ with oracle calls.
 Thus, the overall running time of $\widetilde{\mathit{Gen}}$ is  polynomial in $k,\frac{1}{\epsilon},h,v,n$ with oracle access.
