@@ -1,45 +1,24 @@
 \begin{abstract}
-% A good abstract explains in one line why the paper is important.
-% It then goes on to give a summary of your major results, preferably couched in numbers with error limits.
-% The final sentences explain the major implications of your work. A good abstract is concise, readable, and quantitative.
-% Length should be ~ 1-2 paragraphs, approx. 400 words.
-%
-% Abstracts generally do not have citations.
-% Information in title should not be repeated.
-% Be explicit.
-% Use numbers where appropriate.
-% Answers to these questions should be found in the abstract:
-% What did you do?
-% Why did you do it? What question were you trying to answer?
-% How did you do it? State methods.
-% What did you learn? State major results.
-% Why does it matter? Point out at least one significant implication.
-%
-%
-% 1) new hardness proof
-% 2) it is possible to start with a weak crypto primitive and obtain strong one.
-% 3) a natural puzzle fixing technique similar to the one used in the classical proofs of weak one-way function implying strong ones
-% 4) uses an arbitrary monotone function to decide the result
-% 5) compare with previous works
-%
-We give a proof of hardness amplification for a new type of weakly verifiable puzzles that generalize the previous approaches.
+Weakly verifiable puzzles can be seen as problems where a solution
+cannot be efficiently verified by the solver. They are introduced by
+Canetti et al. (Theory of Cryptography, 2005), who give a first hardness amplification
+result. Dodis et al. (Theory of cryptography, 2009) define dynamic weakly verifiable
+puzzles that generalize, for example, MACs and signature schemes. They
+prove a hardness amplification result for the case where the solver
+must solve some fraction of puzzles. Holenstein and Schönebeck (Theory of Cryptography,
+2011) introduce interactive weakly verifiable puzzles that generalize,
+for example, commitment schemes. They study hardness amplification for
+these puzzles and give the right bound even for the setting where a
+monotone function applied to the output of the checking circuit of the
+puzzle has to evaluate to one.
 
-An important question in cryptography is whether it is possible to build cryptographic construction that is strongly hard
-from a one that is only weakly hard. An example is the well known result of Yao which shows that it is possible to build a strong one-way function
-from functions that are only weakly one-way hard.
-
-Weakly verifiable puzzles can be seen as problems where a solution cannot be efficiently verified by a party that solves a puzzle.
-The problem of hardness amplification for various variants of weakly verifiable puzzles has been
-studied in a series of papers \cite{canetti2004hardness, Dodis:2009:SAI:1530441.1530450, DBLP:journals/corr/abs-1002-3534}.
-Dodis, Impagliazzo, Jaiswal, and Kabanets \cite{Dodis:2009:SAI:1530441.1530450} define dynamic weakly verifiable puzzles
-that generalize cryptographic primitives like message authentication codes and signature schemes.
-They prove that it is possible to amplify hardness for this type of puzzles.
-Holenstein and Schoenebeck \cite{DBLP:journals/corr/abs-1002-3534} introduce interactive weakly verifiable puzzles
-that generalize constructions like bit commitment protocols and also give the proof of hardness amplification for this case.
-
-In this thesis we introduce the notion of \textit{dynamic interactive weakly verifiable puzzles} that combines the previous definitions of dynamic and interactive puzzles.
-Similar as in the previous works we state the hardness amplification theorem for these puzzles.
-More precisely, we show that if there is no efficient probabilistic algorithm that solves a single puzzle with the substantial probability,
-then it is not possible to find an efficient probabilistic algorithm that is a good solver for several independent instances of puzzles.
+In this thesis we introduce dynamic interactive weakly verifiable
+puzzles by combining the definitions of Dodis et al. and Holenstein et
+al. We combine their proofs to obtain a hardness amplification result
+for monotone functions in this case.
 \end{abstract}
 
+% Local Variables:
+% mode: latex
+% TeX-master: "thesis"
+% End:
