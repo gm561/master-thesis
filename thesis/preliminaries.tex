@@ -12,8 +12,7 @@ In this chapter we set up the notation and introduce definitions used in the the
 % The randomness used by algorithms and circuits is denoted by small letters from the Greek alphabet $\rho, \delta, \dotsc$.
 
 %TODO define tuples
-\textbf{Bitstrings and tuples.}
-We denote a tuple $(x_1, \dotsc, x_n)$ by $x^{(n)}$. The $i$-th element of $x^{(n)}$ is denote by $x^{(n)}_i$
+\paragraph{Bitstrings and tuples.} We denote a tuple $(x_1, \dotsc, x_n)$ by $x^{(n)}$. The $i$-th element of $x^{(n)}$ is denote by $x^{(n)}_i$
 Furthermore, for tuples $x^{(n)}$, $y^{(k)}$ we use $x^{(n)} \circ y^{(k)}$ to denote the concatenation of $x^{(n)}$ and $y^{(k)}$ which results in
 a tuple $(x_1, \dotsc, x_l, y_1, \dotsc, y_k)$.
 We denote a bitstring $(b_1, \dotsc, b_n) \in \{0,1\}^{n}$ as a $n$-tuple of bits.
@@ -21,7 +20,7 @@ We denote a bitstring $(b_1, \dotsc, b_n) \in \{0,1\}^{n}$ as a $n$-tuple of bit
 % If $x$ is the input of a circuit then it is naturally bounded by the size of a circuit
 % whereas for algorithms it is bounded by the running time of an algorithm.
 
-\textbf{Functions.}
+\paragraph{Functions.}
 We write $\p(\alpha_1, \dots, \alpha_n)$ to denote a polynomial on variables $(\alpha_1, \dots, \alpha_n) \in \R^n$.
 We call a function $f: \N \rightarrow \R$ \textit{negligible} if for every $\p(n)$
 there exists $n_0 \in \N$ such that for all $n \in \N : n > n_0$ we have
@@ -47,7 +46,7 @@ and sets $\cI := \{i \in \{1,\dotsc, n\}: b_i = 1\}$ and $\cI' := \{i \in \{1,\d
 that if $\cI \subseteq \cI'$ and $g(b_1, \dotsc, b_n) = 1$ then $g(b_1', \dotsc, b_n') = 1$.
 \end{definition}
 
-\textbf{Algorithms and Circuits.}
+\paragraph{Algorithms and Circuits.}
 We define a \textit{probabilistic circuit} as a Boolean circuit $C_{m,n} : \{0,1\}^{m} \times \{0,1\}^{n} \rightarrow \{0,1\}^{*}$ and
 write $C_{m,n}(x;\rho)$ to denote a probabilistic circuit that takes as input $x \in \{0,1\}^{m}$ and the randomness $\rho \in \{0,1\}^{n}$.
 If a probabilistic circuit takes as input only the randomness, we slightly abuse the notation and write $C_{n}(\rho)$.
