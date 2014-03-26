@@ -94,7 +94,7 @@ It seems that a game of breaking security of the public key signature scheme is 
 to efficiently check the correctness of the solution. However, we it easy to see that this situation still can be modeled as
 a dynamic interactive weakly verifiable puzzle where the solver has access to the verification circuit and can ask a polynomial number of verification queries.
 %
-\begin{definition}\textbf{(Security of a public key signature scheme with respect to a chosen message attack.)}
+\begin{definition}[Security of a public key signature scheme with respect to a chosen message attack]
   \label{def:sec_sig}
 Let $H$ be a polynomial size circuit that has hard-coded $k_{priv}$ and takes as input $q$ and outputs $S(k_{priv}, q)$.
 An \textit{adversary} $A$ is a probabilistic polynomial time algorithm that takes as input $k_{pub}$ and has oracle access to $H$.

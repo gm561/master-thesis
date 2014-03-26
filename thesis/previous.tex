@@ -1,28 +1,29 @@
 \label{st:previous_results}
 In the last chapter we gave an overview of different types of cryptographic primitives that motivated studies of weakly verifiable puzzles.
 The focus of this chapter is on giving the outline of the previous research.
-We give a short overview of techniques used in the series of papers \cite{canetti2004hardness, Dodis:2009:SAI:1530441.1530450, DBLP:journals/corr/abs-1002-3534}
+We give a short overview of techniques used in the series of papers \cite{canetti2005hardness, dodis2009security, holenstein2011general}
 and provide some intuition and insight into the problem of hardness amplification for weakly verifiable puzzles.
-First, we describe weakly verifiable puzzles studied in \cite{canetti2004hardness} that are neither interactive nor dynamic.
-Then, in Section~\ref{section:dijk} we bring our focus on the dynamic non-interactive puzzles studied in \cite{Dodis:2009:SAI:1530441.1530450}.
-Finally, in Section~\ref{section:iwvp} we give an overview of the results of Holenstein and Schoenebeck \cite{DBLP:journals/corr/abs-1002-3534}
+First, we describe weakly verifiable puzzles studied in \cite{canetti2005hardness} that are neither interactive nor dynamic.
+Then, in Section~\ref{section:dijk} we bring our focus on the dynamic non-interactive puzzles studied in \cite{dodis2009security}.
+Finally, in Section~\ref{section:iwvp} we give an overview of the results of Holenstein and Schoenebeck \cite{holenstein2011general}
 where non-dynamic but interactive weakly verifiable puzzles are studied.
 %
+% dodis2009security holenstein2011general
 \section{Weakly Verifiable Puzzles}
 \label{subsec:chs}
 The notion of \textit{weakly verifiable puzzles} has been coined by Canetti, Halevi, and Steiner in the paper
-\textit{Hardness amplification of weakly verifiable puzzles} \cite{canetti2004hardness}.
+\textit{Hardness amplification of weakly verifiable puzzles} \cite{canetti2005hardness}.
 The puzzles considered there are non-dynamic and non-interactive.
 Moreover, the number of verification queries is limited to one. This constitutes a special case of Definition \ref{def:dwvp}.
 In this section we provide the definition of weakly verifiable puzzles (WVPs) and state the theorem of hardness amplification for WVPs
-in a similar vein as in \cite{canetti2004hardness}.
+in a similar vein as in \cite{canetti2005hardness}.
 Finally, we give the intuition behind the proof of this theorem. It is noteworthy that the main proof of this thesis,
-presented in Chapter~\ref{ch:main_result}, uses many ideas of the work of Canetti, Halevi, and Steiner \cite{canetti2004hardness}.
+presented in Chapter~\ref{ch:main_result}, uses many ideas of the work of Canetti, Halevi, and Steiner \cite{canetti2005hardness}.
 %
 \subsection{The definition}
-We give the definition of WVP from \cite{canetti2004hardness}. However, we use the notation and terminology defined in this thesis.
+We give the definition of WVP from \cite{canetti2005hardness}. However, we use the notation and terminology defined in this thesis.
 
-\begin{definition}[Weakly Verifiable Puzzle, \cite{canetti2004hardness}]
+\begin{definition}[Weakly Verifiable Puzzle, \cite{canetti2005hardness}]
   \label{def:wvp}
 A \textit{weakly verifiable puzzle} is defined by a pair of polynomial time algorithms:
 a probabilistic puzzle-generation algorithm $G$ and a deterministic verification algorithm $V$.
@@ -58,7 +59,7 @@ Finally, we note that the puzzles described in Definition~\ref{def:wvp} are non-
 \subsection{The hardness amplification}
 We give the definition of the $n$-wise direct product of weakly verifiable puzzles.
 %
-\begin{definition}[$n$-wise direct product of weakly verifiable puzzles, \cite{canetti2004hardness}]
+\begin{definition}[$n$-wise direct product of weakly verifiable puzzles, \cite{canetti2005hardness}]
   \label{def:n-fold-rep}
   Let $n~\in~\N$ and a weakly verifiable puzzle $P = (G,V)$ be fixed.
   We define the $n$-wise direct product of $P$ as a weakly verifiable puzzle where the puzzle-generation algorithm
@@ -79,10 +80,10 @@ is used to decide which coordinates of the $n$-wise direct product of puzzles ha
 Clearly, we can assume that $g$ is such that the puzzles on all coordinates have to be solved successfully
 which matches the case considered in Definition \ref{def:n-fold-rep}.
 
-The main theorem proved in \cite{canetti2004hardness} states that it is possible to turn a good solver for $P^{(n)}$
+The main theorem proved in \cite{canetti2005hardness} states that it is possible to turn a good solver for $P^{(n)}$
 into a good solver for $P$.
 %
-\begin{theorem}[Hardness amplification for weakly verifiable puzzles, \cite{canetti2004hardness}]
+\begin{theorem}[Hardness amplification for weakly verifiable puzzles, \cite{canetti2005hardness}]
   \label{thm:wvp_chs}
 Let $n,q \in \N$ and $\delta: \N \rightarrow (0,1)$ be an efficiently computable function.
 Moreover, let $P = (G,V)$ be a weakly verifiable puzzle. We denote the running time of the
@@ -159,7 +160,7 @@ To make the notation shorter in the following code excerpts we do not write the 
   \Return $successes / M$
 \end{codeblock}
 %
-A full proof of Theorem \ref{thm:wvp_chs} is presented in \cite{canetti2004hardness}.
+A full proof of Theorem \ref{thm:wvp_chs} is presented in \cite{canetti2005hardness}.
 We limit ourselves to providing intuition why the CHS-solver transforms a good solver
 for the $n$--wise direct product of $P$ into a good solver for a single puzzle defined by $P$.
 
@@ -206,13 +207,13 @@ puzzles to prove hardness amplification in this more general setting.
 \section{Dynamic Weakly Verifiable Puzzles}
 \label{section:dijk}
 Some of the cryptographic primitives presented in Chapter~\ref{ch:examples_wvcp}
-are not only weakly verifiable but also dynamic (MAC and SIG). This type of puzzles is defined and studied in \cite{Dodis:2009:SAI:1530441.1530450}.
+are not only weakly verifiable but also dynamic (MAC and SIG). This type of puzzles is defined and studied in \cite{dodis2009security}.
 We give a short overview of this work and state the definition of a \textit{dynamic weakly verifiable puzzle} (DWVP) that closely follows
-the one included in \cite{Dodis:2009:SAI:1530441.1530450}.
+the one included in \cite{dodis2009security}.
 Finally, we describe important parts of the proof of hardness amplification for DWVPs.
 
 \subsection{The definition}
-\begin{definition}[Dynamic Weakly Verifiable Puzzle, \cite{DBLP:journals/corr/abs-1002-3534}]
+\begin{definition}[Dynamic Weakly Verifiable Puzzle, \cite{holenstein2011general}]
   \label{def:dwvp_dodis}
   A \textit{dynamic weakly verifiable puzzle} is defined by a distribution $\cD$ on pairs $(x, \alpha)$ where
   $\alpha$ is a secret information and $x$ is a bitstring.
@@ -236,7 +237,7 @@ with oracle access to $\Gamma_H$ and $\Gamma_V$. Furthermore, in the first phase
 a bitstring $x$ is sent by the problem poser to the solver.
 
 \subsection{The hardness amplification theorem}
-\begin{definition}[$n$-wise direct product of DWVPs, \cite{Dodis:2009:SAI:1530441.1530450}]
+\begin{definition}[$n$-wise direct product of DWVPs, \cite{dodis2009security}]
   \label{def:n-wdp-dwvp}
 For a dynamic weakly verifiable puzzle $P~:=~(\cD, V, H)$ we define the $n$-wise direct product of $P$
 as a DWVP with a distribution $\cD^{(n)}$ on tuples $(x_1, \alpha_1), \dotsc, (x_n, \alpha_n)$ where
@@ -268,7 +269,7 @@ We define the \textit{success probability} of a solver $S$ as
   {\Pr}\big[\exists (q,r) \in \cV_{verif} : q \notin \cH_{hint} \land V(\alpha, q, r) = 1 \big]
 \end{align*}
 
-\begin{theorem}\textbf{(Hardness amplification for dynamic weakly verifiable puzzles \cite{Dodis:2009:SAI:1530441.1530450}.)}
+\begin{theorem}[Hardness amplification for dynamic weakly verifiable puzzles \cite{dodis2009security}]
 \label{lemma:dwvp}
 Let $S^{(n)}$ be a probabilistic algorithm for $P^{(n)}$ that succeeds with
 probability at least $\epsilon$, where $\epsilon \geq (800/\gamma\delta) \cdot (h+v) \cdot e^{-\gamma^2\delta n/40}$, and $h$ and $v$
@@ -287,7 +288,7 @@ which prevents in one of the later runs a verification query $(q,r)$ from succee
 The fact that a hint query on $q$ has been asked before makes it impossible to make a successful verification query on this $q$.
 Thus, we cannot dismiss a situation where the success probability of $S^{(n)}$ decreases with the number of iterations.
 
-The solution proposed in \cite{Dodis:2009:SAI:1530441.1530450} is to partition the set $\cQ$ into a set of \textit{attacking queries} $\cQ_{\mathit{attack}}$
+The solution proposed in \cite{dodis2009security} is to partition the set $\cQ$ into a set of \textit{attacking queries} $\cQ_{\mathit{attack}}$
 and a set of \textit{advice queries} $\cQ_{\mathit{adv}}$. The idea is to allow a solver for the direct product to ask hint
 queries only on $q \in \cQ_{\mathit{adv}}$, and to halt the execution whenever a hint query is asked on $q \in \cQ_{\mathit{attack}}$.
 More formally, for a function $\hash:\cQ \rightarrow \{0,1,\dotsc, 2(h+v)\!-\!1 \}$
@@ -297,9 +298,8 @@ It is possible, for a fixed solver $S$ that asks at most $h$ hint queries and $v
 to find a function $hash: \cQ \rightarrow \{0,1,\dotsc 2(h+v)-1\}$ such that the success probability of $S$ with respect to
 $\cQ_{\mathit{attack}}$ and $\cQ_{\mathit{adv}}$ partitioned using $\hash$ is multiplied by $\frac{1}{8(h+v)}$.
 If $h$ and $v$ are not too big, then the success probability of $S$ can be still substantial.
-More formally, the following lemma is proved in \cite{Dodis:2009:SAI:1530441.1530450}.
-\begin{lemma}
-\textbf{(Success probability in solving a dynamic weakly verifiable puzzle with respect to a function hash, \cite{Dodis:2009:SAI:1530441.1530450}).}
+More formally, the following lemma is proved in \cite{dodis2009security}.
+\begin{lemma}[Success probability in solving a dynamic weakly verifiable puzzle with respect to a function hash, \cite{dodis2009security}]
   \label{lemma:hash_function_previous}
 Let $S$ be a solver for DWVP which success probability is at least $\delta$, the running time is at most $t$,
 and the number of hint and verification queries is at most $h$ and $v$, respectively.
@@ -362,7 +362,7 @@ a \textit{soft decision system} is used to decide whether to ask a verification 
 The idea is that if there are many puzzles among the ones generated by the algorithm that are solved successfully,
 then it is likely that also the input puzzle is solved successfully.
 We discount $\gamma\delta n$ to take into account that not all puzzles have to be solved successfully.
-Detail calculations provided in \cite{Dodis:2009:SAI:1530441.1530450} show that this approach
+Detail calculations provided in \cite{dodis2009security} show that this approach
 yields a demanded result.
 
 In Chapter \ref{ch:main_result} we consider a weakly verifiable puzzles that are not only dynamic but also interactive.
@@ -374,11 +374,11 @@ determine on which coordinates the solver has to succeed in order to successfull
 \section{Interactive Weakly Verifiable Puzzles}
 \label{section:iwvp}
 Hardness amplification for interactive but non-dynamic weakly verifiable puzzles
-has been studied by Holenstein and Schoenebeck in \cite{DBLP:journals/corr/abs-1002-3534}.
+has been studied by Holenstein and Schoenebeck in \cite{holenstein2011general}.
 We will give now an overview of this work and compare it with our approach.
 
 \subsection{The definition}
-\begin{definition}[Interactive Weakly Verifiable Puzzle, \cite{DBLP:journals/corr/abs-1002-3534}]
+\begin{definition}[Interactive Weakly Verifiable Puzzle, \cite{holenstein2011general}]
   \label{def:iwvp}
 An \textit{interactive weakly verifiable puzzle} is defined by a protocol given by two probabilistic algorithms $P$ and $S$.
 The algorithm $P$ is called the problem poser and produces as output a verification circuit $\Gamma$.
@@ -393,7 +393,7 @@ The puzzles in Definition \ref{def:iwvp} are non-dynamic, thus $|Q| = 1$. Furthe
 corresponds to the verification circuit from Definition \ref{def:dwvp} and the circuit $\Gamma_H$ always outputs $\bot$.
 
 Similarly as in the previous sections, we define the $k$-wise direct product of puzzles.
-\begin{definition}\textbf{($\boldsymbol{k}$-wise direct product of interactive weakly verifiable puzzles, \cite{DBLP:journals/corr/abs-1002-3534})}
+\begin{definition}[$k$-wise direct product of interactive weakly verifiable puzzles, \cite{holenstein2011general}]
 Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function and $(P,S)$ be a fixed interactive weakly verifiable puzzle.
 The $k$-wise direct product of $(P,S)$ denoted by $(P^{(g)}, S^{(g)})$ is an interactive weakly verifiable puzzle where the problem poser and the solver
 sequentially interact in $k$ rounds. In each round $(P,S)$ is used to produce an instance of the interactive weakly verifiable puzzle.
@@ -402,8 +402,8 @@ Finally, $P^{(g)}$ outputs the circuit $\Gamma^{(g)}(y_1, \dotsc, y_k) := g(\Gam
 \end{definition}
 
 \subsection{The hardness amplification theorem}
-The following hardness amplification theorem is proved in \cite{DBLP:journals/corr/abs-1002-3534}.
-\begin{theorem}\textbf{(Hardness amplification for interactive weakly verifiable puzzles, \cite{DBLP:journals/corr/abs-1002-3534}.)}
+The following hardness amplification theorem is proved in \cite{holenstein2011general}.
+\begin{theorem}[Hardness amplification for interactive weakly verifiable puzzles, \cite{holenstein2011general}]
 There exists an algorithm $\mathit{Gen}(C,g,\epsilon, \delta, n)$ which takes as input a solver circuit $C$ for the $k$-wise
 direct product of $(P,S)$, a monotone function $g: \{0,1\}^{*} \rightarrow \{0,1\}$, and parameters $\epsilon,\delta,n$.
 The algorithm $\mathit{Gen}$ outputs a solver circuit $D$ for $P$ such that the following holds.
@@ -425,10 +425,10 @@ First, we notice that the above definition does not impose any restrictions on t
 We consider a general approach where $\mathit{Gen}$ is used to define a polynomial time reduction between a solver for the $k$-wise
 direct product of puzzles to a solver for a single puzzle.
 Furthermore, in the previous sections we considered solvers for the $k$-wise direct product that are compared with the algorithms that either
-solve all puzzles \cite{canetti2004hardness} or allow a fraction of puzzles to be solved incorrectly \cite{Dodis:2009:SAI:1530441.1530450}.
+solve all puzzles \cite{canetti2005hardness} or allow a fraction of puzzles to be solved incorrectly \cite{dodis2009security}.
 In the above definition a more general approach is considered where a binary monotone function $g$ is used.
 
-In chapter \ref{ch:main_result} we use very similar approach as Holenstein and Schoenebeck.
+In Chapter \ref{ch:main_result} we use very similar approach as Holenstein and Schoenebeck.
 The difference is that proven by us hardness amplification theorem captures also puzzles that are both dynamic and interactive.
 
 % in Definition \ref{def:dwvp}, the puzzles studied by Holenstein and Schoenebeck
@@ -461,10 +461,10 @@ The difference is that proven by us hardness amplification theorem captures also
 % Thus, it is enough to show that if it is not possible to find an estimate that is low then
 % if we place an input puzzle on this position and we can find remaining $k-1$ puzzle such that
 % $c \in \cG_1 \setminus \cG_0$ then this puzzle is solved with substantial probability.
-% The whole proof is given in \cite{DBLP:journals/corr/abs-1002-3534}, and requires some probability manipulations.
+% The whole proof is given in \cite{holenstein2011general}, and requires some probability manipulations.
 
 % %cite tell more what is used in our proof which technique do we use.
-% Our proof of the hardness amplification for dynamic interactive weakly verifiable puzzles closely follows the one given in \cite{DBLP:journals/corr/abs-1002-3534}.
+% Our proof of the hardness amplification for dynamic interactive weakly verifiable puzzles closely follows the one given in \cite{holenstein2011general}.
 % \begin{todo}
 %   \textbf{TODO:} Why do we consider fixing 0/1 on the first position
 %   \textbf{TODO:} How the technique is generalized to approach of CHS \\
