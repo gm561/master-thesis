@@ -37,6 +37,9 @@ We note that it is possible that a function $f:\N \rightarrow \R$ is neither neg
 
 We say that a function $f$ is \textit{efficiently computable} if there exists a polynomial time algorithm computing $f$.
 
+For a function $f(n): \R \rightarrow \R$ we write $f(n) = \poly(n)$ to denote that there exists a polynomial $p(n)$ that
+bounds $f(n)$ for $n$ big enough.
+
 \begin{definition}[Binary monotone function.]
 For $n \in \N$ we say that $g: \{0,1\}^n \rightarrow \{0,1\}$ is a \textit{binary monotone function}
 if for any two bitstrings $(b_1, \dotsc, b_n) \in \{0,1\}^{n}$ and $(b_1', \dotsc, b_n') \in \{0,1\}^{n}$
@@ -143,7 +146,7 @@ if $\cH$ has the following properties.
 \underset{\hash \la0 \cH}{\Pr}[hash(x) = \alpha \mid hash(y) = \beta] = \frac{1}{|\cR|}.
 \end{displaymath}
 
-\textbf{Polynomial time samplable.} For every $\mathit{hash} \in \cH$ the function $\mathit{hash}$ is samplable in time $\mathit{poly}(\log|\cD|, \log|\cR|)$.
+\textbf{Polynomial time samplable.} For every $\mathit{hash} \in \cH$ the function $\mathit{hash}$ is samplable in time $\poly(\log|\cD|, \log|\cR|)$.
 
 \textbf{Efficiently computable.}
 For every $hash \in \cH$ there exists an algorithm running in time $\mathit{poly}(\log|\cD|, \log|\cR|)$ which
