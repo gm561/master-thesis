@@ -1,0 +1,142 @@
+%
+\subsection{The proof of hardness amplification theorem}
+\label{st:mainTheoremProof}
+In this section we give the proof of Theorem \ref{th:sec_amp_for_dwvp}.
+This proof uses tow lemma, that we state proofs are given in the succeeding sections.
+
+\begin{todo}
+  \textbf{TODO:} intuition behind the lemma
+\end{todo}
+The following lemma is analogous to Lemma 4 from \cite{dodis2009security}.
+\begin{lemma}[Canonical success probability with respect to a function $\hash$, \cite{dodis2009security}]
+\label{lemma:hash_function_probability}
+For a fixed problem poser $P_n$ let $C$ be a solver for $P_n$ with the success probability at least $\gamma$,
+asking at most $h$ hint queries and $v$ verification queries.
+Moreover, let $\cH$ be a family of pairwise independent efficient hash functions $\cQ \rightarrow \{0,1, \dots,2(h+v)-1\}$.
+There exists a probabilistic algorithm FindHash that takes as input parameters $\gamma$, $n$, $h$, $v$, and has oracle access to $C$ and $P_n$.
+Furthermore, FindHash runs in time polynomial in $(h,v,\frac{1}{\gamma},n)$ and with high probability outputs a function $\hash \in \cH$
+such that the canonical success probability of $C$ with respect to $\hash$ is at least $\frac{\gamma}{16(h+v)}$.
+\end{lemma}
+
+\begin{todo}
+  \textbf{TODO:} intuition behind the lemma
+\end{todo}
+The following lemma is analogous to Theorem 10 from \cite{holenstein2011general}.
+\begin{lemma}[Hardness amplification with respect to $\hash$, \cite{holenstein2011general}]
+  \label{lemma:sec_amp_for_p_hash}
+  Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function, $P_n^{(1)}$ a fixed
+  problem poser and $\widetilde{C} := (C_1, \widetilde{C}_2)$ a probabilistic two-phase circuit
+  with oracle access to a function $\hash: \cQ \rightarrow \{0,1,\dots, 2(h+v)-1\}$
+  and a solver $C := (C_1, C_2)$ for $P_{kn}^{(g)}$ that asks at most $h$ hint queries and $v$ verification queries.
+  There exists an algorithm Gen that takes as input parameters $\varepsilon$, $\delta$, $n$, $k$,
+  has oracle access to $P_n^{(1)}$,  $\widetilde{C}$, $\hash$, $g$,
+  and outputs a probabilistic two-phase circuit $D := (D_1, D_2)$ such that the following holds: \\
+  If $\widetilde{C}$ is such that
+  \begin{align*}
+    \underset{\mathclap{\substack{
+          \pi^{(k)} \in \{0,1\}^{kn}, \rho \in \{0,1\}^{*} \\
+          x:= \langle P^{(g)}(\pi^{(k)}), {C}_1(\rho) \rangle_{\mathit{trans}} \\
+          (\Gamma_H^{(k)}, \Gamma_V^{(g)}) := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}}}}}
+    {\Pr}[\Gamma_V^{(g)}(\widetilde{C}_2^{\Gamma_H^{(k)}, C_2, \hash}(x,\rho)) = 1]
+    \geq \underset{u \leftarrow \mu_\delta^k}{\Pr}[g(u) = 1] + \varepsilon,
+  \end{align*}
+  then $D$ satisfies almost surely over the randomness of Gen
+  \begin{align*}
+    \underset{
+      \mathclap{
+      \substack{
+        \pi \in \{0,1\}^{n}, \rho \in \{0,1\}^{*} \\
+        x := \langle P^{(1)}(\pi), D_1^{\widetilde{C}}(\rho) \rangle_{\mathit{trans}} \\
+        (\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi), D_1^{\widetilde{C}}(\rho) \rangle_{P^{(1)}}}}}
+    {\Pr}[\Gamma_V(D_2^{P^{(1)}, \widetilde{C}, \hash, g, \Gamma_H}(x, \rho)) = 1] \geq \delta + \frac{\varepsilon}{6k}.
+  \end{align*}
+  Furthermore, $D$
+  asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hint queries and no verification queries.
+  Finally, the running time of $\mathit{Gen}$ is polynomial in $k, \frac{1}{\varepsilon}, n$ with oracle calls.
+\end{lemma}
+The circuit $D$ from Lemma \ref{lemma:sec_amp_for_p_hash} does not ask any verification queries,
+instead it outputs a pair $(q, y)$ such that $\hash(q) = 0$ or $\bot$.
+
+\begin{proof}[Proof of Theorem \ref{th:sec_amp_for_dwvp}]
+Let $Gen$ be the algorithm from Theorem \ref{th:sec_amp_for_dwvp} that outputs
+the solver circuit $D$ for $P$. First, in the following code listing we define $Gen$.
+
+In the following code listing we define the algorithm Gen from Theorem \ref{th:sec_amp_for_dwvp}.
+The functions FindHash is as in Lemma \ref{lemma:f}
+%
+\begin{codeblock}
+  \textbf{Algorithm} $\widetilde{\text{Gen}}^{P^{(1)}, g, C}(n, \epsilon, \delta, k, h, v)$
+  \medskip\hrule
+  \textbf{Oracle:} A problem poser $P^{(1)}$, a function $g: \{0,1\}^{k} \rightarrow \{0,1\}$, \\
+  \IndII a solver circuit $C$ for $P^{(g)}$.  \\
+  \textbf{Input:} Parameters $n$, $\epsilon$, $\delta$, $k$, $h$, $v$.\\
+  \textbf{Return:} A circuit $\widetilde{D} = (D_1, \widetilde{D}_2)$.
+  \medskip\hrule
+  %
+  $hash := \text{FindHash}((h+v)\epsilon, n, h, v)$ \\
+  Let $\widetilde{C} := (C_1, \widetilde{C}_2)$ be as in Lemma \ref{lemma:ctilda_c} with oracle access to $C$, $\hash$. \\
+  $D := Gen^{P^{(1)},  \widetilde{C},  g, \hash}(\epsilon, \delta, n, k)$ \\
+  \Return $\widetilde{D} := (D_1, \widetilde{D}_2)$
+\end{codeblock}
+%
+\begin{codeblock}
+  \textbf{Circuit} $\widetilde{D}_2^{D, P^{(1)}, \hash, g, \Gamma_V, \Gamma_H}(x, \rho)$
+  \medskip \hrule
+  \textbf{Oracle:} A circuit $D :=(D_1, \widetilde{D}_2)$ from Lemma \ref{lemma:sec_amp_for_p_hash}, a problem poser $P^{(1)}$, \\
+  \IndII functions $\hash: Q \rightarrow \{0,1, \dots, 2(h+v) - 1\}$, $g: \{0,1\}^{k} \rightarrow \{0,1\}$ \\
+  \IndII a verification oracle $\Gamma_V$, a hint oracle $\Gamma_H$.\\
+  \textbf{Input:}  Bitstrings $x \in \{0,1\}^{*}$, $\rho \in \{0,1\}^{*}$.
+  \medskip\hrule
+  $(q, y) := D_2^{P^{(1)}, \widetilde{C}, \hash, g, \Gamma_H}(x, \rho)$ \\
+  Ask verification query $(q,y)$ to $\Gamma_V$.
+\end{codeblock}
+%
+We show that Theorem \ref{th:sec_amp_for_dwvp} follows from Lemma \ref{lemma:hash_function_probability} and Lemma \ref{lemma:sec_amp_for_p_hash}.
+We fix $P^{(1)}$, $g$, $P^{(g)}$ in the whole proof and consider a solver circuit $C = (C_1, C_2)$, asking at most $h$ hint queries and $v$ verification queries such that
+\begin{align*}
+    \underset{\pi^{(k)}, \rho}{\Pr}\left[\Success^{P^{(g)}, C}(\pi^{(k)}, \rho) = 1\right] \geq 16(h+v)\Big(\underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon\Big).
+\end{align*}
+First, we note that $C$ meets the requirements of Lemma \ref{lemma:hash_function_probability}.
+Furthermore, trivially success probability of $C$ is at least $(h+v)\epsilon$.
+Thus, the algorithm $\widetilde{\text{Gen}}$ can call FindHash to obtain $\hash:\cQ \rightarrow \{0,1,\dotsc, 2(h+v)-1\}$
+such that with high probability it holds
+\begin{align*}
+    \underset{\pi^{(k)}, \rho}{\Pr}\left[\CanonicalSuccess^{P^{(g)}, C, \hash}(\pi^{(k)}, \rho) = 1\right] \geq \underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon.
+\end{align*}
+Additionally, the running time of $\FindHash$ is $\mathit{poly}(h,v,\frac{1}{\epsilon},n)$ with oracle calls.
+Applying Lemma \ref{lemma:ctilda_c} for $C=(C_1, C_2)$ we obtain a circuit $\widetilde{C} = (C_1, \widetilde{C}_2)$ that satisfies
+\begin{align*}
+    \underset{
+      \mathclap {
+      \substack{\pi^{(k)}, \rho \\
+        x := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{\mathit{trans}} \\
+        (\Gamma_V^{(g)}, \Gamma_H^{(k)}) := \langle P^{(g)}(\pi^{(k)}), C_1(\rho) \rangle_{P^{(g)}}
+      }}}
+    {\Pr}\mkern13mu[\Gamma_V^{(g)}(\widetilde{C}_2^{\Gamma_H^{(k)}, C_2, \hash}(x, \rho)) = 1]
+    \geq
+\underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon.
+\end{align*}
+Now, we use the algorithm Gen as in Lemma \ref{lemma:sec_amp_for_p_hash} that yields a circuit $D = (D_1, D_2)$ which with high probability satisfies
+\begin{align}
+  \label{eq:succ_prob_d}
+    \underset{
+      \mathclap{
+      \substack{\pi, \rho \\ x := \langle P^{(1)}(\pi), D_1^{\widetilde{C}}(\rho) \rangle_{\mathit{trans}} \\
+        (\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi), D_1^{\widetilde{C}}(\rho) \rangle_{P^{(1)}}}}}
+    {\Pr}\mkern13mu[\Gamma_V(D_2^{P^{(1)}, \widetilde{C}, hash, g, \Gamma_H}(x, \rho)) = 1] \geq (\delta + \frac{\varepsilon}{6k}).
+\end{align}
+Finally, $\widetilde{\text{Gen}}$ outputs $\widetilde{D} = (D_1, \widetilde{D}_2)$ with oracle access to $D$, $P^{(1)}$, $hash$, $g$ such that with high probability it holds
+\begin{align*}
+    \underset{\pi, \rho}{\Pr}\left[\Success^{P^{(1)},\widetilde{D}}(\pi, \rho) = 1\right] \geq \delta + \frac{\varepsilon}{6k}.
+\end{align*}
+The running time of $\Gen$ is polynomial in $k, \frac{1}{\epsilon}, n)$ with oracle calls.
+Thus, the overall running time of $\widetilde{\mathit{Gen}}$ is  polynomial in $k,\frac{1}{\epsilon},h,v,n$ with oracle access.
+Furthermore, the circuit $\widetilde{D}$ asks at most $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})h$ hint queries and one verification query.
+Finally, we have $\mathit{Size}(\widetilde{D}) \leq \mathit{Size}(C) \cdot \frac{6k}{\epsilon}$.
+This finishes the proof of Theorem~\ref{th:sec_amp_for_dwvp}.
+\end{proof}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../master"
+%%% End:
