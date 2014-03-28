@@ -78,8 +78,8 @@ we have that for every $q_k, q_l \in \cQ$ such that $q_k \neq q_l$ the following
  \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_k) = \alpha] \notag\\ &= \frac{1}{2(h+v)}.
 \end{align}
 %
-We write $\cP_{\Success}$ to denote a set containing $(\pi,\rho)$ for which $\Success^{P, C}(\pi, \rho)=1$.
-We are interested in the probability over the choice of $\hash$ with fixed $(\pi^*, \rho^*) \in \cP_{\mathit{Success}}$ of
+Let $\cP_{\Success}$ denote a set containing $(\pi,\rho)$ for which $\Success^{P, C}(\pi, \rho)=1$.
+We~are interested in the probability over the choice of $\hash$ with fixed $(\pi^*, \rho^*) \in \cP_{\mathit{Success}}$ of
 the event $\CanonicalSuccess^{P,C,\hash}(\pi^*, \rho^*) = 1$. Let $(q_j, y_j)$ denote the first verification query for which $C$ succeeds.
 We calculate this probability
 \begin{align}
@@ -94,9 +94,9 @@ We calculate this probability
   \IndII &\overset{(\ref{eq:hash_pr})}{\geq} \frac{1}{4(h+v)},
 \end{align}
 where in $(*)$ we used the union bound.
-Let us denote the set of those $(\pi,\rho)$ for which $\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1$ by $\cP_{\mathit{Canonical}}$.
-If for $\pi$, $\rho$ the circuit $C$ succeeds canonically, then for the same $\pi$, $\rho$ we also have $\Success^{P, C}(\pi, \rho) = 1$.
-Hence, $\cP_{\mathit{Canonical}} \subseteq \cP_{\mathit{Success}}$, and we conclude
+Let $\cP_{\Canonical}$ be a set of $(\pi, \rho)$ for which $\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1$.
+If for $(\pi, \rho)$ the circuit $C$ succeeds canonically, then for the same $(\pi, \rho)$ we have $\Success^{P, C}(\pi, \rho) = 1$.
+Hence, $\cP_{\Canonical} \subseteq \cP_{\Success}$, and we conclude
 \begin{align}
   \label{ineq:hash_high_prob}
 &\underset{\substack{\hash \leftarrow \cH \\ \pi, \rho}}{\Pr}\left[\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1\right] \notag\\
@@ -115,23 +115,23 @@ Hence, $\cP_{\mathit{Canonical}} \subseteq \cP_{\mathit{Success}}$, and we concl
 {\mathbb{E}}\left[\underset{\hash \leftarrow \cH}{\Pr}[\CanonicalSuccess^{P,C,\hash}(\pi, \rho) = 1] \right] \cdot \gamma \notag\\
 &\hphantom{aaa}\stackrel{(\ref{ineq:prob_hash_success})}{\geq} \frac{\gamma}{4(h+v)}. %use phantom space to align text in the equation
 \end{align}
-%
+The algorithm FindHash uses a natural sampling approach to pick a function $\hash$ that satisfies Lemma \ref{lemma:hash_function_probability}.
 \begin{codeblock}
-  \textbf{Algorithm} $\text{FindHash}^{P,C}(\gamma, n, h, v)$
+  \textbf{Algorithm} $\FindHash^{P,C}(\gamma, n, h, v)$
   \medskip\hrule
   \textbf{Oracle:} A problem poser $P$, a solver circuit $C$ for $P$.\\
   \textbf{Input:} Parameters $\gamma$, $n$. The number of hint queries $h$ and of verification queries $v$. \\
   \textbf{Output:} A function $\hash:\cQ \rightarrow \{0,1, \dots, 2(h+v)-1 \}$.
   \medskip\hrule
-  \For $i := 1$ \To $32n(h+v)^2/\gamma^2$ \Do \\
+  \For $i := 1$ \To $\frac{32(h+v)^2}{\gamma^2}n$ \Do \\
   \IndI $\hash \leftarrow{} \cH$ \\
   \IndI $\mathit{count} := 0$ \\
-  \IndI \For $j := 1$ \To $32n(h+v)^2/\gamma^2$ \Do \\
+  \IndI \For $j := 1$ \To $M := \frac{32(h+v)^2}{\gamma^2}n$ \Do \\
   \IndII $\pi \leftarrow \{0,1\}^{n} $\\
   \IndII $\rho \leftarrow \{0,1\}^*$ \\
   \IndII \If $\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1$ \Then \\
   \IndIII $\mathit{count} := \mathit{count} + 1$\\
-  \IndI \If $\mathit{count} \geq \frac{\gamma}{12(h+v)} \frac{32(h+v)^2}{\gamma^2}n$ \Then \\
+  \IndI \If $\mathit{count} \geq \frac{\gamma}{12(h+v)} M$ \Then \\
   \IndII \Return $\hash$\\
   \Return $\bot$
 \end{codeblock}
