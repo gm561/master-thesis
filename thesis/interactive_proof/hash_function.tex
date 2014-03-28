@@ -1,6 +1,15 @@
 %
 \subsection{Domain partitioning}
 \label{st:domain_partition}
+In this section we use the technique from \cite{dodis2009security}.
+The set $\cQ$ is partitioned into a set of advice $\cQ_{adv}$ and attacking queries $\cQ_{attack}$.
+The circuit $C$ can make hint queries only on $q \in \cQ_{adv}$ and successful verification queries on $q \in \cQ_{attack}$.
+The idea is to avoid collisions between hint and verification queries even in the independent runs of $C$.
+If $C$ tries to ask a hint query on $q \in \cQ_{attack}$, the execution of $C$ is aborted.
+Similarly, all verification queries on $q \in \cQ_{adv}$ are answered as unsuccessful.
+In this section we show that it is possible to find $\cQ_{attack}$ and $\cQ_{adv}$ such that
+the success probability of $C$ with $Q$ partitioned is still substantial.
+
 Let $\hash:\cQ\rightarrow\{0,1,\dots, 2(h\!+\!v)\!-\!1\}$, the idea is to partition $\cQ$ such that the set of preimages
 of $0$ for $\hash$ contains $q \in \cQ$ on which $C$ is not allowed to ask hint queries,
 and the first successful verification query $(q,y)$ of $C$ is such that $\hash(q) = 0$.
