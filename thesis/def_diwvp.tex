@@ -1,0 +1,171 @@
+\section{The Definition}
+\label{section:wvp}
+Let us combine definitions of puzzles introduced in \cite{dodis2009security} and \cite{holenstein2011general}
+and define a \textit{dynamic interactive weakly verifiable puzzle} as follows.
+\begin{definition}[Dynamic interactive weakly verifiable puzzle]
+  \label{def:dwvp}%
+  A~\textit{dynamic interactive weakly verifiable puzzle (DIWVP)} is defined by a family of probabilistic circuits $\{P_n\}_{n \in \N}$.
+  A circuit belonging to $\{P_n\}_{n \in \N}$ is called a \textit{problem poser}.
+  A \textit{solver} $C := (C_1, C_2)$ is a probabilistic two-phase circuit.
+  We write $P_n(\pi)$ to denote the execution of $P_n$ with the randomness fixed to $\pi \in \{0,1\}^n$ and $C(\rho) := (C_1,C_2)(\rho)$
+  to denote the execution of both $C_1$ and $C_2$ with the randomness fixed to $\rho \in \{0,1\}^{*}$.
+
+  In the first phase, the problem poser $P_n(\pi)$ and the solver $C_1(\rho)$ interact.
+  As the result of the interaction $P_n(\pi)$ outputs a \textit{verification circuit} $\Gamma_{V}$ and a probabilistic \textit{hint circuit} $\Gamma_{H}$.
+  The circuit $C_1(\rho)$ produces no output. The circuit $\Gamma_{V}$ takes as input $q \in \cQ$ (for some set $\cQ$ of indices),
+  an answer $y \in \{0,1\}^*$ and outputs a bit. We say that an answer $(q,y)$ is a \textit{correct solution} if and only if $\Gamma_V(q,y) = 1$.
+  The circuit $\Gamma_H$ on input $q \in \cQ$ outputs a hint such that $\Gamma_V(q,\Gamma_H(q))~=~1$.
+
+  In the second phase, $C_2$ takes as input $x := \langle P_n(\pi), C_1(\rho) \rangle_{\trans}$
+  and has oracle access to $\Gamma_V$ and $\Gamma_H$.
+  The execution of $C_2$ with the input $x$ and the randomness fixed to $\rho$
+  is denoted by $C_2(x; \rho)$. The queries of $C_2$ to $\Gamma_V$ and $\Gamma_H$ are called \textit{verification queries} and \textit{hint queries}, respectively.
+  We say that the circuit $C_2$ \textit{succeeds} if and only if it makes a verification query $(q,y)$ such that $\Gamma_V(q,y)~=~1$,
+  and it has not previously asked for a hint query on this $q$.
+\end{definition}
+
+If it is clear from the context, we omit the subscript $n$ and write $P$ instead of~$P_n$.
+
+A verification query $(q,y)$ of a solver $C$ for which a hint query on this $q$ has been asked before cannot be a verification query for which $C$ succeeds.
+Therefore, without loss of generality throughout this chapter, we make the assumption that $C$ does not ask verification queries on $q$
+for which a hint query has been asked before. Moreover, we assume that once $C$ asked a verification query that succeeds,
+it does not ask any further hint or verification queries.
+
+There is no loss of generality in assuming that the problem poser and the solver are defined by probabilistic circuits.
+Definition \ref{def:dwvp} embraces also the case where the problem poser and the solver are probabilistic polynomial time algorithms.
+We use the well known fact \cite{LectureNotesCT} that a probabilistic polynomial time algorithm can be transformed into an equivalent
+family of probabilistic Boolean circuits of the polynomial size\footnote{Theorem 6.10 from \cite{LectureNotesCT} is stated for probabilistic, polynomial time,
+oracle algorithms with a single bit of output, but it can be adopted to the case where an output is longer than a single bit.}.
+
+We use the term \textit{weakly verifiable} to emphasize that there is no easy way
+for the solver to check the correctness of a solution except for asking a verification query.
+We call a weakly verifiable puzzle \textit{dynamic} if the number of hint queries is greater than zero.
+Furthermore, we say that a weakly verifiable puzzle is \textit{interactive} if in the first
+phase the number of messages exchanged between the problem poser and the solver is greater than one.
+Finally, we say that a weakly verifiable puzzle is \textit{non-dynamic} if $|Q| = 1$
+and \textit{non-interactive} if the number of messages sent in the first phase is at most one.
+
+Definition \ref{def:dwvp} generalizes and combines the previous approaches that study
+\textit{weakly verifiable puzzles} \cite{canetti2005hardness},
+\textit{dynamic weakly verifiable puzzles} \cite{dodis2009security}, and \textit{interactive weakly verifiable puzzles} \cite{holenstein2011general}.
+
+%
+\section{The Hardness Amplification Theorem}
+\label{section:hardness_amplification_diwvp}
+In this section we define the $k$-wise direct product of puzzles and state the hardness amplification theorem for dynamic interactive weakly verifiable puzzles.
+
+\begin{definition}[$k$-wise direct-product of DIWVPs]
+  \label{def:k_wise_direct_product}
+  Let $g: \{0,1\}^{k}\!\rightarrow\!\{0,1\}$ be a binary monotone function and $P_n^{(1)}$ a problem poser as in Definition~\ref{def:dwvp}.
+  The $k$-wise direct product of $P_n^{(1)}$ is a DIWVP defined by a circuit $P_{kn}^{(g)}$.
+  We write $P_{kn}^{(g)}(\pi^{(k)})$ to denote the execution of $P_{kn}^{(g)}$ with the randomness fixed to $\pi^{(k)} := (\pi_1, \dots, \pi_k)$
+  where $\pi_i \in \{0,1\}^n$ for all $1 \leq i \leq n$. Let $(C_1, C_2)(\rho)$ be a probabilistic two-phase circuit called a \textit{solver}.
+  In the first phase, the problem poser $P_{kn}^{(g)}(\pi^{(k)})$ sequentially interacts in $k$ rounds with the circuit $C_1(\rho)$.
+  In the $i$-th round $C_1(\rho)$ interacts with $P_n^{(1)}(\pi_i)$, and as the result $P_{n}^{(1)}(\pi_i)$ generates circuits $\Gamma_V^i, \Gamma_H^i$.
+  Finally, after $k$ rounds $P_{kn}^{(g)}(\pi^{(k)})$ outputs a verification circuit
+\begin{align*}
+  \Gamma_V^{(g)} (q, y_1, \dots, y_k) := g(\Gamma_V^{1}(q, y_1), \dotsc, \Gamma_V^{k}(q, y_k))
+\end{align*}
+and a hint circuit
+\begin{align*}
+  \Gamma_H^{(k)} (q) := (\Gamma_H^{1}(q), \dotsc, \Gamma_H^{k}(q)).
+\end{align*}
+\end{definition}
+
+For the $k$-wise direct product of puzzles we require the solver to make a verification query on a single index $q \in \cQ$.
+Otherwise, if verification queries of the form $((q_1,y_1), \dotsc, (q_k, y_k))$ were allowed,
+solving the $k$-wise direct product of puzzles would be trivial.
+One could fix some $\bar{q} \in \cQ$ and ask
+$k$ hint queries such that the $i$-th hint query is of the form $(q_1, \dotsc,q_{i-1}, \bar{q}, q_{i+1}, \dotsc, q_k)$ where
+for all $1 \leq j \leq k$ such that $i \neq j$ it holds $q_j \in \cQ \setminus \{\bar{q}\}$.
+The solver obtains correct solutions for $\bar{q}$ to the puzzles on all $k$ positions and
+can trivially make a successful verification query.
+
+On the following code listing we define an experiment $\Success$ such that
+it outputs $1$ if and only if the solver $C$ asks a successful verification query.
+%
+%\begin{codeblock}
+\begin{restatable}{codeblock}{success}
+  \textbf{Experiment} $\Success^{P, C}(\pi, \rho)$
+  \medskip \hrule
+  \textbf{Oracles:} A problem poser $P$, a solver $C = (C_1, C_2)$ for $P$.\\
+  \textbf{Input:}  Bitstrings $\pi \in \{0,1\}^n$, $\rho \in \{0,1\}^*$.\\
+  \textbf{Output:} A bit $b \in \{0,1\}$.
+  \medskip\hrule
+  \Run $\langle P(\pi), C_1(\rho) \rangle$ \\
+  \IndI $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$ \\
+  \IndI $x := \langle P(\pi), C_1(\rho) \rangle_{\mathit{trans}}$ \\ \\
+  \Run $C_2^{\Gamma_V,\Gamma_H}(x; \rho)$ \\
+  \IndI \If $C_2^{\Gamma_V, \Gamma_H}(x; \rho)$ asks a verification query $(q, y)$ s.t. $\Gamma_V(q, y) = 1$ \Then \\
+  \IndII \Return $1$ \\
+  \Return $0$
+\end{restatable}
+%\end{codeblock}
+%
+We define the \textit{success probability} of $C$ in solving a puzzle defined by $P$ as
+\begin{align}
+ \underset{\pi, \rho}{\Pr}[\Success^{P,C}(\pi, \rho) = 1].
+\end{align}
+Furthermore, for fixed $P$ we say that $C$ \textit{succeeds} for $\pi$, $\rho$ if $\Success^{P,C}(\pi, \rho) = 1$.
+
+We now state our main theorem. Loosely speaking, we claim that it is possible to reduce a solver for the $k$-wise direct product of $P$
+to a solver for a single puzzle defined by $P$. This implies that if there is no good solver for $P$, then also a good solver for
+the $k$-wise direct product of $P$ does not exist.
+\begin{restatable}[Hardness amplification for dynamic interactive weakly verifiable puzzles]{theorem}{hardnessAmpfDiwvp}
+\label{th:sec_amp_for_dwvp}
+Let $P_{n}^{(1)}$ be a fixed problem poser as in Definition \ref{def:dwvp}
+and $P_{kn}^{(g)}$ a problem poser for the $k$-wise direct product of $P_{n}^{(1)}$ as in Definition~\ref{def:k_wise_direct_product}.
+Additionally, let $C$ be a solver for $P_{kn}^{(g)}$ asking at most $h$ hint queries and $v$ verification queries.
+There exists a probabilistic algorithm $\widetilde{\Gen}$ with oracle access to $C$,
+a binary monotone function $g:\{0,1\}^k \rightarrow \{0,1\}$, and a problem poser $P_{n}^{(1)}$.
+The algorithm $\widetilde{\Gen}$ takes as input parameters $\varepsilon$, $\delta$, $n$, $k$, $h$, $v$,
+and outputs a solver circuit $\widetilde{D}$ for $P_{n}^{(1)}$ such that: \\
+If $C$ satisfies
+  \begin{align}
+    \label{th_sec_amp_dwvp_assum}
+    \underset{\substack{\pi^{(k)} \in \{0,1\}^{kn} \\ \rho \in \{0,1\}^{*}}}{\Pr}\left[\mathit{Success}^{P_{kn}^{(g)}, C}(\pi^{(k)}, \rho) = 1\right]
+    \geq 16(h+v)\Bigl(\underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon\Bigr),
+  \end{align}
+then $\widetilde{D}$ is a two-phase probabilistic circuit that almost surely over the randomness of $\widetilde{Gen}$ satisfies
+  \begin{align}
+    \underset{\substack{\pi \in \{0,1\}^{n} \\ \rho \in \{0,1\}^{*}}}
+    {\Pr}\left[\mathit{Success}^{P_{n}^{(1)},\widetilde{D}}(\pi, \rho) = 1\right] \geq \delta + \frac{\varepsilon}{6k}.
+  \end{align}
+Additionally, $\widetilde{D}$ requires oracle access to $g$, $P_{n}^{(1)}$, $C$, hint and verification circuits generated by the problem poser $P_n^{(1)}$ after the first phase
+and asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hint queries and one verification query.
+Finally, $\mathit{Time}(\widetilde{\Gen}) = \poly(k, \frac{1}{\varepsilon}, n, v, h)$ with oracle calls.
+\end{restatable}
+%
+
+The above theorem is very general in the sense that it does not pose any constrains
+on the size of the circuits or the time complexity of the interactive protocol.
+Additionally, we count each oracle call as a single step of the algorithm.
+
+Let us consider, as an example, the case where the solver $C$ and the problem poser $P_{kn}^{(g)}$ are polynomial time probabilistic algorithms.
+Furthermore, we assume that the solver $C$ is such that it satisfies \eqref{th_sec_amp_dwvp_assum}
+and $\frac{1}{\epsilon}$ and $k$ are bounded by some polynomial $p(n)$.
+Clearly the solver and the poser can be represented as polynomial size families of probabilistic circuits.
+The running time of $\widetilde{Gen}$ is polynomial, therefore the size of $\widetilde{D}$ must also be polynomial.
+Finally, the circuit $\widetilde{D}$ can be executed by a polynomial time algorithm.
+Thereby, we obtain a typical polynomial time reduction as described in the literature \cite{Arora:2009:CCM:1540612, LectureNotesCrypo}.
+
+The Theorem \ref{th:sec_amp_for_dwvp} holds with high probability over the randomness of $\widetilde{\Gen}$.
+More precisely, the circuit output by $\widetilde{\Gen}$ satisfies the condition of the theorem with probability
+at least $1 - p(k, n, \frac{1}{\epsilon}) \cdot 2^n$. Therefore, Theorem~\ref{th:sec_amp_for_dwvp} is meaningful if there exists a polynomial $p(n)$
+that bounds~$k$~and~$\frac{1}{\epsilon}$.
+
+We emphasize that the number of hint queries asked by $\widetilde{D}$ is greater than the number of hint queries asked by $C$ whereas the number of verification queries
+is limited to at most one. For many cryptographic constructions making such an assumption about the number of hint and verification queries is reasonable.
+In particular, we cannot assume that a solver for a single puzzle may ask more verification queries than a solver for the $k$-wise direct product of puzzles.
+
+In Chapter \ref{ch:preliminaries} we defined a binary monotone function.
+We note that the monotone restriction on $g$ in Theorem \ref{th:sec_amp_for_dwvp} is essential. For $g(b) := 1 - b$ a circuit that deliberately gives incorrect
+answers satisfies $g$ with probability $1$ whereas a circuit that solves a puzzle successfully with probability
+$\gamma > 0$ succeeds only with probability $1 - \gamma$.
+
+We postpone the proof of Theorem \ref{th:sec_amp_for_dwvp} until Chapter~\ref{ch:main_result}.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "thesis"
+%%% End:
