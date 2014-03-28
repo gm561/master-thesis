@@ -2,13 +2,13 @@
 \subsection{Domain partitioning}
 \label{st:domain_partition}
 In this section we use the technique from \cite{dodis2009security}.
-The set $\cQ$ is partitioned into a set of advice $\cQ_{adv}$ and attacking queries $\cQ_{attack}$.
-The circuit $C$ can make hint queries only on $q \in \cQ_{adv}$ and successful verification queries on $q \in \cQ_{attack}$.
-The idea is to avoid collisions between hint and verification queries even in the independent runs of $C$.
-If $C$ tries to ask a hint query on $q \in \cQ_{attack}$, the execution of $C$ is aborted.
+The set $\cQ$ is partitioned into a set $\cQ_{adv}$ of advice queries and a set $\cQ_{attack}$ of attacking queries.
+The circuit $C$ can make hint queries only on $q \in \cQ_{adv}$ and successful verification queries only on $q \in \cQ_{attack}$.
+If $C$ asks a hint query on $q \in \cQ_{attack}$, the execution of $C$ is aborted.
 Similarly, all verification queries on $q \in \cQ_{adv}$ are answered as unsuccessful.
-In this section we show that it is possible to find $\cQ_{attack}$ and $\cQ_{adv}$ such that
-the success probability of $C$ with $Q$ partitioned is still substantial.
+The idea is to avoid collisions between hint and verification queries even in the independent runs of $C$.
+In this section we show that it is possible to find a function that is used to partition $\cQ$
+such that the success probability of $C$ is still substantial.
 
 Let $\hash:\cQ\rightarrow\{0,1,\dots, 2(h\!+\!v)\!-\!1\}$, the idea is to partition $\cQ$ such that the set of preimages
 of $0$ for $\hash$ contains $q \in \cQ$ on which $C$ is not allowed to ask hint queries,
@@ -20,6 +20,8 @@ Let us define the following experiment $\CanonicalSuccess$ in which $\cQ$ is par
 We say that a solver circuit \textit{succeeds} in the experiment $\CanonicalSuccess$
 if it asks a successful verification query $(q_j, y_j)$ such that $\hash(q_j) = 0$,
 and no hint query $q_i$ has been asked before $(q_j, y_j)$ such that $\hash(q_i) = 0$.
+The result of the experiment $\CanonicalSuccess$ is $1$ if and only if the solver $C$ makes
+a successful verification query with respect to the domain partitioned using $\hash$.
 %
 \begin{codeblock}
   \textbf{Experiment} $\CanonicalSuccess^{P, C, \hash}(\pi, \rho)$
@@ -54,8 +56,9 @@ $\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1$.
 We show now that if a solver circuit $C$ for $P$ often succeeds in the experiment $\Success$,
 then there exists a function $\hash$ such that $C$ also often succeeds in the experiment $\CanonicalSuccess$
 provided that the number of hint and verification queries is not too large.
+We state the lemma analogous to Lemma 5 due to Dodis et al. \cite{dodis2009security}.
 %
-\begin{lemma}[Success probability in solving a dynamic interactive weakly verifiable puzzle with respect to a function $\hash$]
+\begin{lemma}[Canonical success probability with respect to a function $\hash$, \cite{dodis2009security}]
 \label{lemma:hash_function_probability}
 For a fixed problem poser $P_n$ let $C$ be a solver for $P_n$ with the success probability at least $\gamma$,
 asking at most $h$ hint queries and $v$ verification queries.
@@ -75,19 +78,19 @@ we have that for every $q_k, q_l \in \cQ$ such that $q_k \neq q_l$ the following
  \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_k) = \alpha] \notag\\ &= \frac{1}{2(h+v)}.
 \end{align}
 %
-We write $\cP_{\Success}$ to denote a set containing all $(\pi,\rho)$ for which $\Success^{P, C}(\pi, \rho)~=~1$.
-Let us fix $(\pi^*, \rho^*) \in \cP_{\mathit{Success}}$. We are interested in the probability over
-a choice of $\hash$ of the event $\CanonicalSuccess^{P,C,\hash}(\pi^*, \rho^*) = 1$.
-Let $(q_j, y_j)$ denote the first verification query such that $\Gamma_V(q_j, y_j) = 1$, we have
+We write $\cP_{\Success}$ to denote a set containing $(\pi,\rho)$ for which $\Success^{P, C}(\pi, \rho)=1$.
+We are interested in the probability over the choice of $\hash$ with fixed $(\pi^*, \rho^*) \in \cP_{\mathit{Success}}$ of
+the event $\CanonicalSuccess^{P,C,\hash}(\pi^*, \rho^*) = 1$. Let $(q_j, y_j)$ denote the first verification query for which $C$ succeeds.
+We calculate this probability
 \begin{align}
   \label{ineq:prob_hash_success}
   \underset{\hash \leftarrow \cH}{\Pr}&\left[\CanonicalSuccess^{P,C,\hash}(\pi^*, \rho^*) = 1\right] \notag\\
   \IndII &\overset{\hphantom{\eqref{eq:hash_pr}}}{=} \underset{\hash \leftarrow \cH}{\Pr}\big[\hash(q_j) = 0 \land (\forall i < j : \hash(q_i) \neq 0)\big] \notag\\
   \IndII &\overset{\hphantom{\eqref{eq:hash_pr}}}{=} \underset{\hash \leftarrow \cH}{\Pr}\big[
   \forall i < j : \hash(q_i) \neq 0 \mid \hash(q_j) = 0\big] \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_j) = 0] \notag\\
-  \IndII &\overset{(\ref{eq:hash_pr})}{=} \frac{1}{2(h+v)}\left(1 -\underset{\hash \leftarrow \cH}{\Pr}[\exists i < j : \hash(q_i) = 0 \mid \hash(q_j) = 0] \right) \notag\\
-  \IndII &\stackrel{\substack{\hphantom{\eqref{eq:hash_pr}}\\(*)}}{\geq} \frac{1}{2(h+v)} \left( 1 - \sum_{i < j} \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_i) = 0 | \hash(q_j) = 0] \right) \notag\\
-  \IndII &\stackrel{(\ref{eq:hash_pr})}{=} \frac{1}{2(h+v)} \left( 1 -  \sum_{i < j}\underset{\hash \leftarrow \cH}{\Pr}[\hash(q_i) = 0] \right) \notag\\
+  \IndII &\overset{(\ref{eq:hash_pr})}{=} \frac{1}{2(h+v)}\Big(1 -\underset{\hash \leftarrow \cH}{\Pr}[\exists i < j : \hash(q_i) = 0 \mid \hash(q_j) = 0] \Big) \notag\\
+  \IndII &\stackrel{\substack{\hphantom{\eqref{eq:hash_pr}}\\(*)}}{\geq} \frac{1}{2(h+v)} \Big( 1 - \sum_{i < j} \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_i) = 0 | \hash(q_j) = 0] \Big) \notag\\
+  \IndII &\stackrel{(\ref{eq:hash_pr})}{=} \frac{1}{2(h+v)} \Big( 1 -  \sum_{i < j}\underset{\hash \leftarrow \cH}{\Pr}[\hash(q_i) = 0] \Big) \notag\\
   \IndII &\overset{(\ref{eq:hash_pr})}{\geq} \frac{1}{4(h+v)},
 \end{align}
 where in $(*)$ we used the union bound.
