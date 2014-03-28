@@ -1,15 +1,14 @@
 %
 \subsection{The hardness amplification proof for partitioned domains}
 \label{st:amplification_proof}
-Let $C = (C_1, C_2)$ be a solver circuit for a dynamic interactive weakly verifiable puzzle as in Definition \ref{def:dwvp}.
-We write $C_2^{(\cdot, \cdot)}$ to emphasize that $C_2$ does not obtain direct access to hint and verification circuits.
+\begin{todo}
+  \textbf{TODO:} Add short introduction
+\end{todo}
+
+Let $C := (C_1, C_2)$ be a two-phase solver circuit as in Definition \ref{def:dwvp}.
+We write $C_2^{(\cdot, \cdot)}$ to emphasize that $C_2$ does not obtain direct access to the hint and verification oracles.
 Instead, whenever $C_2$ asks a hint or verification query, it is answered explicitly
 as in the following code excerpt of the circuit $\widetilde{C}_2$.
-
-Given $C = (C_1, C_2)$ we define the circuit $\widetilde{C} = (C_1, \widetilde{C}_2)$.
-Every hint query $q$ asked by $\widetilde{C}$ is such that $hash(q) \neq 0$.
-Furthermore, $\widetilde{C}$ asks no verification queries. Instead, it returns $(q,y)$ such that
-$hash(q) = 0$ or $\bot$.
 
 \begin{codeblock}
   \textbf{Circuit} $\widetilde{C}_2^{\Gamma_H, C_2, \hash} (x, \rho)$
@@ -33,6 +32,10 @@ $hash(q) = 0$ or $\bot$.
   \Return $\bot$
 \end{codeblock}
 %
+Given $C := (C_1, C_2)$ we define a circuit $\widetilde{C} := (C_1, \widetilde{C}_2)$.
+Every hint query $q$ asked by $\widetilde{C}$ is such that $hash(q) \neq 0$.
+Furthermore, $\widetilde{C}$ asks no verification queries, instead it returns $(q,y)$ such that $hash(q) = 0$ or $\bot$.
+
 For fixed $\pi$, $\rho$, and $hash$ we say that the circuit $\widetilde{C}$ \textit{succeeds} if
 for $x := \langle P(\pi), C_1(\rho) \rangle_{\mathit{trans}}$,
 $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$, we have
@@ -40,9 +43,13 @@ $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$, we have
 \Gamma_V(\widetilde{C}_2^{\Gamma_H, C_2, \hash}(x, \rho)) = 1.
 \end{align*}
 %
+\begin{todo}
+  \textbf{TODO:} Show the intuitive meaning of this lemma
+\end{todo}
+
 \begin{lemma}
   \label{lemma:ctilda_c}
-  For fixed $P$, $C$, and $hash$ the following statement is true
+  For fixed $P$, $C := (C_1, C_2)$, and $hash$ it holds
   \begin{align*}
     \underset{\pi, \rho}{\Pr}[\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1]
     \leq
@@ -57,9 +64,12 @@ $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$, we have
   \end{align*}
 \end{lemma}
 %
-\begin{proof}
-If for some $\pi$, $\rho$, and $\hash$ a circuit $C = (C_1, C_2)$ succeeds canonically,
-then for the same $\pi$, $\rho$, and $\hash$ a circuit $\widetilde{C} := (C_1, \widetilde{C}_2)$ also succeeds.
+\begin{todo}
+  \textbf{TODO:} Give an overview of this Lemma
+\end{todo}
+\begin{proof}[Proof of Lemma \ref{lemma:ctilda_c}]
+If for some $\pi$, $\rho$, and $\hash$ the circuit $C := (C_1, C_2)$ succeeds canonically,
+then for the same $\pi$, $\rho$, and $\hash$ the circuit $\widetilde{C} := (C_1, \widetilde{C}_2)$ also succeeds.
 Using this observation, we conclude that
 \begin{align*}
   &\underset{\pi, \rho}{\Pr}\left[\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1\right] \\
@@ -85,15 +95,20 @@ Using this observation, we conclude that
 \end{proof}
 %
 %
-\begin{lemma}\textbf{(Hardness amplification for a dynamic interactive weakly verifiable puzzle with respect to \boldmath{$\hash$}.)}
+\begin{todo}
+  \textbf{TODO:} intuition behind the lemma \\
+  \textbf{TODO:} bases on \cite{holenstein2011general}
+\end{todo}
+The following Lemma is analogous to Theorem 10 from \cite{holenstein2011general}.
+\begin{lemma}[Hardness amplification for a dynamic interactive weakly verifiable puzzle with respect to $\hash$]
   \label{lemma:sec_amp_for_p_hash}
   Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function, $P_n^{(1)}$ a fixed
-  problem poser and $\widetilde{C} := (C_1, \widetilde{C}_2)$ a circuit
+  problem poser and $\widetilde{C} := (C_1, \widetilde{C}_2)$ a probabilistic two-phase circuit
   with oracle access to a function $\hash: \cQ \rightarrow \{0,1,\dots, 2(h+v)-1\}$
-  and a solver $C := (C_1, C_2)$ for $P_{kn}^{(g)}$ which asks at most $h$ hint queries and $v$ verification queries.
+  and a solver $C := (C_1, C_2)$ for $P_{kn}^{(g)}$ that asks at most $h$ hint queries and $v$ verification queries.
   There exists an algorithm Gen that takes as input parameters $\varepsilon$, $\delta$, $n$, $k$,
   has oracle access to $P_n^{(1)}$,  $\widetilde{C}$, $\hash$, $g$,
-  and outputs a circuit $D := (D_1, D_2)$ such that the following holds: \\
+  and outputs a probabilistic two-phase circuit $D := (D_1, D_2)$ such that the following holds: \\
   If $\widetilde{C}$ is such that
   \begin{align*}
     \underset{\mathclap{\substack{
@@ -103,7 +118,7 @@ Using this observation, we conclude that
     {\Pr}[\Gamma_V^{(g)}(\widetilde{C}_2^{\Gamma_H^{(k)}, C_2, \hash}(x,\rho)) = 1]
     \geq \underset{u \leftarrow \mu_\delta^k}{\Pr}[g(u) = 1] + \varepsilon,
   \end{align*}
-  then $D$ satisfies almost surely
+  then $D$ satisfies almost surely over the randomness of Gen
   \begin{align*}
     \underset{
       \mathclap{
@@ -117,12 +132,12 @@ Using this observation, we conclude that
   asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hint queries and no verification queries.
   Finally, the running time of $\mathit{Gen}$ is polynomial in $k, \frac{1}{\varepsilon}, n$ with oracle calls.
 \end{lemma}
-We note that the circuit $D$ from Lemma \ref{lemma:sec_amp_for_p_hash} instead of asking verification queries outputs a pair $(q, y)$
-such that $\hash(q) = 0$ or $\bot$.
+We note that the circuit $D$ from Lemma \ref{lemma:sec_amp_for_p_hash} does not ask any verification queries,
+instead it outputs a pair $(q, y)$ such that $\hash(q) = 0$ or $\bot$.
 
 Before we give the proof of Lemma \ref{lemma:sec_amp_for_p_hash} we define additional algorithms.
 First, in the following code listing the algorithm $\Gen$ from Lemma \ref{lemma:sec_amp_for_p_hash} is defined.
-The procedures used by $\Gen$ are presented on the succeeding code listings.
+The procedures and circuits used by $\Gen$ are presented on the succeeding code listings.
 \begin{codeblock}
   \textbf{Algorithm} $\Gen^{P^{(1)}, \widetilde{C}, g, \mathit{hash}}(\epsilon, \delta, n, k)$
   \medskip \hrule
@@ -190,15 +205,20 @@ for the puzzle generated in the $i$-th round of the interaction between $P^{(g)}
 Therefore, the algorithm EvalutePuzzles runs $k$ times $P^{(1)}(\pi_i)$ to simulate the interaction with
 $C_1(\rho)$ where in each round of interaction a fresh random bitstring $\pi_i \in \{0,1\}^{n}$ is used.
 
-Let us introduce some additional notation.
-We denote by $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i$ the execution of the $i$-th round of the sequential interaction.
-We use $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i_{P^{(1)}}$ to denote the output of $P^{(1)}(\pi_i)$ in the $i$-th round.
+Let us introduce the additional notation.
+We write $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i$ to denote the $i$-th round of the sequential interaction.
+Let $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i_{P^{(1)}}$ be the output of $P^{(1)}(\pi_i)$ in the $i$-th round.
 Finally, we write $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i_{\mathit{trans}}$ to denote the transcript of communication in the $i$-th round.
 We note that the $i$-th round of the interaction between $P^{(1)}$ and $C_1$ is well defined only if all previous rounds have been executed before.
 
-For simplicity of notation in the code excerpts of circuits $C_2$, $D_2$, and EvalutePuzzles we
-omit superscripts of some oracles. Exemplary, we write $\widetilde{C}_2^{\Gamma_H^{(k)}, \hash}$ instead of $\widetilde{C}_2^{\Gamma_H^{(k)}, C, \hash}$ where
-the superscript of the oracle circuit $C$ is omitted. We make sure that it is clear from the context which oracles are used.
+For simplicity of the notation in the code excerpts of circuits $C_2$, $D_2$, and EvalutePuzzles we omit superscripts of some oracles.
+
+Exemplary, for $\widetilde{C}_2^{\Gamma_H^{(k)}, C, \hash}$ we omit the superscript $C$ and instead write $\widetilde{C}_2^{\Gamma_H^{(k)}, \hash}$.
+We make sure that it is clear from the context which oracles are used.
+
+\begin{todo}
+  \textbf{TODO:} Introduce this algorithm
+\end{todo}
 
 \begin{codeblock}
   \textbf{Algorithm} $\text{EvaluatePuzzles}^{P^{(1)}, \widetilde{C}, \hash}(\pi^{(k)}, \rho, n, k)$
@@ -264,6 +284,9 @@ returned by EstimateSurplus differs from $S_{\pi^*,b}$ by at most $\frac{\epsilo
 \end{proof}
 %
 We define the following solver circuit $C' = (C_1', C_2')$ for the $(k-1)$--wise direct product of $P^{(1)}$.
+\begin{todo}
+  \textbf{TODO:} Give more intuition why we need this circuit and where it is used
+\end{todo}
 \begin{codeblock}
   \textbf{Circuit} $C_1'^{\widetilde{C}, P^{(1)}}(\rho)$
   \medskip \hrule
@@ -283,7 +306,8 @@ We define the following solver circuit $C' = (C_1', C_2')$ for the $(k-1)$--wise
   \IndII a function $\hash: \cQ \rightarrow \{0,1,\dots, 2(h+v)-1\}$. \\
   \textbf{Input:}  A transcript of $k-1$ rounds of interaction \\
   \IndII $x^{(k-1)} := (x_2, \dotsc, x_{k}) \in \{0,1\}^{*}$, a bitstring $\rho \in \{0,1\}^{*}$.\\
-  \textbf{Hard-coded:} A bitstring $\pi^* \in \{0,1\}^{n}$.
+  \textbf{Hard-coded:} A bitstring $\pi^* \in \{0,1\}^{n}$. \\
+  \textbf{Output:} A tuple $(q, y_2, \dots, y_k)$.
   \medskip\hrule
   Simulate $\langle P^{(1)}(\pi^*), C_1(\rho) \rangle^{1}$ \\
   \IndI $(\Gamma_H^*, \Gamma_V^*) := \langle P^{(1)}(\pi^*), C_1(\rho) \rangle^{1}_{P^{(1)}}$ \\
@@ -532,7 +556,7 @@ We insert \eqref{ineq:first_part} into \eqref{eq:pr_d_succ_0} and calculate the 
  + S_{\pi^*,0}\Bigr)
 \frac{1}{\underset{u \leftarrow \mu_{\delta}^k}{\Pr}[ u \in \cG_1 \setminus\cG_0]}\Bigr].
 \end{align}
-We show now that if Gen does not recurse, then the majority of estimates is low almost surely.
+We now show that if Gen does not recurse, then the majority of estimates is low almost surely.
 Let us assume that
 \begin{align}
 \underset{\pi}{\Pr}\left[\left(S_{\pi,0} \leq (1 - \frac{1}{2k})\epsilon\right) \land \left( S_{\pi,1} \leq (1-\frac{1}{2k})\epsilon\right)\right] < 1 - \frac{\epsilon}{6k},

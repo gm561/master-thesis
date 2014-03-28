@@ -53,7 +53,7 @@ We define the \textit{canonical success probability} of a solver circuit $C$ for
 For fixed $\hash$ and $P$ a \textit{canonical success} of $C$ for bistrings $\pi$, $\rho$ is a situation where
 $\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1$.
 
-We show now that if a solver circuit $C$ for $P$ often succeeds in the experiment $\Success$,
+We now show that if a solver circuit $C$ for $P$ often succeeds in the experiment $\Success$,
 then there exists a function $\hash$ such that $C$ also often succeeds in the experiment $\CanonicalSuccess$
 provided that the number of hint and verification queries is not too large.
 We state the lemma analogous to Lemma 5 due to Dodis et al. \cite{dodis2009security}.
@@ -126,12 +126,12 @@ The algorithm FindHash uses a natural sampling approach to pick a function $\has
   \For $i := 1$ \To $\frac{32(h+v)^2}{\gamma^2}n$ \Do \\
   \IndI $\hash \leftarrow{} \cH$ \\
   \IndI $\mathit{count} := 0$ \\
-  \IndI \For $j := 1$ \To $M := \frac{32(h+v)^2}{\gamma^2}n$ \Do \\
+  \IndI \For $j := 1$ \To $N := \frac{32(h+v)^2}{\gamma^2}n$ \Do \\
   \IndII $\pi \leftarrow \{0,1\}^{n} $\\
   \IndII $\rho \leftarrow \{0,1\}^*$ \\
   \IndII \If $\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1$ \Then \\
   \IndIII $\mathit{count} := \mathit{count} + 1$\\
-  \IndI \If $\mathit{count} \geq \frac{\gamma}{12(h+v)} M$ \Then \\
+  \IndI \If $\mathit{count} \geq \frac{\gamma}{12(h+v)} N$ \Then \\
   \IndII \Return $\hash$\\
   \Return $\bot$
 \end{codeblock}
@@ -157,12 +157,12 @@ Let us define independent and identically distributed binary random variables $X
     0 & \text{otherwise.}
   \end{cases}
 \end{align*}
-We turn now to the case where $\hash \in \cH_{\Bad}$ and show that it is unlikely that $\hash \in \cH_{\Bad}$
+We now turn to the case where $\hash \in \cH_{\Bad}$ and show that it is unlikely that $\hash \in \cH_{\Bad}$
 is returned by FindHash.
 From \eqref{eq:hash_bad} it follows that $\mathbb{E}_{{\pi}, \rho}[X_i]~\leq~\frac{\gamma}{16(h+v)}$.
 In the following inequalities \eqref{ineq:hash_bad_upper} and \eqref{ineq:hash_good_upper} in steps denoted
 with $(*)$ we use the trivial facts $h + v \geq 1$ and $\gamma \leq 1$.
-For any fixed $\hash \in \cH_{\Bad}$ using the Chernoff bound we get
+For fixed $\hash \in \cH_{\Bad}$ using the Chernoff bound we get
 \begin{align}
   \label{ineq:hash_bad_upper}
   \underset{\pi,\rho}{\Pr} \left[\frac{1}{N} \sum_{i=1}^{N} X_i \geq \frac{\gamma}{12(h+v)} \right]
@@ -177,7 +177,7 @@ The probability that $\hash \in \cH_{\Good}$, when picked, is not returned amoun
   &\leq e^{-{\frac{\gamma}{8(h+v)}} N / 18} \leq e^{-\frac{2}{9} \frac{(h+v)}{\gamma}n} \stackrel{(*)}{\leq} e^{-\frac{2}{9}n}
 \end{align}
 where we once more used the Chernoff bound.
-We show now that the probability of picking $\hash \in \cH_{\mathit{Good}}$ is at least $\frac{\gamma}{8(h+v)}$.
+We now show that the probability of picking $\hash \in \cH_{\mathit{Good}}$ is at least $\frac{\gamma}{8(h+v)}$.
 To obtain a contradiction suppose that
 \begin{align}
   \label{ass:hash_max_prob}
@@ -196,11 +196,10 @@ Using \eqref{ass:hash_max_prob} we conclude that it is possible to bound the pro
 \end{align*}
 which contradicts (\ref{ineq:hash_high_prob}). Hence, we conclude that the probability of choosing $\hash \in \cH_{\mathit{Good}}$ amounts at least $\frac{\gamma}{8(h+v)}$.
 
-We show that FindHash picks in one of its iteration $\hash \in \cH_{\mathit{Good}}$ almost surely.
-Let $K$ denote the random variable that takes value equal to the number of iterations of
-the outer loop of FindHash and $Y_i$ be a random variable for the event
-that in the $i$-th iteration of the outer loop $\hash \notin \cH_{\mathit{Good}}$ is picked.
-We use $\underset{\hash \leftarrow \cH}{\Pr}[\hash \in \cH_{\textit{Good}}] \geq \frac{\gamma}{8(h+v)}$ and $K \leq \frac{32(h+v)^2}{\gamma^2}n$ to conclude
+We now show that FindHash picks in one of its iteration $\hash \in \cH_{\mathit{Good}}$ almost surely.
+Let $K$ be the random variable that denotes the number of iterations of the outer loop of $\FindHash$
+and $Y_i$ be the binary random variable for the event that in the $i$-th iteration of the outer loop $\hash \notin \cH_{\mathit{Good}}$ is picked.
+We use $\Pr_{\hash \leftarrow \cH}[\hash \in \cH_{\Good}] \geq \frac{\gamma}{8(h+v)}$ and $K \leq 32n(h+v)^2/\gamma^2$ to conclude
 \begin{align*}
   \underset{\hash \leftarrow \cH}{\Pr}\Bigl[ \bigcap_{1 \leq i \leq K} Y_i \Bigr] \leq \left(1 - \frac{\gamma}{8(h+v)}\right)^{\frac{32(h+v)^2}{\gamma^2}n}
     &\leq e^{-\frac{\gamma}{8(h+v)} \frac{32(h+v)^2}{\gamma^2}n} \\
