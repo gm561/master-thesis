@@ -97,6 +97,12 @@ We define the following circuit $\widetilde{C}_2$.
 Given $C := (C_1, C_2)$ we define a circuit $\widetilde{C} := (C_1, \widetilde{C}_2)$.
 Every hint query $q$ asked by $\widetilde{C}$ is such that $hash(q) \neq 0$. Furthermore, $\widetilde{C}$ asks no verification queries,
 instead it returns $(q,y)$ such that $hash(q) = 0$ or $\bot$.
+For fixed $\pi$, $\rho$, and $hash$ we say that the circuit $\widetilde{C}$ \textit{succeeds} if
+for $x := \langle P(\pi), C_1(\rho) \rangle_{\mathit{trans}}$,
+$(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$, we have
+\begin{align*}
+\Gamma_V(\widetilde{C}_2^{\Gamma_H, C_2, \hash}(x, \rho)) = 1.
+\end{align*}
 We define the circuit $\widetilde{C}$ to use the approach of Holenstein et al. \cite{holenstein2011general} in the proof of hardness amplification.
 More precisely, we state the following lemma that is analogous to Theorem 10 from \cite{holenstein2011general}.
 \begin{lemma}[Hardness amplification with respect to $\hash$, \cite{holenstein2011general}]

@@ -1,21 +1,11 @@
 %
 \subsection{The hardness amplification proof for partitioned domains}
 \label{st:amplification_proof}
-\begin{todo}
-  \textbf{TODO:} Add short introduction
-\end{todo}
+In this section we prove Lemma \ref{lemma:sec_amp_for_p_hash}. The proof in the great extent bases on \cite{holenstein2011general}.
 
-For fixed $\pi$, $\rho$, and $hash$ we say that the circuit $\widetilde{C}$ \textit{succeeds} if
-for $x := \langle P(\pi), C_1(\rho) \rangle_{\mathit{trans}}$,
-$(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$, we have
-\begin{align*}
-\Gamma_V(\widetilde{C}_2^{\Gamma_H, C_2, \hash}(x, \rho)) = 1.
-\end{align*}
+We show now that for a fixed $P$ and $hash$ the circuit $\widetilde{C}$ succeeds with probability at least as high as
+$C$ in the experiment $\CanonicalSuccess$
 %
-\begin{todo}
-  \textbf{TODO:} Show the intuitive meaning of this lemma
-\end{todo}
-
 \begin{lemma}
   \label{lemma:ctilda_c}
   For fixed $P$, $C := (C_1, C_2)$, and $hash$ it holds
