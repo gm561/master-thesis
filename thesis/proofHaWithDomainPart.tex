@@ -5,37 +5,6 @@
   \textbf{TODO:} Add short introduction
 \end{todo}
 
-Let $C := (C_1, C_2)$ be a two-phase solver circuit as in Definition \ref{def:dwvp}.
-We write $C_2^{(\cdot, \cdot)}$ to emphasize that $C_2$ does not obtain direct access to the hint and verification oracles.
-Instead, whenever $C_2$ asks a hint or verification query, it is answered explicitly
-as in the following code excerpt of the circuit $\widetilde{C}_2$.
-
-\begin{codeblock}
-  \textbf{Circuit} $\widetilde{C}_2^{\Gamma_H, C_2, \hash} (x, \rho)$
-  \medskip \hrule
-  \textbf{Oracle:} A hint circuit $\Gamma_H$, a circuit $C_2$, \\ \IndII a function $\hash : \cQ \rightarrow \{0,1,\dots, 2(h+v)-1\}$. \\
-  \textbf{Input:} Bitstrings $x \in \{0,1\}^{*}$, $\rho \in \{0,1\}^{*}$. \\
-  \textbf{Output:} A pair $(q, y)$ where $q \in \cQ$ and $y \in \{0,1\}^{*}$.
-  \medskip\hrule
-  \Run $C_2^{(\cdot, \cdot)}(x, \rho)$ \\
-  \IndI \If $C_2^{(\cdot, \cdot)}(x, \rho)$ asks a hint query on $q$ \Then\\
-  \IndII \If $\hash(q) = 0$ \Then\\
-  \IndIII \Return $\bot$\\
-  \IndII \textbf{else}\\
-  \IndIII answer the query of $C_2^{(\cdot, \cdot)}(x, \rho)$ using $\Gamma_H(q)$\\
-  \\
-  \IndI \If $C_2^{(\cdot, \cdot)}(x, \rho)$ asks a verification query $(q, y)$ \Then \\
-  \IndII \If $\hash(q) = 0 $ \textbf{then} \\
-  \IndIII \Return $(q, y)$ \\
-  \IndII \textbf{else} \\
-  \IndIII answer the verification query of $C_2^{(\cdot, \cdot)}(x, \rho)$ with 0 \\
-  \Return $\bot$
-\end{codeblock}
-%
-Given $C := (C_1, C_2)$ we define a circuit $\widetilde{C} := (C_1, \widetilde{C}_2)$.
-Every hint query $q$ asked by $\widetilde{C}$ is such that $hash(q) \neq 0$.
-Furthermore, $\widetilde{C}$ asks no verification queries, instead it returns $(q,y)$ such that $hash(q) = 0$ or $\bot$.
-
 For fixed $\pi$, $\rho$, and $hash$ we say that the circuit $\widetilde{C}$ \textit{succeeds} if
 for $x := \langle P(\pi), C_1(\rho) \rangle_{\mathit{trans}}$,
 $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$, we have

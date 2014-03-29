@@ -1,12 +1,58 @@
 %
 \subsection{The proof of hardness amplification theorem}
 \label{st:mainTheoremProof}
-In this section we give the proof of Theorem \ref{th:sec_amp_for_dwvp}.
-This proof uses tow lemma, that we state proofs are given in the succeeding sections.
+In this section we prove Theorem \ref{th:sec_amp_for_dwvp} and state two additional lemmas that help us to prove this theorem.
+Informally speaking, Lemma \ref{lemma:hash_function_probability} states that it is possible to partition $\cQ$ such that
+the solver $C$ has still substantial success probability and there are no conflicting hint and verification queries.
+In Lemma~\ref{lemma:sec_amp_for_p_hash} we state that it is possible to amplify hardness for dynamic interactive puzzles
+under the assumption that there are no conflicting hint and verification queries.
 
-\begin{todo}
-  \textbf{TODO:} intuition behind the lemma
-\end{todo}
+\paragraph{Domain partitioning} Let $\hash:\cQ\rightarrow\{0,1,\dots, 2(h\!+\!v)\!-\!1\}$, the idea is to partition $\cQ$ such that the set of preimages
+of $0$ for $\hash$ contains $q \in \cQ$ on which $C$ is not allowed to ask hint queries,
+and the first successful verification query $(q,y)$ of $C$ is such that $\hash(q) = 0$.
+Therefore, if $C$ makes a verification query $(q,y)$ such that $\hash(q) = 0$, then we know that no hint query is ever asked on this $q$.
+
+We denote the $i$-th query of $C$ by $q_i$ if it is a hint query and by $(q_i, y_i)$ if it is a verification query.
+Let us define the following experiment $\CanonicalSuccess$ in which $\cQ$ is partitioned using a function $\hash$.
+We say that a solver circuit \textit{succeeds} in the experiment $\CanonicalSuccess$
+if it asks a successful verification query $(q_j, y_j)$ such that $\hash(q_j) = 0$,
+and no hint query $q_i$ has been asked before $(q_j, y_j)$ such that $\hash(q_i) = 0$.
+% The result of the experiment $\CanonicalSuccess$ is $1$ if and only if the solver $C$ makes
+% a successful verification query with respect to the domain partitioned using $\hash$.
+%
+\begin{codeblock}
+  \textbf{Experiment} $\CanonicalSuccess^{P, C, \hash}(\pi, \rho)$
+  \medskip \hrule
+  \textbf{Oracle:} A problem poser $P$, a solver circuit $C = (C_1, C_2)$ for $P$,\\
+  \IndII a function $\hash: \cQ \rightarrow \{0, 1, \dotsc, 2(h+v) - 1\}$.\\
+  \textbf{Input:}  Bitstrings $\pi \in \{0,1\}^n$, $\rho \in \{0,1\}^*$. \\
+  \textbf{Output:} A bit $b \in \{0,1\}$.
+  \medskip\hrule
+  \Run $\langle P(\pi), C_1(\rho) \rangle$ \\
+  \IndI $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$ \\
+  \IndI $x := \langle P(\pi), C_1(\rho) \rangle_{\trans}$ \\ \\
+  \Run $C_2^{\Gamma_V, \Gamma_H} (x, \rho)$ \\
+  \IndI \If $C_2^{\Gamma_V, \Gamma_H} (x, \rho)$ does not succeed for any verification query \Then \\
+  \IndII \Return $0$ \\
+  \IndI Let $(q_j,y_j)$ be the first verification query such that $\Gamma_V(q_j, y_j) = 1$.\\
+  \\
+  \If $(\forall i < j :  \hash(q_i) \neq 0)$ \And $(\hash(q_j) = 0)$ \Then \\
+  \IndI \Return 1\\
+  \Else\\
+  \IndI \Return 0
+\end{codeblock}
+%
+We define the \textit{canonical success probability} of a solver circuit $C$ for $P$ with respect to a function $\hash$ as
+\begin{align}
+ \underset{\pi, \rho}{\Pr}[\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1].
+\end{align}
+%
+For fixed $\hash$ and $P$ a \textit{canonical success} of $C$ for bistrings $\pi$, $\rho$ is a situation where
+$\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1$.
+
+We now show that if a solver circuit $C$ for $P$ often succeeds in the experiment $\Success$,
+then there exists a function $\hash$ such that $C$ also often succeeds in the experiment $\CanonicalSuccess$
+provided that the number of hint and verification queries is not too large.
 The following lemma is analogous to Lemma 4 from \cite{dodis2009security}.
 \begin{lemma}[Canonical success probability with respect to a function $\hash$, \cite{dodis2009security}]
 \label{lemma:hash_function_probability}
@@ -17,6 +63,39 @@ There exists a probabilistic algorithm FindHash that takes as input parameters $
 Furthermore, FindHash runs in time polynomial in $(h,v,\frac{1}{\gamma},n)$ and with high probability outputs a function $\hash \in \cH$
 such that the canonical success probability of $C$ with respect to $\hash$ is at least $\frac{\gamma}{16(h+v)}$.
 \end{lemma}
+We prove Lemma \ref{lemma:hash_function_probability} in Section \ref{st:domain_partition}.
+%
+\paragraph{Hardness amplification}%
+Let $C := (C_1, C_2)$ be a two-phase solver circuit as in Definition \ref{def:dwvp}.
+We write $C_2^{(\cdot, \cdot)}$ to emphasize that $C_2$ does not obtain direct access to the hint and verification oracles.
+Instead, whenever $C_2$ asks a hint or verification query, it is answered explicitly
+as in the following code excerpt of the circuit $\widetilde{C}_2$.
+
+\begin{codeblock}
+  \textbf{Circuit} $\widetilde{C}_2^{\Gamma_H, C_2, \hash} (x, \rho)$
+  \medskip \hrule
+  \textbf{Oracle:} A hint circuit $\Gamma_H$, a circuit $C_2$, \\ \IndII a function $\hash : \cQ \rightarrow \{0,1,\dots, 2(h+v)-1\}$. \\
+  \textbf{Input:} Bitstrings $x \in \{0,1\}^{*}$, $\rho \in \{0,1\}^{*}$. \\
+  \textbf{Output:} A pair $(q, y)$ where $q \in \cQ$ and $y \in \{0,1\}^{*}$.
+  \medskip\hrule
+  \Run $C_2^{(\cdot, \cdot)}(x, \rho)$ \\
+  \IndI \If $C_2^{(\cdot, \cdot)}(x, \rho)$ asks a hint query on $q$ \Then\\
+  \IndII \If $\hash(q) = 0$ \Then\\
+  \IndIII \Return $\bot$\\
+  \IndII \textbf{else}\\
+  \IndIII answer the query of $C_2^{(\cdot, \cdot)}(x, \rho)$ using $\Gamma_H(q)$\\
+  \\
+  \IndI \If $C_2^{(\cdot, \cdot)}(x, \rho)$ asks a verification query $(q, y)$ \Then \\
+  \IndII \If $\hash(q) = 0 $ \textbf{then} \\
+  \IndIII \Return $(q, y)$ \\
+  \IndII \textbf{else} \\
+  \IndIII answer the verification query of $C_2^{(\cdot, \cdot)}(x, \rho)$ with 0 \\
+  \Return $\bot$
+\end{codeblock}
+%
+Given $C := (C_1, C_2)$ we define a circuit $\widetilde{C} := (C_1, \widetilde{C}_2)$.
+Every hint query $q$ asked by $\widetilde{C}$ is such that $hash(q) \neq 0$.
+Furthermore, $\widetilde{C}$ asks no verification queries, instead it returns $(q,y)$ such that $hash(q) = 0$ or $\bot$.
 
 \begin{todo}
   \textbf{TODO:} intuition behind the lemma
