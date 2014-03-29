@@ -103,8 +103,54 @@ $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$, we have
 \begin{align*}
 \Gamma_V(\widetilde{C}_2^{\Gamma_H, C_2, \hash}(x, \rho)) = 1.
 \end{align*}
-We define the circuit $\widetilde{C}$ to use the approach of Holenstein et al. \cite{holenstein2011general} in the proof of hardness amplification.
-More precisely, we state the following lemma that is analogous to Theorem 10 from \cite{holenstein2011general}.
+We now show the circuit $\widetilde{C}$ succeeds with probability at least as high as $C$ in the experiment $\CanonicalSuccess$.
+%
+\begin{lemma}
+  \label{lemma:ctilda_c}
+  For fixed $P$, $C := (C_1, C_2)$, and $hash$ it holds
+  \begin{align*}
+    \underset{\pi, \rho}{\Pr}[\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1]
+    \leq
+    \mkern13mu
+    \underset{
+      \mathclap{
+      \substack{
+        \pi, \rho \\
+        x := \langle P(\pi), C_1(\rho) \rangle_{\mathit{trans}} \\
+        (\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}}}}
+  {\Pr}[\Gamma_V(\widetilde{C}_2^{\Gamma_H, C_2, hash}(x, \rho)) = 1].
+  \end{align*}
+\end{lemma}
+%
+\begin{proof}[Proof of Lemma \ref{lemma:ctilda_c}]
+If for some $\pi$, $\rho$, and $\hash$ the circuit $C := (C_1, C_2)$ succeeds canonically,
+then for the same $\pi$, $\rho$, and $\hash$ the circuit $\widetilde{C} := (C_1, \widetilde{C}_2)$ also succeeds.
+Using this observation we conclude that
+\begin{align*}
+  &\underset{\pi, \rho}{\Pr}\left[\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1\right] \\
+  &\IndII \leq
+  \mkern33mu
+    \underset{
+      \mathclap{
+        \substack{\pi, \rho \\
+        x := \langle P(\pi), C_1(\rho) \rangle_{\mathit{trans}} \\
+        (\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}
+      }}}
+    {\mathbb{E}}\mkern13mu\big[\Gamma_V(\widetilde{C}_2^{\Gamma_H, C_2, \hash}(x, \rho)) = 1\big] \\
+  &\IndII =
+  \mkern33mu
+    \underset{
+      \mathclap{
+        \substack{\pi, \rho \\
+        x := \langle P(\pi), C_1(\rho) \rangle_{\mathit{trans}} \\
+        (\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}
+      }}}
+    {\Pr}\mkern13mu\big[\Gamma_V(\widetilde{C}_2^{\Gamma_H, C_2, \hash}(x, \rho)) = 1\big]
+\end{align*}
+\end{proof}
+%
+We state the following lemma that is analogous to Theorem 10 from \cite{holenstein2011general}.
+Intuitively, it states that it is possible to amplify hardness in case the circuit $\widetilde{C}$ is used.
 \begin{lemma}[Hardness amplification with respect to $\hash$, \cite{holenstein2011general}]
   \label{lemma:sec_amp_for_p_hash}
   Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a binary monotone function, $P_n^{(1)}$ a fixed

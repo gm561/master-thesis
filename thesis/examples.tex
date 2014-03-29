@@ -64,10 +64,10 @@ has not been asked before corresponds to making a successful verification query 
 \section{Public Key Signature Schemes}
 \label{section:pks}
 In this section we describe \textit{public key signature schemes} (SIGs).
-The game base security definition of SIGs for the chosen message attack can be seen as a dynamic,
+The game based security definition of SIGs for the chosen message attack can be seen as a dynamic,
 non-interactive weakly verifiable puzzle.
 
-First, we give a definition of public key encryption schemes, and what it means for such schemes to be secure.
+We give a definition of public key encryption schemes, and what it means for such schemes to be secure.
 The definitions are based on \cite{Goldreich:2004:FCV:975541}.
 
 \begin{definition}[Public key signature scheme]
@@ -91,7 +91,7 @@ such that the following conditions are satisfied:
 We say that $s \in \cS$ is a \textit{valid signature} for $q \in \cQ$ if and only if $V(k_{pub}, q, s) = 1$.
 
 It seems that a game of breaking security of the public key signature scheme is not weakly verifiable as the adversary can use $V$
-to efficiently check the correctness of the solution. However, we it easy to see that this situation still can be modeled as
+to efficiently check the correctness of the solution. However, it is easy to see that this situation still can be modeled as
 a dynamic interactive weakly verifiable puzzle where the solver has access to the verification circuit and can ask a polynomial number of verification queries.
 %
 \begin{definition}[Security of a public key signature scheme with respect to a chosen message attack]
@@ -105,7 +105,7 @@ The public key encryption scheme is \textit{secure} if there is no polynomial ti
 We will describe how a task of breaking the security of the public key signature scheme can be
 seen as a dynamic non-interactive weakly verifiable puzzle.
 
-The problem poser correspond to $G$ and the solver to the adversary. The set $Q$ is a set of messages.
+the problem poser corresponds to $G$ and the solver to the adversary. The set $Q$ is a set of messages.
 In the first phase, the problem poser obtains $k_{pub}$, $k_{priv}$ and sends $k_{pub}$ to the solver.
 Then, the problem poser generates a hint circuit $\Gamma_H$ and a verification circuit $\Gamma_V$.
 The hint circuit $\Gamma_H$ corresponds to the circuit $H$ from Definition \ref{def:sec_sig} and takes as input $q \in \cQ$ and outputs a valid signature for $q$.
@@ -128,7 +128,7 @@ Loosely speaking, we consider the following \textit{bit commitment protocol} tha
 We suppose that the sender and the receiver are polynomial time probabilistic algorithms.
 The protocol consists of a \textit{commit phase} and a \textit{reveal phase}.
 In the commit phase the sender and the receiver interact, as the result the sender commits to a value $b \in \{0,1\}$.
-We require that after the commit phase it is hard for the receiver to correctly guess $b$.
+We require that after the commit phase it is hard for the receiver to guess $b$ correctly.
 In the reveal phase the sender opens the commitment by sending to the receiver a pair $(b', y)$ where $y \in \{0,1\}^{*}$
 should convince the receiver that the sender committed in the commit phase to the value $b' \in \{0,1\}$.
 A desirable property of a bit commitment protocol is that in the reveal phase it is hard for
@@ -172,7 +172,7 @@ where $\epsilon(n)$ is a negligible function of $n$.
 
 Breaking the binding property of a bit commitment protocol can be seen as a problem of solving
 an interactive weakly verifiable puzzle.
-The receiver corresponds the problem poser and the solver to the sender that tries to break the binding property of the bit commitment protocol.
+The receiver corresponds to the problem poser and the solver to the sender that tries to break the binding property of the bit commitment protocol.
 The number of hint queries is zero, and the number of the verification queries is at most one. Thus, we conclude that the puzzle is non-dynamic.
 
 In the first phase, the solver uses its randomness to choose a bit to which it commits. Then, it engage in interaction with the problem poser.
@@ -217,7 +217,7 @@ Thus we conclude that a task of correctly guessing a text depicted on the image 
 
 It is not known how good an algorithm for solving CAPTCHAs can be. Thus, it is likely that a gap between the human
 performance and a performance of the best computer programs may be small. We are interested in finding a way to amplify this gap.
-In the paper \cite{DBLP:journals/corr/abs-1002-3534} it was shown that this is possible by means of the parallel repetition of non-dynamic
+In the paper \cite{holenstein2011general} it was shown that this is possible by means of the parallel repetition of non-dynamic
 interactive weakly verifiable puzzles.
 
 % is used where a solver is given $n$ independent weakly verifiable puzzles.
