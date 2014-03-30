@@ -29,7 +29,7 @@ The circuit $\widetilde{C}'$ is a solver for the $(k\!-\!1)$-wise direct product
   \IndII Let $\widetilde{C}_2'$ have oracle access to $\widetilde{C}$ and have hard-coded $\pi^*$. \\
   \IndII $\widetilde{C}' := (C_1', \widetilde{C}_2')$ \\
   \IndII $g'(b_2, \dots, b_k) := g(b, b_2, \dots, b_k)$\\
-  \IndII\Return $\widetilde{\Gen}^{P^{(1)}, \widetilde{C}', g', hash}(\epsilon, \delta, n, k-1)$ \\
+  \IndII\Return $\widetilde{Gen}^{P^{(1)}, \widetilde{C}', g', hash}(\epsilon, \delta, n, k-1)$ \\
   \textit{// all estimates are lower than $(1-\frac{3}{4k})\varepsilon$}\\
   \Return $\widetilde{D}^{P^{(1)}, \widetilde{C}, hash, g}$
 \end{codeblock}
@@ -264,7 +264,7 @@ that with high probability satisfies
         \pi, \rho \\
         x := \langle P^{(1)}(\pi), D_1^{\widetilde{C}}(\rho) \rangle_{\mathit{trans}} \\
         (\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi), D_1^{\widetilde{C}}(\rho) \rangle_{P^{(1)}}}}}
-  {\Pr}\Big[\Gamma_V\big(\widetilde{D
+  {\Pr}\Big[\Gamma_V\big(\widetilde{D}_2^{P^{(1)}, \widetilde{C}, \hash, g, \Gamma_H}(x, \rho)) = 1\Big]
   &\geq \delta + \Bigl(1 - \frac{1}{k}\Bigr)\frac{\epsilon}{6(k-1)} \notag\\
   &= \delta + \frac{\epsilon}{6k}.
 \end{align}
