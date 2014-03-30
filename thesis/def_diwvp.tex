@@ -11,9 +11,9 @@ and define a \textit{dynamic interactive weakly verifiable puzzle} as follows.
   to denote the execution of both $C_1$ and $C_2$ with the randomness fixed to $\rho \in \{0,1\}^{*}$.
 
   In the first phase, the problem poser $P_n(\pi)$ and the solver $C_1(\rho)$ interact.
-  As the result of the interaction $P_n(\pi)$ outputs a \textit{verification circuit} $\Gamma_{V}$ and a probabilistic \textit{hint circuit} $\Gamma_{H}$.
+  As a result of the interaction $P_n(\pi)$ outputs a \textit{verification circuit} $\Gamma_{V}$ and a~probabilistic \textit{hint circuit} $\Gamma_{H}$.
   The circuit $C_1(\rho)$ produces no output. The circuit $\Gamma_{V}$ takes as input $q \in \cQ$ (for some set $\cQ$ of indices),
-  an answer $y \in \{0,1\}^*$ and outputs a bit. We say that an answer $(q,y)$ is a \textit{correct solution} if and only if $\Gamma_V(q,y) = 1$.
+  $y \in \{0,1\}^*$ and outputs a bit. We say that an answer $(q,y)$ is a \textit{correct solution} if and only if $\Gamma_V(q,y) = 1$.
   The circuit $\Gamma_H$ on input $q \in \cQ$ outputs a hint such that $\Gamma_V(q,\Gamma_H(q))~=~1$.
 
   In the second phase, $C_2$ takes as input $x := \langle P_n(\pi), C_1(\rho) \rangle_{\trans}$
@@ -26,7 +26,7 @@ and define a \textit{dynamic interactive weakly verifiable puzzle} as follows.
 
 If it is clear from the context, we omit the subscript $n$ and write $P$ instead of~$P_n$.
 
-A verification query $(q,y)$ of a solver $C$ for which a hint query on this $q$ has been asked before cannot be a verification query for which $C$ succeeds.
+A verification query $(q,y)$ of $C$ for which a hint query on this $q$ has been asked before cannot be a verification query for which $C$ succeeds.
 Therefore, without loss of generality throughout this chapter, we make the assumption that $C$ does not ask verification queries on $q$
 for which a hint query has been asked before. Moreover, we assume that once $C$ asked a verification query that succeeds,
 it does not ask any further hint or verification queries.
