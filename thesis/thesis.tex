@@ -133,16 +133,14 @@ and state the hardness amplification theorem that proving is the main goal of th
 \chapter{Hardness Amplification for Dynamic Interactive Weakly Verifiable Puzzles}
 \label{ch:main_result} %
 In the previous chapter we gave an overview of the former studies of different types of weakly verifiable puzzles.
-The focus of this chapter is on giving a constructive proof of hardness amplification for dynamic interactive weakly verifiable puzzles.
-First, in Section \ref{subst:main_theorem} we remind the hardness amplification theorem
-for dynamic interactive weakly verifiable puzzles stated in Section \ref{section:hardness_amplification_diwvp}.
-We give an intuition behind the proof in Section \ref{section:intuition}.
-Next, in Section \ref{st:domain_partition} we construct an algorithm that finds an efficiently computable function
-that is used to partition the domain of hint and verification queries.
-Then, in Section \ref{st:amplification_proof} we show that is it possible to amplify hardness
-for dynamic interactive weakly verifiable puzzles under the assumption that
-there are no hint queries that prevents verification queries from succeeding.
-Finally, in Section \ref{st:put_together} we complete the proof by combining the previous steps.
+The focus of this chapter is on proving the hardness amplification theorem for dynamic interactive weakly verifiable puzzles.
+In Section \ref{subst:main_theorem} we remind the hardness amplification theorem stated in Section \ref{section:hardness_amplification_diwvp}.
+We give intuition behind the proof of this theorem in Section \ref{section:intuition}.
+The theorem is proved in Section \ref{st:mainTheoremProof}. The proof requires two additional lemmas.
+In Section \ref{st:domain_partition} we prove the first one that states that it is possible to efficiently partition the query domain.
+Next, in Section \ref{st:amplification_proof} we prove the latter lemma that shows that is it possible to amplify hardness for dynamic interactive weakly
+verifiable puzzles under the assumption that no hint queries prevent verification queries from succeeding.
+Finally, in Section~\ref{st:discussion} we discuss our result.
 %
 \input{mainTheoremRestated}
 \input{intuitionHardAmpfProof}
