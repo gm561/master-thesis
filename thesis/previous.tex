@@ -378,35 +378,39 @@ has been studied by Holenstein and Schoenebeck in \cite{holenstein2011general}.
 We will now give an overview of this work and compare it with our approach.
 
 \subsection{The definition}
+Holenstein and Schoenebeck study hardness amplification for puzzles defined as follows.
 \begin{definition}[Interactive Weakly Verifiable Puzzle, \cite{holenstein2011general}]
   \label{def:iwvp}
 An \textit{interactive weakly verifiable puzzle} is defined by a protocol given by two probabilistic algorithms $P$ and $S$.
-The algorithm $P$ is called the problem poser and produces as output a verification circuit $\Gamma$.
-The algorithm $S$ called the problem solver produces no output.
-Furthermore, the \textit{success probability} of the algorithm $S^*$ in solving an interactive weakly verifiable puzzle defined by $(P,S)$ is:
+The algorithm $P$ is called a \textit{problem poser} and produces as output a verification circuit $\Gamma$.
+The algorithm $S$ called \textit{a solver} produces no output.
+Furthermore, the \textit{success probability} of the algorithm $S^*$ in solving an interactive weakly verifiable puzzle defined by $(P,S)$ amounts
 \begin{align*}
-  \underset{\substack{\rho, \pi \\ \Gamma := \langle P(\rho), S^*(\pi) \rangle_{P}}}{\Pr}\Big[\Gamma(\langle P(\rho),S^*(\pi) \rangle_{S^*}) = 1 \Big].
+  \underset{\substack{\rho \in \{0,1\}^{n}, \pi \in \{0,1\}^{n} \\ \Gamma := \langle P(\rho), S^*(\pi) \rangle_{P}}}{\Pr}\Big[\Gamma(\langle P(\rho),S^*(\pi) \rangle_{S^*}) = 1 \Big].
 \end{align*}
 \end{definition}
 It is not hard to see that Definition \ref{def:iwvp} is a special case of Definition \ref{def:dwvp}.
 The puzzles in Definition \ref{def:iwvp} are non-dynamic, thus $|Q| = 1$. Furthermore, we can assume that $\Gamma$
 corresponds to the verification circuit from Definition \ref{def:dwvp} and the circuit $\Gamma_H$ always outputs $\bot$.
+Finally, at most one verification query is allowed.
+
+\subsection{The hardness amplification theorem}
+In this section we briefly describe approach of Holenstein and Schoenebeck used to amplify hardness for interactive weakly verifiable puzzles.
 
 Similarly as in the previous sections, we define the $k$-wise direct product of puzzles.
 \begin{definition}[$k$-wise direct product of interactive weakly verifiable puzzles, \cite{holenstein2011general}]
 Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a monotone function and $(P,S)$ be a fixed interactive weakly verifiable puzzle.
 The $k$-wise direct product of $(P,S)$ denoted by $(P^{(g)}, S^{(g)})$ is an interactive weakly verifiable puzzle where the problem poser and the solver
-sequentially interact in $k$ rounds. In each round $(P,S)$ is used to produce an instance of the interactive weakly verifiable puzzle.
+sequentially interact in $k$ rounds. In each round $(P,S)$ is used to produce an instance of the puzzle.
 As the result circuits $\Gamma^{(1)}, \dotsc, \Gamma^{(k)}$ for $P$ are generated.
 Finally, $P^{(g)}$ outputs the circuit $\Gamma^{(g)}(y_1, \dotsc, y_k) := g(\Gamma^{(1)}(y_1), \dotsc, \Gamma^{(k)}(y_k))$.
 \end{definition}
 
-\subsection{The hardness amplification theorem}
 The following hardness amplification theorem is proved in \cite{holenstein2011general}.
 \begin{theorem}[Hardness amplification for interactive weakly verifiable puzzles, \cite{holenstein2011general}]
 There exists an algorithm $\mathit{Gen}(C,g,\epsilon, \delta, n)$ which takes as input a solver circuit $C$ for the $k$-wise
 direct product of $(P,S)$, a monotone function $g: \{0,1\}^{*} \rightarrow \{0,1\}$, and parameters $\epsilon,\delta,n$.
-The algorithm $\mathit{Gen}$ outputs a solver circuit $D$ for $P$ such that the following holds.
+The algorithm $\mathit{Gen}$ outputs a solver circuit $D$ for $P$ such that the following holds. \\
 If $C$ is such that
 \begin{align*}
 \Pr\Big[\Gamma^{(g)}(\langle P^{(g)}, C \rangle_C) = 1\Big] \geq \Pr_{u \leftarrow \mu_{\delta}^{(k)}} \Big[ g(u) = 1 \Big] + \epsilon,
@@ -417,19 +421,17 @@ where the probability is over the randomness of $P^{(g)}$ and $C$, then $D$ sati
 \end{align*}
 where the probability is over the randomness of $P$ and $D$.
 Additionally, $\mathit{Gen}$ and $D$ only require oracle access to $g$ and $C$.
-Furthermore, $\mathit{Size}(D) \leq \mathit{Size}(C) \cdot \frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$,
-and the running time of Gen is polynomial in $k, \frac{1}{\epsilon}, n$ with oracle calls.
+Furthermore, the running time of Gen is $poly(k, \frac{1}{\epsilon}, n)$ with oracle calls and $\mathit{Size}(D) \leq \mathit{Size}(C)\cdot\frac{6k}{\epsilon}\log(\frac{6k}{\epsilon})$.
 \end{theorem}
 
-First, we notice that the above definition does not impose any restrictions on the time complexity of the poser and the solver.
-We consider a general approach where $\mathit{Gen}$ is used to define a polynomial time reduction between a solver for the $k$-wise
-direct product of puzzles to a solver for a single puzzle.
-Furthermore, in the previous sections we considered solvers for the $k$-wise direct product that are compared with the algorithms that either
-solve all puzzles \cite{canetti2005hardness} or allow a fraction of puzzles to be solved incorrectly \cite{dodis2009security}.
+The above definition does not impose any restrictions on the time complexity of the poser and the solver.
+The algorithm $\mathit{Gen}$ is used to define a polynomial time reduction between a solver for the $k$-wise direct product of puzzles to a solver for a single puzzle.
+In the previous sections we considered solvers for the $k$-wise direct product that
+must solve all puzzles \cite{canetti2005hardness} or allow a fraction of puzzles to be solved incorrectly \cite{dodis2009security}.
 In the above definition a more general approach is considered where a binary monotone function $g$ is used.
 
 In Chapter \ref{ch:main_result} we use very similar approach as Holenstein and Schoenebeck.
-The difference is that proven by us hardness amplification theorem captures also puzzles that are both dynamic and interactive.
+The difference is that the hardness amplification theorem proven in this thesis captures dynamic and interactive puzzles.
 
 % in Definition \ref{def:dwvp}, the puzzles studied by Holenstein and Schoenebeck
 % are non-dynamic. Thus, only a verification circuit $\Gamma$ is generated and no hint circuit is ever used.
