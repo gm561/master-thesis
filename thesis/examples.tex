@@ -123,7 +123,7 @@ is dynamic but non-interactive as in the first phase only a single message is se
 
 \section{Bit Commitment Protocols}
 \label{section:bc}
-In this section we describe \textit{bit commitment protocols}. A task of breaking the binding property of
+In this section we describe \textit{bit commitment protocols}. The binding property of
 a bit commitment protocol can be seen as an interactive non-dynamic weakly verifiable puzzle where $|\cQ| = 1$.
 
 Loosely speaking, we consider the following \textit{bit commitment protocol} that involves two parties, a \textit{sender} and a \textit{receiver}.
@@ -132,11 +132,11 @@ The protocol consists of a \textit{commit phase} and a \textit{reveal phase}.
 In the commit phase the sender and the receiver interact, as the result the sender commits to a value $b \in \{0,1\}$.
 We require that after the commit phase it is hard for the receiver to guess $b$ correctly.
 In the reveal phase the sender opens the commitment by sending to the receiver a pair $(b', y)$ where $y \in \{0,1\}^{*}$
-should convince the receiver that the sender committed in the commit phase to the value $b' \in \{0,1\}$.
+should convince the receiver that the sender committed to the value $b' \in \{0,1\}$.
 A desirable property of a bit commitment protocol is that in the reveal phase it is hard for
 the sender to find two bitstrings $y_0$ and $y_1$ such that the receiver recognizes both $(0,y_0)$ and $(1, y_1)$ to be valid decommitments.
 
-We base the following formal definition of a \textit{bit commitment protocol} on \cite{LectureNotesComThCrypto}.
+We base the following definition of a \textit{bit commitment protocol} on \cite{LectureNotesComThCrypto}.
 \begin{definition}[Bit Commitment Protocol]
   \label{def:bit_commitment}
 A \textit{bit commitment protocol} is defined by families of circuits $\{S_n\}_{n \in \N}$ and $\{R_n\}_{n \in \N}$
@@ -146,7 +146,7 @@ The circuit $S_1$ takes as input a pair $(b, \rho_S)$ where $b \in \{0,1\}$ is i
 The receiver $R_n$ uses the randomness $\rho_R \in \{0,1\}^{*}$.
 The protocol consists of two phases. In the \textit{commit phase}, $S_1$ and $R_n$ engage in the protocol execution.
 As the result, $S_n$ commits to $b$ and $R_n$ generates a circuit $V$.
-The circuit $V$ takes as input $b' \in \{0,1\}$ and a bitstring $y \in \{0,1\}^{*}$ and outputs a bit.
+The circuit $V$ takes as input $b' \in \{0,1\}$ and $y \in \{0,1\}^{*}$ and outputs a bit.
 In the \textnormal{reveal phase}, the circuit $S_2$ takes as input a communication transcript from the commitment phase
 $\langle S_1, R_n \rangle_{\mathit{trans}}$, the randomness $\rho_s$ and returns $(b', y)$.
 We require a bit commitment protocol to have the following properties:
@@ -159,7 +159,7 @@ We require a bit commitment protocol to have the following properties:
   \end{align*}
 where $\epsilon(n)$ is a negligible function of $n$.
 \item{\textnormal{\textbf{Hiding.}}}
-  For every $b \in \{0,1\}$ the probability over the random coins of $S_n$ and $R_n$ that any polynomial size circuit
+  For every $b \in \{0,1\}$ the probability over the randomness of $S_n$ and $R_n$ that any polynomial size circuit
   can guess $b$ correctly after the commit phase is at most $\frac{1}{2} + \epsilon(n)$ where $\epsilon(n)$ is a negligible function of $n$.
 \item{\textnormal{\textbf{Binding.}}}
   For every probabilistic polynomial size two-phase circuit $S_n^*(\rho_S) := (S^*_1, S^*_2)(\rho_S)$ we have
@@ -172,55 +172,48 @@ where $\epsilon(n)$ is a negligible function of $n$.
 \end{enumerate}
 \end{definition}
 
-Breaking the binding property of a bit commitment protocol can be seen as a problem of solving
-an interactive weakly verifiable puzzle.
-The receiver corresponds to the problem poser and the solver to the sender that tries to break the binding property of the bit commitment protocol.
-The number of hint queries is zero, and the number of the verification queries is at most one. Thus, we conclude that the puzzle is non-dynamic.
-
-In the first phase, the solver uses its randomness to choose a bit to which it commits. Then, it engage in interaction with the problem poser.
-
+Breaking the binding property of a bit commitment protocol can be seen as solving an interactive weakly verifiable puzzle.
+The problem poser corresponds to the receiver and the solver to the circuit that tries to break the binding property of the bit commitment protocol.
+% The number of hint queries is zero. The number of the verification queries is at most one. Thus, we the puzzle is non-dynamic.
+% In the first phase, the solver uses its randomness to choose a bit to which it commits. Then, it engage in interaction with the problem poser.
 When the interaction in the commit phase is completed the problem poser generates circuits $\Gamma_V$, $\Gamma_H$.
 The circuit $\Gamma_V$ takes as input $y_0 \in \{0,1\}^{*}$, $y_1 \in \{0,1\}^{*}$ and outputs $1$
 if and only if $V(0,y_0) = 1 \land V(1,y_1) = 1$. The hint circuit $\Gamma_H$ outputs $\bot$ for any query.
 Thus, without loss of generality, we assume that the solver does not ask any verification queries.
-Furthermore, for the bit commitment protocols $|\cQ| = 1$, thus we do not write explicitly on which $q \in \cQ$ the solver asks a verification query.
-
+Furthermore, $|\cQ| = 1$, therefore we do not write explicitly on which $q \in \cQ$ the solver asks a verification query.
 In the second phase, the solver is given oracle access to $\Gamma_V$ and is allowed to ask at most one verification query.
-We emphasize that the solver has only oracle access to $\Gamma_V$. Therefore, it has no efficient way to check whether
-the solution is successful except asking a verification query.
-
-Finally, we conclude that for the problem poser and the solver defined as above a task of making a successful verification query
-corresponds to breaking the binding property of the bit commitment protocol.
+% We emphasize that the solver has only oracle access to $\Gamma_V$. Therefore, it has no efficient way to check whether
+% the solution is successful except asking a verification query.
+Finally, we conclude that for the problem poser and the solver defined as above making a successful verification query
+corresponds to breaking the binding property of a bit commitment protocol.
 
 \section{Automated Turing Tests}
 \label{section:att}
 In this section we describe CAPTCHAs which can be seen as non-dynamic
 and non-interactive weakly verifiable puzzles.
 
-The goal of \textit{Automated Turing tests} is to distinguish humans from computer programs.
+The goal of \textit{automated Turing tests} is to distinguish humans from computer programs.
 An example of such a test is a \textit{CAPTCHA}, which is formally defined in \cite{von2003captcha}.
-Loosely speaking, a CAPTCHA is a test for which it is hard to write a computer program whose success
-probability is comparable to or higher than the one achieved by humans. An example is an image
-depicting a distorted text where the goal is to guess the text used to generate the image.
+% Loosely speaking, a CAPTCHA is a test for which it is hard to write a computer program whose success
+% probability is comparable to or higher than the one achieved by humans.
+An example of a CAPTCHA is an image depicting a distorted text where the task is to guess the text used to generate the image.
 
-A task of solving a CAPTCHA based on guessing the distorted text can be seen as a non-dynamic,
-non-interactive weakly verifiable puzzle.
-In the first round the problem poser sends the solver an image containing the distorted text.
+Solving a CAPTCHA can be seen as a non-dynamic, non-interactive weakly verifiable puzzle.
+In the first phase the problem poser sends the solver an image containing a distorted text.
 Then, the problem poser generates circuits $\Gamma_V$ and $\Gamma_H$.
 The circuit $\Gamma_V$ takes as input a bitstring $y$ and outputs $1$
-if and only if $y$ correctly encodes the text depicted on the distorted image.
+if and only if $y$ correctly encodes the text depicted in the distorted image.
 A hint circuit $\Gamma_H$ outputs $\bot$ in response to every query.
 Therefore, without loss of generality, we assume that the solver makes no hint queries.
 
-In the second phase, the solver takes as input the image with the distorted text, has oracle access to $\Gamma_V$
+In the second phase, the solver takes as input the image, has oracle access to $\Gamma_V$
 and can ask at most a single verification query. In general, for CAPTCHAs checking the correctness of a solution is
 comparably hard to finding a correct solution.
-Thus we conclude that a task of correctly guessing a text depicted on the image can be seen as a weakly verifiable non-interactive and non-dynamic puzzle.
+Thus we conclude that a task of correctly guessing a text depicted in the image can be seen as a weakly verifiable non-interactive and non-dynamic puzzle.
 
-It is not known how good an algorithm for solving CAPTCHAs can be. Thus, it is likely that a gap between the human
-performance and a performance of the best computer programs may be small. We are interested in finding a way to amplify this gap.
-In the paper \cite{holenstein2011general} it was shown that this is possible by means of the parallel repetition of non-dynamic
-interactive weakly verifiable puzzles.
+It is unknown how good algorithms for solving a CAPTCHA can be. Thus, it is likely that a gap between the human
+performance and the performance of the best computer programs may be small. We are interested in finding a way to amplify this gap.
+In the papers \cite{holenstein2011general, dodis2009security} it was shown that this is possible by means of parallel repetition.
 
 % is used where a solver is given $n$ independent weakly verifiable puzzles.
 % The verifier for the parallel repetition accepts if the solver succeeds on at least some fraction of these puzzles.
