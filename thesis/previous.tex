@@ -214,10 +214,10 @@ the one included in \cite{dodis2009security}.
 Finally, we describe important parts of the proof of hardness amplification for DWVPs.
 
 \subsection{The definition}
-\begin{definition}[Dynamic Weakly Verifiable Puzzle, \cite{holenstein2011general}]
+\begin{definition}[Dynamic Weakly Verifiable Puzzle, \cite{dodis2009security}]
   \label{def:dwvp_dodis}
   A \textit{dynamic weakly verifiable puzzle} is defined by a distribution $\cD$ on pairs $(x, \alpha)$ where
-  $\alpha$ is a secret information and $x$ is a bitstring.
+  $\alpha$ is secret information and $x$ is a bitstring.
   Furthermore, we consider a set $\cQ$ (for some set of indices $\cQ$) and a probabilistic polynomial time computable verification relation $V$ such that
   $V(\alpha, q, r) = 1$ if and only if $r \in \{0,1\}^{*}$ is a correct answer to $q \in \cQ$
   on the set determined by $\alpha$. Finally, let $H$ be a probabilistic polynomial time computable \textit{hint} function
@@ -226,10 +226,13 @@ Finally, we describe important parts of the proof of hardness amplification for 
   A solver $S$ takes as input $x$ and can make hint queries on $q \in \cQ$ which are answered using $H(\alpha, q)$ and verification
   queries $(q,r)$ answered by means of $V(\alpha, q, r)$.
   We say that $S$ succeeds if and only if it makes a verification query on $(q,r)$ such that
-  $V(\alpha,q,r) = 1$ and it has not previously asked for a hint query on this $q$.
+  $V(\alpha,q,r) = 1$, and it has not previously asked for a hint query on this $q$.
   We write $P := (\cD, V, H)$ to denote a DWVP with the distribution $\cD$ and $V$, $H$ being a verification and hint relations, respectively.
 \end{definition}
 %
+Dynamic weakly verifiable puzzles generalize games of breaking the security of message authentication codes and public key signature schemes.
+In the case of MAC $x$ is an empty bitstring. For the public key signature schemes $x$ is a public key.
+
 The above definition is a special case of Definition \ref{def:dwvp}.
 To see this we observe that instead of considering a distribution $\cD$ on pairs $(x,\alpha)$
 we can use a probabilistic problem poser that outputs circuits $\Gamma_H$ and $\Gamma_V$ with hard-coded $\alpha$ that correspond to $H$ and $V$, respectively.
@@ -243,28 +246,25 @@ a bitstring $x$ is sent by the problem poser to the solver.
 For a dynamic weakly verifiable puzzle $P~:=~(\cD, V, H)$ we define the $n$-wise direct product of $P$
 as a DWVP with a distribution $\cD^{(n)}$ on tuples $(x_1, \alpha_1), \dotsc, (x_n, \alpha_n)$ where
 each $(x_i, \alpha_i)$ is drawn from the distribution $\cD$.
-Furthermore, the hint relation is defined by $H^{(n)}(q, \alpha_1, \dotsc, \alpha_n) := (H(\alpha_1, q), \dotsc, H(\alpha_n, q))$ and
-the verification relation $V^{(n)}(\alpha_1, \dotsc, \alpha_n, r_1, \dotsc, r_n, q)$ evaluates to $1$ if and only if
+Furthermore, a hint relation is defined by $H^{(n)}(q, \alpha_1, \dotsc, \alpha_n) := (H(\alpha_1, q), \dotsc, H(\alpha_n, q))$ and
+a verification relation $V^{(n)}(\alpha_1, \dotsc, \alpha_n, r_1, \dotsc, r_n, q)$ evaluates to $1$ if and only if
 for at least $n - (1 - \gamma)\delta n$ of bitstrings $r_1, \dotsc, r_n $ it holds $V(\alpha_i, q, r_i)~=~1$ where $0~\leq~\gamma,\delta~\leq~1$.
 %
 \end{definition}
 We write $P^{(n)} := (D^{(n)}, H^{(n)}, V^{(n)})$ to denote the $n$-wise direct product of $P$.
 
-The above definition is more general than defined in the previous section definition of the $n$-wise direct product of WVP as
-in Definition \ref{def:n-fold-rep} it is enough if the solver succeeds only on a fraction of coordinates.
-
-Dynamic weakly verifiable puzzles generalize games of breaking security of message authentication codes and public key signature schemes.
-In the case of MAC $x$ is an empty bitstring. For the public key signature schemes $x$ is a public key.
+The above definition is more general than the one given in the previous section of the $n$-wise direct product of WVP.
+In Definition \ref{def:n-fold-rep} it is enough if the solver succeeds only on a fraction of coordinates.
 
 We write $(\cH_{\mathit{hint}}, \cV_{\mathit{verif}}) \leftarrow S(x; \delta)$ to denote
 the execution of $S$ with the input $x \in \{0,1\}^{*}$ and using the randomness $\delta \in \{0,1\}^{*}$
 where $\cH_{hint}$ is the set of all hint queries asked by $S$, and $\cV_{verif}$ is
-the set of pairs $(q,r)$ of all verification queries asked in the execution of $S$.
+the set of all verification queries asked in the execution of $S$.
 
 With no loss of generality, we make the assumption that once $S$
 made a successful verification query it does not ask any further hint and verification queries.
 
-We define the \textit{success probability} of a solver $S$ as
+We define the \textit{success probability} of $S$ as
 \begin{align*}
   \underset{\substack{\delta \in \{0,1\}^{*} \\(x,\alpha) \leftarrow \cD \\ (\cH_{hint}, \cV_{verif}) \leftarrow S(x;\delta))}}
   {\Pr}\big[\exists (q,r) \in \cV_{verif} : q \notin \cH_{hint} \land V(\alpha, q, r) = 1 \big]
@@ -273,38 +273,38 @@ We define the \textit{success probability} of a solver $S$ as
 \begin{theorem}[Hardness amplification for dynamic weakly verifiable puzzles \cite{dodis2009security}]
 \label{lemma:dwvp}
 Let $S^{(n)}$ be a probabilistic algorithm for $P^{(n)}$ that succeeds with
-probability at least $\epsilon$, where $\epsilon \geq (800/\gamma\delta) \cdot (h+v) \cdot e^{-\gamma^2\delta n/40}$, and $h$ and $v$
+probability at least $\epsilon$, where $\epsilon \geq (800/\gamma\delta) \cdot (h+v) \cdot e^{-\gamma^2\delta n/40}$ and $h$ and $v$
 denote the number of hint and verification queries asked by $S^{(n)}$, respectively.
 There exists a probabilistic algorithm $S$ that solves a puzzle defined by $P$ with probability at least $1-\delta$.
 Furthermore, $S$ makes $O(h(h+v)/\epsilon) \cdot \log(1/\gamma\delta)$ hint queries and at most one verification query.
-The running time of $S$ is polynomial in $h,v,\frac{1}{\epsilon}, t, \omega, \log(1/\gamma\delta)$ where
-$\omega$ is time needed to ask a single hint query.
+The running time of $S$ is $\poly(h,v,\frac{1}{\epsilon}, t, \omega, \log(1/\gamma\delta))$ where
+$\omega$ is the time needed to make a single hint or verification query.
 \end{theorem}
 
 It is worth seeing why the approach presented in the previous section that works well for the direct product of WVPs
 cannot be applied for the direct product of DWVPs (moving aside for a moment the issue of solving only a fraction of puzzles successfully).
-Loosely speaking, for DWVP the algorithm CHS-solver breaks in the $\mathit{OnlinePhase}$ where the solver $S^{(n)}$ can be called multiple times.
+Loosely speaking, for DWVP the algorithm CHS-solver breaks in the $\mathit{OnlinePhase}$ where $S^{(n)}$ can be called multiple times.
 It is possible that in one of these calls $S^{(n)}$ asks a hint query on $q$
 which prevents in one of the later runs a verification query $(q,r)$ from succeeding.
 The fact that a hint query on $q$ has been asked before makes it impossible to make a successful verification query on this $q$.
 Thus, we cannot dismiss a situation where the success probability of $S^{(n)}$ decreases with the number of iterations.
 
-The solution proposed in \cite{dodis2009security} is to partition the set $\cQ$ into a set of \textit{attacking queries} $\cQ_{\mathit{attack}}$
-and a set of \textit{advice queries} $\cQ_{\mathit{adv}}$. The idea is to allow a solver for the direct product to ask hint
+The solution proposed in \cite{dodis2009security} is to partition $\cQ$ into a set of \textit{attacking queries} $\cQ_{\mathit{attack}}$
+and a set of \textit{advice queries} $\cQ_{\mathit{adv}}$. The idea is to allow a solver to ask hint
 queries only on $q \in \cQ_{\mathit{adv}}$, and to halt the execution whenever a hint query is asked on $q \in \cQ_{\mathit{attack}}$.
 More formally, for a function $\hash:\cQ \rightarrow \{0,1,\dotsc, 2(h+v)\!-\!1 \}$
 we define $\cQ_{\mathit{attack}} := \{q \in \cQ : \hash(q) = 0 \}$ and $\cQ_{adv} := \{q \in \cQ: \hash(q) \neq 0\}$.
 
 It is possible, for a fixed solver $S$ that asks at most $h$ hint queries and $v$ verification queries,
 to find a function $hash: \cQ \rightarrow \{0,1,\dotsc 2(h+v)-1\}$ such that the success probability of $S$ with respect to
-$\cQ_{\mathit{attack}}$ and $\cQ_{\mathit{adv}}$ partitioned using $\hash$ is multiplied by $\frac{1}{8(h+v)}$.
+$\cQ_{\mathit{attack}}$ and $\cQ_{\mathit{adv}}$ is multiplied by $\frac{1}{8(h+v)}$.
 If $h$ and $v$ are not too big, then the success probability of $S$ can be still substantial.
 More formally, the following lemma is proved in \cite{dodis2009security}.
 \begin{lemma}[Success probability in solving a dynamic weakly verifiable puzzle with respect to a function hash, \cite{dodis2009security}]
   \label{lemma:hash_function_previous}
 Let $S$ be a solver for DWVP which success probability is at least $\delta$, the running time is at most $t$,
 and the number of hint and verification queries is at most $h$ and $v$, respectively.
-There exists a probabilistic algorithm that runs in time polynomial in $h,v,\frac{1}{\delta},t$
+There exists a probabilistic algorithm that runs in time $poly(h,v,\frac{1}{\delta},t)$
 that outputs a function $\hash : \cQ \rightarrow \{0,1, \dotsc, 2(h+v)-1\}$
 that partitions $\cQ$ into $\cQ_{attack}$ and $\cQ_{adv}$ such that
 with probability at least $\frac{\delta}{8(h+v)}$ the first successful verification query $(q',a)$ asked by $S$ is such that $q' \in \cQ_{attack}$
@@ -313,10 +313,9 @@ and all previous hint and verification queries have been asked on $q \in \cQ_{ad
 A function $\hash$ can be found by means of a natural sampling technique.
 We follow exactly the same approach of partitioning $\cQ$ in Section \ref{st:domain_partition}.
 
-Let $H_{\alpha}(q)$ denote a polynomial time probabilistic algorithm that takes as input $q$,
-has hard-coded $\alpha$ and outputs $H(\alpha, q)$.
-Similarly, we use $V_{\alpha}(q,r)$ to denote a polynomial time probabilistic algorithm that computes $V(\alpha, q, r)$ and has hard-coded bitstring $\alpha$.
-The algorithm DWVP-solver has oracle access to $S^{(n)}$, $V_{\alpha}$ and $H_{\alpha}$ as well as a function $\hash$ as in Lemma \ref{lemma:hash_function_previous}.
+Let $H_{\alpha}(q)$ be a polynomial time probabilistic algorithm that takes as input $q$, has hard-coded $\alpha$ and outputs $H(\alpha, q)$.
+Similarly, we use $V_{\alpha}(q,r)$ to denote a polynomial time probabilistic algorithm that computes $V(\alpha, q, r)$ and has hard-coded $\alpha$.
+The algorithm DWVP-solver, from \cite{dodis2009security}, has oracle access to $S^{(n)}$, $V_{\alpha}$ and $H_{\alpha}$ as well as a function $\hash$ as in Lemma \ref{lemma:hash_function_previous}.
 %
 \begin{codeblock}
   \textbf{Algorithm:} $\text{DWVP-solver}^{S^{(n)}, \hash, H_{\alpha}^{(n)}, V_{\alpha}^{(n)}}(x)$
@@ -328,12 +327,12 @@ The algorithm DWVP-solver has oracle access to $S^{(n)}$, $V_{\alpha}$ and $H_{\
   \Repeat at most $O(\frac{h+v}{\epsilon} \cdot \log(\frac{1}{\gamma\delta}))$ times \\
   \IndI Let $i \xleftarrow{\$} \{1, \dotsc, n\}$ be a position for $x$.\\
   \IndI Generate $(x_1, \alpha_1), \dotsc, (x_{i-1}, \alpha_{i-1}), (x_{i+1}, \alpha_{i+1}), \dotsc, (x_n, \alpha_n)$ \\
-  \IndI using $(n-1)$ calls to $P$ each time with fresh randomness.\\
+  \IndI using $(n-1)$ calls to $P$ each time with the fresh randomness.\\
   \IndI \Run $S^{(n)}(x_1, \dotsc, x_{i-1}, x, x_{i+1}, \dotsc, x_n)$\\
   \IndII \If $S^{(n)}$ asks a hint query on $q$ \Then \\
-  \IndIII \If $hash(q) \neq 0$ \Then abort current run of $S^{(n)}$\\
+  \IndIII \If $hash(q) \neq 0$ \Then abort the current run of $S^{(n)}$\\
   \IndIII Ask a verification query $r := H(q)$\\
-  \IndIII Let $(r_1, \dotsc, r_{i-1}, r_{i+1}, \dotsc, r_{n})$ be hints for query $q$ for puzzle\\
+  \IndIII Let $(r_1, \dotsc, r_{i-1}, r_{i+1}, \dotsc, r_{n})$ be hints for the query $q$ for puzzle\\
   \IndIII sets $(x_1, \dotsc, x_{i-1}, x_{i+1}, x_n)$\\
   \IndIII Answer the hint query of $S^{(n)}$ using $(r_1, \dots, r_{i-1}, r, r_{i+1}, r_n)$\\
   \IndII \If $S^{(n)}$ asks a verification query $(q, r_1, \dots, r_n)$ \Then \\
@@ -347,13 +346,13 @@ The algorithm DWVP-solver has oracle access to $S^{(n)}$, $V_{\alpha}$ and $H_{\
   \Return $\bot$
 \end{codeblock}
 
-In each iteration of the DWVP-solver the position for the input puzzle is chosen uniformly at random.
-The remaining $(n-1)$ puzzles are generated by the algorithm, thus it is possible to answer
+In each iteration of the DWVP-solver a position for the input puzzle is chosen uniformly at random.
+The remaining $(n-1)$ puzzles are generated by the DWVP-solver, thus it is possible to answer
 all hint and verification queries for these puzzles.
 %We assume that $\hash$ is such that the success probability of $S^{(n)}$ with respect to $\hash$ is at least $\frac{\delta}{8(h+v)}$.
 The DWVP-solver calls $S^{(n)}$ multiple times, but the function $\hash$ is used
-to partition the query domain into $\cQ_{\mathit{attack}}$ and $\cQ_{\mathit{adv}}$ such that
-if a hint query is asked on $q$ such that $hash(q) = 0$ then the current execution of $S^{(n)}$
+to partition the query domain such that
+if a hint query is asked on $q$ for which $hash(q) = 0$ then the current execution of $S^{(n)}$
 is aborted, and the DWVP-solver goes to the next iteration.
 In this way, we ensure that the DWVP-solver never asks a hint query that could prevent a verification query from succeeding.
 If a verification query is asked on $q$ such that $hash(q) \neq 0$ we answer this query with $0$.
@@ -366,11 +365,11 @@ We discount $\gamma\delta n$ to take into account that not all puzzles have to b
 Detail calculations provided in \cite{dodis2009security} show that this approach
 yields a demanded result.
 
-In Chapter \ref{ch:main_result} we consider a weakly verifiable puzzles that are not only dynamic but also interactive.
-We use a very similar technique to partition domain $\cQ$ into advice and attacking queries.
+In Chapter \ref{ch:main_result} we consider weakly verifiable puzzles that are not only dynamic but also interactive.
+We use a very similar technique to partition $\cQ$ into advice and attacking queries.
 Instead of the requirement to succeed on at least a fraction of puzzles we consider a more general approach where
-an arbitrary monotone function $g : \{0,1\}^{n} \rightarrow \{0,1\}$ is used to
-determine on which coordinates the solver has to succeed in order to successfully solve the $k$-wise direct product of puzzles.
+an arbitrary binary monotone function $g : \{0,1\}^{n} \rightarrow \{0,1\}$ is used to
+determine on which coordinates the solver has to succeed in order to successfully solve the $n$-wise direct product of puzzles.
 
 \section{Interactive Weakly Verifiable Puzzles}
 \label{section:iwvp}
