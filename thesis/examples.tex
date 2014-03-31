@@ -1,49 +1,49 @@
 %
-In the previous chapter we formally defined dynamic interactive weakly verifiable puzzles, the $k$-wise direct product of puzzles,
+In the previous chapter we formally defined dynamic interactive weakly verifiable puzzles
 and stated the hardness amplification theorem for this type of puzzles.
-In this chapter we give an overview of well known cryptographic primitives that can be seen as various types of weakly verifiable puzzles.
-First, in Section \ref{section:mac} we describe message authentication codes which game based security definition can be seen being a dynamic
+In this chapter we give an overview of cryptographic primitives that can be seen as various types of weakly verifiable puzzles.
+First, in Section \ref{section:mac} we describe message authentication codes which the game based security definition can be seen being a dynamic
 non-interactive weakly verifiable puzzle.
-In Section \ref{section:pks} we describe public key signature schemes and give
-the chosen-message attack security definition for public key signature schemes which is yet another example of a dynamic non-interactive weakly verifiable puzzle.
-Then, in Section \ref{section:bc} we focus on bit commitment protocols that binding property can be seen as a non-dynamic interactive  weakly verifiable puzzle.
-Finally, in Section \ref{section:att} we describe a problem of solving CAPTCHAs that can be considered to be a non-dynamic non-interactive weakly verifiable puzzle.
+In Section \ref{section:pks} we give the chosen-message attack security definition
+for public key signature schemes which is yet another example of a dynamic non-interactive weakly verifiable puzzle.
+Then, in Section \ref{section:bc} we focus on commitment protocols, which binding property can be seen as a non-dynamic interactive  weakly verifiable puzzle.
+Finally, in Section \ref{section:att} we describe a problem of solving CAPTCHAs that can be considered to be a non-dynamic and non-interactive weakly verifiable puzzle.
 
 \section{Message Authentication Codes}
 \label{section:mac}
-In this section we describe message authentication codes (MAC) and conclude that the game based definition of MAC
+In this section we describe message authentication codes (MACs) and conclude that the game based definition of MAC
 security can be seen being a dynamic non-interactive weakly verifiable puzzle.
 
-Let us consider the setting in which two parties, a \textit{sender} and a \textit{receiver}, communicate over an \textit{insecure channel} where
+Let us consider the setting in which two parties a \textit{sender} and a \textit{receiver} communicate over an \textit{insecure channel} where
 messages of the sender may be intercepted, modified, and deleted by a third party called an \textit{adversary}.
 The receiver needs a way to ensure that the received messages were indeed sent by the sender and were not modified by the adversary.
 The solution is to use \textit{message authentication codes}.
 
-Loosely speaking, message authentication codes can be explained as follows.
+Loosely speaking, MAC can be explained as follows.
 Let the sender, receiver, and adversary be polynomial time algorithms and messages be represented as bitstrings.
 Furthermore, we assume that the sender and the receiver share a secret key to which the adversary has no access.
 The sender appends to every message a tag which is computed as a function of the key and the message.
 The receiver, using the key, has a way to efficiently check whether an appended tag is valid for a received message.
 The receiver accepts a message if the tag is valid, otherwise it rejects.
 We require that it is hard for the adversary to find a tag and a message that was not sent before and
-with the non-negligible probability is accepted by the receiver.
+with non-negligible probability is accepted by the receiver.
 
 Below we give the formal definition of a \textit{message authentication code} based on \cite{LectureNotesCrypo, Goldreich:2004:FCV:975541}.
 %
 \begin{definition}[Message Authentication Code]
   \label{def:mac}
-  Let $\cM$ be a set of messages, $\cK$ a set of keys and $\cT$ a set of tags.
+  Let $\cM$ be a set of messages, $\cK$ a set of keys, and $\cT$ a set of tags.
   A \textit{message authentication code} (MAC) is defined by an efficiently computable function $f:\cM \times \cK \rightarrow \cT$.
-  We say that MAC is \textit{secure} if $f$ satisfies the following condition:
+  We say that a MAC is \textit{secure} if $f$ satisfies the following condition:
 
   Let $k$ be chosen uniformly at random from $\cK$ and $H$ be a polynomial size circuit with hard-coded $k$
   that takes as input a message $m \in \cM$ and outputs a tag $t \in \cT$ such that $f(m,k) = t$.
-  We say that MAC is secure if there is no probabilistic polynomial time algorithm
-  with oracle access to $H$ that with non-negligible probability outputs a message $m \in \cM$
-  as well as a corresponding tag $t \in \cT$ such that $f(m, k) = t$, and $H$ has not been queried on $m$.
+  We say that a MAC is secure if there is no probabilistic polynomial time algorithm
+  with oracle access to $H$ that with non-negligible probability outputs $m \in \cM$
+  as well as $t \in \cT$ such that $f(m, k) = t$ and $H$ has not been queried on $m$.
 \end{definition}
 
-We describe how a task of breaking the security of MAC can be seen as solving a dynamic weakly verifiable puzzle
+We describe how the security definition of a MAC can be seen as a dynamic weakly verifiable puzzle
 where at most one verification query is asked.
 For fixed $f$ and $n \in \N$ the sender corresponds to the problem poser and the adversary to the solver.
 Furthermore, the key $k_{\pi}$ depends on the randomness $\pi \in \{0,1\}^{n}$ used by the problem poser.
@@ -55,68 +55,70 @@ have hard-coded $\pi$.
 The circuit $\Gamma_H$ corresponds to the circuit $H$ from Definition \ref{def:mac} and takes as input
 a message $m$ and outputs a tag $t$ such that $f(m, k_{\pi}) = t$.
 The circuit $\Gamma_V$ takes as input $m \in \cM$ and $t \in \cT$ and outputs $1$ if and only if $f(m, k_{\pi}) = t$.
-In the second phase, the solver takes no input ($x$ is empty string), is given oracle access to $\Gamma_H$ and $\Gamma_V$ and
-can ask at most one verification query.
+In the second phase, the solver takes no input ($x$ is empty string) and has oracle access to $\Gamma_H$, $\Gamma_V$ and
+can make at most one verification query.
 
-Thus, the task of the adversary to find a valid tag $t \in \cT$ for some message $m \in \cM$ such that the hint query for $m$
-has not been asked before corresponds to making a successful verification query by a problem solver to $\Gamma_V$.
+Thus, the task of the adversary to find a valid tag $t \in \cT$ for a message $m \in \cM$ such that the hint query for $m$
+has not been asked before corresponds to making a successful verification query by the solver.
 %
 \section{Public Key Signature Schemes}
 \label{section:pks}
 In this section we describe \textit{public key signature schemes} (SIGs).
-The game based security definition of SIGs for the chosen message attack can be seen as a dynamic,
+The game-based security definition of SIGs for a chosen message attack can be seen as a dynamic,
 non-interactive weakly verifiable puzzle.
 
-We give a definition of public key encryption schemes, and what it means for such schemes to be secure.
-The definitions are based on \cite{Goldreich:2004:FCV:975541}.
+We now give a definition of a public key encryption scheme, and what it means for such a scheme to be secure.
+These definitions are based on \cite{Goldreich:2004:FCV:975541}.
 
 \begin{definition}[Public key signature scheme]
-Let $\cQ$ be the set of messages. A \textit{public key signature scheme} is defined by a triple of probabilistic polynomial time algorithms:
-$G$ -- the key generation algorithm,
-$V$ -- the verification algorithm,
-$S$ -- the signing algorithm,
+Let $\cQ$ be a set of messages. A \textit{public key signature scheme} is defined by a triple of polynomial time algorithms:
+$G$ -- a probabilistic key-generation algorithm,
+$V$ -- a verification algorithm,
+$S$ -- a probabilistic signing algorithm,
 such that the following conditions are satisfied:
 \begin{enumerate}[-]
-  \item $G(1^n; \rho)$ outputs a pair of bitstrings $k_{priv} \in \{0,1\}^{*}$ and $k_{pub} \in \{0,1\}^{*}$ where $n \in \N$ is a security
-    parameter and $\rho$ the randomness used by $G$. We call $k_{priv}$ a \textit{private key} and $k_{pub}$ a \textit{public key}.
-  \item The signing algorithm $S$ takes as input $k_{priv}$, $q \in \cQ$ and outputs a signature $s \in \cS$.
-  \item The verification algorithm $V$ takes as input $k_{pub}$, $q \in \cQ$, and $s \in \cS$ and outputs $b \in \{0,1\}$.
+  \item The key-generation algorithm $G(1^n; \rho)$ outputs a pair of bitstrings $k_{priv} \in \{0,1\}^{*}$ and $k_{pub} \in \{0,1\}^{*}$ where $n \in \N$ is a security
+    parameter and $\rho_G$ the randomness used by $G$. We call $k_{priv}$ a \textit{private key} and $k_{pub}$ a \textit{public key}.
+  \item The signing algorithm $S$ takes as input $k_{priv}$, $q \in \cQ$, uses the randomness $\rho_S$ and outputs a signature $s \in \cS$.
+  \item The verification algorithm $V$ takes as input $k_{pub}$, $q \in \cQ$, and $s \in \cS$ and outputs $b \in \{0,1\}$\footnote{For simplicity we assume that the verification
+algorithm is deterministic.}.
   \item For every $k_{priv}$, $k_{pub}$ output by $G$ and every $q \in \cQ$ it holds
     \begin{align*}
-      \Pr[V(k_{pub}, q, S(k_{priv}, q))] = 1
+      \Pr[V(k_{pub}, q, S(k_{priv}, q)) = 1] = 1,
     \end{align*}
-    where the probability is over the randomness $S$.
+    where the probability is over the randomness of $S$.
 \end{enumerate}
 \end{definition}
 We say that $s \in \cS$ is a \textit{valid signature} for $q \in \cQ$ if and only if $V(k_{pub}, q, s) = 1$.
-
-It seems that a game of breaking security of the public key signature scheme is not weakly verifiable as the adversary can use $V$
-to efficiently check the correctness of the solution. However, it is easy to see that this situation still can be modeled as
-a dynamic interactive weakly verifiable puzzle where the solver has access to the verification circuit and can ask a polynomial number of verification queries.
+We define the security of public key signature scheme as follows.
 %
 \begin{definition}[Security of a public key signature scheme with respect to a chosen message attack]
   \label{def:sec_sig}
-Let $H$ be a polynomial size circuit that has hard-coded $k_{priv}$ and takes as input $q$ and outputs $S(k_{priv}, q)$.
+Let $H$ be a polynomial size probabilistic circuit that has hard-coded $k_{priv}$ and takes as input $q$ and outputs $S(k_{priv}, q)$.
 An \textit{adversary} $A$ is a probabilistic polynomial time algorithm that takes as input $k_{pub}$ and has oracle access to $H$.
 We say that $A$ \textit{succeeds} if it finds a valid signature $s \in \cS$ for a message $q \in \cQ$, and the oracle $H$ has not been queried for a signature of $q$.
 The public key encryption scheme is \textit{secure} if there is no polynomial time adversary that succeeds with non-negligible probability.
 \end{definition}
 %
-We will describe how a task of breaking the security of the public key signature scheme can be
+It seems that a game of breaking the security of a public key signature scheme is not weakly verifiable as the adversary can use $V$
+to efficiently check the correctness of a solution. However, it is easy to see that this situation can be modeled as
+a dynamic weakly verifiable puzzle where the solver has access to the verification circuit and can ask a polynomial number of verification queries.
+
+More precisely, we now describe how breaking the security of a public key signature scheme can be
 seen as a dynamic non-interactive weakly verifiable puzzle.
 
-the problem poser corresponds to $G$ and the solver to the adversary. The set $Q$ is a set of messages.
+The problem poser corresponds to the key-generation algorithm $G$ and the solver to the adversary. The set $\cQ$ is a set of messages.
 In the first phase, the problem poser obtains $k_{pub}$, $k_{priv}$ and sends $k_{pub}$ to the solver.
 Then, the problem poser generates a hint circuit $\Gamma_H$ and a verification circuit $\Gamma_V$.
 The hint circuit $\Gamma_H$ corresponds to the circuit $H$ from Definition \ref{def:sec_sig} and takes as input $q \in \cQ$ and outputs a valid signature for $q$.
 The verification circuit $\Gamma_V$ takes as input $s \in \cS$ and $q \in \cQ$ and outputs $1$ if and only if $s \in \cS$ is a valid signature for $q \in \cQ$.
-In the second phase, the solver takes as input a transcript of the messages from the first phase which consists solely of $k_{pub}$.
-Additionally, the solver is given oracle access to $\Gamma_V$ and $\Gamma_H$ and can make the polynomial number of queries to $\Gamma_H$ and $\Gamma_V$.
-An adversary calls to $V$ can be simulated by making a verification query to $\Gamma_V$.
+In the second phase, the solver takes as input a transcript of messages from the first phase which consists solely of $k_{pub}$.
+Additionally, the solver has oracle access to $\Gamma_V$ and $\Gamma_H$ and can make a polynomial number of queries to $\Gamma_H$ and $\Gamma_V$.
+The adversary calls to $V$ can be simulated by making a verification query to $\Gamma_V$.
 It is clear that if the solver asks a successful verification query $(q,s)$,
 then there exists an adversary that also finds a valid signature for $q$.
 
-Thus, a task of finding a valid signature by the adversary in a public key signature scheme can be seen as a weakly verifiable puzzle that
+Thus, the task of finding a valid signature in a public key signature scheme can be seen as a weakly verifiable puzzle that
 is dynamic but non-interactive as in the first phase only a single message is sent.
 
 \section{Bit Commitment Protocols}
