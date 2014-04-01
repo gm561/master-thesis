@@ -67,7 +67,7 @@ The estimate of this probability is calculated by $\EstimateFunctionProbability$
 \end{lemma}
 %
 \begin{proof}
-We fix the notation as in the code listing of the algorithm EstimateFunctionProbability.
+We fix the notation as in the code listing of EstimateFunctionProbability.
 Let us define independent and identically distributed binary random variables $K_1, K_2, \dots, K_N$
 such that for each $1 \leq i \leq N$ the random variable $K_i$ takes value $g_i$. We use the Chernoff bound to obtain
 \begin{align*}
@@ -84,7 +84,7 @@ for the puzzle generated in the $i$-th round of the interaction between $P^{(g)}
 Therefore, the algorithm EvalutePuzzles runs $k$ times $P^{(1)}(\pi_i)$ to simulate the interaction with
 $C_1(\rho)$.
 
-Let us introduce the additional notation.
+Let us introduce some additional notation.
 We write $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i$ to denote the $i$-th round of the sequential interaction.
 Let $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i_{P^{(1)}}$ be the output of $P^{(1)}(\pi_i)$ in the $i$-th round.
 Finally, we write $\langle P^{(1)}(\pi_i), C_1(\rho)\rangle^i_{\mathit{trans}}$ to denote the transcript of communication in the $i$-th round.
@@ -233,9 +233,9 @@ Finally, we define the solver circuit $\widetilde{D} = (D_1, \widetilde{D}_2)$ f
 \end{codeblock}
 %
 %
-\begin{proof}[Proof of Lemma \ref{lemma:sec_amp_for_p_hash}]
+\begin{proof}[Proof of Lemma \ref{lemma:sec_amp_for_p_hash}, \cite{holenstein2011general}]
 First, let us consider the case where $k=1$. The function $g: \{0,1\} \rightarrow \{0,1\}$ is either the identity or a constant function.
-In the latter case, when $g$ is a constant function, Lemma \ref{lemma:sec_amp_for_p_hash} is vacuously true.
+In the latter case, where $g$ is a constant function, Lemma \ref{lemma:sec_amp_for_p_hash} is vacuously true.
 If $g$ is the identity function, then the circuit $\widetilde{D}$ directly uses $\widetilde{C}$ to find a solution.
 From the assumptions of Lemma \ref{lemma:sec_amp_for_p_hash} it follows that $\widetilde{C}$ succeeds with probability at least
 $\delta + \epsilon$. Hence, $\widetilde{D}$ trivially satisfies Lemma~\ref{lemma:sec_amp_for_p_hash}.
