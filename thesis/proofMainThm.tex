@@ -7,14 +7,14 @@ the solver $C$ has still substantial success probability and there are no confli
 In Lemma~\ref{lemma:sec_amp_for_p_hash} we state that it is possible to amplify hardness for dynamic interactive puzzles
 under the assumption that there are no conflicting hint and verification queries.
 
-\paragraph{Domain partitioning} Let $\hash:\cQ\rightarrow\{0,1,\dots, 2(h\!+\!v)\!-\!1\}$, the idea is to partition $\cQ$ such that the set of preimages
+\paragraph{Domain partitioning} Let $\hash:\cQ\rightarrow\{0,1,\dots, 2(h\!+\!v)\!-\!1\}$. The idea is to partition $\cQ$ such that the set of preimages
 of $0$ for $\hash$ contains $q \in \cQ$ on which $C$ is not allowed to ask hint queries,
 and the first successful verification query $(q,y)$ of $C$ is such that $\hash(q) = 0$.
 Therefore, if $C$ makes a verification query $(q,y)$ such that $\hash(q) = 0$, then we know that no hint query is ever asked on this $q$.
 
 We denote the $i$-th query of $C$ by $q_i$ if it is a hint query and by $(q_i, y_i)$ if it is a verification query.
 Let us define the following experiment $\CanonicalSuccess$ in which $\cQ$ is partitioned using a function $\hash$.
-We say that a solver circuit \textit{succeeds} in the experiment $\CanonicalSuccess$
+We say that a solver \textit{succeeds} in the experiment $\CanonicalSuccess$
 if it asks a successful verification query $(q_j, y_j)$ such that $\hash(q_j) = 0$,
 and no hint query $q_i$ has been asked before $(q_j, y_j)$ such that $\hash(q_i) = 0$.
 % The result of the experiment $\CanonicalSuccess$ is $1$ if and only if the solver $C$ makes
@@ -61,17 +61,16 @@ For a fixed problem poser $P_n$ let $C$ be a solver for $P_n$ with the success p
 asking at most $h$ hint queries and $v$ verification queries.
 Moreover, let $\cH$ be a family of pairwise independent efficient hash functions $\cQ \rightarrow \{0,1, \dots,2(h+v)-1\}$.
 There exists a probabilistic algorithm FindHash that takes as input parameters $\gamma$, $n$, $h$, $v$, and has oracle access to $C$ and $P_n$.
-Furthermore, FindHash runs in time polynomial in $(h,v,\frac{1}{\gamma},n)$ and with high probability outputs a function $\hash \in \cH$
+Furthermore, FindHash runs in time $poly(h,v,\frac{1}{\gamma},n)$ and with high probability outputs a function $\hash \in \cH$
 such that the canonical success probability of $C$ with respect to $\hash$ is at least $\frac{\gamma}{16(h+v)}$.
 \end{lemma}
 We prove Lemma \ref{lemma:hash_function_probability} in Section \ref{st:domain_partition}.
 %
 \paragraph{Hardness amplification}%
 Let $C := (C_1, C_2)$ be a two-phase solver circuit as in Definition \ref{def:dwvp}.
-We write $C_2^{(\cdot, \cdot)}$ to emphasize that $C_2$ does not obtain direct access to the hint and verification oracles.
+We write $C_2^{(\cdot, \cdot)}$ to emphasize that $C_2$ does not obtain direct access to hint and verification oracles.
 Instead, whenever $C_2$ asks a hint or verification query, it is answered explicitly
 as in the following code excerpt of the circuit $\widetilde{C}_2$.
-We define the following circuit $\widetilde{C}_2$.
 \begin{codeblock}
   \textbf{Circuit} $\widetilde{C}_2^{\Gamma_H, C_2, \hash} (x, \rho)$
   \medskip \hrule
@@ -103,7 +102,7 @@ $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$, we have
 \begin{align*}
 \Gamma_V(\widetilde{C}_2^{\Gamma_H, C_2, \hash}(x, \rho)) = 1.
 \end{align*}
-We now show the circuit $\widetilde{C}$ succeeds with probability at least as high as $C$ in the experiment $\CanonicalSuccess$.
+We now show that $\widetilde{C}$ succeeds with probability at least as high as $C$ in the experiment $\CanonicalSuccess$.
 %
 \begin{lemma}
   \label{lemma:ctilda_c}
@@ -150,8 +149,8 @@ Using this observation we conclude that
 \end{proof}
 %
 We state the following lemma that is analogous to Theorem 10 from \cite{holenstein2011general}.
-Intuitively, it states that it is possible to amplify hardness in case the circuit $\widetilde{C}$ is used.
-\begin{lemma}[Hardness amplification with respect to $\hash$, \cite{holenstein2011general}]
+Intuitively, it states that it is possible to amplify hardness where the circuit $\widetilde{C}$, meeting certain criteria, is used.
+\begin{lemma}[Hardness amplification for partitioned domains, \cite{holenstein2011general}]
   \label{lemma:sec_amp_for_p_hash}
   Let $g: \{0,1\}^{k} \rightarrow \{0,1\}$ be a binary monotone function, $P_n^{(1)}$ a fixed
   problem poser and $\widetilde{C} := (C_1, \widetilde{C}_2)$ a probabilistic two-phase circuit
@@ -181,14 +180,15 @@ Intuitively, it states that it is possible to amplify hardness in case the circu
   \end{align*}
   Furthermore, $\widetilde{D}$ asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hint queries and no verification queries
   and outputs a pair $(q, y)$ such that $\hash(q) = 0$ or $\bot$.
-  Finally, the running time of $\mathit{Gen}$ is polynomial in $k, \frac{1}{\varepsilon}, n$ with oracle calls.
+  Finally, the running time of $\widetilde{\Gen}$ is $poly(k, \frac{1}{\varepsilon}, n)$ with oracle calls.
 \end{lemma}
 %
-We now give the proof of Theorem \ref{th:sec_amp_for_dwvp} that combines Lemma~\ref{lemma:hash_function_probability} and Lemma~\ref{lemma:sec_amp_for_p_hash}.
+We now give the proof of Theorem \ref{th:sec_amp_for_dwvp} that uses Lemma~\ref{lemma:hash_function_probability} and Lemma~\ref{lemma:sec_amp_for_p_hash}.
 \begin{proof}[Proof of Theorem \ref{th:sec_amp_for_dwvp}]
   We fix the notation as in Lemma \ref{lemma:sec_amp_for_p_hash}.
   Additionally, let $\Gen$ and $D := (D_1, D_2)$ be as in Theorem \ref{th:sec_amp_for_dwvp}.
-  We define~$\Gen$ and $D_2$ in the following code listings.
+  In the following code listing we define $\Gen$ that outputs $D := (D_1, D_2)$.
+  The circuit $D_2$ is defined in the succeeding code excerpt.
 %
 \begin{codeblock}
   \textbf{Algorithm} $\Gen^{P^{(1)}, g, C}(n, \epsilon, \delta, k, h, v)$
@@ -201,7 +201,7 @@ We now give the proof of Theorem \ref{th:sec_amp_for_dwvp} that combines Lemma~\
   $hash := \FindHash^{P^{(g)}, C}(\gamma, n, h, v)$ \\
   Let $\widetilde{C} := (C_1, \widetilde{C}_2)$ be as in Lemma \ref{lemma:ctilda_c} with oracle access to $C$ and $\hash$. \\
   $\widetilde{D} := \widetilde{\Gen}^{P^{(1)},  \widetilde{C},  g, \hash}(\epsilon, \delta, n, k)$ \\
-  \Return $D := (D_1, D_2)$ \textit{// where $D$ has oracle access to $\widetilde{D}, \hash, g$}
+  \Return $D := (D_1, D_2)$ \textit{// where $D$ has oracle access to $\widetilde{D}_2, \hash, g$}
 \end{codeblock}
 %
 \begin{codeblock}
@@ -212,7 +212,7 @@ We now give the proof of Theorem \ref{th:sec_amp_for_dwvp} that combines Lemma~\
   \IndII a verification oracle $\Gamma_V$, a hint oracle $\Gamma_H$.\\
   \textbf{Input:}  Bitstrings $x \in \{0,1\}^{*}$, $\rho \in \{0,1\}^{*}$.
   \medskip\hrule
-  $(q, y) := D_2^{P^{(1)}, \widetilde{C}, \hash, g, \Gamma_H}(x, \rho)$ \\
+  $(q, y) := \widetilde{D}_2^{P^{(1)}, \widetilde{C}, \hash, g, \Gamma_H}(x, \rho)$ \\
   Ask verification query $(q,y)$ to $\Gamma_V$.
 \end{codeblock}
 %
@@ -227,7 +227,7 @@ The algorithm $\Gen$ can use $\FindHash$ to obtain $\hash:\cQ \rightarrow \{0,1,
 \begin{align*}
     \underset{\pi^{(k)}, \rho}{\Pr}\left[\CanonicalSuccess^{P^{(g)}, C, \hash}(\pi^{(k)}, \rho) = 1\right] \geq \underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon.
 \end{align*}
-The running time of $\FindHash$ is $\mathit{poly}(h,v,\frac{1}{\epsilon},n)$ with oracle calls.
+The running time of $\FindHash$ is $\poly(h,v,\frac{1}{\epsilon},n)$ with oracle calls.
 Applying Lemma \ref{lemma:ctilda_c} for $C=(C_1, C_2)$ we obtain a circuit $\widetilde{C} = (C_1, \widetilde{C}_2)$ that satisfies
 \begin{align*}
     \underset{
@@ -241,7 +241,7 @@ Applying Lemma \ref{lemma:ctilda_c} for $C=(C_1, C_2)$ we obtain a circuit $\wid
 \underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon.
 \end{align*}
 We use the algorithm $\widetilde{\Gen}$ as in Lemma \ref{lemma:sec_amp_for_p_hash}
-that yields a circuit $\widetilde{D} = (D_1, \widetilde{D}_2)$ and almost surely over the randomness $\widetilde{\Gen}$ satisfies
+that yields a circuit $\widetilde{D} := (D_1, \widetilde{D}_2)$ and almost surely over the randomness of $\widetilde{\Gen}$ satisfies
 \begin{align}
   \label{eq:succ_prob_d}
     \underset{
@@ -250,14 +250,15 @@ that yields a circuit $\widetilde{D} = (D_1, \widetilde{D}_2)$ and almost surely
         (\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi), D_1^{\widetilde{C}}(\rho) \rangle_{P^{(1)}}}}}
     {\Pr}\mkern13mu[\Gamma_V(D_2^{P^{(1)}, \widetilde{C}, hash, g, \Gamma_H}(x, \rho)) = 1] \geq \delta + \frac{\epsilon}{6k}.
 \end{align}
-Finally, $\Gen$ outputs $D = (D_1, D_2)$ with oracle access to $\widetilde{D}_2$, $P^{(1)}$, $hash$, $g$ such that almost surely over
+The running time of $\Gen$ is $\poly(k,\frac{1}{\epsilon},h,v,n)$ with oracle access.
+Finally, $\Gen$ outputs $D := (D_1, D_2)$ with oracle access to $\widetilde{D}_2$, $P^{(1)}$, $hash$, $g$ such that almost surely over
 the randomness of $\Gen$ it holds
 \begin{align*}
     \underset{\pi, \rho}{\Pr}\left[\Success^{P^{(1)},\widetilde{D}}(\pi, \rho) = 1\right] \geq \delta + \frac{\varepsilon}{6k}.
 \end{align*}
-The running time of $\widetilde{\Gen}$ is $\poly(k, \frac{1}{\epsilon}, n)$ with oracle calls.
+The running time of $\widetilde{\Gen}$ is $\poly(k, \frac{1}{\epsilon}, n)$ with oracle access
 
-The running time of $\Gen$ is  $poly(k,\frac{1}{\epsilon},h,v,n)$ with oracle access.
+
 The circuit $D$ asks at most $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})h$ hint queries and one verification query and
 $\Size(D) \leq \Size(C) \cdot \frac{6k}{\epsilon}$.
 This finishes the proof of Theorem~\ref{th:sec_amp_for_dwvp}.

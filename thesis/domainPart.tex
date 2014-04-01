@@ -2,18 +2,18 @@
 \subsection{Domain partitioning}
 \label{st:domain_partition}
 In this section we use the technique from \cite{dodis2009security} to
-partition the set $\cQ$ into a set $\cQ_{adv}$ of advice queries and a set $\cQ_{attack}$ of attacking queries.
+partition $\cQ$ into a set $\cQ_{adv}$ of advice queries and a set $\cQ_{attack}$ of attacking queries.
 The circuit~$C$ is allowed to make hint queries on $q \in \cQ_{adv}$ and successful verification queries on $q \in \cQ_{attack}$.
 If $C$ asks a hint query on $q \in \cQ_{attack}$, the execution of $C$ is aborted.
 Similarly, all verification queries on $q \in \cQ_{adv}$ are answered as unsuccessful.
 The idea is to avoid collisions between hint and verification queries in the independent runs of $C$.
-In this section we give a proof of Lemma~\ref{lemma:hash_function_probability}.
+Let us now prove Lemma~\ref{lemma:hash_function_probability}.
 %
 %
 \begin{proof}[Proof of Lemma \ref{lemma:hash_function_probability}]
 We fix a problem poser $P$ and a solver $C$ for $P$ in the whole proof of Lemma \ref{lemma:hash_function_probability}.
-For $k,l \in \{1, \dotsc, (h+v)\}$ and $\alpha,\beta \in \{0,1,\dotsc,2(h+v)-1\}$ by the pairwise independence property
-we have that for every $q_k, q_l \in \cQ$ such that $q_k \neq q_l$ the following holds
+For $k,l \in \{1, \dotsc, (h+v)\}$ and $\alpha,\beta \in \{0,1,\dotsc,2(h+v)-1\}$ by the pairwise independence
+property of $\cH$ we have that for every $q_k, q_l \in \cQ$ such that $q_k \neq q_l$ the following holds
 \begin{align}
  \label{eq:hash_pr}%
  \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_k) = \alpha \mid \hash(q_l) = \beta] &=
@@ -21,7 +21,7 @@ we have that for every $q_k, q_l \in \cQ$ such that $q_k \neq q_l$ the following
 \end{align}
 %
 Let $\cP_{\Success}$ denote a set containing $(\pi,\rho)$ for which $\Success^{P, C}(\pi, \rho)=1$.
-We~are interested in the probability over the choice of $\hash$ of the event $\CanonicalSuccess^{P,C,\hash}(\pi^*, \rho^*) = 1$
+We~are interested in probability over the choice of $\hash$ of the event $\CanonicalSuccess^{P,C,\hash}(\pi^*, \rho^*) = 1$
 where $(\pi^*, \rho^*) \in \cP_{\mathit{Success}}$ is fixed. Let $(q_j, y_j)$ denote the first verification query for which $C$ succeeds.
 We calculate this probability
 \begin{align}
@@ -57,7 +57,7 @@ Hence, $\cP_{\Canonical} \subseteq \cP_{\Success}$, and we conclude
 {\mathbb{E}}\left[\underset{\hash \leftarrow \cH}{\Pr}[\CanonicalSuccess^{P,C,\hash}(\pi, \rho) = 1] \right] \cdot \gamma \notag\\
 &\hphantom{aaa}\stackrel{(\ref{ineq:prob_hash_success})}{\geq} \frac{\gamma}{4(h+v)}. %use phantom space to align text in the equation
 \end{align}
-The algorithm FindHash uses a natural sampling approach to pick a function $\hash$ that satisfies Lemma \ref{lemma:hash_function_probability}.
+The following algorithm FindHash uses a natural sampling approach to pick a function $\hash$ that satisfies Lemma \ref{lemma:hash_function_probability}.
 \begin{codeblock}
   \textbf{Algorithm} $\FindHash^{P,C}(\gamma, n, h, v)$
   \medskip\hrule
@@ -66,7 +66,7 @@ The algorithm FindHash uses a natural sampling approach to pick a function $\has
   \textbf{Output:} A function $\hash:\cQ \rightarrow \{0,1, \dots, 2(h+v)-1 \}$.
   \medskip\hrule
   \For $i := 1$ \To $\frac{32(h+v)^2}{\gamma^2}n$ \Do \\
-  \IndI $\hash \leftarrow{} \cH$ \\
+  \IndI $\hash \xleftarrow{\$} \cH$ \\
   \IndI $\mathit{count} := 0$ \\
   \IndI \For $j := 1$ \To $N := \frac{32(h+v)^2}{\gamma^2}n$ \Do \\
   \IndII $\pi \leftarrow \{0,1\}^{n} $\\
@@ -101,8 +101,8 @@ Let us define independent and identically distributed binary random variables $X
 \end{align*}
 We now turn to the case where $\hash \in \cH_{\Bad}$ and show that it is unlikely that $\hash \in \cH_{\Bad}$
 is returned by FindHash.
-From \eqref{eq:hash_bad} it follows that $\mathbb{E}_{{\pi}, \rho}[X_i]~\leq~\frac{\gamma}{16(h+v)}$.
-In the following inequalities \eqref{ineq:hash_bad_upper} and \eqref{ineq:hash_good_upper} in steps denoted
+From \eqref{eq:hash_bad} it follows that $\mathbb{E}_{{\pi}, \rho}[X_i] \leq \frac{\gamma}{16(h+v)}$.
+In the following inequalities \eqref{ineq:hash_bad_upper} and \eqref{ineq:hash_good_upper} in the steps denoted
 with $(*)$ we use the trivial facts $h + v \geq 1$ and $\gamma \leq 1$.
 For fixed $\hash \in \cH_{\Bad}$ using the Chernoff bound we get
 \begin{align}
@@ -136,7 +136,7 @@ Using \eqref{ass:hash_max_prob} we conclude that it is possible to bound the pro
   \underset{\substack{\hash \leftarrow \cH \\ \pi, \rho}}{\Pr}[\CanonicalSuccess^{P,C,\hash}(\pi, \rho) = 1 \mid \hash \notin \cH_{\mathit{Good}}] \\
   & \IndI  \stackrel{\substack{ (\ref{eq:hash_good}) \\ (\ref{ass:hash_max_prob})}}{<} \frac{\gamma}{8(h+v)} + \frac{\gamma}{8(h+v)} = \frac{\gamma}{4(h+v)},
 \end{align*}
-which contradicts (\ref{ineq:hash_high_prob}). Hence, we conclude that the probability of choosing $\hash \in \cH_{\mathit{Good}}$ amounts at least $\frac{\gamma}{8(h+v)}$.
+which contradicts (\ref{ineq:hash_high_prob}). Hence, we conclude that the probability of choosing $\hash \in \cH_{\mathit{Good}}$ is at least $\frac{\gamma}{8(h+v)}$.
 
 We now show that FindHash picks in one of its iteration $\hash \in \cH_{\mathit{Good}}$ almost surely.
 Let $K$ be the random variable that denotes the number of iterations of the outer loop of $\FindHash$

@@ -1,17 +1,17 @@
 %
 \subsection{The hardness amplification proof for partitioned domains}
 \label{st:amplification_proof}
-In this section we prove Lemma \ref{lemma:sec_amp_for_p_hash} which in a great extent bases on~\cite{holenstein2011general}.
+In this section we give the proof of Lemma \ref{lemma:sec_amp_for_p_hash} which in a great extent bases on~\cite{holenstein2011general}.
 
 We need to introduce some additional algorithms and circuits before giving the proof of Lemma \ref{lemma:sec_amp_for_p_hash} .
 The following code listing depicts the algorithm $\widetilde{\Gen}$.
 The algorithm $\EstimateSurplus$ and the circuits $\widetilde{D}$, $\widetilde{C}' := (C_1',\widetilde{C}_2')$ used by $\widetilde{Gen}$ are presented on the succeeding code excerpts.
-Intuitively, the algorithm $\EstimateSurplus$ returns an estimate of an advantage of $\widetilde{C}$
+Intuitively, the algorithm $\EstimateSurplus$ returns the estimate of the advantage of $\widetilde{C}$
 over the algorithm that solves each puzzle independently with probability $\delta$
 where the randomness used to generate a puzzle on the first position is fixed to $\pi^*$
 and the fact of solving this puzzle is disregarded.
 The circuit $\widetilde{D}$ outputs a solution $(q,y)$ for a puzzle defined by~$P^{(1)}$.
-The circuit $\widetilde{C}'$ is a solver for the $(k\!-\!1)$-wise direct product of puzzles that outputs an answer $(q, y_1, \dotsc, y_{k-1})$.
+The circuit $\widetilde{C}'$ is a solver for the $(k\!-\!1)$-wise direct product of puzzles that outputs an answer $(q, y_2, \dotsc, y_k)$.
 %
 \begin{codeblock}
   \textbf{Algorithm} $\widetilde{\Gen}^{P^{(1)}, \widetilde{C}, g, \mathit{hash}}(\epsilon, \delta, n, k)$
