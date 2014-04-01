@@ -69,7 +69,7 @@ The estimate of this probability is calculated by $\EstimateFunctionProbability$
 \begin{proof}
 We fix the notation as in the code listing of EstimateFunctionProbability.
 Let us define independent and identically distributed binary random variables $K_1, K_2, \dots, K_N$
-such that for each $1 \leq i \leq N$ the random variable $K_i$ takes value $g_i$. We use the Chernoff bound to obtain
+such that for each $1 \leq i \leq N$ the random variable $K_i$ takes value $g_i$. We use the Chernoff bound \eqref{ineq:ch2} to obtain
 \begin{align*}
   &\Pr \Bigl[ \Bigl| \widetilde{g}_b - \Pr_{u \leftarrow \mu_{\delta}^{k}}\left[g(b,u_2, \dots, u_k) = 1\right] \Bigr| \geq \frac{\epsilon}{8k} \Bigr]\\
   &\IndII = \Pr \Bigl[\Bigl|\Bigl(\frac{1}{N} \sum_{i=1}^N K_i \Bigr) - \mathbb{E}_{u \leftarrow \mu_{\delta}^k}[g(b,u_2, \dots, u_k)]\Bigr|
@@ -274,14 +274,15 @@ If all surpluses $S_{\pi,0}$ and $S_{\pi,1}$ were lower than $(1-\frac{1}{k})\ep
 does not succeed on the remaining $k-1$ puzzles with much higher probability than an algorithm that solves each puzzle
 independently with success probability $\delta$. However, from the assumptions of Lemma~\ref{lemma:sec_amp_for_p_hash}
 we know that on all $k$ puzzles the success probability of $\widetilde{C}$ is higher.
-Hence, we suspect that the first puzzle is correctly solved unusually often.
+Hence, we suspect that a puzzle on the first position is correctly solved unusually often.
 It remains to show that the fact that $\widetilde{\Gen}$ fails to find a surplus estimate that is large implies that
 with high probability there are only few surpluses greater than $(1-\frac{1}{k})\epsilon$ and their influence
-can be neglected. Additionally, we have to show that the circuit $\widetilde{D}$ outputs an answer almost surely.
+can be neglected.
+Additionally, we have to show that $\widetilde{D}$ outputs an answer often.
 
-The proof in this case requires lengthly probability manipulations.
-In Appendix \ref{st:proofSimAssm} we give a shorter proof under the simplifying assumptions
-that the circuit $\widetilde{D}$ always outputs an answer and all surpluses are low.
+The proof requires lengthly probability manipulations. In Appendix \ref{st:proofSimAssm} we give a shorter proof
+under the simplifying assumptions that $\widetilde{D}$ always outputs an answer and all surpluses are low.
+The full proof is presented below.
 
 We fix the notation as in the code listing of $\widetilde{D}_2$.
 Let us consider a single iteration of the outer loop of $\widetilde{D}_2$ where values $\pi_2, \dotsc, \pi_k$ are fixed.
@@ -531,7 +532,7 @@ We observe that
  &\stackrel{\eqref{eq:gu_rel}}{\geq} \frac{\epsilon + \delta\Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_1 \setminus \cG_0] - (1 - \frac{1}{6k})\epsilon}
 {\Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_1 \setminus \cG_0]} \geq \delta + \frac{\epsilon}{6k}.
 \end{align}
-Clearly, the running time of $\widetilde{\Gen}$ is bounded by some polynomial $p(k, \frac{1}{\epsilon}, n)$ with oracle calls.
+Clearly, the running time of $\widetilde{\Gen} = \poly(k, \frac{1}{\epsilon}, n)$ with oracle access.
 Furthermore, the algorithm $\widetilde{\Gen}$ outputs a circuit $\widetilde{D}$ such that it satisfies with probability at least $1 - \p(k, \frac{1}{\epsilon}, n) \cdot 2^n$
 the statement of Lemma \ref{lemma:sec_amp_for_p_hash}. This concludes the proof of Lemma~\ref{lemma:sec_amp_for_p_hash}.
 \end{proof}
