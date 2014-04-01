@@ -4,29 +4,31 @@
 In this section we give the intuition behind the proof of Theorem \ref{th:sec_amp_for_dwvp}.
 We refer to a puzzle solved by $\widetilde{D}$ as an \textit{input puzzle} and fix the notation as in Theorem~\ref{th:sec_amp_for_dwvp}.
 First, we give the intuition behind the part of the proof that bases on \cite{canetti2005hardness, holenstein2011general}.
+Then, we describe methods of \cite{dodis2009security} used in our proof.
+
 \paragraph{Technique of \cite{canetti2005hardness, holenstein2011general}}
-The idea is to use the circuit $C$ to solve $k$ puzzles among which is the input puzzle, and
+The idea is to use the solver circuit $C$ to solve $k$ puzzles among which is the input puzzle, and
 the remaining $k\!-\!1$ puzzles are generated.
 If a position for the input puzzle is carefully chosen as well as the randomness used to generate the remaining puzzles,
 then the input puzzle can be solved with the substantial probability almost surely.
 
-More precisely, we try to fix the randomness used to generate a puzzle on the first position such that
-the circuit $C$ satisfies the assumptions of Theorem \ref{th:sec_amp_for_dwvp}
+More precisely, we try to fix the randomness used to generate a puzzle on the first position such that $C$
+satisfies the assumptions of Theorem \ref{th:sec_amp_for_dwvp}
 for the $(k\!-\!1)$-wise direct product of puzzles (where the fact whether the puzzle on the first position is correctly solved is neglected).
-The success probability on the remaining puzzles can be estimated using a natural sampling technique.
+The success probability of $C$ on the remaining puzzles can be estimated using a natural sampling technique.
 
 When it is possible to find this randomness, then we recursively solve the sub-problem for the $(k\!-\!1)$-wise direct product of puzzles.
 If the recursion reaches $k=1$, then we can use $C$ directly to solve the input puzzle.
 
 We cannot exclude the situation where in one of the recursive calls we cannot
 find the randomness for the first position such that the success probability of $C$ for the $(k\!-\!1)$-wise direct product of puzzles is substantial.
-Nevertheless, we know that $C$ has the substantial success probability when all positions are considered.
+Nevertheless, we know that $C$ has substantial success probability when all positions are considered.
 Hence, we conclude that the first coordinate is somehow important in the sense that $C$ solves a puzzle on this coordinate unusually often.
 Therefore, it makes sense to place the input puzzle on this position.
 All that is left is to find the randomness used to generate puzzles on the remaining positions
-such that when the input puzzle is placed on the first position, then it is solved correctly often.
+such that the input puzzle is solved correctly often.
 
-In Section \ref{subsec:chs} we describe the same approach for the special case where
+In Section \ref{subsec:chs} we describe a similar approach for the special case where
 non-interactive puzzles are considered and the function $g$ is such that all puzzles have to be correctly solved.
 In that section we use Observation~\ref{obs:wvp_matrix} to conclude that the remaining puzzles should be chosen such that they
 are all correctly solved by~ $C$.
