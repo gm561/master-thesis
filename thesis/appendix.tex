@@ -26,7 +26,7 @@ where $\Pr[X_i = 1] = p$ for some $p \in (0,1)$ for all $ 1 \leq  i \leq n$ we h
 
 \section{The Proof of Lemma \ref{lemma:sec_amp_for_p_hash} Under the Simplifying Assumptions}
 \label{st:proofSimAssm}
-We give a proof of Lemma \ref{lemma:sec_amp_for_p_hash} in the case where non of the estimate is large.
+We prove Lemma \ref{lemma:sec_amp_for_p_hash} in the case where non of the estimate is large.
 For the sake of simplicity we make the following assumptions
 \begin{gather}
   \label{pr:always_d}
@@ -35,13 +35,13 @@ For the sake of simplicity we make the following assumptions
   \substack{\pi, \rho \\ x := \langle P^{(1)}(\pi), D_1(\rho) \rangle_{\trans}}}}
 {\Pr}[D_2(x,\rho) \neq \bot] = 1 \\
   \label{pr:low_surpluses}
-\forall \pi \in \{0,1\}^{n} : S_{\pi, b} \leq (1 - \frac{1}{k}).
+\forall \pi \in \{0,1\}^{n} : S_{\pi, b} \leq (1 - \frac{1}{k})\epsilon.
 \end{gather}
 Loosely speaking, in \eqref{pr:always_d} we assume that for every $\pi$ circuit $D$ outputs an answer,
 and in \eqref{pr:low_surpluses} we make the assumption that all surpluses are low.
 In the complete proof of Lemma \ref{lemma:sec_amp_for_p_hash} this assumptions fail only slightly such that it is still possible
 to obtain the desired result. However, the calculations are fairly lengthy.
-The following simplified calculations are intended to give the Reader better intuition about the full proof.
+The following simplified calculations are intended to give the intuition behind the full proof.
 We have
 \begin{align*}
 \underset{
@@ -54,19 +54,38 @@ We have
   \mathclap{
   \substack{\pi, \rho \\ x := \langle P^{(1)}(\pi), D_1(\rho) \rangle_{\trans}
     \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi), D_1 (\rho) \rangle_{P^{(1)}} }}}
-{\Pr}[\Gamma_V(D_2(x^*,\rho)) = 1 \mid D_2(x,\rho) \neq \bot] \\
+{\Pr}[\Gamma_V(D_2(x,\rho)) = 1 \mid D_2(x,\rho) \neq \bot] \\
   &\overset{\hphantom{a}(*)\hphantom{a}}{=} \underset{\pi^{(k)}}{\Pr}[c_1 = 1 \mid c \in \cG_1 \setminus \cG_0] \\
-  &\overset{\hphantom{\eqref{eq:diff_s01_next}}}{=} \frac{\Pr_{\pi^{(k)}}[c_1 = 1 \land c \in \cG_1 \setminus \cG_0]}{\Pr_{\pi^{(k)}}[c \in \cG_1 \setminus \cG_0]} \\
-  &\overset{\eqref{eq:diff_s01_next}}{=} \underset{\pi^*}{\mathbb{E}}\left[\frac{\Pr_{\pi^{(k-1)}}[c_1^* = 1 \land c \in \cG_1 \setminus \cG_0]
-    \big(\Pr_{\pi^{(k-1)}}[c \in \cG_0 \setminus \cG_1] - (S_{\pi^*,1} - S_{\pi^*,0})\big)}
-  {\underset{\pi^{(k-1)}}{\Pr}[c \in \cG_0 \setminus \cG_1] \underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[u \in \cG_1 \setminus \cG_0]}\right]  \\
-  &\overset{\hphantom{\eqref{eq:diff_s01_next}}}{\geq} \underset{\pi^*}{\mathbb{E}}\left[\frac{\Pr_{\pi^{(k-1)}}[c_1^* = 1 \land c \in \cG_1 \setminus \cG_0]
-    \big(\Pr_{\pi^{(k-1)}}[c \in \cG_0 \setminus \cG_1] - (1 - \frac{1}{k})\epsilon\big)}
-  {\underset{\pi^{(k-1)}}{\Pr}[c \in \cG_0 \setminus \cG_1] \underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[u \in \cG_1 \setminus \cG_0]}\right]  \\
-  &\overset{\hphantom{\eqref{eq:diff_s01_next}}}{\geq} \frac{\Pr_{\pi^{(k)}}[c_1 = 1 \land c \in \cG_1 \setminus \cG_0] -
-    (1 - \frac{1}{k})\epsilon}{\underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[u \in \cG_1 \setminus \cG_0]} \\
-  &\overset{\eqref{eq:gu_rel}}{\geq} \frac{\delta \underset{}{\Pr}[u \in \cG_1 \setminus \cG_0] + \epsilon - (1-\frac{1}{k})\epsilon}{\underset{}{\Pr}[u \in \cG_1 \setminus \cG_0]} \\
-  &\overset{\hphantom{\eqref{eq:diff_s01_next}}}{\geq} \delta + \frac{\epsilon}{k},
+  &\overset{\eqref{eq:diff_s01_next}}{=} \underset{\pi^*}{\mathbb{E}}
+  \left[\frac{\Pr[c_1 = 1 \mid c \in \cG_1 \setminus \cG_0] \big(\Pr[c \in \cG_1 \setminus \cG_0] - (S_{\pi^*,1} - S_{\pi^*,0})\big)}
+  {\underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[u \in \cG_1 \setminus \cG_0]}\right] \\
+  % &\overset{\hphantom{a(*)}\hphantom{a}}{\geq} \underset{\pi^*}{\mathbb{E}}
+  % \left[\frac{\Pr[c_1 = 1 \land c \in \cG_1 \setminus \cG_0]  - (S_{\pi^*,1} - S_{\pi^*,0})}
+  % {\underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[u \in \cG_1 \setminus \cG_0]}\right] \\
+  &\overset{\hphantom{a(*)}\hphantom{a}}{\geq} \underset{\pi^*}{\mathbb{E}}
+  \left[\frac{\Pr[g(c)=1] - \Pr[c \in \cG_0]  - (S_{\pi^*,1} - S_{\pi^*,0})}
+  {\underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[u \in \cG_1 \setminus \cG_0]}\right] \\
+  &\overset{\hphantom{a(*)}\hphantom{a}}{=} \underset{\pi^*}{\mathbb{E}}
+  \left[\frac{\Pr[g(c)=1] - \Pr[u \in \cG_0] - S_{\pi^*,0}  - (S_{\pi^*,1} - S_{\pi^*,0})}
+  {\underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[u \in \cG_1 \setminus \cG_0]}\right]\\
+  &\overset{\eqref{eq:s_pi_b}}{\geq} \underset{\pi^*}{\mathbb{E}}
+  \left[\frac{\Pr[g(c)=1] - \Pr[u \in \cG_0] - S_{\pi^*,0}  - (S_{\pi^*,1} - S_{\pi^*,0})}
+  {\underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[u \in \cG_1 \setminus \cG_0]}\right]\\
+  &\overset{\eqref{pr:low_surpluses}}{\geq} \underset{\pi^*}{\mathbb{E}}
+  \left[\frac{\delta \Pr[u \in \cG_1 \setminus \cG_0] + \epsilon  - (1 - \frac{1}{k})\epsilon}
+  {\underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[u \in \cG_1 \setminus \cG_0]}\right] \geq \delta + \frac{\epsilon}{k},
+  %
+  % &\overset{\hphantom{\eqref{eq:diff_s01_next}}}{=} \frac{\Pr_{\pi^{(k)}}[c_1 = 1 \land c \in \cG_1 \setminus \cG_0]}{\Pr_{\pi^{(k)}}[c \in \cG_1 \setminus \cG_0]} \\
+  % &\overset{\eqref{eq:diff_s01_next}}{=} \underset{\pi^*}{\mathbb{E}}\left[\frac{\Pr_{\pi^{(k-1)}}[c_1^* = 1 \land c \in \cG_1 \setminus \cG_0]
+  %   \big(\Pr_{\pi^{(k-1)}}[c \in \cG_0 \setminus \cG_1] - (S_{\pi^*,1} - S_{\pi^*,0})\big)}
+  % {\underset{\pi^{(k-1)}}{\Pr}[c \in \cG_0 \setminus \cG_1] \underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[u \in \cG_1 \setminus \cG_0]}\right]  \\
+  % &\overset{\hphantom{\eqref{eq:diff_s01_next}}}{\geq} \underset{\pi^*}{\mathbb{E}}\left[\frac{\Pr_{\pi^{(k-1)}}[c_1^* = 1 \land c \in \cG_1 \setminus \cG_0]
+  %   \big(\Pr_{\pi^{(k-1)}}[c \in \cG_0 \setminus \cG_1] - (1 - \frac{1}{k})\epsilon\big)}
+  % {\underset{\pi^{(k-1)}}{\Pr}[c \in \cG_0 \setminus \cG_1] \underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[u \in \cG_1 \setminus \cG_0]}\right]  \\
+  % &\overset{\hphantom{\eqref{eq:diff_s01_next}}}{\geq} \frac{\Pr_{\pi^{(k)}}[c_1 = 1 \land c \in \cG_1 \setminus \cG_0] -
+  %   (1 - \frac{1}{k})\epsilon}{\underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[u \in \cG_1 \setminus \cG_0]} \\
+  % &\overset{\eqref{eq:gu_rel}}{\geq} \frac{\delta \underset{}{\Pr}[u \in \cG_1 \setminus \cG_0] + \epsilon - (1-\frac{1}{k})\epsilon}{\underset{}{\Pr}[u \in \cG_1 \setminus \cG_0]} \\
+  % &\overset{\hphantom{\eqref{eq:diff_s01_next}}}{\geq} \delta +  \frac{\epsilon}{k},
 \end{align*}
 where in $(*)$ we use the facts that $D_2(x,\rho) \neq \bot$ if and only if $D_2$ finds $c \in \cG_1 \setminus \cG_0$
 and conditioned on $D_2(x,\rho) \neq \bot$  we have that $\Gamma_V(D_2(x,r)) = 1$ if and only if $c_1 = 1$.
