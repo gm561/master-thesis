@@ -20,10 +20,10 @@ property of $\cH$ we have that for every $q_k, q_l \in \cQ$ such that $q_k \neq 
  \underset{\hash \leftarrow \cH}{\Pr}[\hash(q_k) = \alpha] \notag\\ &= \frac{1}{2(h+v)}.
 \end{align}
 %
-Let $\cP_{\Success}$ denote a set containing $(\pi,\rho)$ for which $\Success^{P, C}(\pi, \rho)=1$.
-We~are interested in probability over the choice of $\hash$ of the event $\CanonicalSuccess^{P,C,\hash}(\pi^*, \rho^*) = 1$
-where $(\pi^*, \rho^*) \in \cP_{\mathit{Success}}$ is fixed. Let $(q_j, y_j)$ denote the first verification query for which $C$ succeeds.
-We calculate this probability
+Let $\cP_{\Success}$ be a set containing $(\pi,\rho)$ for which $\Success^{P, C}(\pi, \rho) = 1$.
+For fixed $(\pi^*, \rho^*) \in \cP_{\mathit{Success}}$ we calculate the probability over the choice of $\hash$ of the event $\CanonicalSuccess^{P,C,\hash}(\pi^*, \rho^*) = 1$.
+Additionally, let $(q_j, y_j)$ be the first verification query for which $C$ succeeds in the experiment $\CanonicalSuccess$.
+We have
 \begin{align}
   \label{ineq:prob_hash_success}
   \underset{\hash \leftarrow \cH}{\Pr}&\left[\CanonicalSuccess^{P,C,\hash}(\pi^*, \rho^*) = 1\right] \notag\\
