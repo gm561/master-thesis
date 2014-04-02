@@ -1,7 +1,7 @@
 \chapter{Appendix}
 \section{Concentration Bounds}
 \begin{lemma}[Chernoff Bounds]
-For independent and identically distributed Bernoulli random variables $X_1, \dotsc, X_n$ with $X := \sum_{i=1}^n X_i$
+For independent Bernoulli distributed random variables $X_1, \dotsc, X_n$ with $X := \sum_{i=1}^n X_i$
 and $\Pr[X_i = 1] = p_i$ for all $ 1 \leq  i \leq n$ the following inequalities hold
 \begin{gather}
 \label{ineq:ch0}
@@ -12,6 +12,14 @@ and $\Pr[X_i = 1] = p_i$ for all $ 1 \leq  i \leq n$ the following inequalities 
 \Pr[|X - \mathbb{E}[X]| \geq \delta \mathbb{E}[X]] \leq 2 e^{- \mathbb{E}[X] \delta^2 / 3},
 \end{gather}
 where $0 \leq \delta \leq 1$.
+
+For independent and identically distributed Bernoulli random variables $X_1, \dotsc, X_n$ with $X := \sum_{i=1}^n X_i$
+where $\Pr[X_i = 1] = p$ for some $p \in (0,1)$ for all $ 1 \leq  i \leq n$ we have
+\begin{gather}
+\label{ineq:ch00}
+\Pr[x \geq (p + \varepsilon)n] \leq e^{-\frac{\epsilon^2k}{2}}.
+\end{gather}
+
 \end{lemma}
 \vspace*{\fill}
 \pagebreak

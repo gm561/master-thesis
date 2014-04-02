@@ -2,25 +2,25 @@
 \subsection{The intuition behind the proof}
 \label{section:intuition}
 In this section we give the intuition behind the proof of Theorem \ref{th:sec_amp_for_dwvp}.
-We refer to a puzzle solved by $\widetilde{D}$ as an \textit{input puzzle} and fix the notation as in Theorem~\ref{th:sec_amp_for_dwvp}.
+We refer to a puzzle solved by $D$ as an \textit{input puzzle} and fix the notation as in Theorem~\ref{th:sec_amp_for_dwvp}.
 First, we give the intuition behind the part of the proof that bases on \cite{canetti2005hardness, holenstein2011general}.
 Then, we describe methods of \cite{dodis2009security} used in our proof.
 
-\paragraph{Technique of \cite{canetti2005hardness, holenstein2011general}}
+\paragraph{Technique of \cite{canetti2005hardness, holenstein2011general}.}
 The idea is to use the solver circuit $C$ to solve $k$ puzzles among which is the input puzzle, and
 the remaining $k\!-\!1$ puzzles are generated.
 If a position for the input puzzle is carefully chosen as well as the randomness used to generate the remaining puzzles,
-then the input puzzle can be solved with the substantial probability almost surely.
+then the input puzzle can be solved with substantial probability almost surely.
 
 More precisely, we try to fix the randomness used to generate a puzzle on the first position such that $C$
 satisfies the assumptions of Theorem \ref{th:sec_amp_for_dwvp}
-for the $(k\!-\!1)$-wise direct product of puzzles (where the fact whether the puzzle on the first position is correctly solved is neglected).
+for the $(k\!-\!1)$-wise direct product of puzzles, where the fact whether the puzzle on the first position is correctly solved is neglected.
 The success probability of $C$ on the remaining puzzles can be estimated using a natural sampling technique.
 
 When it is possible to find this randomness, then we recursively solve the sub-problem for the $(k\!-\!1)$-wise direct product of puzzles.
 If the recursion reaches $k=1$, then we can use $C$ directly to solve the input puzzle.
 
-We cannot exclude the situation where in one of the recursive calls we cannot
+We cannot exclude the situation where in one of the recursive calls $\Gen$ does not
 find the randomness for the first position such that the success probability of $C$ for the $(k\!-\!1)$-wise direct product of puzzles is substantial.
 Nevertheless, we know that $C$ has substantial success probability when all positions are considered.
 Hence, we conclude that the first coordinate is somehow important in the sense that $C$ solves a puzzle on this coordinate unusually often.
@@ -36,7 +36,7 @@ are all correctly solved by~ $C$.
 Here we generalize this approach. Namely, we search for the randomness used to generate the remaining $k\!-\!1$ puzzles
 such that when a puzzle on the first position was solved successfully, then the $k$-wise direct product of puzzles would be solved successfully,
 and if a puzzle on the first position was unsuccessfully solved, then the $k$-wise direct product of puzzles would be also solved unsuccessfully.
-These are the only cases where solving a puzzle on the first position makes a difference.
+This is the only case where solving a puzzle on the first position makes a difference.
 For a function $g$ which requires all puzzles to be solved correctly
 this approach corresponds exactly to the one presented in~Section~\ref{subsec:chs} for weakly verifiable puzzles.
 
@@ -49,7 +49,7 @@ After choosing a position for the input puzzle we have to find the randomness fr
 This requires running $C$ several times. In one of this runs $C$ can ask a hint query which prevents a later verification query from succeeding.
 Therefore, it may happen that the success probability of $C$ in the consecutive runs decreases.
 
-\paragraph{Technique of \cite{dodis2009security}}
+\paragraph{Technique of \cite{dodis2009security}.}
 We would like to ensure that no hint query is ever asked that could prevent a verification query from being successful.
 To satisfy this requirement we use the technique described in \cite{dodis2009security}.
 The set $Q$ is partitioned into two sets. A set of advice queries contains these $q \in \cQ$ on which

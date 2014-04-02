@@ -3,11 +3,11 @@
 \label{st:domain_partition}
 In this section we use the technique from \cite{dodis2009security} to
 partition $\cQ$ into a set $\cQ_{adv}$ of advice queries and a set $\cQ_{attack}$ of attacking queries.
-The circuit~$C$ is allowed to make hint queries on $q \in \cQ_{adv}$ and successful verification queries on $q \in \cQ_{attack}$.
+The circuit~$C$ is allowed to make hint queries on $q \in \cQ_{adv}$ and successful verification queries only on $q \in \cQ_{attack}$.
 If $C$ asks a hint query on $q \in \cQ_{attack}$, the execution of $C$ is aborted.
 Similarly, all verification queries on $q \in \cQ_{adv}$ are answered as unsuccessful.
 The idea is to avoid collisions between hint and verification queries in the independent runs of $C$.
-Let us now prove Lemma~\ref{lemma:hash_function_probability}.
+Let us now prove Lemma~\ref{lemma:hash_function_probability} that in a great extend uses techniques from \cite{dodis2009security}.
 %
 %
 \begin{proof}[Proof of Lemma \ref{lemma:hash_function_probability}]
@@ -57,7 +57,8 @@ Hence, $\cP_{\Canonical} \subseteq \cP_{\Success}$, and we conclude
 {\mathbb{E}}\left[\underset{\hash \leftarrow \cH}{\Pr}[\CanonicalSuccess^{P,C,\hash}(\pi, \rho) = 1] \right] \cdot \gamma \notag\\
 &\hphantom{aaa}\stackrel{(\ref{ineq:prob_hash_success})}{\geq} \frac{\gamma}{4(h+v)}. %use phantom space to align text in the equation
 \end{align}
-The following algorithm FindHash uses a natural sampling approach to pick a function $\hash$ that satisfies Lemma \ref{lemma:hash_function_probability}.
+The following algorithm FindHash from \cite{dodis2009security} uses
+a natural sampling approach to pick a function $\hash$ that satisfies Lemma \ref{lemma:hash_function_probability}.
 \begin{codeblock}
   \textbf{Algorithm} $\FindHash^{P,C}(\gamma, n, h, v)$
   \medskip\hrule
@@ -69,8 +70,8 @@ The following algorithm FindHash uses a natural sampling approach to pick a func
   \IndI $\hash \xleftarrow{\$} \cH$ \\
   \IndI $\mathit{count} := 0$ \\
   \IndI \For $j := 1$ \To $N := \frac{32(h+v)^2}{\gamma^2}n$ \Do \\
-  \IndII $\pi \leftarrow \{0,1\}^{n} $\\
-  \IndII $\rho \leftarrow \{0,1\}^*$ \\
+  \IndII $\pi \xleftarrow{\$} \{0,1\}^{n} $\\
+  \IndII $\rho \xleftarrow{\$} \{0,1\}^*$ \\
   \IndII \If $\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1$ \Then \\
   \IndIII $\mathit{count} := \mathit{count} + 1$\\
   \IndI \If $\mathit{count} \geq \frac{\gamma}{12(h+v)} N$ \Then \\
