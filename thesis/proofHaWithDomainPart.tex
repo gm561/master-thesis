@@ -3,9 +3,10 @@
 \label{st:amplification_proof}
 In this section we give the proof of Lemma \ref{lemma:sec_amp_for_p_hash} which in a great extent bases on~\cite{holenstein2011general}.
 
-We need to introduce some additional algorithms and circuits before giving the proof of Lemma \ref{lemma:sec_amp_for_p_hash} .
+First, we need to introduce some additional algorithms and circuits.
 The following code listing depicts the algorithm $\widetilde{\Gen}$.
-The algorithm $\EstimateSurplus$ and the circuits $\widetilde{D}$, $\widetilde{C}' := (C_1',\widetilde{C}_2')$ used by $\widetilde{Gen}$ are presented on the succeeding code excerpts.
+The algorithm $\EstimateSurplus$ and the circuits $\widetilde{D}$, $\widetilde{C}' := (C_1',\widetilde{C}_2')$
+used by $\widetilde{Gen}$ are presented in the succeeding code excerpts.
 Intuitively, the algorithm $\EstimateSurplus$ returns the estimate of the advantage of $\widetilde{C}$
 over the algorithm that solves each puzzle independently with probability $\delta$
 where the randomness used to generate a puzzle on the first position is fixed to $\pi^*$
@@ -34,8 +35,8 @@ The circuit $\widetilde{C}'$ is a solver for the $(k\!-\!1)$-wise direct product
   \Return $\widetilde{D}^{P^{(1)}, \widetilde{C}, hash, g}$
 \end{codeblock}
 
-The algorithm $\EstimateSurplus$ uses procedures $\EstimateFunctionProbability$ and $\EvalutePuzzles$.
-We state them first before $\EstimateSurplus$.
+The algorithm $\EstimateSurplus$ uses procedures $\EstimateFunctionProbability$ and $\EvalutePuzzles$
+that we state in the following code listings.
 
 We are interested in the probability that for $u \leftarrow \mu_{\delta}^k$ and $b \in \{0,1\}$ we have $g(b,u_2, \dotsc, u_k) = 1$.
 The estimate of this probability is calculated by $\EstimateFunctionProbability$.
@@ -119,7 +120,7 @@ All puzzles are generated  by $\EvalutePuzzles$. Thus, the algorithm can answer 
 
 We are interested in the success probability of $\widetilde{C}$ with the bitstring $\pi_1$ fixed to $\pi^*$ where
 the fact whether $\widetilde{C}$ succeeds in solving the puzzle placed on the first position is neglected
-and instead $b \in \{0,1\}$ is used. More formally, we introduce the notion of a surplus $S_{\pi^*, b}$ defined as
+and instead $b \in \{0,1\}$ is used. More formally, we introduce the notion of a \textit{surplus} $S_{\pi^*, b}$ defined as
 \begin{align}
   \label{eq:s_pi_b}
 S_{\pi^*, b} = \underset{\pi^{(k)}, \rho}{\Pr}\left[g(b, c_2, \dots, c_k) = 1 \mid \pi_1 = \pi^*\right] - \underset{u \leftarrow \mu^{k}_{\delta}}{\Pr}\left[g(b, u_2, \dots, u_k) = 1\right],
@@ -154,11 +155,11 @@ The estimate $\widetilde{S}_{\pi^*,b}$ returned by EstimateSurplus differs from 
 We use the union bound and similar argument as in Lemma \ref{lemma:estimate_of_g}
 which yields that $\frac{1}{N} \sum_{i=1}^{N} \widetilde{s}_{\pi^*,b}^i$ differs from
 $\mathbb{E}[g(b, c_2, \dots, c_k)]$ by at most $\frac{\epsilon}{8k}$ almost surely. Together, with Lemma $\ref{lemma:estimate_of_g}$ we conclude that the surplus estimate
-returned by EstimateSurplus differs from $S_{\pi^*,b}$ by at most $\frac{\epsilon}{4k}$ with probability at least $1 - 2e^{-n}$.
+returned by EstimateSurplus differs from $S_{\pi^*,b}$ by at most $\frac{\epsilon}{4k}$ with high probability.
 \end{proof}
 %
 We define the following circuit $\widetilde{C}' = (C_1', \widetilde{C}_2')$ for the $(k-1)$-wise direct product of $P^{(1)}$.
-Loosely speaking, in the recursive calls of $\widetilde{\Gen}$ we fix the randomness used to generate the puzzle on the first position.
+%In the recursive calls of $\widetilde{\Gen}$ we fix the randomness used to generate the puzzle on the first position.
 The circuit $\widetilde{C}'$ uses the circuit $\widetilde{C}$ for the $k$-wise direct product where
 the first puzzle is generated internally using the fixed randomness.
 
@@ -241,7 +242,8 @@ From the assumptions of Lemma \ref{lemma:sec_amp_for_p_hash} it follows that $\w
 $\delta + \epsilon$. Hence, $\widetilde{D}$ trivially satisfies Lemma~\ref{lemma:sec_amp_for_p_hash}.
 
 For the general case, we consider two possibilities.
-Namely, either $\widetilde{\Gen}$ in one of the iterations finds an estimate such that $\widetilde{S}_{\pi, b} \geq (1-\frac{3}{4k})\epsilon$ and recurses,
+Namely, either $\widetilde{\Gen}$ in one of the iterations finds an estimate with the high surplus
+such that $\widetilde{S}_{\pi, b} \geq (1-\frac{3}{4k})\epsilon$ and recurses,
 or in all iterations it fails and outputs the circuit~$\widetilde{D}$.
 
 If it is possible to find an estimate with the high surplus, then we introduce a~new monotone function $g': \{0,1\}^{k-1} \rightarrow \{0,1\}$
@@ -250,7 +252,7 @@ with oracle access to $\widetilde{C}$. We apply Lemma \ref{lemma:surplus_estimat
 \begin{align*}
 S_{\pi^*,b} \geq \widetilde{S}_{\pi^*, b} - \frac{\epsilon}{4k} \geq \Bigl(1 - \frac{1}{k}\Bigr)\epsilon.
 \end{align*}
-It follows that $\widetilde{C}'$ succeeds in solving the $(k\!-\!1)$--wise direct product of puzzles with probability at least
+Hence, it follows that $\widetilde{C}'$ succeeds in solving the $(k\!-\!1)$-wise direct product of puzzles with probability at least
 \begin{align*}
 \Pr_{u \leftarrow \mu^{(k-1)}_{\delta}}[g'(u_1,\dots, u_{k-1} )] + \Bigl(1 - \frac{1}{k}\Bigr)\epsilon.
 \end{align*}
