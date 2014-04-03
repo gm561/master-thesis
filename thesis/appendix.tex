@@ -61,13 +61,13 @@ We have
   % &\overset{\hphantom{a(*)}\hphantom{a}}{\geq} \underset{\pi^*}{\mathbb{E}}
   % \left[\frac{\Pr[c_1 = 1 \land c \in \cG_1 \setminus \cG_0]  - (S_{\pi^*,1} - S_{\pi^*,0})}
   % {\underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[u \in \cG_1 \setminus \cG_0]}\right] \\
-  &\overset{\hphantom{a(*)}\hphantom{a}}{\geq} \underset{\pi^*}{\mathbb{E}}
+  &\overset{\eqref{pr:low_surpluses}}{\geq} \underset{\pi^*}{\mathbb{E}}
   \left[\frac{\Pr_{\pi^{(k)}}[g(c)=1] - \Pr_{\pi^{(k)}}[c \in \cG_0]  - (1 - \frac{1}{k})\epsilon + S_{\pi^*,0}}
   {\underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[u \in \cG_1 \setminus \cG_0]}\right] \\
   &\overset{\eqref{eq:s_pi_b}}{=} \underset{\pi^*}{\mathbb{E}}
   \left[\frac{\Pr_{\pi^{(k)}}[g(c)=1] - \Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_0] - S_{\pi^*,0}  - (1 - \frac{1}{k})\epsilon + S_{\pi^*,0}}
   {\underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[u \in \cG_1 \setminus \cG_0]}\right]\\
-  &\overset{\eqref{eq:gu_rel}}{\geq} \underset{\pi^*}{\mathbb{E}}
+  &\overset{\substack{\eqref{eq:gu_rel}\\\eqref{eq:lemma_assum}}}{\geq} \underset{\pi^*}{\mathbb{E}}
   \left[\frac{\delta \Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_1 \setminus \cG_0] + \epsilon  - (1 - \frac{1}{k})\epsilon}
   {\underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[u \in \cG_1 \setminus \cG_0]}\right] \geq \delta + \frac{\epsilon}{k},
   %
