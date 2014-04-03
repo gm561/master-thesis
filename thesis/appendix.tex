@@ -35,12 +35,12 @@ For the sake of simplicity we make the following assumptions
   \substack{\pi, \rho \\ x := \langle P^{(1)}(\pi), D_1(\rho) \rangle_{\trans}}}}
 {\Pr}[\widetilde{D}_2(x,\rho) \neq \bot] = 1 \\
   \label{pr:low_surpluses}
-\forall \pi \in \{0,1\}^{n} : S_{\pi, b} \leq (1 - \frac{1}{k})\epsilon.
+\forall \pi \in \{0,1\}^{n} : S_{\pi, b} \leq \Big(1 - \frac{1}{k}\Big)\epsilon.
 \end{gather}
 In \eqref{pr:always_d} we assume that $\widetilde{D}$ always outputs an answer, and in \eqref{pr:low_surpluses} that all surpluses are low.
-In the complete proof of Lemma \ref{lemma:sec_amp_for_p_hash} these assumptions fail only slightly such that it is still possible
+In the complete proof of Lemma \ref{lemma:sec_amp_for_p_hash} these assumptions fail only slightly such that it is possible
 to obtain the desired result. However, the calculations are fairly lengthy.
-The following simplified calculations are intended to give the intuition behind the full proof.
+The following simplified proof is intended to give the intuition behind the full proof.
 We have
 \begin{align*}
 \underset{
@@ -62,15 +62,12 @@ We have
   % \left[\frac{\Pr[c_1 = 1 \land c \in \cG_1 \setminus \cG_0]  - (S_{\pi^*,1} - S_{\pi^*,0})}
   % {\underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[u \in \cG_1 \setminus \cG_0]}\right] \\
   &\overset{\hphantom{a(*)}\hphantom{a}}{\geq} \underset{\pi^*}{\mathbb{E}}
-  \left[\frac{\Pr_{\pi^{(k)}}[g(c)=1] - \Pr_{\pi^{(k)}}[c \in \cG_0]  - (S_{\pi^*,1} - S_{\pi^*,0})}
+  \left[\frac{\Pr_{\pi^{(k)}}[g(c)=1] - \Pr_{\pi^{(k)}}[c \in \cG_0]  - (1 - \frac{1}{k})\epsilon + S_{\pi^*,0}}
   {\underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[u \in \cG_1 \setminus \cG_0]}\right] \\
-  &\overset{\hphantom{a(*)}\hphantom{a}}{=} \underset{\pi^*}{\mathbb{E}}
-  \left[\frac{\Pr_{\pi^{(k)}}[g(c)=1] - \Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_0] - S_{\pi^*,0}  - (S_{\pi^*,1} - S_{\pi^*,0})}
+  &\overset{\eqref{eq:s_pi_b}}{=} \underset{\pi^*}{\mathbb{E}}
+  \left[\frac{\Pr_{\pi^{(k)}}[g(c)=1] - \Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_0] - S_{\pi^*,0}  - (1 - \frac{1}{k})\epsilon + S_{\pi^*,0}}
   {\underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[u \in \cG_1 \setminus \cG_0]}\right]\\
-  &\overset{\eqref{eq:s_pi_b}}{\geq} \underset{\pi^*}{\mathbb{E}}
-  \left[\frac{\Pr_{\pi^{(k)}}[g(c)=1] - \Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_0] - S_{\pi^*,0}  - (S_{\pi^*,1} - S_{\pi^*,0})}
-  {\underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[u \in \cG_1 \setminus \cG_0]}\right]\\
-  &\overset{\eqref{pr:low_surpluses}}{\geq} \underset{\pi^*}{\mathbb{E}}
+  &\overset{\eqref{eq:gu_rel}}{\geq} \underset{\pi^*}{\mathbb{E}}
   \left[\frac{\delta \Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_1 \setminus \cG_0] + \epsilon  - (1 - \frac{1}{k})\epsilon}
   {\underset{u \leftarrow \mu_{\delta}^{k}}{\Pr}[u \in \cG_1 \setminus \cG_0]}\right] \geq \delta + \frac{\epsilon}{k},
   %
