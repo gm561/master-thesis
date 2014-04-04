@@ -212,7 +212,7 @@ Finally, we define the solver circuit $\widetilde{D} = (D_1, \widetilde{D}_2)$ f
   \textbf{Oracle:} A poser $P^{(1)}$, a solver circuit $\widetilde{C} = (C_1, \widetilde{C}_2)$ for $P^{(g)}$, \\
   \IndII functions $hash : \cQ \rightarrow \{0,1, \dots, 2(h+v)-1\}$, $g:\{0,1\}^k \rightarrow \{0,1\}$, \\
   \IndII a hint circuit $\Gamma_H$ for $P^{(1)}$. \\
-  \textbf{Input:} A communiation transcript $x^* \in \{0,1\}^{*}$, a bitstring $r := (\rho, \sigma)$ \\
+  \textbf{Input:} A communication transcript $x^* \in \{0,1\}^{*}$, a bitstring $r := (\rho, \sigma)$ \\
   \IndII where $\rho \in \{0,1\}^{*}$ and $\sigma \in \{0,1\}^{*}$\\
   \textbf{Output}: A pair $(q, y^*)$.
   \medskip \hrule
@@ -237,7 +237,7 @@ Finally, we define the solver circuit $\widetilde{D} = (D_1, \widetilde{D}_2)$ f
 \begin{proof}[Proof of Lemma \ref{lemma:sec_amp_for_p_hash}, \cite{holenstein2011general}]
 First, let us consider the case where $k=1$. The function $g: \{0,1\} \rightarrow \{0,1\}$ is either the identity or a constant function.
 In the latter case, where $g$ is a constant function, Lemma \ref{lemma:sec_amp_for_p_hash} is vacuously true.
-If $g$ is the identity function, then the circuit $\widetilde{D}$ directly uses $\widetilde{C}$ to find a solution.
+If $g$ is the identity function, then the circuit $\widetilde{D}$ uses directly $\widetilde{C}$ to find a solution.
 From the assumptions of Lemma \ref{lemma:sec_amp_for_p_hash} it follows that $\widetilde{C}$ succeeds with probability at least
 $\delta + \epsilon$. Hence, $\widetilde{D}$ trivially satisfies Lemma~\ref{lemma:sec_amp_for_p_hash}.
 
@@ -276,13 +276,13 @@ If all surpluses $S_{\pi,0}$ and $S_{\pi,1}$ were lower than $(1-\frac{1}{k})\ep
 does not succeed on the remaining $k-1$ puzzles with much higher probability than an algorithm that solves each puzzle
 independently with success probability $\delta$. However, from the assumptions of Lemma~\ref{lemma:sec_amp_for_p_hash}
 we know that on all $k$ puzzles the success probability of $\widetilde{C}$ is higher.
-Hence, we suspect that a puzzle on the first position is correctly solved unusually often.
+Hence, we suspect that a puzzle on the first position is solved correctly unusually often.
 It remains to show that the fact that $\widetilde{\Gen}$ fails to find a surplus estimate that is large implies that
 with high probability there are only few surpluses greater than $(1-\frac{1}{k})\epsilon$ and their influence
 can be neglected.
 Additionally, we have to show that $\widetilde{D}$ outputs an answer often.
 
-The proof requires lengthly probability manipulations. In Appendix \ref{st:proofSimAssm} we give a shorter proof
+The proof requires slightly complex probability manipulations. In Appendix \ref{st:proofSimAssm} we give a shorter proof
 under the simplifying assumptions that $\widetilde{D}$ always outputs an answer and all surpluses are low.
 The full proof is presented below.
 
@@ -534,7 +534,7 @@ We observe that
  &\stackrel{\eqref{eq:gu_rel}}{\geq} \frac{\epsilon + \delta\Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_1 \setminus \cG_0] - (1 - \frac{1}{6k})\epsilon}
 {\Pr_{u \leftarrow \mu_{\delta}^{k}}[u \in \cG_1 \setminus \cG_0]} \geq \delta + \frac{\epsilon}{6k}.
 \end{align}
-Clearly, the running time of $\widetilde{\Gen} = \poly(k, \frac{1}{\epsilon}, n)$ with oracle access.
+Clearly, the running time of $\Time(\widetilde{\Gen}) = \poly(k, \frac{1}{\epsilon}, n)$ with oracle access.
 Furthermore, the algorithm $\widetilde{\Gen}$ outputs a circuit $\widetilde{D}$ such that it satisfies with probability at least $1 - \p(k, \frac{1}{\epsilon}, n) \cdot 2^n$
 the statement of Lemma \ref{lemma:sec_amp_for_p_hash}. This concludes the proof of Lemma~\ref{lemma:sec_amp_for_p_hash}.
 \end{proof}
