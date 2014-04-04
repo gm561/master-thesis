@@ -1,32 +1,41 @@
 \subsection{Optimality of the result}
 \label{st:discussion}
-A natural question to ask is whether it is possible to prove hardness amplification where a solver for the $k$-wise direct product of puzzles satisfies
+A natural question is whether one can improve the result in Theorem \ref{th:sec_amp_for_dwvp} such that a solver
+for the $k$-wise direct product of puzzles that satisfies
 \begin{align}
     \label{weakerAssumptions}
     \underset{\substack{\pi^{(k)} \in \{0,1\}^{kn} \\ \rho \in \{0,1\}^{*}}}{\Pr}\left[\mathit{Success}^{P_{kn}^{(g)}, C}(\pi^{(k)}, \rho) = 1\right]
-    \geq \underset{u \leftarrow \mu_\delta^k}{\Pr}[g(u) = 1] + \varepsilon.
+    \geq \underset{u \leftarrow \mu_\delta^k}{\Pr}[g(u) = 1] + \varepsilon
 \end{align}
-In Theorem \ref{th_sec_amp_dwvp_assum} the coefficient $\frac{1}{16(h+v)}$ comes from the fact that we need to partition the query domain using the hash function
-such that we avoid collisions between hint and verification queries.
-To obtain \ref{weakerAssumptions} we would need to find a way to avoid collisions using a different method.
-Unfortunately, we did not see an easy way to achieve that.
+suffices to obtain a solver $D$ for a single puzzle that with high probability satisfies
+  \begin{align}
+    \underset{\substack{\pi \in \{0,1\}^{n} \\ \rho \in \{0,1\}^{*}}}
+    {\Pr}\left[\Success^{P_{n}^{(1)},D}(\pi, \rho) = 1\right] \geq \delta + \frac{\epsilon}{6k}.
+  \end{align}
+In Theorem \ref{th_sec_amp_dwvp_assum} the coefficient $\frac{1}{16(h+v)}$ comes from the fact that we need to partition the query domain
+to avoid collisions between hint and verification queries.
+To improve this result we would need to deal with collisions using a different method or show that the influence of the hint queries that can prevent
+verification queries from succeeding is not big such that the theorem holds even when a solver as in \ref{weakerAssumptions} is used.
+Unfortunately, we do not see a way to partition the domain in a more efficient manner or to amend the algorithm $\Gen$.
 
-Furthermore, it seems to be natural that the we have to loose a factor of $\frac{1}{v}$ as instead of asking $v$ verification queries we ask just a single query.
-Thus for a trivial case where we have a solver $C_v$ for the $1$-wise direct product always solves the puzzle but asks $v-1$ unsuccessful verification
+Furthermore, it seems to be natural that the we have to loose a factor of $\frac{1}{v}$ as instead of making $v$ verification queries we make just a single query.
+For a case of a solver $C_v$ for the $1$-wise direct product that always solves the puzzle but makes at least $v-1$ unsuccessful verification
 queries and a single successful verification and asks no hint queries.
 The solver output by $\Gen$ has to guess which of the $v$ queries is the correct one.
-It is clear, that if the solver $C_v$ chooses uniformly at random which of the verification queries it the successful one then the solve $C$ cannot succeed with
+It seems that if $C_v$ chooses uniformly at random which of the verification queries it the successful one then the solve $C$ cannot succeed with
 probability higher than $\frac{1}{v}$.
 
-For the verification queries a similar results is obtained by Coron \cite{coron2000exact}.
+Coron \cite{coron2000exact, coron2002optimal} shows the reduction between RSA and full domain hash (FDH)
+(which is a type of a signature scheme that can be seen as a dynamic interactive weakly verifiable puzzle).
+He shows that the fact that corresponds to the number of hint queries in this reduction is necessary.
+Unfortunately, we do not see how the proof technique used by Coron can be applied to our setting.
 
-Thus, we tries to show that the bound stated in Theorem \ref{th:sec_amp_for_dwvp} is optimal using
-the black box separation techniques similar to the one \ref{haitner2009possibility}.
-The intuition, behind our approach was to use a solver for the $k$-wise direct product that asks many hint queries
-such that the success probability in next runs decreases quickly.
+We also tried to apply the \textit{black box separation technique} by Holenstein and Heitner \cite{haitner2009possibility}.
+The intuition, behind our approach was to use a solver for the $k$-wise direct product that asks large amount of hint queries such that
+the success probability in next runs decreases drastically.
 In the technique of \cite{haitner2009possibility} a impossibility of a black box reduction is shown between the problem that has access
-to some possibility computationally unbounded oracle for certain problem. It is shown that it is possible to solve a certain problem, but
-not with high probability not possible to solve a different problem (write it more formally).
+to some possibility computationally unbounded oracle for a certain problem. It is shown that it is possible to solve a certain problem,
+but not with high probability not possible to solve a different problem (write it more formally).
 
 However, in our setting it only makes sense to consider situations where the number of hint and verification queries is bounded.
 Thus, this solver cannot asks exponential number of queries. Furthermore, the solve for the $k$-wise direct product cannot solve puzzle on each position
