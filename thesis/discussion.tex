@@ -1,23 +1,57 @@
 \subsection{Optimality of the result}
 \label{st:discussion}
+A natural question to ask is whether it is possible to prove hardness amplification where a solver for the $k$-wise direct product of puzzles satisfies
+\begin{align}
+    \label{weakerAssumptions}
+    \underset{\substack{\pi^{(k)} \in \{0,1\}^{kn} \\ \rho \in \{0,1\}^{*}}}{\Pr}\left[\mathit{Success}^{P_{kn}^{(g)}, C}(\pi^{(k)}, \rho) = 1\right]
+    \geq \underset{u \leftarrow \mu_\delta^k}{\Pr}[g(u) = 1] + \varepsilon.
+\end{align}
+In Theorem \ref{th_sec_amp_dwvp_assum} the coefficient $\frac{1}{16(h+v)}$ comes from the fact that we need to partition the query domain using the hash function
+such that we avoid collisions between hint and verification queries.
+To obtain \ref{weakerAssumptions} we would need to find a way to avoid collisions using a different method.
+Unfortunately, we did not see an easy way to achieve that.
+
+Furthermore, it seems to be natural that the we have to loose a factor of $\frac{1}{v}$ as instead of asking $v$ verification queries we ask just a single query.
+Thus for a trivial case where we have a solver $C_v$ for the $1$-wise direct product always solves the puzzle but asks $v-1$ unsuccessful verification
+queries and a single successful verification and asks no hint queries.
+The solver output by $\Gen$ has to guess which of the $v$ queries is the correct one.
+It is clear, that if the solver $C_v$ chooses uniformly at random which of the verification queries it the successful one then the solve $C$ cannot succeed with
+probability higher than $\frac{1}{v}$.
+
+For the verification queries a similar results is obtained by Coron \cite{coron2000exact}.
+
+Thus, we tries to show that the bound stated in Theorem \ref{th:sec_amp_for_dwvp} is optimal using
+the black box separation techniques similar to the one \ref{haitner2009possibility}.
+The intuition, behind our approach was to use a solver for the $k$-wise direct product that asks many hint queries
+such that the success probability in next runs decreases quickly.
+In the technique of \cite{haitner2009possibility} a impossibility of a black box reduction is shown between the problem that has access
+to some possibility computationally unbounded oracle for certain problem. It is shown that it is possible to solve a certain problem, but
+not with high probability not possible to solve a different problem (write it more formally).
+
+However, in our setting it only makes sense to consider situations where the number of hint and verification queries is bounded.
+Thus, this solver cannot asks exponential number of queries. Furthermore, the solve for the $k$-wise direct product cannot solve puzzle on each position
+independently (in this setting it is possible to prove the hardness amplification with a bound as in \ref{weakerAssumptions}).
+These makes the solver fairly complicated so that we do not see a way how to use the technique of \cite{haitner2009possibility} in this setting.
+
 
 % \begin{todo}
-%   \textbf{TODO:} When does p.r. fails to a.h. \\
 %   \textbf{TODO:} Why fixing all puzzles is not possible \\
 %   \textbf{TODO:} Why we believe that it is not possible to do any better \\
 %   \textbf{TODO:} Mention the number of the verification queries  \\
 %   \textbf{TODO:} Try to explain somehow the number of hint queries \\
 %   \textbf{TOOD:} What we tried to prove the lower bound \\
 %   \textbf{TOOD:} Why it was not possible \\
-
+%   \textbf{TODO:} Why the methods of Coron does not work \\
+%   \textbf{TODO:} When does parallel repetition fails to amplify hardness \\
 %   - no easy way to handle inefficient solver without visible effect on the number of hint queries \\
 %   - complicated breaker + puzzles has to depend on each other, \\
 %   - has to ask many hint and verification queries in each phase on the more less the same domain \\
 %   - it interacts with the solver that is computationally bounded, hence limitation on the number of hint and verification queries \\
 %   - the solver may be dishonest answer the queries with different (not true response)
 % \end{todo}
-
-%%% Local Variables:
-%%% mode: latex
-%%% TeX-master: "thesis"
-%%% End:
+%
+%
+% Local Variables:
+% mode: latex
+% TeX-master: "thesis"
+% End:
