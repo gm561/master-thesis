@@ -1,5 +1,4 @@
-A natural question is whether one can improve the result in Theorem \ref{th:sec_amp_for_dwvp} such that a solver
-for the $k$-wise direct product of puzzles that satisfies
+A natural question is whether one can improve the result in Theorem \ref{th:sec_amp_for_dwvp} such that a solver $C$ for the $k$-wise direct product of puzzles that satisfies
 \begin{align}
     \label{weakerAssumptions}
     \underset{\substack{\pi^{(k)} \in \{0,1\}^{kn} \\ \rho \in \{0,1\}^{*}}}{\Pr}\left[\mathit{Success}^{P_{kn}^{(g)}, C}(\pi^{(k)}, \rho) = 1\right]
@@ -15,37 +14,34 @@ In Theorem \ref{th_sec_amp_dwvp_assum} we loose the factor $\frac{1}{16(h+v)}$ b
 We do not see how to find a more efficient partitioning such that the assumption \eqref{weakerAssumptions} is sufficient.
 We also tried unsuccessfully other methods:
 \begin{enumerate}[]
-  \item showing that the influence of the hint queries can be somehow bounded such that the weaker assumption \eqref{weakerAssumptions} holds. \\
-  \item amending the algorithm $\Gen$ such that only one call to the solver for the $k$-wise direct product of puzzles is necessary.
+  \item Showing that the influence of hint queries can be somehow bounded such that the weaker assumption \eqref{weakerAssumptions} holds. \\
+  \item Amending the algorithm $\Gen$ such that only one call to the solver for the $k$-wise direct product of puzzles is necessary.
 \end{enumerate}
 
-It seems to be likely that we have to loose a factor $\frac{1}{v}$ as we make just a single verification query.
-For example let $C_v$ be a solver for the $1$-wise direct product that asks no hint queries and at most $v$ verification queries.
+It seems that we must loose a factor $\frac{1}{v}$ as we allow the solver $D$ to make just a single verification query.
+For example, let $C_v$ be a solver for the $1$-wise direct product that asks no hint queries and at most $v$ verification queries.
 Additionally, $C_v$ succeeds with probability $1$ and a verification query on which it succeeds is chosen uniformly at random from $\{0,1, \cdots, v\}$.
 All queries except this one are unsuccessful.
 Thus, in a situation where we allow to ask only a single verification query we do not see a way to succeed with probability higher than~$\frac{1}{v}$.
 
 Therefore, we tried to show that the result obtain in Theorem \ref{th:sec_amp_for_dwvp} is optimal.
-Full domain hash is a type of sigature scheme that can be seen as dynamic weakly verifiable puzzle.
-Coron \cite{coron2000exact, coron2002optimal} proves that security of RSA implies security of FDH.
-Loosely speaking, he shows that if there is no efficient algorithm that breaks security of RSA with probability higher
-than $\epsilon_{\mathit{RSA}}$ then there is no algorithm that breaks security of FDH with probability higher than
-$\epsilon_{\mathit{FDH}} \approx h \cdot \epsilon_{\mathit{RSA}}$ where $h$ is the number of hint queries that a solver makes when solving FDH.
-Coron shows that this result is optimal. However, we do not see how the technique used in \cite{coron2002optimal} can be used in our setting.
 
 We also tried to apply the \textit{black box separation technique} by Holenstein and Haitner \cite{haitner2009possibility}.
 The intuition, behind our approach was to use a solver for the $k$-wise direct product that asks a large number of hint queries such that
 the success probability of $C$ in every next run decreases drastically.
-% In the technique of \cite{haitner2009possibility} a impossibility of a black box reduction is shown between the problem that has access
-% to some possibility computationally unbounded oracle for a certain problem. It is shown that it is possible to solve a certain problem,
-% but not with high probability not possible to solve a different problem (write it more formally).
-
 However, in our setting it only makes sense to consider situations where the number of hint and verification queries is bounded by some polynomial.
 Furthermore, the solver for the $k$-wise direct product cannot solve puzzle on each position independently (in this setting it is possible
 to prove the hardness amplification with a bound as in \ref{weakerAssumptions}).
 Finally, as we assume that the solver for the $k$-wise direct product of puzzles may not obtain direct access to hint and verification oracles.
 Instead, these queries are answered by the solver that runs the solver $D$ for a single puzzle. We cannot exclude a situation where $D$ is dishonest.
 This makes the solver fairly complicated so that we do not see a way to apply the technique of \cite{haitner2009possibility} in this setting.
+
+Full domain hash is a type of sigature scheme that can be seen as dynamic weakly verifiable puzzle.
+Coron \cite{coron2000exact, coron2002optimal} proves that security of RSA implies security of FDH.
+Loosely speaking, he shows that if there is no efficient algorithm that breaks security of RSA with probability higher
+than $\epsilon_{\mathit{RSA}}$ then there is no algorithm that breaks security of FDH with probability higher than
+$\epsilon_{\mathit{FDH}} \approx h \cdot \epsilon_{\mathit{RSA}}$ where $h$ is the number of hint queries that a solver makes when solving FDH.
+Coron shows that this result is optimal. However, we do not see how the technique used in \cite{coron2002optimal} can be used in our setting.
 
 Therefore, the question whether the result in Theorem \ref{th:sec_amp_for_dwvp} is optimal remains open.
 
