@@ -12,8 +12,11 @@ suffices to obtain a solver $D$ for a single puzzle that with high probability s
     \underset{\substack{\pi \in \{0,1\}^{n} \\ \rho \in \{0,1\}^{*}}}
     {\Pr}\left[\Success^{P_{n}^{(1)},D}(\pi, \rho) = 1\right] \geq \delta + \frac{\epsilon}{6k}.
   \end{align}
-In Theorem \ref{th_sec_amp_dwvp_assum} the coefficient $\frac{1}{16(h+v)}$ comes from the fact that we need to partition the query domain
-to avoid collisions between hint and verification queries.
+In Theorem \ref{th_sec_amp_dwvp_assum} we loose the factor $\frac{1}{16(h+v)}$ because of the domain partitioning that
+let us avoid collisions between hint and verification queries.
+
+We do not see how to find a different partitioning of the query domain that would be more efficient.
+
 To improve this result we would need to deal with collisions using a different method or show that the influence of the hint queries that can prevent
 verification queries from succeeding is not big such that the theorem holds even when a solver as in \ref{weakerAssumptions} is used.
 Unfortunately, we do not see a way to partition the domain in a more efficient manner or to amend the algorithm $\Gen$.
@@ -58,7 +61,6 @@ These makes the solver fairly complicated so that we do not see a way how to use
 %   - it interacts with the solver that is computationally bounded, hence limitation on the number of hint and verification queries \\
 %   - the solver may be dishonest answer the queries with different (not true response)
 % \end{todo}
-%
 %
 % Local Variables:
 % mode: latex
