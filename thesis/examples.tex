@@ -2,7 +2,7 @@
 In the previous chapter we formally defined dynamic interactive weakly verifiable puzzles
 and stated the hardness amplification theorem for this type of puzzles.
 In this chapter we give an overview of cryptographic primitives that can be seen as various types of weakly verifiable puzzles.
-First, in Section \ref{section:mac} we describe message authentication codes which the game based security definition can be seen being a dynamic
+First, in Section \ref{section:mac} we describe message authentication codes which the game-based security definition can be seen being a dynamic
 non-interactive weakly verifiable puzzle.
 In Section \ref{section:pks} we give the chosen-message attack security definition
 for public key signature schemes which is yet another example of a dynamic non-interactive weakly verifiable puzzle.
@@ -11,12 +11,12 @@ Finally, in Section \ref{section:att} we describe a problem of solving CAPTCHAs 
 
 \section{Message Authentication Codes}
 \label{section:mac}
-In this section we describe message authentication codes (MACs) and conclude that the game based definition of MAC
+In this section we describe message authentication codes (MACs) and conclude that the game-based definition of MAC
 security can be seen being a dynamic non-interactive weakly verifiable puzzle.
 
 Let us consider the setting in which two parties a \textit{sender} and a \textit{receiver} communicate over an \textit{insecure channel} where
 messages of the sender may be intercepted, modified, and deleted by a third party called an \textit{adversary}.
-The receiver needs a way to ensure that the received messages were indeed sent by the sender and were not modified by the adversary.
+The receiver needs a way to ensure that the messages were indeed sent by the sender and were not modified by the adversary.
 The solution is to use \textit{message authentication codes}.
 
 Loosely speaking, MAC can be explained as follows.
@@ -77,25 +77,25 @@ $V$ -- a verification algorithm,
 $S$ -- a probabilistic signing algorithm,
 such that the following conditions are satisfied:
 \begin{enumerate}[-]
-  \item The key-generation algorithm $G(1^n; \rho)$ outputs a pair of bitstrings $k_{priv} \in \{0,1\}^{*}$ and $k_{pub} \in \{0,1\}^{*}$ where $n \in \N$ is a security
-    parameter and $\rho_G$ the randomness used by $G$. We call $k_{priv}$ a \textit{private key} and $k_{pub}$ a \textit{public key}.
-  \item The signing algorithm $S$ takes as input $k_{priv}$, $q \in \cQ$, uses the randomness $\rho_S$ and outputs a signature $s \in \cS$.
-  \item The verification algorithm $V$ takes as input $k_{pub}$, $q \in \cQ$, and $s \in \cS$ and outputs $b \in \{0,1\}$\footnote{For simplicity we assume that the verification
-algorithm is deterministic.}.
-  \item For every $k_{priv}$, $k_{pub}$ output by $G$ and every $q \in \cQ$ it holds
+  \item The key-generation algorithm $G(1^n; \rho_G)$ outputs a pair of bitstrings $k_{\mathit{priv}} \in \{0,1\}^{*}$ and $k_{\mathit{pub}} \in \{0,1\}^{*}$ where $n \in \N$ is a security
+    parameter and $\rho_G$ the randomness used by $G$. We call $k_{\mathit{priv}}$ a \textit{private key} and $k_{\mathit{pub}}$ a \textit{public key}.
+  \item The signing algorithm $S(k_{\mathit{priv}}, q; \rho_S)$ takes as input $k_{\mathit{priv}}$, $q \in \cQ$, uses the randomness $\rho_S$ and outputs a signature $s \in \cS$.
+  \item The verification algorithm $V(k_{\mathit{pub}}, q, s)$ takes as input $k_{\mathit{pub}}$, $q \in \cQ$, and $s \in \cS$ and outputs $b \in \{0,1\}$.\footnote{For simplicity we assume that the verification
+algorithm is deterministic.}
+  \item For every $k_{\mathit{priv}}$, $k_{\mathit{pub}}$ output by $G$ and every $q \in \cQ$ it holds
     \begin{align*}
-      \Pr[V(k_{pub}, q, S(k_{priv}, q)) = 1] = 1,
+      \Pr[V(k_{\mathit{pub}}, q, S(k_{\mathit{priv}}, q)) = 1] = 1,
     \end{align*}
     where the probability is over the randomness of $S$.
 \end{enumerate}
 \end{definition}
-We say that $s \in \cS$ is a \textit{valid signature} for $q \in \cQ$ if and only if $V(k_{pub}, q, s) = 1$.
-We define the security of public key signature scheme as follows.
+We say that $s \in \cS$ is a \textit{valid signature} for $q \in \cQ$ if and only if $V(k_{\pub}, q, s) = 1$.
+We define the security of a public key signature scheme as follows.
 %
 \begin{definition}[Security of a public key signature scheme with respect to a chosen message attack]
   \label{def:sec_sig}
-Let $H$ be a polynomial size probabilistic circuit that has hard-coded $k_{priv}$ and takes as input $q$ and outputs $S(k_{priv}, q)$.
-An \textit{adversary} $A$ is a probabilistic polynomial time algorithm that takes as input $k_{pub}$ and has oracle access to $H$.
+Let $H$ be a polynomial size probabilistic circuit that has hard-coded $k_{\priv}$ and takes as input $q$ and outputs $S(k_{\priv}, q)$.
+An \textit{adversary} $A$ is a probabilistic polynomial time algorithm that takes as input $k_{\pub}$ and has oracle access to $H$.
 We say that $A$ \textit{succeeds} if it finds a valid signature $s \in \cS$ for a message $q \in \cQ$, and the oracle $H$ has not been queried for a signature of $q$.
 The public key encryption scheme is \textit{secure} if there is no polynomial time adversary that succeeds with non-negligible probability.
 \end{definition}
@@ -108,11 +108,11 @@ More precisely, we now describe how breaking the security of a public key signat
 seen as a dynamic non-interactive weakly verifiable puzzle.
 
 The problem poser corresponds to the key-generation algorithm $G$ and the solver to the adversary. The set $\cQ$ is a set of messages.
-In the first phase, the problem poser obtains $k_{pub}$, $k_{priv}$ and sends $k_{pub}$ to the solver.
+In the first phase, the problem poser obtains $k_{\pub}$, $k_{\priv}$ and sends $k_{pub}$ to the solver.
 Then, the problem poser generates a hint circuit $\Gamma_H$ and a verification circuit $\Gamma_V$.
 The hint circuit $\Gamma_H$ corresponds to the circuit $H$ from Definition \ref{def:sec_sig} and takes as input $q \in \cQ$ and outputs a valid signature for $q$.
 The verification circuit $\Gamma_V$ takes as input $s \in \cS$ and $q \in \cQ$ and outputs $1$ if and only if $s \in \cS$ is a valid signature for $q \in \cQ$.
-In the second phase, the solver takes as input a transcript of messages from the first phase which consists solely of $k_{pub}$.
+In the second phase, the solver takes as input a transcript of messages from the first phase which consists solely of $k_{\pub}$.
 Additionally, the solver has oracle access to $\Gamma_V$ and $\Gamma_H$ and can make a polynomial number of queries to $\Gamma_H$ and $\Gamma_V$.
 The adversary calls to $V$ can be simulated by making a verification query to $\Gamma_V$.
 It is clear that if the solver asks a successful verification query $(q,s)$,
@@ -129,7 +129,7 @@ a bit commitment protocol can be seen as an interactive non-dynamic weakly verif
 Loosely speaking, we consider the following \textit{bit commitment protocol} that involves two parties, a \textit{sender} and a \textit{receiver}.
 We suppose that the sender and the receiver are polynomial time probabilistic algorithms.
 The protocol consists of a \textit{commit phase} and a \textit{reveal phase}.
-In the commit phase the sender and the receiver interact, as the result the sender commits to a value $b \in \{0,1\}$.
+In the commit phase the sender and the receiver interact, as a result the sender commits to a value $b \in \{0,1\}$.
 We require that after the commit phase it is hard for the receiver to guess $b$ correctly.
 In the reveal phase the sender opens the commitment by sending to the receiver a pair $(b', y)$ where $y \in \{0,1\}^{*}$
 should convince the receiver that the sender committed to the value $b' \in \{0,1\}$.
@@ -145,7 +145,7 @@ $n~\in~\N$ is a security parameter. We call $S_n$ a \textit{sender} and $R_n$ a 
 The circuit $S_1$ takes as input a pair $(b, \rho_S)$ where $b \in \{0,1\}$ is interpreted as a bit to which $S$ commits, and $\rho_S \in \{0,1\}^{*}$ is the randomness used by $S$.
 The receiver $R_n$ uses the randomness $\rho_R \in \{0,1\}^{*}$.
 The protocol consists of two phases. In the \textit{commit phase}, $S_1$ and $R_n$ engage in the protocol execution.
-As the result, $S_n$ commits to $b$ and $R_n$ generates a circuit $V$.
+As a result, $S_n$ commits to $b$ and $R_n$ generates a circuit $V$.
 The circuit $V$ takes as input $b' \in \{0,1\}$ and $y \in \{0,1\}^{*}$ and outputs a bit.
 In the \textnormal{reveal phase}, the circuit $S_2$ takes as input a communication transcript from the commitment phase
 $\langle S_1, R_n \rangle_{\mathit{trans}}$, the randomness $\rho_s$ and returns $(b', y)$.
@@ -176,7 +176,7 @@ Breaking the binding property of a bit commitment protocol can be seen as solvin
 The problem poser corresponds to the receiver and the solver to the circuit that tries to break the binding property of the bit commitment protocol.
 % The number of hint queries is zero. The number of the verification queries is at most one. Thus, we the puzzle is non-dynamic.
 % In the first phase, the solver uses its randomness to choose a bit to which it commits. Then, it engage in interaction with the problem poser.
-When the interaction in the commit phase is completed the problem poser generates circuits $\Gamma_V$, $\Gamma_H$.
+When the interaction in the commit phase is completed, the problem poser generates circuits $\Gamma_V$, $\Gamma_H$.
 The circuit $\Gamma_V$ takes as input $y_0 \in \{0,1\}^{*}$, $y_1 \in \{0,1\}^{*}$ and outputs $1$
 if and only if $V(0,y_0) = 1 \land V(1,y_1) = 1$. The hint circuit $\Gamma_H$ outputs $\bot$ for any query.
 Thus, without loss of generality, we assume that the solver does not ask any verification queries.
@@ -193,7 +193,7 @@ In this section we describe CAPTCHAs which can be seen as non-dynamic
 and non-interactive weakly verifiable puzzles.
 
 The goal of \textit{automated Turing tests} is to distinguish humans from computer programs.
-An example of such a test is a \textit{CAPTCHA}, which is formally defined in \cite{von2003captcha}.
+An example of such a test is a CAPTCHA, which is formally defined in \cite{von2003captcha}.
 % Loosely speaking, a CAPTCHA is a test for which it is hard to write a computer program whose success
 % probability is comparable to or higher than the one achieved by humans.
 An example of a CAPTCHA is an image depicting a distorted text where the task is to guess the text used to generate the image.
