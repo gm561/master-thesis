@@ -43,7 +43,7 @@ such that $f(n) = O(p(n))$.
 For $n \in \N$ we say that $g: \{0,1\}^n \rightarrow \{0,1\}$ is a \textit{binary monotone function}
 if for any two bitstrings $(b_1, \dotsc, b_n) \in \{0,1\}^{n}$ and $(b_1', \dotsc, b_n') \in \{0,1\}^{n}$
 and sets $\cI := \{i \in \{1,\dotsc, n\}: b_i = 1\}$ and $\cI' := \{i \in \{1,\dotsc, n\} : b_i' = 1\}$ it holds
-that if $\cI \subseteq \cI'$ and $g(b_1, \dotsc, b_n) = 1$ then $g(b_1', \dotsc, b_n') = 1$.
+that if $\cI \subseteq \cI'$ and $g(b_1, \dotsc, b_n) = 1$, then $g(b_1', \dotsc, b_n') = 1$.
 \end{definition}
 
 \paragraph{Algorithms and Circuits.}
@@ -56,7 +56,7 @@ For a (probabilistic) circuit $C$ we write $\mathit{Size}(C)$ to denote the tota
 W define a \textit{family of (probabilistic) polynomial size circuits} as a family of (probabilistic) circuits where
 the size of a circuit belonging to this family is polynomial in the number of input vertices.
 
-Sometimes we talk about interactive protocols consisting of the two phases.
+Sometimes we talk about interactive protocols consisting of two phases.
 In this settings we define a \textit{two-phase circuit} $C := (C_1, C_2)$ as a circuit
 where in the first phase the circuit $C_1$ is used and in the second phase the circuit $C_2$.
 %If $C_1$ and $C_2$ are probabilistic circuits
@@ -96,9 +96,11 @@ there exists $n_0 \in \N$ such that for all $n \in \N : n > n_0$ there exists $p
 % \end{todo}
 
 \textbf{Interactive protocols.}
+\enlargethispage{\baselineskip}
 We are often interested in situations where two probabilistic circuits interact with
 each other according to some protocol by means of messages representable by bitstrings.
-Let $\{A_n\}_{n \in \N}$ and $\{B_n\}_{n \in \N}$ be families of circuits\footnote{We represent the input of $A_n$ as some tuple that is encoded into a bitstring.
+Let $\{A_n\}_{n \in \N}$ and $\{B_n\}_{n \in \N}$ be families of circuits\footnote{
+We represent the input of $A_n$ as some tuple that is encoded into a bitstring.
 The same approach is used for the input of $B_n$.}
 such that $A_n : \{0,1\}^{*} \rightarrow \{0,1\}^{*}$ and $B_n : \{0,1\}^{*} \rightarrow \{0,1\}^{*}$.
 An~\textit{interactive protocol} is defined by $\{A_n\}_{n \in \N}$ and $\{B_n\}_{n \in \N}$ where
@@ -141,15 +143,15 @@ Let $\cD$ and $\cR$ be finite sets and $\cH$ be a family of functions mapping va
 We say that $\cH$ is a \textnormal{family of pairwise independent efficient hash functions}
 if $\cH$ has the following properties.
 
-\textbf{Pairwise independent.} For all $x, y \in \mathcal{D}, x \neq y$ and for all $\alpha, \beta \in \cR$, it holds that
+\textbf{Pairwise independent.} For all $x \neq y \in \mathcal{D}$ and for all $\alpha, \beta \in \cR$ it holds that
 \begin{displaymath}
 \underset{\hash \la0 \cH}{\Pr}[hash(x) = \alpha \mid hash(y) = \beta] = \frac{1}{|\cR|}.
 \end{displaymath}
 
-\textbf{Polynomial time samplable.} The function $\mathit{hash} \in \cH$ is samplable in time $\poly(\log|\cD|, \log|\cR|)$.
+%\textbf{Polynomial time samplable.} The function $\mathit{hash} \in \cH$ is samplable in time $\poly(\lceil \log|\cD| \rceil, \lceil \log|\cR| \rceil)$.
 
 \textbf{Efficiently computable.}
-For every $hash \in \cH$ there exists an algorithm running in time $\mathit{poly}(\log|\cD|, \log|\cR|)$ which
+For every $hash \in \cH$ there exists an algorithm running in time $\poly(\lceil \log|\cD| \rceil, \lceil \log|\cR| \rceil)$ which
 on input $x \in \cD$ outputs $y \in \cR$ such that $y = hash(x)$.
 \end{definition}
 
