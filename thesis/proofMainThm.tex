@@ -50,7 +50,7 @@ We define the \textit{canonical success probability} of a solver circuit $C$ for
 For fixed $\hash$ and $P$ the \textit{canonical success} of $C$ for bistrings $\pi$, $\rho$ is a situation where
 $\CanonicalSuccess^{P, C, \hash}(\pi, \rho) = 1$.
 
-We now give Lemma \ref{lemma:hash_function_probability}. Loosely speaking, it states that if a solver circuit $C$ for $P$
+We now state Lemma \ref{lemma:hash_function_probability}. Loosely speaking, it says that if a solver circuit $C$ for $P$
 often succeeds in the experiment $\Success$, then there exists a function $\hash$ such that $C$ also
 often succeeds in the experiment $\CanonicalSuccess$ provided that the number of hint and verification queries is not too large.
 This lemma is analogous to Lemma 4 from \cite{dodis2009security}.
@@ -97,7 +97,7 @@ Given $C := (C_1, C_2)$ we define a circuit $\widetilde{C} := (C_1, \widetilde{C
 Every hint query $q$ asked by $\widetilde{C}$ is such that $hash(q) \neq 0$. Furthermore, $\widetilde{C}$ asks no verification queries,
 instead it returns $(q,y)$ such that $hash(q) = 0$ or $\bot$.
 For fixed $\pi$, $\rho$, and $hash$ we say that the circuit $\widetilde{C}$ \textit{succeeds} if
-for $x := \langle P(\pi), C_1(\rho) \rangle_{\mathit{trans}}$, $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$, we have
+for $x := \langle P(\pi), C_1(\rho) \rangle_{\mathit{trans}}$, $(\Gamma_V, \Gamma_H) := \langle P(\pi), C_1(\rho) \rangle_{P}$ we have
 \begin{align*}
   \Gamma_V(\widetilde{C}_2^{\Gamma_H, C_2, \hash}(x, \rho)) = 1.
 \end{align*}
