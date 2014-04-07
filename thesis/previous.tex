@@ -49,7 +49,7 @@ that takes as input only the randomness $\rho$.
 In Definition \ref{def:wvp} a verification algorithm $V$ takes as input $p$, $c$, $a$.
 Again, without loss of generality, we can assume that bitstrings $p$ and $c$ are hard-coded
 in the circuit $\Gamma_V$ from Definition \ref{def:dwvp}.
-Furthermore, for weakly verifiable puzzles we have that $|Q| = 1$ and thus,
+Furthermore, for weakly verifiable puzzles we have that $|\cQ| = 1$ and thus,
 it is not necessary to pass $q$ as the parameter to $\Gamma_V$.
 Hence, for fixed $p$ and $c$ the algorithm $V$ corresponds to $\Gamma_V$.
 The puzzles considered in Definition \ref{def:wvp} are non--dynamic.
@@ -395,7 +395,7 @@ Furthermore, the \textit{success probability} of the algorithm $S^*$ in solving 
 \end{align*}
 \end{definition}
 It is not hard to see that Definition \ref{def:iwvp} is a special case of Definition \ref{def:dwvp}.
-The puzzles in Definition \ref{def:iwvp} are non-dynamic, thus $|Q| = 1$. Furthermore, we can assume that $\Gamma$
+The puzzles in Definition \ref{def:iwvp} are non-dynamic, thus $|\cQ| = 1$. Furthermore, we can assume that $\Gamma$
 corresponds to the verification circuit from Definition \ref{def:dwvp} and the circuit $\Gamma_H$ always outputs $\bot$.
 Thus, with no loss of generality, we can assume that the solver makes no hint queries.
 Finally, at most one verification query is allowed.

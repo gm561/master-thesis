@@ -14,7 +14,7 @@ then the input puzzle can be solved with substantial probability almost surely.
 
 More precisely, we try to fix the randomness used to generate a puzzle on the first position such that $C$
 satisfies the assumptions of Theorem \ref{th:sec_amp_for_dwvp}
-for the $(k\!-\!1)$-wise direct product of puzzles, where the fact whether the puzzle on the first position is solved correctly is neglected.
+for the $(k\!-\!1)$-wise direct product of puzzles, where the fact whether a puzzle on the first position is solved correctly is neglected.
 The success probability of $C$ on the remaining puzzles can be estimated using a natural sampling technique.
 
 When it is possible to find this randomness, then we solve recursively the sub-problem for the $(k\!-\!1)$-wise direct product of puzzles.
@@ -52,9 +52,9 @@ Therefore, it may happen that the success probability of $C$ in the consecutive 
 \paragraph{Technique of \cite{dodis2009security}.}
 We would like to ensure that no hint query is ever asked that could prevent a verification query from being successful.
 To satisfy this requirement we use the technique described in \cite{dodis2009security}.
-The set $Q$ is partitioned into two sets. A set of advice queries contains these $q \in \cQ$ on which
+The set $\cQ$ is partitioned into two sets. A set of advice queries contains these $q \in \cQ$ on which
 $C$ is allowed to ask hint queries. A set of attacking queries is the set on which $C$ asks successful verification queries.
-It is possible to use a natural sampling technique to find a function that partitions $Q$ such that
+It is possible to use a natural sampling technique to find a function that partitions $\cQ$ such that
 the success probability of $C$ is still substantial.
 
 % \paragraph{Putting it together}

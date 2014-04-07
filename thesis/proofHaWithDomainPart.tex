@@ -19,7 +19,7 @@ The circuit $\widetilde{C}'$ is a solver for the $(k\!-\!1)$-wise direct product
   \medskip \hrule
   \textbf{Oracle:} A problem poser $P^{(1)}$, a solver $\widetilde{C}$ for $P^{(g)}$, functions $g: \{0,1\}^{k} \rightarrow \{0,1\}$, $hash:\cQ \rightarrow \{0,1, \dots, 2(h + v) - 1\}$. \\
   \textbf{Input:}  Parameters $\epsilon$, $\delta$, $n$, $k$.\\
-  \textbf{Output:} A circuit $\widetilde{D}$.
+  \textbf{Output:} A circuit $\widetilde{D} := (D_1, \widetilde{D}_2)$.
   \medskip\hrule
   \For $i:=1$ \To $\frac{6k}{\epsilon}n$ \Do \\
   \IndI $\pi^* \xleftarrow{\$} \{0,1\}^{n}$\\
