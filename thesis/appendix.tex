@@ -7,19 +7,21 @@ and $\Pr[X_i = 1] = p_i$ for all $ 1 \leq  i \leq n$ the following inequalities 
 \label{ineq:ch0}
 \Pr[X \geq (1+\delta) \mathbb{E}[X]] \leq e^{- \mathbb{E}[X] \delta^2/3} \\
 \label{ineq:ch1}
-\Pr[X \leq (1-\delta) \mathbb{E}[X]] \leq e^{- \mathbb{E}[X] \delta^2/2} \\
-\label{ineq:ch2}
-\Pr[|X - \mathbb{E}[X]| \geq \delta \mathbb{E}[X]] \leq 2 e^{- \mathbb{E}[X] \delta^2 / 3},
+\Pr[X \leq (1-\delta) \mathbb{E}[X]] \leq e^{- \mathbb{E}[X] \delta^2/2},
+% \label{ineq:ch2}
+% \Pr[|X - \mathbb{E}[X]| \geq \delta \mathbb{E}[X]] \leq 2 e^{- \mathbb{E}[X] \delta^2 / 3},
 \end{gather}
 where $0 \leq \delta \leq 1$.
 
 For independent and identically distributed Bernoulli random variables $X_1, \dotsc, X_n$ with $X := \sum_{i=1}^n X_i$
-where $\Pr[X_i = 1] = p$ for some $p \in (0,1)$ for all $ 1 \leq  i \leq n$ we have
+where $\Pr[X_i = 1] = p$ for some $p \in (0,1)$ and for all $ 1 \leq  i \leq n$ and
+for any $\epsilon > 0$ we have
 \begin{gather}
 \label{ineq:ch3}
-\Pr[x \geq (p + \varepsilon)n] \leq e^{-\frac{\epsilon^2k}{2}}.
+\Pr[X \geq (p + \varepsilon)n] < e^{-\frac{\epsilon^2n}{2}} \\
+\label{ineq:ch2}
+\Pr[| X - \mathbb{E}[X]| \geq \epsilon\mathbb{E}[X]] \leq 2e^{-\frac{\epsilon^2 \mathbb{E}[X]}{2}}.
 \end{gather}
-
 \end{lemma}
 \vspace*{\fill}
 \pagebreak

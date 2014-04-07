@@ -3,11 +3,11 @@
 \label{st:domain_partition}
 In this section we use the technique from \cite{dodis2009security} to
 partition $\cQ$ into a set $\cQ_{adv}$ of advice queries and a set $\cQ_{attack}$ of attacking queries.
-The circuit~$C$ is allowed to make hint queries on $q \in \cQ_{adv}$ and successful verification queries only on $q \in \cQ_{attack}$.
+The circuit~$C$ is allowed to make hint queries only on $q \in \cQ_{adv}$ and successful verification queries only on $q \in \cQ_{attack}$.
 If $C$ asks a hint query on $q \in \cQ_{attack}$, the execution of $C$ is aborted.
 Similarly, all verification queries on $q \in \cQ_{adv}$ are answered as unsuccessful.
-The idea is to avoid collisions between hint and verification queries in the independent runs of $C$.
-Let us now prove Lemma~\ref{lemma:hash_function_probability} that in a great extend uses techniques from \cite{dodis2009security}.
+The idea is to avoid collisions between hint and verification queries in the different executions of $C$.
+Let us now prove Lemma~\ref{lemma:hash_function_probability} that in a great extent uses techniques from \cite{dodis2009security}.
 %
 %
 \begin{proof}[Proof of Lemma \ref{lemma:hash_function_probability}]
@@ -48,7 +48,8 @@ Hence, $\cP_{\Canonical} \subseteq \cP_{\Success}$, and we conclude
 \underset{\pi, \rho}{\Pr}[(\pi, \rho) \notin \cP_{\mathit{Success}}] \notag\\
 %
 &\IndI = \underset{\substack{\hash \leftarrow \cH \\ \pi, \rho}}{\Pr}\left[\CanonicalSuccess^{P,C,\hash}(\pi, \rho) = 1 \mid (\pi, \rho) \in \cP_{\mathit{Success}}\right]
-\underset{\pi, \rho}{\Pr}[(\pi, \rho) \in \cP_{\mathit{Success}}] \notag\\
+\underset{\pi, \rho}{\Pr}[\Success^{P,C}(\pi, \rho) = 1] \notag\\
+%\underset{\pi, \rho}{\Pr}[(\pi, \rho) \in \cP_{\mathit{Success}}] \notag\\
 %
 &\IndI \geq
 \underset{\substack{\hash \leftarrow \cH \\ \pi, \rho}}{\Pr}\left[\CanonicalSuccess^{P,C,\hash}(\pi, \rho) = 1 \mid (\pi, \rho) \in \cP_{\mathit{Success}}\right] \cdot \gamma \notag\\
@@ -103,7 +104,7 @@ Let us define independent and identically distributed binary random variables $X
 We now turn to the case where $\hash \in \cH_{\Bad}$ and show that it is unlikely that $\hash \in \cH_{\Bad}$
 is returned by FindHash.
 From \eqref{eq:hash_bad} it follows that $\mathbb{E}_{{\pi}, \rho}[X_i] \leq \frac{\gamma}{16(h+v)}$.
-For fixed $\hash \in \cH_{\Bad}$ using the Chernoff \eqref{ineq:ch3} bound we get
+For fixed $\hash \in \cH_{\Bad}$ using the Chernoff bound \eqref{ineq:ch3}  we get
 \begin{align}
   \label{ineq:hash_bad_upper}
   \underset{\pi,\rho}{\Pr} \left[\frac{1}{N} \sum_{i=1}^{N} X_i \geq \frac{\gamma}{12(h+v)} \right]
@@ -120,14 +121,14 @@ The probability that $\hash \in \cH_{\Good}$ when picked is not returned amounts
   &\leq \underset{\pi, \rho}{\Pr}\left[\frac{1}{N} \sum_{i=1}^{N} X_i \leq \bigl(1 - \frac{1}{3}\bigr)\mathbb{E}[X_i]\right] \notag\\
   &\leq e^{-{\frac{\gamma}{8(h+v)}} N / 18} \leq e^{-\frac{2}{9} \frac{(h+v)}{\gamma}n} \stackrel{(*)}{\leq} e^{-\frac{2}{9}n}
 \end{align}
-where we used the Chernoff \ref{ineq:ch1} bound and in the step denoted with $(*)$ the trivial facts $h + v \geq 1$ and $\gamma \leq 1$.
+where we used the Chernoff bound \eqref{ineq:ch1} and in the step denoted with $(*)$ the trivial facts $h + v \geq 1$ and $\gamma \leq 1$.
 We now show that the probability of picking $\hash \in \cH_{\mathit{Good}}$ is at least $\frac{\gamma}{8(h+v)}$.
 To obtain a contradiction suppose that
 \begin{align}
   \label{ass:hash_max_prob}
 \underset{\hash \leftarrow \cH}{\Pr}[\hash \in \cH_{\mathit{Good}}] < \frac{\gamma}{8(h+v)}.
 \end{align}
-Using \eqref{ass:hash_max_prob} we conclude that it is possible to bound the probability of the~canonical success as follows
+Using \eqref{ass:hash_max_prob} we conclude that it is possible to bound the~canonical success probability as follows
 \begin{align*}
   &\underset{\substack{\hash \leftarrow \cH \\ \pi, \rho}}{\Pr}[\CanonicalSuccess^{P,C,\hash}(\pi, \rho) = 1] \\
   &\IndI = \underset{\substack{ \hash \leftarrow \cH \\ \pi, \rho}}{\Pr}[\CanonicalSuccess^{P,C,\hash}(\pi, \rho) = 1 \mid \hash \in \cH_{\mathit{Good}}]
@@ -142,7 +143,8 @@ which contradicts (\ref{ineq:hash_high_prob}). Hence, we conclude that the proba
 
 We now show that FindHash picks in one of its iteration $\hash \in \cH_{\mathit{Good}}$ almost surely.
 Let $K$ be the random variable that denotes the number of iterations of the outer loop of $\FindHash$
-and $Y_i$ be the binary random variable for the event that in the $i$-th iteration of the outer loop $\hash \notin \cH_{\mathit{Good}}$ is picked.
+and $Y_1, \dotsc, Y_K$ be independent and identically distributed random variables such that
+$Y_i$ is the binary random variable for the event that in the $i$-th iteration of the outer loop $\hash \notin \cH_{\mathit{Good}}$ is picked.
 We use $\Pr_{\hash \leftarrow \cH}[\hash \in \cH_{\Good}] \geq \frac{\gamma}{8(h+v)}$ and $K \leq 32n(h+v)^2/\gamma^2$ to conclude
 \begin{align*}
   \underset{\hash \leftarrow \cH}{\Pr}\Bigl[ \bigcap_{1 \leq i \leq K} Y_i \Bigr] \leq \left(1 - \frac{\gamma}{8(h+v)}\right)^{\frac{32(h+v)^2}{\gamma^2}n}

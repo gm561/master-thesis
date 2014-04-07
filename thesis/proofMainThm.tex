@@ -178,11 +178,14 @@ We prove this lemma in Section \ref{st:amplification_proof}.
       \mathclap{
       \substack{
         \pi \in \{0,1\}^{n}, \rho \in \{0,1\}^{*} \\
-        x := \langle P^{(1)}(\pi), D_1^{\widetilde{C}}(\rho) \rangle_{\mathit{trans}} \\
-        (\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi), D_1^{\widetilde{C}}(\rho) \rangle_{P^{(1)}}}}}
-    {\Pr}[\Gamma_V(\widetilde{D}_2^{P^{(1)}, \widetilde{C}, \hash, g, \Gamma_H}(x, \rho)) = 1] \geq \delta + \frac{\varepsilon}{6k}.
+        x := \langle P^{(1)}(\pi), D_1(\rho) \rangle_{\mathit{trans}} \\
+        %(\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi), D_1^{\widetilde{C}}(\rho) \rangle_{P^{(1)}}}}}
+        (\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi), D_1(\rho) \rangle_{P^{(1)}}}}}
+    %{\Pr}[\Gamma_V(\widetilde{D}_2^{P^{(1)}, \widetilde{C}, \hash, g, \Gamma_H}(x, \rho)) = 1] \geq \delta + \frac{\varepsilon}{6k}.
+    {\Pr}[\Gamma_V(\widetilde{D}_2^{P^{(1)}, hash, \Gamma_H}(x; \rho)) = 1] \geq \delta + \frac{\varepsilon}{6k}.
   \end{align*}
-  Furthermore, $\widetilde{D}$ asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hint queries and no verification queries
+  Furthermore, $\widetilde{D}$ has oracle access to $\widetilde{C}$, $\hash$, $g$, $P^{(1)}$, and the hint oracle output after the first phase.
+  Moreover, $\widetilde{D}$ asks at most $\frac{6k}{\epsilon}\log\left(\frac{6k}{\epsilon}\right) h$ hint queries and no verification queries
   and outputs a pair $(q, y)$ such that $\hash(q) = 0$ or $\bot$.
   Finally, the running time of $\widetilde{\Gen}$ is $poly(k, \frac{1}{\varepsilon}, n)$ with oracle calls.
 \end{lemma}
@@ -202,22 +205,23 @@ We now give the proof of Theorem \ref{th:sec_amp_for_dwvp} that uses Lemma~\ref{
   \textbf{Input:} Parameters $n$, $\epsilon$, $\delta$, $k$, $h$, $v$.\\
   \textbf{Output:} A circuit $D := (D_1, D_2)$.
   \medskip\hrule
-  Let $\gamma$ be the success probability of $C$.\\
-  $hash := \FindHash^{P^{(g)}, C}(\gamma, n, h, v)$ \textit{// simulate calls to $P^{(g)}$ using $P^{(1)}$,$g$}\\
+%  Let $\gamma$ be the success probability of $C$.\\
+  \textit{// simulate calls of $\FindHash$ to $P^{(g)}$ using $P^{(1)}$,$g$} \\
+  $hash := \FindHash^{P^{(g)}, C}((h+v)\epsilon, n, h, v)$ \\
   Let $\widetilde{C} := (C_1, \widetilde{C}_2)$ be as in Lemma \ref{lemma:ctilda_c} with oracle access to $C$ and $\hash$. \\
   $\widetilde{D} := \widetilde{\Gen}^{P^{(1)},  \widetilde{C},  g, \hash}(\epsilon, \delta, n, k)$ \textit{// where $\widetilde{D} := (D_1, \widetilde{D}_2)$}\\
-  \Return $D := (D_1, D_2)$ \textit{//with fixed oracle access to $\widetilde{D}_2$}
+  \Return $D := (D_1, D_2)$
 \end{codeblock}
 %
 \begin{codeblock}
-  \textbf{Circuit} $D_2^{\widetilde{D}_2, \Gamma_V, \Gamma_H}(x, \rho)$
+  \textbf{Circuit} $D_2^{\widetilde{D}_2, P^{(1)}, \hash, g, \widetilde{C}, \Gamma_V, \Gamma_H}(x; \rho)$
   \medskip \hrule
-  \textbf{Oracle:} A circuit $\widetilde{D}_2$ from Lemma \ref{lemma:sec_amp_for_p_hash}, a problem poser $P^{(1)}$, \\
-  \IndII a verification oracle $\Gamma_V$, a hint oracle $\Gamma_H$.\\
+  \textbf{Oracle:} A circuit $\widetilde{D}_2$ from Lemma \ref{lemma:sec_amp_for_p_hash}, a problem poser $P^{(1)}$,
+  functions $g: \{0,1\}^{k} \rightarrow \{0,1\}$, $\hash$, a circuit $\widetilde{C}$, a verification circuit $\Gamma_V$, a hint circuit $\Gamma_H$.\\
   \textbf{Input:}  Bitstrings $x \in \{0,1\}^{*}$, $\rho \in \{0,1\}^{*}$.
   \medskip\hrule
-  $(q, y) := \widetilde{D}_2^{\Gamma_H}(x, \rho)$ \textit{//where $D_2$ has oracle access to $\widetilde{C}, \hash, g$ from $\widetilde{\Gen}$} \\
-  Ask the verification query $(q,y)$ to $\Gamma_V$.
+  $(q, y) := \widetilde{D}_2^{P^{(1)}, \hash, \Gamma_H}(x; \rho)$ \textit{//$D_2$ accesses fixed  $\widetilde{C}$, $g$ from $\widetilde{\Gen}$} \\
+  Make the verification query $(q,y)$ to $\Gamma_V$.
 \end{codeblock}
 %
 %Let us fix $P^{(1)}$, $g$, $P^{(g)}$ in the whole proof.
@@ -231,7 +235,8 @@ The algorithm $\Gen$ uses $\FindHash$ to obtain $\hash:\cQ \rightarrow \{0,1,\do
 \begin{align*}
     \underset{\pi^{(k)}, \rho}{\Pr}\left[\CanonicalSuccess^{P^{(g)}, C, \hash}(\pi^{(k)}, \rho) = 1\right] \geq \underset{u \leftarrow \mu_\delta^k}{\Pr}\left[g(u) = 1\right] + \varepsilon.
 \end{align*}
-The running time of $\FindHash$ is $\poly(h,v,\frac{1}{\epsilon},n)$ with oracle access.
+The running time of $\FindHash$ is $\poly(h,v,\frac{1}{\epsilon},n)$ with oracle calls.
+We note that it is enough to call $\FindHash$ with the input parameter $(h+v)\epsilon$, instead of the success probability of $C$, to obtain the desired running time.
 Applying Lemma \ref{lemma:ctilda_c} for $C := (C_1, C_2)$ and $\hash$ we obtain a circuit $\widetilde{C} := (C_1, \widetilde{C}_2)$ that satisfies
 \begin{align*}
     \underset{
@@ -250,19 +255,20 @@ a circuit $\widetilde{D} := (D_1, \widetilde{D}_2)$ that almost surely over the 
   \label{eq:succ_prob_d}
     \underset{
       \mathclap{
-      \substack{\pi, \rho \\ x := \langle P^{(1)}(\pi), D_1^{\widetilde{C}}(\rho) \rangle_{\mathit{trans}} \\
-        (\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi), D_1^{\widetilde{C}}(\rho) \rangle_{P^{(1)}}}}}
-    {\Pr}\mkern13mu[\Gamma_V(D_2^{P^{(1)}, \widetilde{C}, hash, g, \Gamma_H}(x, \rho)) = 1] \geq \delta + \frac{\epsilon}{6k}.
+      \substack{\pi, \rho \\ x := \langle P^{(1)}(\pi), D_1(\rho) \rangle_{\mathit{trans}} \\
+        (\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi), D_1(\rho) \rangle_{P^{(1)}}}}}
+    {\Pr}\mkern13mu[\Gamma_V(D_2^{P^{(1)}, hash, \Gamma_H}(x, \rho)) = 1] \geq \delta + \frac{\epsilon}{6k},
 \end{align}
-The running time of $\widetilde{\Gen}$ is $\poly(k, \frac{1}{\epsilon}, n)$ with oracle access
-Finally, $\Gen$ outputs $D := (D_1, D_2)$ with oracle access to $\widetilde{D}_2$, $P^{(1)}$, $hash$, $g$ such that almost surely over
+where $D_1$ and $D_2$ has additionally oracle access to the fixed redefined $\widetilde{C}$ and $g$ as in $\widetilde{\Gen}$.
+The running time of $\widetilde{\Gen}$ is $\poly(k, \frac{1}{\epsilon}, n)$ with oracle calls.
+Finally, $\Gen$ outputs $D := (D_1, D_2)$ with oracle access to $\widetilde{D}_2$, $P^{(1)}$, $hash$, $g$, $\widetilde{C}$ such that almost surely over
 the randomness of $\Gen$ it holds
 \begin{align*}
     \underset{\pi, \rho}{\Pr}\left[\Success^{P^{(1)},\widetilde{D}}(\pi, \rho) = 1\right] \geq \delta + \frac{\varepsilon}{6k}.
 \end{align*}
-The running time of $\Gen$ is $\poly(k,\frac{1}{\epsilon},h,v,n)$ with oracle access.
-The circuit $D$ asks at most $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})h$ hint queries and one verification query and
-$\Size(D) \leq \Size(C) \cdot \frac{6k}{\epsilon}$.
+The running time of $\Gen$ is $\poly(k,\frac{1}{\epsilon},h,v,n)$ with oracle calls.
+The circuit $D$ asks at most $\frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})h$ hint queries and one verification query.
+%and $\Size(D) \leq \Size(C) \cdot \frac{6k}{\epsilon} \log(\frac{6k}{\epsilon})$.
 This finishes the proof of Theorem~\ref{th:sec_amp_for_dwvp}.
 \end{proof}
 

@@ -11,7 +11,9 @@ Intuitively, the algorithm $\EstimateSurplus$ returns the estimate of the advant
 over the algorithm that solves each puzzle independently with probability $\delta$
 where the randomness used to generate a puzzle on the first position is fixed to $\pi^*$
 and the fact of solving this puzzle is disregarded.
-The circuit $\widetilde{D}$ outputs a solution $(q,y)$ for a puzzle defined by~$P^{(1)}$.
+The circuit $\widetilde{D}$ outputs a solution $(q,y)$ for a puzzle defined by~$P^{(1)}$
+and has oracle access to fixed $\widetilde{C}$ and $g$ defined as in $\widetilde{Gen}$.
+Additionally, $\widetilde{D}$ has oracle access to $\hash$ and $P^{(1)}$.
 The circuit $\widetilde{C}'$ is a solver for the $(k\!-\!1)$-wise direct product of puzzles that outputs an answer $(q, y_2, \dotsc, y_k)$.
 %
 \begin{codeblock}
@@ -32,7 +34,7 @@ The circuit $\widetilde{C}'$ is a solver for the $(k\!-\!1)$-wise direct product
   \IndII $g'(b_2, \dots, b_k) := g(b, b_2, \dots, b_k)$\\
   \IndII\Return $\widetilde{Gen}^{P^{(1)}, \widetilde{C}', g', hash}(\epsilon, \delta, n, k-1)$ \\
   \textit{// all estimates are lower than $(1-\frac{3}{4k})\varepsilon$}\\
-  \Return $\widetilde{D}^{P^{(1)}, \widetilde{C}, hash, g}$
+  \Return $\widetilde{D}^{(\cdot), \widetilde{C}, (\cdot), g}$ \textit{//where access to $\widetilde{C}$ and $g$ is fixed}
 \end{codeblock}
 
 The algorithm $\EstimateSurplus$ uses procedures $\EstimateFunctionProbability$ and $\EvalutePuzzles$
@@ -74,7 +76,7 @@ such that for each $1 \leq i \leq N$ the random variable $K_i$ takes value $g_i$
 \begin{align*}
   &\Pr \Bigl[ \Bigl| \widetilde{g}_b - \Pr_{u \leftarrow \mu_{\delta}^{k}}\left[g(b,u_2, \dots, u_k) = 1\right] \Bigr| \geq \frac{\epsilon}{8k} \Bigr]\\
   &\IndII = \Pr \Bigl[\Bigl|\Bigl(\frac{1}{N} \sum_{i=1}^N K_i \Bigr) - \mathbb{E}_{u \leftarrow \mu_{\delta}^k}[g(b,u_2, \dots, u_k)]\Bigr|
-    \geq \frac{\epsilon}{8k} \Bigr] \leq 2 \cdot e^{-n/3}.
+    \geq \frac{\epsilon}{8k} \Bigr] \leq 2 \cdot e^{-n/2}.
 \end{align*}
 \end{proof}
 %
@@ -155,7 +157,7 @@ The estimate $\widetilde{S}_{\pi^*,b}$ returned by EstimateSurplus differs from 
 We use the union bound and similar argument as in Lemma \ref{lemma:estimate_of_g}
 which yields that $\frac{1}{N} \sum_{i=1}^{N} \widetilde{s}_{\pi^*,b}^i$ differs from
 $\mathbb{E}[g(b, c_2, \dots, c_k)]$ by at most $\frac{\epsilon}{8k}$ almost surely. Together, with Lemma $\ref{lemma:estimate_of_g}$ we conclude that the surplus estimate
-returned by EstimateSurplus differs from $S_{\pi^*,b}$ by at most $\frac{\epsilon}{4k}$ with high probability.
+returned by EstimateSurplus differs from $S_{\pi^*,b}$ by at most $\frac{\epsilon}{4k}$ almost surely.
 \end{proof}
 %
 We define the following circuit $\widetilde{C}' = (C_1', \widetilde{C}_2')$ for the $(k-1)$-wise direct product of $P^{(1)}$.
@@ -190,7 +192,7 @@ the first puzzle is generated internally using the fixed randomness.
   \IndI $x^* := \langle P^{(1)}(\pi^*), C_1(\rho) \rangle^{1}_{\mathit{trans}}$ \\
   $\Gamma_H^{(k)} := (\Gamma_H^*, \Gamma_H^{2}, \dots, \Gamma_H^{k})$ \\
   $x^{(k)} := (x^*, x_2, \dots, x_{k})$ \\
-  $(q, y_1, \dots, y_k) := \widetilde{C}_2^{\Gamma_H^{(k)}, \mathit{hash}}(x^{(k)}, \rho)$ \\
+  $(q, y_1, \dots, y_k) := \widetilde{C}_2^{\Gamma_H^{(k)}, \mathit{hash}}(x^{(k)}; \rho)$ \\
   \Return $(q, y_2, \dots, y_k)$
 \end{codeblock}
 %
@@ -257,16 +259,16 @@ Hence, it follows that $\widetilde{C}'$ succeeds in solving the $(k\!-\!1)$-wise
 \Pr_{u \leftarrow \mu^{(k-1)}_{\delta}}[g'(u_1,\dots, u_{k-1} )] + \Bigl(1 - \frac{1}{k}\Bigr)\epsilon.
 \end{align*}
 In this case $\widetilde{C}'$ satisfies the conditions of Lemma \ref{lemma:sec_amp_for_p_hash} for the $(k\!-\!1)$-wise direct product of puzzles.
-The recursive call to $\widetilde{\Gen}$, which has oracle access to $g'$ and $\widetilde{C}$, returns $\widetilde{D} = (D_1, \widetilde{D}_2)$
+The recursive call to $\widetilde{\Gen}$, which has oracle access to $g'$ and $\widetilde{C}'$, returns $\widetilde{D} = (D_1, \widetilde{D}_2)$
 that with high probability satisfies
 \begin{align}
   \underset{
     \mathclap{
       \substack{
         \pi, \rho \\
-        x := \langle P^{(1)}(\pi), D_1^{\widetilde{C}}(\rho) \rangle_{\mathit{trans}} \\
-        (\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi), D_1^{\widetilde{C}}(\rho) \rangle_{P^{(1)}}}}}
-  {\Pr}\Big[\Gamma_V\big(\widetilde{D}_2^{P^{(1)}, \widetilde{C}, \hash, g, \Gamma_H}(x, \rho)) = 1\Big]
+        x := \langle P^{(1)}(\pi), D_1^{\widetilde{C}'}(\rho) \rangle_{\mathit{trans}} \\
+        (\Gamma_H, \Gamma_V) := \langle P^{(1)}(\pi), D_1^{\widetilde{C}'}(\rho) \rangle_{P^{(1)}}}}}
+  {\Pr}\Big[\Gamma_V\big(\widetilde{D}_2^{P^{(1)}, \widetilde{C}', \hash, g', \Gamma_H}(x, \rho)) = 1\Big]
   &\geq \delta + \Bigl(1 - \frac{1}{k}\Bigr)\frac{\epsilon}{6(k-1)} \notag\\
   &= \delta + \frac{\epsilon}{6k}.
 \end{align}
@@ -277,13 +279,12 @@ does not succeed on the remaining $k-1$ puzzles with much higher probability tha
 independently with success probability $\delta$. However, from the assumptions of Lemma~\ref{lemma:sec_amp_for_p_hash}
 we know that on all $k$ puzzles the success probability of $\widetilde{C}$ is higher.
 Hence, we suspect that a puzzle on the first position is solved correctly unusually often.
-It remains to show that the fact that $\widetilde{\Gen}$ fails to find a surplus estimate that is large implies that
-with high probability there are only few surpluses greater than $(1-\frac{1}{k})\epsilon$ and their influence
-can be neglected.
-Additionally, we have to show that $\widetilde{D}$ outputs an answer often.
+We need to show that the fact that $\widetilde{\Gen}$ fails to find a surplus estimate that is large implies that
+that there are only few surpluses greater than $(1-\frac{1}{k})\epsilon$ and their influence
+cannot be substantial. Additionally, we have to show that $\widetilde{D}$ outputs an answer often.
 
 The proof requires slightly complex probability manipulations. In Appendix \ref{st:proofSimAssm} we give a shorter proof
-under the simplifying assumptions that $\widetilde{D}$ always outputs an answer and all surpluses are low.
+under the assumptions that $\widetilde{D}$ always outputs an answer and all surpluses are low.
 The full proof is presented below.
 
 We fix the notation as in the code listing of $\widetilde{D}_2$.
@@ -345,7 +346,7 @@ which yields
 {\Pr}\mkern13mu[\Gamma_V(\widetilde{D}_2(x^*, r)) = 1](S_{\pi^*,1} - S_{\pi^*,0})
 \frac{1}{\underset{u \leftarrow \mu_{\delta}^k}{\Pr}[ u \in \cG_1 \setminus\cG_0]}.
 \end{align}
-Let us study the first summand of \eqref{eq:pr_d_succ_0}. First, we have
+We take a closer look at the first summand of \eqref{eq:pr_d_succ_0}. We know that
 \begin{align}
   \label{eq:pr_gamma_v_0}
   \IndII &\underset{
@@ -444,12 +445,12 @@ Let us assume that
 \underset{\pi}{\Pr}\left[\left(S_{\pi,0} \leq (1 - \frac{1}{2k})\epsilon\right) \land \left( S_{\pi,1} \leq (1-\frac{1}{2k})\epsilon\right)\right] < 1 - \frac{\epsilon}{6k},
 \end{align}
 then $\widetilde{\Gen}$ recurses almost surely, because the probability that
-$\widetilde{\Gen}$ does not find $\widetilde{S}_{\pi, b} \geq (1-\frac{3}{4k})\epsilon$ in all of the $\frac{6k}{\epsilon}n$ iterations is at most
+$\widetilde{\Gen}$ does not find $\widetilde{S}_{\pi, b} \geq (1-\frac{3}{4k})\epsilon$ in all of the $\frac{6k}{\epsilon}n$ iterations is almost surely at most
 \begin{align*}
-  \Bigl(1 - \frac{\epsilon}{6k}\Bigr)^{\frac{6k}{\epsilon}n} \leq e^{-n}
+  \Bigl(1 - \frac{\epsilon}{6k}\Bigr)^{\frac{6k}{\epsilon}n} \leq e^{-n},
 \end{align*}
-almost surely, where we used Lemma \ref{lemma:surplus_estimate}.
-Therefore, under the assumption that $\widetilde{\Gen}$ does not recurse with high probability it holds
+where we used Lemma \ref{lemma:surplus_estimate}.
+Therefore, under the assumption that $\widetilde{\Gen}$ does not recurse it almost surely holds
 \begin{align}
 \underset{\pi, \rho}{\Pr}\left[\left(S_{\pi,0} \leq (1 - \frac{1}{2k})\epsilon\right) \land \left( S_{\pi,1} \leq (1-\frac{1}{2k})\epsilon\right)\right] \geq 1 - \frac{\epsilon}{6k}.
 \end{align}
@@ -457,7 +458,7 @@ Let us define a set
 \begin{align}
   \cW = \left\{ \pi :  \left(S_{\pi,0} \leq (1 - \frac{1}{2k})\epsilon\right) \land \left( S_{\pi,1} \leq (1-\frac{1}{2k})\epsilon \right) \right\}.
 \end{align}
-Additionally, let $\overline{\cW}$ denote the complement of $\cW$.
+%Additionally, let $\overline{\cW}$ denote the complement of $\cW$.
 We bound the numerator of the second summand in (\ref{ineq:ex_pr_gamma})
 \begin{align}
   \label{ineq:second_eq}
@@ -479,7 +480,7 @@ We bound the numerator of the second summand in (\ref{ineq:ex_pr_gamma})
   \substack{r \\ x^* := \langle P^{(1)}(\pi^*), D_1(r) \rangle_{\mathit{trans}}
     \\ (\Gamma_V, \Gamma_H) := \langle P^{(1)}(\pi^*), D_1 (r) \rangle_{P^{(1)}} }}}
 {\Pr}\mkern13mu[\Gamma_V(\widetilde{D}_2(x^*, r) = 1]
-  (S_{\pi^*,1} - S_{\pi^*,0}) \bigm| \pi^* \in \overline{\cW}\Bigr] \Pr_{\pi^*}[\pi^* \in \overline{\cW}]\notag\\
+  (S_{\pi^*,1} - S_{\pi^*,0}) \bigm| \pi^* \notin \cW \Bigr] \Pr_{\pi^*}[\pi^* \notin \cW]\notag\\
 &\IndIII +  \mathbb{E}_{\pi^*}\Bigl[ S_{\pi^*,0} \mkern13mu + \mkern13mu
 \underset{
   \mathclap{
