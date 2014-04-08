@@ -2,7 +2,7 @@
 In the previous chapter we formally defined dynamic interactive weakly verifiable puzzles
 and stated the hardness amplification theorem for this type of puzzles.
 In this chapter we give an overview of cryptographic primitives that can be seen as various types of weakly verifiable puzzles.
-First, in Section \ref{section:mac} we describe message authentication codes for which the game-based security definition can be seen being a dynamic
+First, in Section \ref{section:mac} we describe message authentication codes, for which the game-based security definition can be seen being a dynamic
 non-interactive weakly verifiable puzzle.
 In Section \ref{section:pks} we give the chosen-message attack security definition
 for public key signature schemes, which is yet another example of a dynamic non-interactive weakly verifiable puzzle.
@@ -11,8 +11,8 @@ Finally, in Section \ref{section:att} we describe a problem of solving CAPTCHAs 
 
 \section{Message Authentication Codes}
 \label{section:mac}
-In this section we describe message authentication codes (MACs) and conclude that the game-based definition of MAC
-security can be seen being a dynamic non-interactive weakly verifiable puzzle.
+In this section we describe message authentication codes (MACs) and conclude that the game-based security definition for MAC
+can be seen being a dynamic non-interactive weakly verifiable puzzle.
 
 Let us consider the setting in which two parties, a \textit{sender} and a \textit{receiver}, communicate over an \textit{insecure channel} where
 messages can be intercepted, modified, and deleted by a third party called an \textit{adversary}.
@@ -71,7 +71,7 @@ We now give a definition of a public key encryption scheme, and what it means fo
 These definitions are based on \cite{Goldreich:2004:FCV:975541}.
 
 \begin{definition}[Public key signature scheme]
-Let $\cQ$ be a set of messages. A \textit{public key signature scheme} is defined by a triple of polynomial time algorithms:
+Let $\cQ$ be a set of messages. A~\textit{public key signature scheme} is defined by a triple of polynomial time algorithms:
 $G$ -- a probabilistic key-generation algorithm,
 $V$ -- a verification algorithm,
 $S$ -- a probabilistic signing algorithm,
@@ -142,7 +142,7 @@ We base the following definition of a \textit{bit commitment protocol} on \cite{
 A \textit{bit commitment protocol} is defined by families of circuits $\{S_n\}_{n \in \N}$ and $\{R_n\}_{n \in \N}$
 where $S_n = (S_1, S_2)$ is a two-phase probabilistic circuit, $R_n$ is a probabilistic circuit, and
 $n~\in~\N$ is a security parameter. We call $S_n$ a \textit{sender} and $R_n$ a \textit{receiver}.
-The circuit $S_1$ takes as input a pair $(b, \rho_S)$ where $b \in \{0,1\}$ is interpreted as a bit to which $S$ commits, and $\rho_S \in \{0,1\}^{*}$ is the randomness used by $S$.
+The circuit $S_1$ takes as input a pair $(b, \rho_S)$ where $b \in \{0,1\}$ is interpreted as a bit to which $S_n$ commits, and $\rho_S \in \{0,1\}^{*}$ is the randomness used by $S$.
 The receiver $R_n$ uses the randomness $\rho_R \in \{0,1\}^{*}$.
 The protocol consists of two phases. In the \textit{commit phase}, $S_1$ and $R_n$ engage in the protocol execution.
 As a result, $S_n$ commits to $b$ and $R_n$ generates a circuit $V$.

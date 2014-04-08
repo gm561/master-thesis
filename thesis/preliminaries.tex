@@ -103,10 +103,10 @@ Let $\{A_n\}_{n \in \N}$ and $\{B_n\}_{n \in \N}$ be families of circuits\footno
 We represent the input of $A_n$ as some tuple that is encoded into a bitstring.
 The same approach is used for the input of $B_n$.}
 such that $A_n : \{0,1\}^{*} \rightarrow \{0,1\}^{*}$ and $B_n : \{0,1\}^{*} \rightarrow \{0,1\}^{*}$.
-An~\textit{interactive protocol} is defined by $\{A_n\}_{n \in \N}$ and $\{B_n\}_{n \in \N}$ where
+An~\textit{interactive protocol} is defined by $\{A_n\}_{n \in \N}$ and $\{B_n\}_{n \in \N}$, where
 for random bitstrings $\rho_A \in \{0,1\}^{n}$, $\rho_B \in \{0,1\}^{n}$ in the first round a message $m_0 := A_n(\rho_A)$ is sent and in the second round a message $m_1 := B_n(\rho_B, m_0)$.
 In general, in the $(2k\!-\!1)$-th round we have $m_{2k-2} := A_n(\rho_A, m_1, \cdots, m_{2k-3})$ and in the $2k$-th round $m_{2k-1} := B_n(\rho_B, m_1, \cdots, m_{2k-2})$.
-The number of rounds is naturally bound by the size of $A_n$ and $B_n$.
+The number of rounds is naturally bounded by the size of $A_n$ and $B_n$.
 
 The protocol execution between probabilistic circuits $A$ and $B$ is denoted by $\langle A, B \rangle$.
 The output of $A$ is denoted by $\langle A, B \rangle_A$ and of $B$ by $\langle A, B \rangle_B$.
