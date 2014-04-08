@@ -1,4 +1,5 @@
-A natural question is whether one can improve the result in Theorem \ref{th:sec_amp_for_dwvp} such that a solver $C$ for the $k$-wise direct product of puzzles that satisfies
+A natural question is whether one can improve the result from Theorem \ref{th:sec_amp_for_dwvp}
+such that a solver $C$ for the $k$-wise direct product of puzzles that satisfies
 \begin{align}
     \label{weakerAssumptions}
     \underset{\substack{\pi^{(k)} \in \{0,1\}^{kn} \\ \rho \in \{0,1\}^{*}}}{\Pr}\left[\mathit{Success}^{P_{kn}^{(g)}, C}(\pi^{(k)}, \rho) = 1\right]
@@ -12,7 +13,7 @@ suffices to obtain a solver $D$ for a single puzzle that with high probability s
 In Theorem \ref{th_sec_amp_dwvp_assum} we lose the factor $\frac{1}{16(h+v)}$ because of the domain partitioning that let us avoid collisions between hint and verification queries.
 
 We do not see how to find a more efficient partitioning such that the assumption \eqref{weakerAssumptions} is sufficient.
-We also tried unsuccessfully other methods:
+We also tried unsuccessfully other approaches:
 \begin{enumerate}[-]
   \item Showing that the influence of hint queries can be somehow bounded such that the weaker assumption \eqref{weakerAssumptions} holds. \\
   \item Amending the algorithm $\Gen$ such that only one call to the solver $C$ for the $k$-wise direct product of puzzles is necessary.
@@ -21,16 +22,16 @@ We also tried unsuccessfully other methods:
 It seems that we must loose a factor $\frac{1}{v}$ as we allow the solver $D$ to make just a single verification query.
 For example, let $C_v$ be a solver for the $1$-wise direct product that asks no hint queries and at most $v$ verification queries.
 among which exactly one is always successful.
-Furthermore, this successful verification query is chosen uniformly at random independently from the results of other queries.
+Furthermore, this successful verification query is chosen uniformly at random independently from other queries.
 Thus, in a situation where we allow to ask only a single verification query (as in Theorem \ref{th:sec_amp_for_dwvp})
 we do not see a way to succeed with probability higher than~$\frac{1}{v}$.
 
 We also tried to show that the result obtained in Theorem \ref{th:sec_amp_for_dwvp} is optimal.
-First, we attempted to apply the \textit{black-box separation technique} by Holenstein and Haitner \cite{haitner2009possibility}.
+Firstly, we attempted to apply the \textit{black-box separation technique} by Holenstein and Haitner \cite{haitner2009possibility}.
 The intuition, behind our approach was to use a solver for the $k$-wise direct product that asks a large number of hint queries such that
 the success probability of $C$ in every next run decreases drastically.
 However, in our setting it only makes sense to consider situations where the number of hint and verification queries is bounded by some polynomial.
-Furthermore, the solver for the $k$-wise direct product cannot solve puzzle on each position independently (in this setting it is possible
+Furthermore, the solver for the $k$-wise direct product cannot solve puzzle on each position independently (otherwise it is possible
 to prove the hardness amplification with a bound as in \ref{weakerAssumptions}).
 Finally, we assume that the solver $C$ for the $k$-wise direct product of puzzles may not obtain direct access to hint and verification oracles.
 Instead, the queries are answered by the solver circuit $D$ for a single puzzle that runs $C$. Thus, we cannot exclude a situation where the queries of $C$
