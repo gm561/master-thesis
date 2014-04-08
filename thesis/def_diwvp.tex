@@ -11,7 +11,7 @@ and define a \textit{dynamic interactive weakly verifiable puzzle} as follows.
   to denote the execution of both $C_1$ and $C_2$ with the randomness fixed to $\rho \in \{0,1\}^{*}$.
 
   In the first phase, the problem poser $P_n(\pi)$ and the solver $C_1(\rho)$ interact.
-  As a result of the interaction $P_n(\pi)$ outputs a \textit{verification circuit} $\Gamma_{V}$ and a~probabilistic \textit{hint circuit} $\Gamma_{H}$.
+  As a result of the interaction, $P_n(\pi)$ outputs a \textit{verification circuit} $\Gamma_{V}$ and a~probabilistic \textit{hint circuit} $\Gamma_{H}$.
   The circuit $C_1(\rho)$ produces no output. The circuit $\Gamma_{V}$ takes as input $q \in \cQ$ (for some set $\cQ$ of indices),
   $y \in \{0,1\}^*$ and outputs a bit. We say that an answer $(q,y)$ is a \textit{correct solution} if and only if $\Gamma_V(q,y) = 1$.
   The circuit $\Gamma_H$ on input $q \in \cQ$ outputs a hint such that $\Gamma_V(q,\Gamma_H(q))~=~1$.
@@ -32,7 +32,7 @@ for which a hint query has been asked before. Moreover, we assume that once $C$ 
 it does not ask any further hint or verification queries.
 
 There is no loss of generality in assuming that the problem poser and the solver are defined by probabilistic circuits.
-Definition \ref{def:dwvp} embraces also the case where the problem poser and the solver are probabilistic polynomial time algorithms.
+Definition \ref{def:dwvp} also embraces the case where the problem poser and the solver are probabilistic polynomial time algorithms.
 We use the well known fact \cite{LectureNotesCT} that a probabilistic polynomial time algorithm can be transformed into an equivalent
 family of probabilistic Boolean circuits of the polynomial size\footnote{Theorem 6.10 from \cite{LectureNotesCT} is stated for probabilistic, polynomial time,
 oracle algorithms with a single bit of output, but it can be adopted to the case where an output is longer than a single bit.}.
@@ -81,7 +81,7 @@ for all $1 \leq j \leq k$ such that $i \neq j$ it holds $q_j \in \cQ \setminus \
 The solver obtains correct solutions for $\bar{q}$ to the puzzles on all $k$ positions and
 can trivially make a successful verification query.
 
-In the following code listing we define an experiment $\Success$ such that
+In the following code listing, we define an experiment $\Success$ such that
 it outputs $1$ if and only if $C$ asks a successful verification query.
 %
 %\begin{codeblock}
@@ -137,7 +137,7 @@ the problem poser after the first phase and asks at most $\frac{6k}{\epsilon}\lo
 hint queries and one verification query. Finally, $\Time(\Gen) = \poly(k, \frac{1}{\varepsilon}, n, v, h)$ with oracle calls.
 \end{restatable}
 
-The above theorem is very general in the sense that it does not pose any constrains
+The above theorem is very general in the sense that it does not impose any constraints
 on the size of the circuits or the time complexity of the interactive protocol.
 Additionally, we count each oracle call as a single step.
 
@@ -156,7 +156,7 @@ at least $1 - p(k, n, \frac{1}{\epsilon}) \cdot 2^{-n}$. Therefore, Theorem~\ref
 that bounds~$k$~and~$\frac{1}{\epsilon}$.
 
 We emphasize that the number of hint queries asked by $D$ is greater than the number of hint queries asked by $C$ whereas the number of verification queries
-is limited to at most one. For many cryptographic constructions making such an assumption about the number of hint and verification queries is reasonable.
+is limited to at most one. For many cryptographic constructions, making such an assumption about the number of hint and verification queries is reasonable.
 In particular, we cannot assume that a solver for a single puzzle may ask more verification queries than a solver for a $k$-wise direct product of puzzles.
 
 In Chapter \ref{ch:preliminaries} we defined a binary monotone function.

@@ -1,7 +1,7 @@
 %
 \subsection{The proof of hardness amplification theorem}
 \label{st:mainTheoremProof}
-In this section we prove Theorem \ref{th:sec_amp_for_dwvp} and state two additional lemmas that help us to prove this theorem.
+In this section we prove Theorem \ref{th:sec_amp_for_dwvp} and state two additional lemmas that help us prove this theorem.
 Informally speaking, Lemma \ref{lemma:hash_function_probability} states that it is possible to partition $\cQ$ such that
 the solver $C$ still has substantial success probability and there are no conflicting hint and verification queries.
 In Lemma~\ref{lemma:sec_amp_for_p_hash} we state that it is possible to amplify hardness for dynamic interactive puzzles
@@ -151,7 +151,7 @@ Using this observation we conclude that
 \end{align*}
 \end{proof}
 %
-We state the following lemma that is analogous to Theorem 10 from \cite{holenstein2011general}.
+We state the following, analogous to Theorem 10 from \cite{holenstein2011general}, lemma.
 Intuitively, it says that it is possible to amplify hardness where the circuit $\widetilde{C}$, meeting certain criteria, is used.
 We prove this lemma in Section \ref{st:amplification_proof}.
 \begin{lemma}[Hardness amplification for partitioned domains, \cite{holenstein2011general}]
@@ -195,7 +195,7 @@ We now give the proof of Theorem \ref{th:sec_amp_for_dwvp} that uses Lemma~\ref{
 \begin{proof}[Proof of Theorem \ref{th:sec_amp_for_dwvp}]
 %  We use the notation as in Lemma \ref{lemma:sec_amp_for_p_hash}.
   Let $\Gen$ and $D := (D_1, D_2)$ be as in Theorem \ref{th:sec_amp_for_dwvp}.
-  In the following code listing we define $\Gen$ that outputs $D := (D_1, D_2)$.
+  In the following code listing, we define $\Gen$ that outputs $D := (D_1, D_2)$.
   The circuit $D_2$ is defined in the succeeding code excerpt.
 %
 \begin{codeblock}
