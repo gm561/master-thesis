@@ -19,31 +19,31 @@ We also tried unsuccessfully different approaches:
   \item Amending the algorithm $\Gen$ such that only one call to the solver for the $k$-wise direct product of puzzles is necessary.
 \end{enumerate}
 
-Intuitively, it seems that we must loose a factor $\frac{1}{v}$ as we allow the solver $D$ to make just a single verification query.
+Intuitively, it seems that we must loose a factor $\frac{1}{v}$ as we allow a solver $D$ to make just a single verification query.
 For example, let us consider a solver $C$ for the $1$-wise direct product that asks no hint queries and at most $v$ verification queries,
 among which exactly one is always successful.
 Furthermore, this successful verification query is chosen uniformly at random independently from other queries.
 Thus, in a situation where we allow to ask only a single verification query (as in Theorem \ref{th:sec_amp_for_dwvp})
-we do not see a way to succeed with probability higher than~$\frac{1}{v}$.
+we do not see a way how $D$ can succeed with probability higher than~$\frac{1}{v}$.
 
 We tried to show that the result obtained in Theorem \ref{th:sec_amp_for_dwvp} is optimal.
 Firstly, we attempted to apply the \textit{black-box separation technique} by Holenstein and Haitner \cite{haitner2009possibility}.
 The intuition behind our approach was to use a solver $C$ for the $k$-wise direct product that asks a large number of hint queries such that
 the success probability of $C$, when its execution is repeated, decreases drastically.
-In our setting it only makes sense to consider situations where the number of hint and verification queries is bounded by some polynomial.
+In our setting it makes sense to consider situations where the number of hint and verification queries is bounded by some polynomial.
 Furthermore, the solver for the $k$-wise direct product cannot solve a puzzle on each position independently
 (otherwise it is possible to show that the assumption \eqref{weakerAssumptions} is sufficient).
 Finally, we have to take into account that the solver $C$ for the $k$-wise direct product of puzzles does not obtain direct access to hint and verification oracles.
 Instead, the queries are answered by a solver circuit $D$ for a single puzzle that runs $C$. Thus, we cannot exclude a situation where the queries of $C$
-are answered dishonestly. This makes fairly complicated to apply the black-box separation technique to our setting.
+are answered dishonestly. All this makes fairly complicated to apply the black-box separation technique to our setting.
 
 We also tried to use the technique of Coron \cite{coron2000exact, coron2002optimal}.
 He proves that the security of RSA implies the security of the full domain hash (FDH).
-Full domain hash is a signature scheme that can be seen as a dynamic weakly verifiable puzzle.
+The full domain hash is a signature scheme that can be seen as a dynamic weakly verifiable puzzle.
 Loosely speaking, Coron shows that if there is no efficient algorithm that breaks the security of RSA with probability higher
 than $\epsilon_{\mathit{RSA}}$, then there is no algorithm that breaks the security of FDH with probability higher than
 $\epsilon_{\mathit{FDH}} \approx h \cdot \epsilon_{\mathit{RSA}}$, where $h$ is the number of hint queries made by the solver for FDH.
-Coron proves that this result is optimal. However, we do not see how this technique can be applied in our setting.
+Coron proves that this result is optimal. However, we do not see how his technique, used to show the optimality result, can be applied to our setting.
 
 Therefore, the question whether our result is optimal remains open.
 
