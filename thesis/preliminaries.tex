@@ -50,14 +50,14 @@ that if $\cI \subseteq \cI'$ and $g(b_1, \dotsc, b_n) = 1$, then $g(b_1', \dotsc
 We define a \textit{probabilistic circuit} as a Boolean circuit $C_{m,n} : \{0,1\}^{m} \times \{0,1\}^{n} \rightarrow \{0,1\}^{*}$ and
 write $C_{m,n}(x;\rho)$ to denote a probabilistic circuit that takes as input $x \in \{0,1\}^{m}$ and the randomness $\rho \in \{0,1\}^{n}$.
 If a probabilistic circuit takes as input only the randomness, we slightly abuse the notation and write $C_{n}(\rho)$.
-We make sure that it is clear from the context that probabilistic circuits that take as input only the randomness
+We make sure that it is clear from the context that probabilistic circuits that take only the randomness as input
 are not confused with deterministic circuits. We use $\{C_n\}_{n \in \N}$ to denote a family of probabilistic circuits.
 For a (probabilistic) circuit $C$ we write $\mathit{Size}(C)$ to denote the total number of vertices of $C$.
-W define a \textit{family of (probabilistic) polynomial size circuits} as a family of (probabilistic) circuits where
+We define a \textit{family of (probabilistic) polynomial size circuits} as a family of (probabilistic) circuits where
 the size of a circuit belonging to this family is polynomial in the number of input vertices.
 
 Sometimes we talk about interactive protocols consisting of two phases.
-In this settings we define a \textit{two-phase circuit} $C := (C_1, C_2)$ as a circuit
+In this setting we define a \textit{two-phase circuit} $C := (C_1, C_2)$ as a circuit
 where in the first phase the circuit $C_1$ is used and in the second phase the circuit $C_2$.
 %If $C_1$ and $C_2$ are probabilistic circuits
 We write $C(\delta) := (C_1, C_2)(\delta)$ to denote that $C_1$ and $C_2$ use the same randomness $\delta \in \{0,1\}^{*}$.
@@ -66,7 +66,7 @@ We write $\mathit{Time}(A)$ to denote the number of steps it takes to execute
 an algorithm $A$ as a function of the input length of $A$.
 We say that $A$ runs in \textit{polynomial time} if $\Time(A) = \poly(n)$ where $n \in \N$ is the input length of $A$.
 
-Similarly as for a probabilistic circuit we often write the randomness used by a probabilistic algorithm explicitly.
+Similarly as for a probabilistic circuit, we often write the randomness used by a probabilistic algorithm explicitly.
 %as a bitstring provided as an auxiliary input.
 % Exemplary, for a probabilistic algorithm $B$ we write $B(x;r)$
 % where $x$ is the input taken by $B$ and $r$ denotes randomness taken as auxiliary input.
@@ -105,15 +105,15 @@ The same approach is used for the input of $B_n$.}
 such that $A_n : \{0,1\}^{*} \rightarrow \{0,1\}^{*}$ and $B_n : \{0,1\}^{*} \rightarrow \{0,1\}^{*}$.
 An~\textit{interactive protocol} is defined by $\{A_n\}_{n \in \N}$ and $\{B_n\}_{n \in \N}$ where
 for random bitstrings $\rho_A \in \{0,1\}^{n}$, $\rho_B \in \{0,1\}^{n}$ in the first round a message $m_0 := A_n(\rho_A)$ is sent and in the second round a message $m_1 := B_n(\rho_B, m_0)$.
-In general in the $(2k\!-\!1)$-th round we have $m_{2k-2} := A_n(\rho_A, m_1, \cdots, m_{2k-3})$ and in the $2k$-th round $m_{2k-1} := B_n(\rho_B, m_1, \cdots, m_{2k-2})$.
-The number of rounds is naturally bounded by the size of $A_n$ and $B_n$.
+In general, in the $(2k\!-\!1)$-th round we have $m_{2k-2} := A_n(\rho_A, m_1, \cdots, m_{2k-3})$ and in the $2k$-th round $m_{2k-1} := B_n(\rho_B, m_1, \cdots, m_{2k-2})$.
+The number of rounds is naturally bound by the size of $A_n$ and $B_n$.
 
 The protocol execution between probabilistic circuits $A$ and $B$ is denoted by $\langle A, B \rangle$.
 The output of $A$ is denoted by $\langle A, B \rangle_A$ and of $B$ by $\langle A, B \rangle_B$.
 The sequence of all messages sent by $A$ and $B$ is called a \textit{communication transcript} and
 is denoted by $\langle A, B \rangle_{\mathit{trans}}$.
 The time complexity of the protocol depends on the size of $A_n$ and $B_n$.
-For example, we say that a protocol runs in polynomial time if the size of $A_n$ and $B_n$ are bounded by some $\p(n)$.
+For example, we say that a protocol runs in polynomial time, if the size of $A_n$ and $B_n$ are bounded by some $\p(n)$.
 
 \textbf{Oracle algorithms.}
 We use the notion of \textit{oracle circuits} and \textit{oracle algorithms} following the standard definition in the literature \cite{Goldreich:2004:FCV:975541, Arora:2009:CCM:1540612}.
@@ -124,7 +124,7 @@ the context which oracle is accessed by~$B$. We use the same convention for the 
 Often when studying the time complexity of oracle algorithms we count each oracle call as a single step.
 We emphasize this by writing that an algorithm has a certain time complexity \textit{with oracle calls}.
 On the other hand, in some settings we are interested in giving a more rigorous bound on the running time of an algorithm.
-In these situations we compute the running time with regard to the time needed for an oracle access.
+In these situations, we compute the running time with regard to the time needed for an oracle access.
 
 % \begin{todo}
 %   \textbf{TODO:} Exponential factor in what?\\
@@ -140,7 +140,7 @@ In these situations we compute the running time with regard to the time needed f
 \begin{definition}[Pairwise independent family of efficient hash functions]
   \label{def:hash_pair_ind}
 Let $\cD$ and $\cR$ be finite sets and $\cH$ be a family of functions mapping values from $\cD$ to values in $\cR$.
-We say that $\cH$ is a \textnormal{family of pairwise independent efficient hash functions}
+We say that $\cH$ is a \textnormal{family of pairwise independent efficient hash functions},
 if $\cH$ has the following properties.
 
 \textbf{Pairwise independent.} For all $x \neq y \in \mathcal{D}$ and for all $\alpha, \beta \in \cR$ it holds that
@@ -159,7 +159,7 @@ We note that the pairwise independence property is equivalent to
 \begin{displaymath}
 \underset{\hash \la0 \cH}{\Pr}[hash(x) = \alpha \land hash(y) = \beta] = \frac{1}{|\cR|^2}.
 \end{displaymath}
-It is well known \cite{Carter:1977:UCH:800105.803400} that there exists families of functions meeting the criteria stated in Definition \ref{def:hash_pair_ind}.
+It is well known \cite{Carter:1977:UCH:800105.803400} that there exist families of functions meeting the criteria stated in Definition \ref{def:hash_pair_ind}.
 
 %%% Local Variables:
 %%% mode: latex

@@ -38,12 +38,12 @@ are answered dishonestly.
 This makes fairly complicated to apply the black-box separation technique to our setting.
 
 We also tried to use technique of Coron \cite{coron2000exact, coron2002optimal}.
-Coron \cite{coron2000exact, coron2002optimal} proves that security of RSA implies security of the full domain hash (FDH),
+He proves that the security of RSA implies the security of the full domain hash (FDH),
 which is a type of a signature scheme that can be seen as dynamic weakly verifiable puzzle.
 Loosely speaking, Coron shows that if there is no efficient algorithm that breaks the security of RSA with probability higher
 than $\epsilon_{\mathit{RSA}}$ then there is no algorithm that breaks security of FDH with probability higher than
 $\epsilon_{\mathit{FDH}} \approx h \cdot \epsilon_{\mathit{RSA}}$ where $h$ is the number of hint queries that a solver makes when solving FDH.
-Coron shows that this result is optimal. However, we do not see how the technique used in \cite{coron2002optimal} can be applied in our setting.
+Coron shows that this result is optimal. However, we do not see how the technique used by him to show the optimality can be applied in our setting.
 
 Therefore, the question whether the result in Theorem \ref{th:sec_amp_for_dwvp} is optimal remains open.
 
