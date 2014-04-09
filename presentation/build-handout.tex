@@ -1,0 +1,32 @@
+\documentclass[a4paper]{article}
+\usepackage{pdfpages}
+
+% Copyright 2005 by Robert Mach <RMach@ethz.ch>
+% Chair of Systems Design, ETH Zurich
+% Kreuzplatz 5, CH-8032 Zurich
+%
+%
+% This program can be redistributed and/or modified under the terms
+% of the GNU Public License, version 2.
+% For the context of the licence, program shall refer to all source
+% files distributed with this stylefile. Note that this does not refer
+% to your documents.
+
+\begin{document} 
+
+\typeout{Compile this file with ``PDFLATEX PDF-FILE''!}
+\typein[\file]{Enter PDF-File Name:}
+\typein[\dimx]{Enter dimension x-coordinate:}
+\typein[\dimy]{Enter dimension y-coordinate:}
+\typein[\landsc]{Landscape Mode (true|false):}
+\typein[\scale]{Enter scale-factor [0-1] (if unsure enter 1):}
+\typein[\gapx]{Enter separation between small pages x-dim [mm]:}
+\typein[\gapy]{Enter separation between small pages y-dim [mm]:}
+
+\includepdf[pages=-,nup=\dimx x \dimy,column,landscape=\landsc,frame=true,
+noautoscale=false,columnstrict,scale=\scale,delta=\gapx mm \gapy mm]{\file} 
+
+%\includepdf[pages=2-5,nup=1x2,landscape=false,frame=true,
+%noautoscale=true,scale=0.6,delta=0mm 5mm]{vortrag.pdf}
+
+\end{document}

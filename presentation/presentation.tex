@@ -1,0 +1,148 @@
+%\documentclass[first,firstsupp,handout,compress,notes,navigation]{ETHclass}
+%\documentclass[first,firstsupp,handout,lastsupp]{ETHclass}
+\documentclass[first,firstsupp,handout,last]{ETHclass}
+%\documentclass[first,firstsupp]{ETHclass}
+
+% use sensible encoding
+\usepackage[T1]{fontenc}
+
+%% Input encoding 'utf8'. In some cases you might need 'utf8x' for
+%% extra symbols. Not all editors, especially on Windows, are UTF-8
+%% capable, so you may want to use 'latin1' instead.
+\usepackage[utf8x]{inputenc}
+
+% Options for beamer:
+%
+% 9,10,11,12,13,14,17pt  Fontsizes
+%
+% compress: navigation bar becomes smaller
+% t       : place contents of frames on top (alternative: b,c)
+% handout : handoutversion
+% notes   : show notes
+% notes=onlyslideswithnotes
+%
+%hyperref={bookmarksopen,bookmarksnumbered} : Needed for menues in
+%                                             acrobat. Also need
+%                                             pdftex as option or
+%                                             compile with
+% pdflatex '\PassOptionsToPackage{pdftex,bookmarksopen,bookmarksnumbered}{hyperref} \input{file}'
+
+%\usepackage{beamerseminar}
+%\usepackage[accumulated]{beamerseminar}
+                                % remove ``accumulated'' option
+                                % for original behaviour
+%\usepackage{beamerbasenotes}
+%\setbeamertemplate{note page}[plain]
+%\setbeameroption{notes on second screen}
+
+%\setbeamertemplate{note page}[plain]
+\setbeamertemplate{note page}{\ \\[.3cm]
+\textbf{\color{blue}Notes:}\\%[0.1cm]
+{\footnotesize %\tiny
+\insertnote}}
+%\setbeameroption{notes on second screen}
+
+
+\setbeamertemplate{navigation symbols}{} % suppresses all navigation symbols:
+% \setbeamertemplate{navigation symbols}[horizontal] % Organizes the navigation symbols horizontally.
+% \setbeamertemplate{navigation symbols}[vertical] % Organizes the navigation symbols vertically.
+% \setbeamertemplate{navigation symbols}[only frame symbol] % Shows only the navigational symbol for navigating frames.
+
+\setlayoutscale{0.5}
+\setparametertextfont{\scriptsize}
+\setlabelfont{\scriptsize}
+
+\begin{document}
+
+\title{Hardness amplification for weakly verifiable cryptographic primitives}
+\author{Grzegorz M\k{a}kosa}
+\advisors{Advisors: Prof. Dr. Thomas Holenstein, Dr. Robin Künzler}
+\department{Department of Computer Science}
+
+%\institute{D-MTEC - ETH Zurich}
+
+\begin{frame}
+\maketitle
+\end{frame}
+%\note{}
+
+\begin{frame}[t]
+\frametitle{Agenda}
+\begin{itemize}
+  \item<+-> Motivation and problem statement
+  \item<+-> Background and related work
+  \item<+-> My contribution
+  \item<+-> Results
+  \item<+-> Discussion
+% \item<+-> Item order 1
+% \item<+-> Item order 1
+%   \begin{itemize}
+%   \item Item order 2
+%   \item Item order 2
+%         \begin{itemize}
+%         \item Item order 3
+%         \end{itemize}
+%   \item Item
+%   \end{itemize}
+% \item<+-> Item order 1
+% \item<+-> Item order 1
+% \item<+-> Item order 1
+\end{itemize}
+\end{frame}
+\note{}
+
+% \frame{
+
+%   \frametitle{Frame with Box}
+
+%   \vspace{-0.2cm}
+%   \begin{block}{\textbf{Box Title}}
+%    Text within the box...
+%   \end{block}
+% }
+%\note{}
+
+
+% \frame{
+% \frametitle{Include Figures}
+
+% \includegraphics[width=0.4\textwidth]{penguin}
+% \begin{itemize}
+% \item This is a pdf figure called `penguin.pdf'
+% \end{itemize}
+% }
+% %\note{}
+
+% \begin{frame}[allowframebreaks=0.8]
+% \frametitle{Overcrowded Slide: allowframebreaks=0.8}
+%   Word1 Word2 Word3 Word4 Word5 Word6 Word7 Word8 Word9 Word10 Word11
+%   Word12 Word13 Word14 Word15 Word16 Word17 Word18 Word19 Word20
+%   Word21 Word22 Word23 Word24 Word25 Word26 Word27 Word28 Word29
+%   Word30 Word31 Word32 Word33 Word34 Word35 Word36 Word37 Word38
+%   Word39 Word40 Word41 Word42 Word43 Word44 Word45 Word46 Word47
+%   Word48 Word49 Word50 Word51 Word52 Word53 Word54 Word55 Word56
+%   Word57 Word58 Word59 Word60 Word61 Word62 Word63 Word64 Word65
+%   Word66 Word67 Word68 Word69 Word70 Word71 Word72 Word73 Word74
+%   Word75 Word76 Word77 Word78 Word79 Word80 Word81 Word82 Word83
+%   Word84 Word85 Word86 Word87
+% \end{frame}
+
+% \begin{frame}[shrink=10]
+% \frametitle{Overcrowded Slide: shrink=10}
+%   Word1 Word2 Word3 Word4 Word5 Word6 Word7 Word8 Word9 Word10 Word11
+%   Word12 Word13 Word14 Word15 Word16 Word17 Word18 Word19 Word20
+%   Word21 Word22 Word23 Word24 Word25 Word26 Word27 Word28 Word29
+%   Word30 Word31 Word32 Word33 Word34 Word35 Word36 Word37 Word38
+%   Word39 Word40 Word41 Word42 Word43 Word44 Word45 Word46 Word47
+%   Word48 Word49 Word50 Word51 Word52 Word53 Word54 Word55 Word56
+%   Word57 Word58 Word59 Word60 Word61 Word62 Word63 Word64 Word65
+%   Word66 Word67 Word68 Word69 Word70 Word71 Word72 Word73 Word74
+%   Word75 Word76 Word77 Word78 Word79 Word80 Word81 Word82 Word83
+%   Word84 Word85 Word86 Word87
+% \end{frame}
+
+\begin{frame}
+\frametitle{}
+\end{frame}
+
+\end{document}
