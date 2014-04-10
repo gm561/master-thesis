@@ -11,6 +11,29 @@
 %% capable, so you may want to use 'latin1' instead.
 \usepackage[utf8x]{inputenc}
 
+%% The AMS-LaTeX extensions for mathematical typesetting.  Do not
+%% remove.
+\usepackage{amsmath,amssymb,amsfonts,mathrsfs}
+
+\usepackage{amsthm}
+%% additional package extending mathematical typesetting.
+\usepackage{thmtools}
+\usepackage{thm-restate}
+
+%% Some more packages that you may want to use.  Have a look at the
+%% file, and consult the package docs for each.
+\input{extrapackages}
+
+%% Our layout configuration.  DO NOT CHANGE.
+%\input{layoutsetup}
+
+%% Theorem environments.  You will have to adapt this for a German
+%% thesis.
+\input{theoremsetup}
+
+%% Helpful macros.
+%\input{macrosetup}
+
 % Options for beamer:
 %
 % 9,10,11,12,13,14,17pt  Fontsizes
@@ -89,12 +112,48 @@
 % \item<+-> Item order 1
 \end{itemize}
 \end{frame}
-\note{}
+
+\begin{frame}
+  \frametitle{Hardness Amplification}
+\end{frame}
+\note{Describe hardness amplification theorem, maybe the implication that we use (it makes sense to say that when we state the theorem), why is it important -- building a weakly securite primitives is easier}
+
+\begin{frame}
+  \frametitle{Weakly verifiable cryptographic primitives}
+\end{frame}
+\note{Give examples of weakly verifiable cryptographic primitives, motivate why it is not possible to use the traditional approach of Yao / why it is necessary to extend it.}
+
+\begin{frame}
+  \frametitle{Previous works HS}
+\end{frame}
+\note{Set up ground for introducing my results}
+
+\begin{frame}
+  \frametitle{Previous works DIJK}
+\end{frame}
+\note{Set up ground for introducing my results}
+
+\begin{frame}
+  \frametitle{My contribution I}
+\end{frame}
+\note{State theorem}
+
+\begin{frame}
+  \frametitle{My contribution II}
+\end{frame}
+\note{Give intuition behind the result}
+
+\begin{frame}
+  \frametitle{Discussion}
+\end{frame}
+\note{Give intuition behind the result}
+
+\begin{frame}
+\frametitle{Questions}
+\end{frame}
 
 % \frame{
-
 %   \frametitle{Frame with Box}
-
 %   \vspace{-0.2cm}
 %   \begin{block}{\textbf{Box Title}}
 %    Text within the box...
@@ -140,9 +199,5 @@
 %   Word75 Word76 Word77 Word78 Word79 Word80 Word81 Word82 Word83
 %   Word84 Word85 Word86 Word87
 % \end{frame}
-
-\begin{frame}
-\frametitle{}
-\end{frame}
 
 \end{document}
