@@ -1,5 +1,6 @@
 %\documentclass[first,firstsupp,handout,compress,notes,navigation]{ETHclass}
 %\documentclass[first,firstsupp,handout,lastsupp]{ETHclass}
+%\documentclass[handout,notes]{ETHclass}
 \documentclass[first,firstsupp,handout,last]{ETHclass}
 %\documentclass[first,firstsupp]{ETHclass}
 
@@ -20,6 +21,9 @@
 \usepackage{thmtools}
 \usepackage{thm-restate}
 
+% for graphics
+\usepackage{tikz}
+
 %% Some more packages that you may want to use.  Have a look at the
 %% file, and consult the package docs for each.
 \input{extrapackages}
@@ -32,44 +36,15 @@
 \input{theoremsetup}
 
 %% Helpful macros.
-%\input{macrosetup}
+\input{macrosetup}
 
-% Options for beamer:
-%
-% 9,10,11,12,13,14,17pt  Fontsizes
-%
-% compress: navigation bar becomes smaller
-% t       : place contents of frames on top (alternative: b,c)
-% handout : handoutversion
-% notes   : show notes
-% notes=onlyslideswithnotes
-%
-%hyperref={bookmarksopen,bookmarksnumbered} : Needed for menues in
-%                                             acrobat. Also need
-%                                             pdftex as option or
-%                                             compile with
-% pdflatex '\PassOptionsToPackage{pdftex,bookmarksopen,bookmarksnumbered}{hyperref} \input{file}'
-
-%\usepackage{beamerseminar}
-%\usepackage[accumulated]{beamerseminar}
-                                % remove ``accumulated'' option
-                                % for original behaviour
-%\usepackage{beamerbasenotes}
-%\setbeamertemplate{note page}[plain]
-%\setbeameroption{notes on second screen}
-
-%\setbeamertemplate{note page}[plain]
 \setbeamertemplate{note page}{\ \\[.3cm]
 \textbf{\color{blue}Notes:}\\%[0.1cm]
 {\footnotesize %\tiny
 \insertnote}}
-%\setbeameroption{notes on second screen}
 
-
-\setbeamertemplate{navigation symbols}{} % suppresses all navigation symbols:
-% \setbeamertemplate{navigation symbols}[horizontal] % Organizes the navigation symbols horizontally.
-% \setbeamertemplate{navigation symbols}[vertical] % Organizes the navigation symbols vertically.
-% \setbeamertemplate{navigation symbols}[only frame symbol] % Shows only the navigational symbol for navigating frames.
+% suppresses all navigation symbols:
+\setbeamertemplate{navigation symbols}{} 
 
 \setlayoutscale{0.5}
 \setparametertextfont{\scriptsize}
@@ -82,12 +57,9 @@
 \advisors{Advisors: Prof. Dr. Thomas Holenstein, Dr. Robin Künzler}
 \department{Department of Computer Science}
 
-%\institute{D-MTEC - ETH Zurich}
-
 \begin{frame}
 \maketitle
 \end{frame}
-%\note{}
 
 \begin{frame}[t]
 \frametitle{Agenda}
@@ -97,61 +69,220 @@
   \item<+-> My contribution
   \item<+-> Results
   \item<+-> Discussion
-% \item<+-> Item order 1
-% \item<+-> Item order 1
-%   \begin{itemize}
-%   \item Item order 2
-%   \item Item order 2
-%         \begin{itemize}
-%         \item Item order 3
-%         \end{itemize}
-%   \item Item
-%   \end{itemize}
-% \item<+-> Item order 1
-% \item<+-> Item order 1
-% \item<+-> Item order 1
 \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Hardness Amplification}
+  \[\begin{tikzpicture}[remember picture,overlay]
+\node (rect) at (0,0) [draw,thin, minimum width=2cm,minimum height=1cm] {};
+\node (rect) at (-3,3) [draw,thin, minimum width=2cm,minimum height=1cm] {};
+  \end{tikzpicture}\]
+
+\note{
+  \begin{enumerate}
+    \item Describe hardness amplification theorem in general,
+    \item The implication that we use to prove the theorem (it makes sense to say that when we state the theorem),
+    \item Why is it important - building a weakly secure primitives is easier
+  \end{enumerate}
+}
 \end{frame}
-\note{Describe hardness amplification theorem, maybe the implication that we use (it makes sense to say that when we state the theorem), why is it important -- building a weakly securite primitives is easier}
 
 \begin{frame}
-  \frametitle{Weakly verifiable cryptographic primitives}
+  \frametitle{Weakly Verifiable Cryptographic Primitives}
+  \note{
+    \begin{enumerate}
+      \item Give examples of weakly verifiable cryptographic primitives (that are really weakly verifiable),
+        motivate why it is not possible to use the traditional approach of Yao / why it is necessary to extend it.
+      \item Use CAPTCHAs as an example (maybe but a nice picture)
+    \end{enumerate}
+  }
 \end{frame}
-\note{Give examples of weakly verifiable cryptographic primitives, motivate why it is not possible to use the traditional approach of Yao / why it is necessary to extend it.}
 
 \begin{frame}
-  \frametitle{Previous works HS}
+  \frametitle{Dynamic Cryptographic Primitives}
+  \note{
+    \begin{enumerate}
+    \item Give examples of dynamic weakly verifiable cryptographic primitives MAC seems to be easily understandable
+    \end{enumerate}
+  }
 \end{frame}
-\note{Set up ground for introducing my results}
 
 \begin{frame}
-  \frametitle{Previous works DIJK}
+  \frametitle{Interactive Cryptographic Primitives}
+  \note{
+    \begin{enumerate}
+    \item Bit commitment protocols
+    \end{enumerate}
+  }
 \end{frame}
-\note{Set up ground for introducing my results}
+
+\begin{frame}
+  \frametitle{Previous work of Cannetti, Halevi, and Steiner}
+  \note{
+    \begin{enumerate}
+    \item It is the only understandable result
+    \item Explaining how to deal with weakly verifiable property in this example seems to be possible, it is not possible for others
+    \item Very general overview of the work
+    \end{enumerate}
+  }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Previous work DIJK}
+\note{
+  \begin{enumerate}
+    \item Threshold functions
+    \item Dynamic puzzles recall what it is.
+    \item Give a general overview of the method i.e. what they do
+  \end{enumerate}
+}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Previous work HS}
+  \note{
+    \begin{enumerate}
+     \item Use general monotone binary function -- has to introduce
+     \item Works also for interactive puzzles
+     \item Extends proof of CHS
+    \end{enumerate}
+}
+\end{frame}
 
 \begin{frame}
   \frametitle{My contribution I}
+  \note{
+    \begin{enumerate}
+    \item State formally the theorem being proven? Does it make sense without formal introduction of weakly verifiable puzzles
+    \item Maybe use pictures to visualize the main theorem?
+    \end{enumerate}
+}
 \end{frame}
-\note{State theorem}
 
 \begin{frame}
   \frametitle{My contribution II}
+  \note {
+    \begin{enumerate}
+      \item Give a very short overview of how you prove your theorem
+      \item Have to state the bounds that I get and say that it may not be optimal
+    \end{enumerate}
+}
 \end{frame}
 \note{Give intuition behind the result}
 
 \begin{frame}
   \frametitle{Discussion}
+  \note{
+    \begin{enumerate}
+      \item Summarize the work
+      \item Say that it may not be optimal
+    \end{enumerate}
+}
 \end{frame}
-\note{Give intuition behind the result}
 
 \begin{frame}
 \frametitle{Questions}
 \end{frame}
 
+\note{
+  \begin{enumerate}
+    \item What is weak one-way function:
+      there exists a polynomial that lower bounds the failure probability of every polynomial time algorithm. Goldreich p.35.
+    \item What is strong one-way function?
+
+    \item Why it may not be optimal?
+
+    \item What did you try to show that it is possible to improve your results?
+
+    \item Is it computational or information theoretic result?
+
+    \item What kind of security-games for MAC are modeled by DWVP?
+
+    \item Why sequential repetition implies security amplification?
+
+    \item What if the number of puzzles in the sequential repetition is very big i.e. our result holds only with high probability?
+
+    \item Does repeating the whole algorithm may help and increase the success probability?
+
+    \item What is the cryptographic primitive?
+
+    \item What is the cryptographic scheme?
+
+    \item Is there a simple proof for sequential repetition?
+
+    \item Why is it not possible to fix all coordinates? Give examples in $n$-dim space.
+
+    \item Try to justify why we have this form of the theorem, what does it mean? and what w
+  \end{enumerate}
+}
+
+\note{
+  \begin{enumerate}
+
+  \item Where does the proof break when you want to apply it to the large surplus
+
+  \item When does the proof breaks? -- exactly and why we do not have to care about it too much
+
+  \item What it the intuition behind the surplus?
+
+  \item Be manage to explain the function on the right hand-side.
+
+  \item Why do we need to consider two surpluses
+
+  \item How does the optimization problem for gap amplification looks like?
+
+  \item Why we cannot perfect hardness amplification?
+
+  \item Why $\Pr[c \in \cG_1 \setminus \cG_0]$ is small but we still have a large surplus
+
+  \item Why can we assume that the verification algorithm can be deterministic
+
+  \item Followup question: what is proven in DIJK09
+
+  \item Followup question: why is the hint circuit H probabilistic
+
+  \item Is defining the puzzle only by poser is not artificial as an instance is defined by a pair poser-solver
+
+  \item There are no examples of puzzles that are both interactive and dynamic what about this?
+
+  \item Number of rounds for which parallel repetition works as i.e. the intuition behind the > 3-round protocols
+
+  \end{enumerate}
+}
+
+
+\note {
+  \begin{enumerate}
+
+  \item Why does obsevation 5.1 is true?
+
+  \item What is function what is relation
+
+  \item Why WVP does not imply one-way function
+
+  \item Is it possible that sampling does not work?
+
+  \item Is number of hint and verification queries limitation for the solver or the verify
+
+  \item Why do we iterate $\frac{1}{\epsilon}$ times in $\Gen$, is it efficient, when it might not be efficient what happens with $h+v$ then?
+
+  \item Think about different computational contexts for this theorem. Under what conditions for $h,v,\epsilon$ does it make sense
+
+  \item Be able to explain the definition in DIJK09.
+
+  \item What is the Coron's proof about? Why it does not work?
+
+  \item $k$-wise independent functions; how do they look like?
+
+  \item Random questions about hash functions
+
+  \item (if not covered in the presentation) is your result optimal?
+
+  \item Relation with soundness error of four-round protocols
+
+  \end{enumerate}
+}
 % \frame{
 %   \frametitle{Frame with Box}
 %   \vspace{-0.2cm}
@@ -199,5 +330,19 @@
 %   Word75 Word76 Word77 Word78 Word79 Word80 Word81 Word82 Word83
 %   Word84 Word85 Word86 Word87
 % \end{frame}
+
+% \item<+-> Item order 1
+% \item<+-> Item order 1
+%   \begin{itemize}
+%   \item Item order 2
+%   \item Item order 2
+%         \begin{itemize}
+%         \item Item order 3
+%         \end{itemize}
+%   \item Item
+%   \end{itemize}
+% \item<+-> Item order 1
+% \item<+-> Item order 1
+% \item<+-> Item order 1
 
 \end{document}
