@@ -39,6 +39,7 @@
 %% file, and consult the package docs for each.
 \input{extrapackages}
 
+
 %% Our layout configuration.  DO NOT CHANGE.
 %\input{layoutsetup}
 
@@ -83,22 +84,9 @@
 \end{itemize}
 \end{frame}
 
+\tikzset{decorate sep/.style 2 args={decorate,decoration={shape backgrounds,shape=circle,shape size=#1,shape sep=#2}}}
 \begin{frame}[fragile,t]
   \frametitle{Hardness Amplification}
-% \begin{columns}
-% \begin{column}{.48\textwidth}
-% \color{red}\rule{\linewidth}{4pt}
-
-% Left Part
-% \end{column}%
-% \hfill%
-% \begin{column}{.48\textwidth}
-% \color{blue}\rule{\linewidth}{4pt}
-
-% Right Part
-% \end{column}%
-% \end{columns}
-\tikzset{decorate sep/.style 2 args={decorate,decoration={shape backgrounds,shape=circle,shape size=#1,shape sep=#2}}}
 
 Is solving parallel repetition of problems substantially harder than a single instance of a problem?
 \vspace{50pt}
@@ -137,63 +125,88 @@ Is solving parallel repetition of problems substantially harder than a single in
 \end{frame}
 
 \begin{frame}[t]
-  \frametitle{Weakly Verifiable Puzzles}
-  \begin{enumerate}
-    \item An algorithm $G$ generates a puzzle $p$ together with some secrecy information $s$.
-    \item A solver given $p$ has to find a correct solution.
-    \item It is hard for the solver to verify the correctness of a solution given only $p$.
-    \item A verification algorithm has access to $s$ which makes the task of checking the correctness of a solution easy.
-  \end{enumerate}
-  \note{
-    \begin{enumerate}
-    \end{enumerate}
-  }
-\end{frame}
-
-\begin{frame}[c]
-  \frametitle{Weakly Verifiable Primitives - Example}
-%  \includegraphics[width=0.30\textwidth,natwidth=100,natheight=100]{captcha.png}
-%\pgfdeclareimage{captcha}{captcha.png}
+  \frametitle{Weakly Verifiable Puzzles - CAPTCHA}
+\vspace{40pt}
 \[\begin{tikzpicture}[remember picture,overlay]
 % generation
 \node (rect) at (-4,0) [draw,thin, minimum width=2cm,minimum height=1cm] {$\Gen$};
-\draw (-5.5,0) -- (-5,0);
+\draw (-5,0) -- (-5.5,0) node [left] {$\rho$};
 \draw (-1, 1.5) -- (-2.5, 1.5) -- (-2.5, 0.25) -- (-3, 0.25);
-\draw (-3, -0.25) -- (3, -0.25);
+\draw (-3, -0.25) -- (2.5, -0.25) node at (-1.8,0) {YF4JY};
 
 % solver's input i.e. CAPTCHA
 \node at (-1.9, 1.6) {\pgfbox[center,bottom]{\includegraphics[width=0.16\textwidth,natwidth=100,natheight=100]{captcha.png}}};
 
-%one of the verifies input's the unique solution
-\node[draw] at (0,0) {Solution YF4JY};
-
 % solver
 \node (rect) at (0,1.5) [draw,thin, minimum width=2cm,minimum height=1cm] {Solver};
-\draw (1, 1.5) -- (2.5, 1.5) -- (2.5,0);
+\draw (1, 1.5) -- (2, 1.5) -- (2,0) -- (2.5,0);
 
 % verification algorithm
-\node (rect) at (4,0) [draw,thin, minimum width=2cm,minimum height=1cm] {Verif.};
-\draw (5, 0) -- (5.5,0);
-
+\node (rect) at (3.5,0) [draw,thin, minimum width=2cm,minimum height=1cm] {Verif.};
+\draw (4.5, 0) -- (5,0) node [right] {$0/1$};
 \end{tikzpicture}\]
 
+\vspace{40pt}
+Assumptions
+\begin{itemize}
+  \item<+-> Small solutions space.
+  \item<+-> Solver cannot have a way to efficiently verify its solutions.
+\end{itemize}
 
+\note{
+  \begin{enumerate}
+  \item Give examples of weakly verifiable cryptographic primitives (that are really weakly verifiable),
+    motivate why it is not possible to use the traditional approach of Yao / why it is necessary to extend it.
+  \item Use CAPTCHAs as an example (maybe but a nice picture)
+  \end{enumerate}
+}
+\end{frame}
+
+\begin{frame}[t]
+  \frametitle{Weakly Verifiable Puzzles}
+  \begin{itemize}
+    \item Introduces by Cannetti, Halevi, Steiner \cite{canetti2005hardness}
+    \item An algorithm $G$ generates a puzzle $p$ together with some secrecy information $s$.
+    \item A solver given $p$ has to find a correct solution.
+    \item It is hard for the solver to verify the correctness of a solution given only $p$.
+    \item A verification algorithm has access to $s$ which makes the task of checking the correctness of a solution easy.
+  \end{itemize}
   \note{
     \begin{enumerate}
-      \item Give examples of weakly verifiable cryptographic primitives (that are really weakly verifiable),
-        motivate why it is not possible to use the traditional approach of Yao / why it is necessary to extend it.
-      \item Use CAPTCHAs as an example (maybe but a nice picture)
     \end{enumerate}
   }
 \end{frame}
 
-\begin{frame}
-  \frametitle{Dynamic Cryptographic Primitives}
-  \note{
-    \begin{enumerate}
-    \item Give examples of dynamic weakly verifiable cryptographic primitives MAC seems to be easily understandable
-    \end{enumerate}
-  }
+\begin{frame}[t]
+  \frametitle{Dynamic Puzzles Definition (Informal)}
+  % \begin{itemize}
+  %   \item Given a set of indices $\cQ$.
+  %   \item Hints : Solver can ask for solutions on any $q \in \cQ$
+  %   \item Verification: Solver solves a puzzle on $q \in \cQ$ for which it has not asked for a hint before.
+  %   \item Number of hint and verification queries limited.
+  %   \item Generalize breaking MACs and signature schemes
+  % \end{itemize}
+
+\vspace{20pt}
+\[\begin{tikzpicture}[remember picture,overlay]
+% generation
+ % messages
+\node (rect) at (-4,0) [draw,thin, minimum width=1.8cm,minimum height=2.6cm] {Solver};
+\draw (-3.1,1) -- (-0.9,1) node [near start,above] {\scalebox{0.6}{$m \in \cQ$}};
+\draw (-3.1,0.5) -- (-0.9,0.5) node [near end,above] {\scalebox{0.6}{$t \in \cT$}};
+% dots
+\draw[decorate sep={0.3mm}{3mm},fill] (-2,.3) -- (-2,-.5);
+% last message
+\draw (-3.1,-1) -- (-0.9,-1) node [near start, above] {\scalebox{0.6}{\hspace{50pt}$m' \in \cQ, t' \in \cT$}};
+% Poser
+\node (rect) at (0,0) [draw,thin, minimum width=1.8cm,minimum height=2.6cm] {Poser};
+\end{tikzpicture}\]
+
+\note{
+  \begin{enumerate}
+  \item Give examples of dynamic weakly verifiable cryptographic primitives MAC seems to be easily understandable
+  \end{enumerate}
+}
 \end{frame}
 
 \begin{frame}
@@ -271,6 +284,13 @@ Is solving parallel repetition of problems substantially harder than a single in
 
 \begin{frame}
 \frametitle{Questions}
+\end{frame}
+
+
+\begin{frame}[t]
+\frametitle{Bibliography}
+\bibliographystyle{alpha}
+\bibliography{refs}
 \end{frame}
 
 \note{
@@ -433,4 +453,18 @@ Is solving parallel repetition of problems substantially harder than a single in
 % \item<+-> Item order 1
 % \item<+-> Item order 1
 
+
+% \begin{columns}
+% \begin{column}{.48\textwidth}
+% \color{red}\rule{\linewidth}{4pt}
+
+% Left Part
+% \end{column}%
+% \hfill%
+% \begin{column}{.48\textwidth}
+% \color{blue}\rule{\linewidth}{4pt}
+
+% Right Part
+% \end{column}%
+% \end{columns}
 \end{document}

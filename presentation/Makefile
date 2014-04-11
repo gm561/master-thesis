@@ -37,6 +37,9 @@ presentation.pdf: $(texfiles)
 presentation.aux: $(texfiles)
 	$(Q) $(Q_LATEX) $(LATEX) -interaction=nonstopmode -file-line-error presentation.tex
 
+presentation.bbl: presentation.aux
+	$(Q)$(Q_OTHER) $(BIBTEX) presentation
+
 clean:
 	rm -rf build/
 	rm -f *.aux
