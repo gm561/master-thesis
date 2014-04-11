@@ -21,8 +21,19 @@
 \usepackage{thmtools}
 \usepackage{thm-restate}
 
+\usepackage{textpos}
 % for graphics
 \usepackage{tikz}
+\usetikzlibrary{arrows, decorations.markings}
+% for double arrows a la chef
+% adapt line thickness and line width, if needed
+\tikzstyle{vecArrow} = [thick, decoration={markings,mark=at position
+   1 with {\arrow[semithick]{open triangle 60}}},
+   double distance=1.4pt, shorten >= 5.5pt,
+   preaction = {decorate},
+   postaction = {draw,line width=1.4pt, white,shorten >= 4.5pt}]
+\tikzstyle{innerWhite} = [semithick, white,line width=1.4pt, shorten >= 4.5pt]
+\usetikzlibrary{decorations.shapes}
 
 %% Some more packages that you may want to use.  Have a look at the
 %% file, and consult the package docs for each.
@@ -44,7 +55,7 @@
 \insertnote}}
 
 % suppresses all navigation symbols:
-\setbeamertemplate{navigation symbols}{} 
+\setbeamertemplate{navigation symbols}{}
 
 \setlayoutscale{0.5}
 \setparametertextfont{\scriptsize}
@@ -72,13 +83,50 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}[fragile,t]
   \frametitle{Hardness Amplification}
-  \[\begin{tikzpicture}[remember picture,overlay]
-\node (rect) at (0,0) [draw,thin, minimum width=2cm,minimum height=1cm] {};
-\node (rect) at (-3,3) [draw,thin, minimum width=2cm,minimum height=1cm] {};
-  \end{tikzpicture}\]
+% \begin{columns}
+% \begin{column}{.48\textwidth}
+% \color{red}\rule{\linewidth}{4pt}
 
+% Left Part
+% \end{column}%
+% \hfill%
+% \begin{column}{.48\textwidth}
+% \color{blue}\rule{\linewidth}{4pt}
+
+% Right Part
+% \end{column}%
+% \end{columns}
+\tikzset{decorate sep/.style 2 args={decorate,decoration={shape backgrounds,shape=circle,shape size=#1,shape sep=#2}}}
+
+Is solving parallel repetition of problems substantially harder than a single instance of a problem?
+\vspace{50pt}
+  \[\begin{tikzpicture}[remember picture,overlay]
+% left node
+\node (rect) at (-4,0) [draw,thin, minimum width=2cm,minimum height=1cm] {$S$};
+%\node at (-5.5,0.25) {$f(x)$};
+\draw (-5.5,0) -- (-5,0);
+\draw (-2.5,0) -- (-3.0,0);
+% arrow
+ \draw[vecArrow] (-1.5,0) to (0.75,0);
+% right nodes
+\node (rect) at (3,2) [draw,thin, minimum width=2cm,minimum height=1cm] {$S_1$};
+\draw (1.5,2) -- (2,  2);
+\draw (4.0,2) -- (4.5,2);
+
+\node (rect) at (3,0.5) [draw,thin, minimum width=2cm,minimum height=1cm] {$S_2$};
+\draw (1.5,0.5) -- (2,  0.5);
+\draw (4.0,0.5) -- (4.5,0.5);
+
+\draw[decorate sep={1mm}{5mm},fill] (3,-.3) -- (3,-1.5);
+
+\node (rect) at (3,-2.) [draw,thin, minimum width=2cm,minimum height=1cm] {$S_k$};
+\draw (1.5,-2) -- (2,  -2);
+\draw (4.0,-2) -- (4.5,-2);
+
+\end{tikzpicture}\]
+%
 \note{
   \begin{enumerate}
     \item Describe hardness amplification theorem in general,
@@ -88,8 +136,48 @@
 }
 \end{frame}
 
-\begin{frame}
-  \frametitle{Weakly Verifiable Cryptographic Primitives}
+\begin{frame}[t]
+  \frametitle{Weakly Verifiable Puzzles}
+  \begin{enumerate}
+    \item An algorithm $G$ generates a puzzle $p$ together with some secrecy information $s$.
+    \item A solver given $p$ has to find a correct solution.
+    \item It is hard for the solver to verify the correctness of a solution given only $p$.
+    \item A verification algorithm has access to $s$ which makes the task of checking the correctness of a solution easy.
+  \end{enumerate}
+  \note{
+    \begin{enumerate}
+    \end{enumerate}
+  }
+\end{frame}
+
+\begin{frame}[c]
+  \frametitle{Weakly Verifiable Primitives - Example}
+%  \includegraphics[width=0.30\textwidth,natwidth=100,natheight=100]{captcha.png}
+%\pgfdeclareimage{captcha}{captcha.png}
+\[\begin{tikzpicture}[remember picture,overlay]
+% generation
+\node (rect) at (-4,0) [draw,thin, minimum width=2cm,minimum height=1cm] {$\Gen$};
+\draw (-5.5,0) -- (-5,0);
+\draw (-1, 1.5) -- (-2.5, 1.5) -- (-2.5, 0.25) -- (-3, 0.25);
+\draw (-3, -0.25) -- (3, -0.25);
+
+% solver's input i.e. CAPTCHA
+\node at (-1.9, 1.6) {\pgfbox[center,bottom]{\includegraphics[width=0.16\textwidth,natwidth=100,natheight=100]{captcha.png}}};
+
+%one of the verifies input's the unique solution
+\node[draw] at (0,0) {Solution YF4JY};
+
+% solver
+\node (rect) at (0,1.5) [draw,thin, minimum width=2cm,minimum height=1cm] {Solver};
+\draw (1, 1.5) -- (2.5, 1.5) -- (2.5,0);
+
+% verification algorithm
+\node (rect) at (4,0) [draw,thin, minimum width=2cm,minimum height=1cm] {Verif.};
+\draw (5, 0) -- (5.5,0);
+
+\end{tikzpicture}\]
+
+
   \note{
     \begin{enumerate}
       \item Give examples of weakly verifiable cryptographic primitives (that are really weakly verifiable),
