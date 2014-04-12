@@ -177,17 +177,25 @@ Assumptions
   }
 \end{frame}
 
-\begin{frame}[t]
-  \frametitle{Dynamic Puzzles Definition (Informal)}
-  % \begin{itemize}
-  %   \item Given a set of indices $\cQ$.
-  %   \item Hints : Solver can ask for solutions on any $q \in \cQ$
-  %   \item Verification: Solver solves a puzzle on $q \in \cQ$ for which it has not asked for a hint before.
-  %   \item Number of hint and verification queries limited.
-  %   \item Generalize breaking MACs and signature schemes
-  % \end{itemize}
+\begin{frame}
+  \frametitle{Threshold and Binary Monotone Functions}
+  Threshold functions
 
-\vspace{20pt}
+  Binary functions
+\end{frame}
+
+\begin{frame}
+  \frametitle{Gap Amplification}
+  Difference between human and computer algorithms solutions.
+\end{frame}
+
+\begin{frame}[t]
+  \frametitle{Dynamic Puzzles Example}
+  \begin{itemize}
+  \item Game based security definition of MAC.
+  \end{itemize}
+\vspace{40pt}
+
 \[\begin{tikzpicture}[remember picture,overlay]
 % generation
  % messages
@@ -209,13 +217,56 @@ Assumptions
 }
 \end{frame}
 
-\begin{frame}
-  \frametitle{Interactive Cryptographic Primitives}
+\begin{frame}[t]
+  \frametitle{Dynamic Puzzle Definition (Informal)}
+  \begin{itemize}
+    \item Given a set of indices $\cQ$
+    \item Hints : Solver can ask for solutions on any $q \in \cQ$
+    \item Verification: Solver solves a puzzle on $q \in \cQ$ for which it has not asked for a hint before.
+    \item Number of hint and verification queries limited.
+    \item Generalize breaking MACs and signature schemes
+    \item Introduced by Dodis et al. \cite{dodis2009security}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[t]
+  \frametitle{Interactive Puzzles Example}
+  \begin{itemize}
+    \item Binding property of the bit commitment protocols.
+  \end{itemize}
   \note{
     \begin{enumerate}
     \item Bit commitment protocols
     \end{enumerate}
   }
+\end{frame}
+
+
+\begin{frame}[t]
+  \frametitle{Goal}
+  Give a single proof for puzzles that are dynamic, interactive, and weakly verifiable.
+  \vspace{40pt}
+  \begin{figure}
+    \centering
+    \begin{tikzpicture}[remember picture,overlay]
+      % Weakly Verifiable box
+      \node (rect) at (-4,0) [draw,thin, minimum width=3cm,minimum height=2.6cm, text width = 3cm] {
+        Weakly Verifiable
+        \includegraphics[width=1.0\textwidth,natwidth=100,natheight=100]{captcha.png}
+      };
+      \node (plus) at (-2,0) {+};
+      \node (rect) at (0,0) [draw,thin, minimum width=3cm,minimum height=2.6cm, text width = 3cm] {
+        Dynamic Puzzles
+      };
+      \node (plus) at (2,0) {+};
+      \node (rect) at (4,0) [draw,thin, minimum width=3cm,minimum height=2.6cm, text width = 3cm] {
+        Interactive Puzzles
+      };
+
+
+      %\draw (-3.1,1) -- (-0.9,1) node [near start,above] {\scalebox{0.6}{$m \in \cQ$}};
+    \end{tikzpicture}
+  \end{figure}
 \end{frame}
 
 \begin{frame}
