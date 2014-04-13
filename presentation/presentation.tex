@@ -39,7 +39,6 @@
 %% file, and consult the package docs for each.
 \input{extrapackages}
 
-
 %% Our layout configuration.  DO NOT CHANGE.
 %\input{layoutsetup}
 
@@ -64,24 +63,13 @@
 
 \begin{document}
 
-\title{Hardness amplification for weakly verifiable cryptographic primitives}
+\title{Hardness Amplification for Weakly Verifiable Cryptographic Primitives}
 \author{Grzegorz M\k{a}kosa}
 \advisors{Advisors: Prof. Dr. Thomas Holenstein, Dr. Robin Künzler}
 \department{Department of Computer Science}
 
 \begin{frame}
 \maketitle
-\end{frame}
-
-\begin{frame}[t]
-\frametitle{Agenda}
-\begin{itemize}
-  \item<+-> Motivation and problem statement
-  \item<+-> Background and related work
-  \item<+-> My contribution
-  \item<+-> Results
-  \item<+-> Discussion
-\end{itemize}
 \end{frame}
 
 \tikzset{decorate sep/.style 2 args={decorate,decoration={shape backgrounds,shape=circle,shape size=#1,shape sep=#2}}}
@@ -122,6 +110,25 @@ Is solving parallel repetition of problems substantially harder than a single in
     \item Why is it important - building a weakly secure primitives is easier
   \end{enumerate}
 }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Hardness Amplification Facts}
+  \begin{itemize}
+    \item Weak one-way function $\implies$ strong one-way function
+    \item What about MAC, signature schemes, CAPTCHAs?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[t]
+\frametitle{Agenda}
+\begin{itemize}
+  \item<+-> Motivation and problem statement
+  \item<+-> Background and related work
+  \item<+-> My contribution
+  \item<+-> Results
+  \item<+-> Discussion
+\end{itemize}
 \end{frame}
 
 \begin{frame}[t]
@@ -241,36 +248,14 @@ Assumptions
   }
 \end{frame}
 
-
-\begin{frame}[t]
-  \frametitle{Goal}
-  Give a single proof for puzzles that are dynamic, interactive, and weakly verifiable.
-  \vspace{40pt}
-  \begin{figure}
-    \centering
-    \begin{tikzpicture}[remember picture,overlay]
-      % Weakly Verifiable box
-      \node (rect) at (-4,0) [draw,thin, minimum width=3cm,minimum height=2.6cm, text width = 3cm] {
-        Weakly Verifiable
-        \includegraphics[width=1.0\textwidth,natwidth=100,natheight=100]{captcha.png}
-      };
-      \node (plus) at (-2,0) {+};
-      \node (rect) at (0,0) [draw,thin, minimum width=3cm,minimum height=2.6cm, text width = 3cm] {
-        Dynamic Puzzles
-      };
-      \node (plus) at (2,0) {+};
-      \node (rect) at (4,0) [draw,thin, minimum width=3cm,minimum height=2.6cm, text width = 3cm] {
-        Interactive Puzzles
-      };
-
-
-      %\draw (-3.1,1) -- (-0.9,1) node [near start,above] {\scalebox{0.6}{$m \in \cQ$}};
-    \end{tikzpicture}
-  \end{figure}
-\end{frame}
-
 \begin{frame}
-  \frametitle{Previous work of Cannetti, Halevi, and Steiner}
+  \frametitle{Previous works}
+  \begin{itemize}
+    \item Weakly verifiable puzzles \cite{canetti2005hardness}
+    \item Dynamic weakly verifiable puzzles and threshold functions \cite{dodis2009security}
+    \item Interactive puzzles and monotone function \cite{holenstein2011general}
+  \end{itemize}
+
   \note{
     \begin{enumerate}
     \item It is the only understandable result
@@ -280,30 +265,41 @@ Assumptions
   }
 \end{frame}
 
-\begin{frame}
-  \frametitle{Previous work DIJK}
-\note{
-  \begin{enumerate}
-    \item Threshold functions
-    \item Dynamic puzzles recall what it is.
-    \item Give a general overview of the method i.e. what they do
-  \end{enumerate}
-}
+\begin{frame}[t]
+  \frametitle{Goal}
+  \begin{itemize}
+    \item Define puzzles that generalize MAC, CAPTCHA, bit commitments.
+    \item Hardness amplification result for these puzzles.
+  \end{itemize}
+  \vspace{40pt}
+  \begin{figure}
+    \centering
+    \begin{tikzpicture}[remember picture,overlay]
+      % Weakly Verifiable box
+      \node (rect) at (-4,0) [draw,thin, minimum width=3cm,minimum height=2.6cm, text width = 3cm] {
+        Weakly Verifiable
+      };
+      \node (plus) at (-2,0) {+};
+      \node (rect) at (0,0) [draw,thin, minimum width=3cm,minimum height=2.6cm, text width = 3cm] {
+        Dynamic
+      };
+      \node (plus) at (2,0) {+};
+      \node (rect) at (4,0) [draw,thin, minimum width=3cm,minimum height=2.6cm, text width = 3cm] {
+        Interactive
+      };
+      %\draw (-3.1,1) -- (-0.9,1) node [near start,above] {\scalebox{0.6}{$m \in \cQ$}};
+    \end{tikzpicture}
+  \end{figure}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Previous work HS}
-  \note{
-    \begin{enumerate}
-     \item Use general monotone binary function -- has to introduce
-     \item Works also for interactive puzzles
-     \item Extends proof of CHS
-    \end{enumerate}
-}
-\end{frame}
+\begin{frame}[t]
+  \frametitle{Dynamic interactive puzzles}
+  \begin{itemize}
+    \item Cannot run the solver multiple times.
+    \item Hint queries from previous runs can prevent verification queries from succeeding.
+    \item Use hash function to partition query domain \cite{dodis2009security}.
+  \end{itemize}
 
-\begin{frame}
-  \frametitle{My contribution I}
   \note{
     \begin{enumerate}
     \item State formally the theorem being proven? Does it make sense without formal introduction of weakly verifiable puzzles
@@ -312,8 +308,21 @@ Assumptions
 }
 \end{frame}
 
-\begin{frame}
-  \frametitle{My contribution II}
+\begin{frame}[t]
+  \frametitle{Weakly verifiable puzzles}
+  \begin{itemize}
+    \item Cannot check whether the solution is correct.
+    \item For a special case where all puzzles have to be solved.
+    \item Look at remaining $n-1$ puzzles that are generated.
+\[\begin{tikzpicture}[remember picture,overlay]
+\node (rect) at (-4,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {?};
+\node (rect) at (-3.4,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {1};
+\node (rect) at (-2.8,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {1};
+\draw[decorate sep={0.3mm}{3mm}, fill] (-2.2, 0) -- (-0.6, 0);
+\node (rect) at (0,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {1};
+\end{tikzpicture}\]
+
+  \end{itemize}
   \note {
     \begin{enumerate}
       \item Give a very short overview of how you prove your theorem
@@ -322,6 +331,18 @@ Assumptions
 }
 \end{frame}
 \note{Give intuition behind the result}
+
+\begin{frame} [t]
+  \frametitle{Results}
+      Let $C$ be a solver for parallel repetition of puzzles \\
+      \begin{align*}
+        \geq \underset{u \leftarrow \mu_\delta^k}{\Pr}[g(u) = 1] + \varepsilon,
+      \end{align*}
+      then $D$ with high probability satisfies
+      \begin{align}
+         \geq \frac{1}{16(h+v)} \Bigl(\delta + \frac{\epsilon}{6k}\Bigr).
+      \end{align}
+\end{frame}
 
 \begin{frame}
   \frametitle{Discussion}
