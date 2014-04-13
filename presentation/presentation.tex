@@ -12,6 +12,8 @@
 %% capable, so you may want to use 'latin1' instead.
 \usepackage[utf8x]{inputenc}
 
+\usepackage{pifont}
+
 %% The AMS-LaTeX extensions for mathematical typesetting.  Do not
 %% remove.
 \usepackage{amsmath,amssymb,amsfonts,mathrsfs}
@@ -61,6 +63,8 @@
 \setparametertextfont{\scriptsize}
 \setlabelfont{\scriptsize}
 
+\tikzset{decorate sep/.style 2 args={decorate,decoration={shape backgrounds,shape=circle,shape size=#1,shape sep=#2}}}
+
 \begin{document}
 
 \title{Hardness Amplification for Weakly Verifiable Cryptographic Primitives}
@@ -71,36 +75,51 @@
 \begin{frame}
 \maketitle
 \end{frame}
-
-\tikzset{decorate sep/.style 2 args={decorate,decoration={shape backgrounds,shape=circle,shape size=#1,shape sep=#2}}}
-\begin{frame}[fragile,t]
+\begin{frame}[t]
   \frametitle{Hardness Amplification}
-
 Is solving parallel repetition of problems substantially harder than a single instance of a problem?
+
 \vspace{50pt}
   \[\begin{tikzpicture}[remember picture,overlay]
-% left node
-\node (rect) at (-4,0) [draw,thin, minimum width=2cm,minimum height=1cm] {$S$};
-%\node at (-5.5,0.25) {$f(x)$};
-\draw (-5.5,0) -- (-5,0);
-\draw (-2.5,0) -- (-3.0,0);
+% single problem
+\node (rect) at (-4,0) [draw,thin, minimum width=1cm,minimum height=.5cm] {$P$};
+% left interface
+\draw (-4.5,0) -- (-4.75,0) node [left] {
+\fontsize{8pt}{8pt}\selectfont $0/1$};
+% right interface
+\draw (-3.5,0) -- (-3,0);
+% solver for single problem
+\node (rect) at (-2.5,0) [draw,thin, minimum width=1cm,minimum height=.5cm] {$S$};
 % arrow
  \draw[vecArrow] (-1.5,0) to (0.75,0);
 % right nodes
-\node (rect) at (3,2) [draw,thin, minimum width=2cm,minimum height=1cm] {$S_1$};
-\draw (1.5,2) -- (2,  2);
-\draw (4.0,2) -- (4.5,2);
+\node (rect) at (3,2) [draw,thin, minimum width=1cm,minimum height=.5cm] {$P_1$};
+%left interface
+\draw (2.5,2) -- (2,  2) node [left] {
+\fontsize{8pt}{8pt}\selectfont $0/1$
+};
+%right interface
+\draw (3.5,2) -- (4.0,2);
 
-\node (rect) at (3,0.5) [draw,thin, minimum width=2cm,minimum height=1cm] {$S_2$};
-\draw (1.5,0.5) -- (2,  0.5);
-\draw (4.0,0.5) -- (4.5,0.5);
+\node (rect) at (3,0.5) [draw,thin, minimum width=1cm,minimum height=.5cm] {$P_2$};
+\draw (2.5, 0.5) -- (2, 0.5) node [left] {
+\fontsize{8pt}{8pt}\selectfont $0/1$
+};
+\draw (3.5, 0.5) -- (4,0.5);
 
-\draw[decorate sep={1mm}{5mm},fill] (3,-.3) -- (3,-1.5);
+%dots
+\draw[decorate sep={0.8mm}{5mm},fill] (3,-.3) -- (3,-1.5);
 
-\node (rect) at (3,-2.) [draw,thin, minimum width=2cm,minimum height=1cm] {$S_k$};
-\draw (1.5,-2) -- (2,  -2);
-\draw (4.0,-2) -- (4.5,-2);
+\node (rect) at (3,-2.) [draw,thin, minimum width=1cm,minimum height=.5cm] {$P_k$};
+\draw (2.5,-2) -- (2,  -2) node [left] {
+\fontsize{8pt}{8pt}\selectfont $0/1$
+};
+\draw (3.5,-2) -- (4,-2);
 
+%connector for right interfaces
+\draw (4,2) -- (4,-2);
+\draw (4,0) -- (4.5,0);
+\node (rect) at (5,0) [draw,thin, minimum width=1cm,minimum height=.5cm] {$S^*$};
 \end{tikzpicture}\]
 %
 \note{
@@ -154,10 +173,9 @@ Is solving parallel repetition of problems substantially harder than a single in
 \end{tikzpicture}\]
 
 \vspace{40pt}
-Assumptions
 \begin{itemize}
   \item<+-> Small solutions space.
-  \item<+-> Solver cannot have a way to efficiently verify its solutions.
+  \item<+-> Solver cannot efficiently verify its solutions.
 \end{itemize}
 
 \note{
@@ -185,10 +203,66 @@ Assumptions
 \end{frame}
 
 \begin{frame}
-  \frametitle{Threshold and Binary Monotone Functions}
-  Threshold functions
+  \frametitle{Threshold and Monotone Functions}
+  \begin{columns}
+    \begin{column}{.4\textwidth}
+      \hspace{3pt}Threshold function
+      {\fontsize{7pt}{7pt}\selectfont{
+      \begin{align*}
+        f_K(b_1, \dots, b_n) =
+        \begin{dcases}
+          1 \text{ if } \sum_{i=1}^{n} b_i \geq K \\
+          0 \text{ otherwise.}
+        \end{dcases}
+      \end{align*}
+    }}
+    Monotone function
+    {\fontsize{7pt}{7pt}\selectfont{
+    \begin{align*}
+      f(b_0, \dots, b_n) : \{0,1\}^{n} \rightarrow \{0,1\}
+    \end{align*}}}
+    \end{column}%
 
-  Binary functions
+    \hfill%
+\begin{column}{.60\textwidth}
+\[\begin{tikzpicture}[remember picture,overlay]
+% right nodes
+\node (rect) at (0,2) [draw,thin, minimum width=1cm,minimum height=.5cm] {$P_1$};
+%left interface
+\draw (-.5,2) -- (-1,  2) node [left] {
+\fontsize{8pt}{8pt}\selectfont $0/1$
+};
+%right interface
+\draw (0.5,2) -- (1.0,2);
+
+\node (rect) at (0,0.5) [draw,thin, minimum width=1cm,minimum height=.5cm] {$P_2$};
+\draw (-.5, 0.5) -- (-1, 0.5) node [left] {
+\fontsize{8pt}{8pt}\selectfont $0/1$
+};
+\draw (.5, 0.5) -- (1,0.5);
+
+%dots
+\draw[decorate sep={0.8mm}{5mm},fill] (0,-.3) -- (0,-1.5);
+
+\node (rect) at (0,-2.) [draw,thin, minimum width=1cm,minimum height=.5cm] {$P_k$};
+\draw (-.5,-2) -- (-1,  -2) node [left] {
+\fontsize{8pt}{8pt}\selectfont $0/1$
+};
+\draw (.5,-2) -- (1,-2);
+
+%connector for right interfaces
+\draw (1,2) -- (1,-2);
+\draw (1,0) -- (1.5,0);
+\node (rect) at (2,0) [draw,thin, minimum width=1cm,minimum height=.5cm] {$S^*$};
+
+%function
+\draw (-1, 2) -- (-1, -2);
+\draw (-1, 0) -- (-2, 0);
+\draw (-3, 0) -- (-3.5, 0) node [left] {\fontsize{8pt}{8pt}\selectfont $0/1$ };
+\node (rect) at (-2.5,0) [draw,thin, minimum width=1cm,minimum height=.5cm] {$f(x)$};
+\end{tikzpicture}\]
+\end{column}%
+\end{columns}
 \end{frame}
 
 \begin{frame}
@@ -293,42 +367,61 @@ Assumptions
 \end{frame}
 
 \begin{frame}[t]
-  \frametitle{Dynamic interactive puzzles}
+  \frametitle{Hint queries}
   \begin{itemize}
-    \item Cannot run the solver multiple times.
-    \item Hint queries from previous runs can prevent verification queries from succeeding.
+    \item The solver asks hint queries.
+    \item Hint queries can prevent verification queries from succeeding.
     \item Use hash function to partition query domain \cite{dodis2009security}.
+    \item Can ask hints only on $\cQ \setminus \cQ_{\mathit{verification}}$.
+    \item Substantial success probability for partitioned domain
   \end{itemize}
+  \begin{columns}
+    \begin{column}{.4\textwidth}
+      \includegraphics[scale=0.08]{images/hashSets.pdf}
+    \end{column}
+    \begin{column}{.4\textwidth}
+      \begin{align*}
+        &\hash \leftarrow \cH \\
+        &\hash : \cQ \rightarrow \{0,1,\dots, 2(h+v) - 1\} \\
+        &\cQ_{\mathit{verification}} := {q \in \cQ : hash(q) = 0}
+      \end{align*}
+    \end{column}
+  \end{columns}
+\end{frame}
 
-  \note{
-    \begin{enumerate}
-    \item State formally the theorem being proven? Does it make sense without formal introduction of weakly verifiable puzzles
-    \item Maybe use pictures to visualize the main theorem?
-    \end{enumerate}
-}
+\begin{frame}[t]
+  \frametitle{Approach overview}
+  \centering
+  \includegraphics[scale=0.3]{images/AlgoBlock1.pdf}
 \end{frame}
 
 \begin{frame}[t]
   \frametitle{Weakly verifiable puzzles}
-  \begin{itemize}
-    \item Cannot check whether the solution is correct.
-    \item For a special case where all puzzles have to be solved.
-    \item Look at remaining $n-1$ puzzles that are generated.
-\[\begin{tikzpicture}[remember picture,overlay]
-\node (rect) at (-4,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {?};
-\node (rect) at (-3.4,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {1};
-\node (rect) at (-2.8,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {1};
-\draw[decorate sep={0.3mm}{3mm}, fill] (-2.2, 0) -- (-0.6, 0);
-\node (rect) at (0,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {1};
-\end{tikzpicture}\]
-
-  \end{itemize}
+  \begin{columns}
+    \begin{column}{.5\textwidth}
+      \begin{itemize}
+      \item Cannot check whether the solution is correct.
+      \item For a special case where all puzzles have to be solved.
+      \item Look at remaining $n-1$ puzzles that are generated.
+      \end{itemize}
+    \end{column}
+    \begin{column}{.5\textwidth}
+      \includegraphics[scale=0.22]{images/AlgoBlock1.pdf}
+    \end{column}
+  \end{columns}
+  \[\begin{tikzpicture}[remember picture,overlay]
+    \node (rect) at (-4,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {?};
+    \node (rect) at (-3.4,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {1};
+    \node (rect) at (-2.8,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {1};
+    \draw[decorate sep={0.3mm}{3mm}, fill] (-2.2, 0) -- (-0.6, 0);
+    \node (rect) at (0,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {1};
+  \end{tikzpicture}\]
   \note {
     \begin{enumerate}
-      \item Give a very short overview of how you prove your theorem
-      \item Have to state the bounds that I get and say that it may not be optimal
+    \item Give a very short overview of how you prove your theorem
+    \item Have to state the bounds that I get and say that it may not be optimal
     \end{enumerate}
-}
+  }
 \end{frame}
 \note{Give intuition behind the result}
 
@@ -339,13 +432,21 @@ Assumptions
         \geq \underset{u \leftarrow \mu_\delta^k}{\Pr}[g(u) = 1] + \varepsilon,
       \end{align*}
       then $D$ with high probability satisfies
-      \begin{align}
+      \begin{align*}
          \geq \frac{1}{16(h+v)} \Bigl(\delta + \frac{\epsilon}{6k}\Bigr).
-      \end{align}
+      \end{align*}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[t]
   \frametitle{Discussion}
+  \begin{itemize}
+    \item Not clear whether it is possible to improve the result
+      \begin{align*}
+         \geq \textcolor{orange}{\frac{1}{16(h+v)}} \Bigl(\delta + \frac{\epsilon}{6k}\Bigr).
+      \end{align*}
+    \item Tried to improve it. \textcolor{orange}{\xmark}
+    \item Tried to show it is optimal. \textcolor{orange}{\xmark}
+  \end{itemize}
   \note{
     \begin{enumerate}
       \item Summarize the work
