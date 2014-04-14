@@ -27,7 +27,7 @@ texfiles = $(wildcard *.tex)
 .PHONY: presentation
 presentation: presentation.pdf
 
-presentation.pdf: $(texfiles)
+presentation.pdf: $(texfiles) 
 	$(Q) rm -rf build/pdf/; mkdir -p build/pdf/
 	$(Q) cd build/pdf/ && TEXINPUTS="../../:$$TEXINPUTS" $(Q_LATEX) $(PDFLATEX) -interaction=nonstopmode -file-line-error ../../presentation.tex
 	$(Q) cd build/pdf/ && TEXINPUTS="../../:$$TEXINPUTS" $(Q_LATEX) $(PDFLATEX) -interaction=nonstopmode -file-line-error ../../presentation.tex

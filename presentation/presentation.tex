@@ -2,6 +2,7 @@
 %\documentclass[first,firstsupp,handout,lastsupp]{ETHclass}
 %\documentclass[handout,notes]{ETHclass}
 \documentclass[first,firstsupp,handout,last]{ETHclass}
+%\documentclass[first,firstsupp,last]{ETHclass}
 %\documentclass[first,firstsupp]{ETHclass}
 
 % use sensible encoding
@@ -24,8 +25,10 @@
 \usepackage{thm-restate}
 
 \usepackage{textpos}
+
 % for graphics
 \usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
 \usetikzlibrary{arrows, decorations.markings}
 % for double arrows a la chef
 % adapt line thickness and line width, if needed
@@ -77,9 +80,11 @@
 \end{frame}
 \begin{frame}[t]
   \frametitle{Hardness Amplification}
-Is solving parallel repetition of problems substantially harder than a single instance of a problem?
-
-\vspace{50pt}
+  \begin{itemize}
+   \item  Is solving parallel repetition of problems substantially harder than a single instance of a problem?
+  \end{itemize}
+\vspace{33pt}
+\begin{figure}
   \[\begin{tikzpicture}[remember picture,overlay]
 % single problem
 \node (rect) at (-4,0) [draw,thin, minimum width=1cm,minimum height=.5cm] {$P$};
@@ -121,33 +126,142 @@ Is solving parallel repetition of problems substantially harder than a single in
 \draw (4,0) -- (4.5,0);
 \node (rect) at (5,0) [draw,thin, minimum width=1cm,minimum height=.5cm] {$S^*$};
 \end{tikzpicture}\]
-%
-\note{
-  \begin{enumerate}
-    \item Describe hardness amplification theorem in general,
-    \item The implication that we use to prove the theorem (it makes sense to say that when we state the theorem),
-    \item Why is it important - building a weakly secure primitives is easier
-  \end{enumerate}
-}
+\end{figure}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Hardness Amplification Facts}
+\begin{frame} [t]
+  \frametitle{Hardness Amplification}
   \begin{itemize}
-    \item Weak one-way function $\implies$ strong one-way function
-    \item What about MAC, signature schemes, CAPTCHAs?
+  \item Weak one-way function $\implies$ strong one-way function
+  \pause \item What about MAC, signature schemes, CAPTCHAs?
   \end{itemize}
+\vspace{30pt}
+
+\onslide<1-2>
+\begin{figure}
+  \[\begin{tikzpicture}[remember picture,overlay]
+% single problem
+\node (rect) at (-4,0) [draw,thin, minimum width=1cm,minimum height=.5cm] {$P$};
+% left interface
+\draw (-4.5,0) -- (-4.75,0) node [left] {
+\fontsize{8pt}{8pt}\selectfont $0/1$};
+% right interface
+\draw (-3.5,0) -- (-3,0);
+% solver for single problem
+\node (rect) at (-2.5,0) [draw,thin, minimum width=1cm,minimum height=.5cm] {$S$};
+% arrow
+ \draw[vecArrow] (-1.5,0) to (0.75,0);
+% right nodes
+\node (rect) at (3,2) [draw,thin, minimum width=1cm,minimum height=.5cm] {$P_1$};
+%left interface
+\draw (2.5,2) -- (2,  2) node [left] {
+\fontsize{8pt}{8pt}\selectfont $0/1$
+};
+%right interface
+\draw (3.5,2) -- (4.0,2);
+
+\node (rect) at (3,0.5) [draw,thin, minimum width=1cm,minimum height=.5cm] {$P_2$};
+\draw (2.5, 0.5) -- (2, 0.5) node [left] {
+\fontsize{8pt}{8pt}\selectfont $0/1$
+};
+\draw (3.5, 0.5) -- (4,0.5);
+
+%dots
+\draw[decorate sep={0.8mm}{5mm},fill] (3,-.3) -- (3,-1.5);
+
+\node (rect) at (3,-2.) [draw,thin, minimum width=1cm,minimum height=.5cm] {$P_k$};
+\draw (2.5,-2) -- (2,  -2) node [left] {
+\fontsize{8pt}{8pt}\selectfont $0/1$
+};
+\draw (3.5,-2) -- (4,-2);
+
+%connector for right interfaces
+\draw (4,2) -- (4,-2);
+\draw (4,0) -- (4.5,0);
+\node (rect) at (5,0) [draw,thin, minimum width=1cm,minimum height=.5cm] {$S^*$};
+\end{tikzpicture}\]
+\end{figure}
 \end{frame}
 
 \begin{frame}[t]
 \frametitle{Agenda}
 \begin{itemize}
-  \item<+-> Motivation and problem statement
-  \item<+-> Background and related work
-  \item<+-> My contribution
-  \item<+-> Results
-  \item<+-> Discussion
+  \item \textcolor{gray} {Motivation and problem statement}
+  \item Background
+    \begin{itemize}
+    \item Weakly Verifiable Puzzles
+    \item Threshold and monotone functions
+    \item Dynamic Puzzles
+    \item Interactive Puzzles
+    \end{itemize}
+  \item Previous Works
+  \item My Results
+  \item Discussion and Questions
 \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Threshold and Monotone Functions}
+  \begin{columns}
+    \begin{column}{.4\textwidth}
+      \hspace{3pt}Threshold function
+      {\fontsize{7pt}{7pt}\selectfont{
+      \begin{align*}
+        f_K(b_1, \dots, b_n) =
+        \begin{dcases}
+          1 \text{ if } \sum_{i=1}^{n} b_i \geq K \\
+          0 \text{ otherwise.}
+        \end{dcases}
+      \end{align*}
+    }}
+  \pause
+    Monotone function
+    {\fontsize{7pt}{7pt}\selectfont{
+    \begin{align*}
+      f(b_0, \dots, b_n) : \{0,1\}^{n} \rightarrow \{0,1\}
+    \end{align*}}}
+    \end{column}%
+    \hfill%
+\onslide<1-2>
+\begin{column}{.60\textwidth}
+\[\begin{tikzpicture}[remember picture,overlay]
+% right nodes
+\node (rect) at (0,2) [draw,thin, minimum width=1cm,minimum height=.5cm] {$P_1$};
+%left interface
+\draw (-.5,2) -- (-1,  2) node [left] {
+\fontsize{8pt}{8pt}\selectfont $0/1$
+};
+%right interface
+\draw (0.5,2) -- (1.0,2);
+
+\node (rect) at (0,0.5) [draw,thin, minimum width=1cm,minimum height=.5cm] {$P_2$};
+\draw (-.5, 0.5) -- (-1, 0.5) node [left] {
+\fontsize{8pt}{8pt}\selectfont $0/1$
+};
+\draw (.5, 0.5) -- (1,0.5);
+
+%dots
+\draw[decorate sep={0.8mm}{5mm},fill] (0,-.3) -- (0,-1.5);
+
+\node (rect) at (0,-2.) [draw,thin, minimum width=1cm,minimum height=.5cm] {$P_n$};
+\draw (-.5,-2) -- (-1,  -2) node [left] {
+\fontsize{8pt}{8pt}\selectfont $0/1$
+};
+\draw (.5,-2) -- (1,-2);
+
+%connector for right interfaces
+\draw (1,2) -- (1,-2);
+\draw (1,0) -- (1.5,0);
+\node (rect) at (2,0) [draw,thin, minimum width=1cm,minimum height=.5cm] {$S^*$};
+
+%function
+\draw (-1, 2) -- (-1, -2);
+\draw (-1, 0) -- (-2, 0);
+\draw (-3, 0) -- (-3.5, 0) node [left] {\fontsize{8pt}{8pt}\selectfont $0/1$ };
+\node (rect) at (-2.5,0) [draw,thin, minimum width=1cm,minimum height=.5cm] {$f(x)$};
+\end{tikzpicture}\]
+\end{column}%
+\end{columns}
 \end{frame}
 
 \begin{frame}[t]
@@ -174,8 +288,8 @@ Is solving parallel repetition of problems substantially harder than a single in
 
 \vspace{40pt}
 \begin{itemize}
-  \item<+-> Small solutions space.
-  \item<+-> Solver cannot efficiently verify its solutions.
+  \item<2-3> Small solutions space.
+  \item<3> Solver cannot efficiently verify correctness of solutions.
 \end{itemize}
 
 \note{
@@ -187,109 +301,60 @@ Is solving parallel repetition of problems substantially harder than a single in
 }
 \end{frame}
 
-\begin{frame}[t]
-  \frametitle{Weakly Verifiable Puzzles}
-  \begin{itemize}
-    \item Introduces by Cannetti, Halevi, Steiner \cite{canetti2005hardness}
-    \item An algorithm $G$ generates a puzzle $p$ together with some secrecy information $s$.
-    \item A solver given $p$ has to find a correct solution.
-    \item It is hard for the solver to verify the correctness of a solution given only $p$.
-    \item A verification algorithm has access to $s$ which makes the task of checking the correctness of a solution easy.
-  \end{itemize}
-  \note{
-    \begin{enumerate}
-    \end{enumerate}
-  }
-\end{frame}
-
-\begin{frame}
-  \frametitle{Threshold and Monotone Functions}
-  \begin{columns}
-    \begin{column}{.4\textwidth}
-      \hspace{3pt}Threshold function
-      {\fontsize{7pt}{7pt}\selectfont{
-      \begin{align*}
-        f_K(b_1, \dots, b_n) =
-        \begin{dcases}
-          1 \text{ if } \sum_{i=1}^{n} b_i \geq K \\
-          0 \text{ otherwise.}
-        \end{dcases}
-      \end{align*}
-    }}
-    Monotone function
-    {\fontsize{7pt}{7pt}\selectfont{
-    \begin{align*}
-      f(b_0, \dots, b_n) : \{0,1\}^{n} \rightarrow \{0,1\}
-    \end{align*}}}
-    \end{column}%
-
-    \hfill%
-\begin{column}{.60\textwidth}
-\[\begin{tikzpicture}[remember picture,overlay]
-% right nodes
-\node (rect) at (0,2) [draw,thin, minimum width=1cm,minimum height=.5cm] {$P_1$};
-%left interface
-\draw (-.5,2) -- (-1,  2) node [left] {
-\fontsize{8pt}{8pt}\selectfont $0/1$
-};
-%right interface
-\draw (0.5,2) -- (1.0,2);
-
-\node (rect) at (0,0.5) [draw,thin, minimum width=1cm,minimum height=.5cm] {$P_2$};
-\draw (-.5, 0.5) -- (-1, 0.5) node [left] {
-\fontsize{8pt}{8pt}\selectfont $0/1$
-};
-\draw (.5, 0.5) -- (1,0.5);
-
-%dots
-\draw[decorate sep={0.8mm}{5mm},fill] (0,-.3) -- (0,-1.5);
-
-\node (rect) at (0,-2.) [draw,thin, minimum width=1cm,minimum height=.5cm] {$P_k$};
-\draw (-.5,-2) -- (-1,  -2) node [left] {
-\fontsize{8pt}{8pt}\selectfont $0/1$
-};
-\draw (.5,-2) -- (1,-2);
-
-%connector for right interfaces
-\draw (1,2) -- (1,-2);
-\draw (1,0) -- (1.5,0);
-\node (rect) at (2,0) [draw,thin, minimum width=1cm,minimum height=.5cm] {$S^*$};
-
-%function
-\draw (-1, 2) -- (-1, -2);
-\draw (-1, 0) -- (-2, 0);
-\draw (-3, 0) -- (-3.5, 0) node [left] {\fontsize{8pt}{8pt}\selectfont $0/1$ };
-\node (rect) at (-2.5,0) [draw,thin, minimum width=1cm,minimum height=.5cm] {$f(x)$};
-\end{tikzpicture}\]
-\end{column}%
-\end{columns}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Gap Amplification}
-  Difference between human and computer algorithms solutions.
-\end{frame}
+% \begin{frame}[t]
+%   \frametitle{Weakly Verifiable Puzzles}
+%   \begin{itemize}
+%     \item Introduced by Cannetti, Halevi, Steiner \cite{canetti2005hardness}
+%     \item An algorithm $G$ generates a puzzle $p$ together with some secrecy information $s$.
+%     \item A solver given $p$ has to find a correct solution.
+%     \item It is hard for the solver to verify the correctness of a solution given only $p$.
+%     \item A verification algorithm has access to $s$ which makes the task of checking the correctness of a solution easy.
+%   \end{itemize}
+%   \note{
+%     \begin{enumerate}
+%     \end{enumerate}
+%   }
+% \end{frame}
+% \begin{frame}
+%   \frametitle{Gap Amplification}
+%   Difference between human and computer algorithms solutions.
+% \end{frame}
 
 \begin{frame}[t]
   \frametitle{Dynamic Puzzles Example}
   \begin{itemize}
   \item Game based security definition of MAC.
   \end{itemize}
-\vspace{40pt}
-
-\[\begin{tikzpicture}[remember picture,overlay]
-% generation
- % messages
-\node (rect) at (-4,0) [draw,thin, minimum width=1.8cm,minimum height=2.6cm] {Solver};
-\draw (-3.1,1) -- (-0.9,1) node [near start,above] {\scalebox{0.6}{$m \in \cQ$}};
-\draw (-3.1,0.5) -- (-0.9,0.5) node [near end,above] {\scalebox{0.6}{$t \in \cT$}};
-% dots
-\draw[decorate sep={0.3mm}{3mm},fill] (-2,.3) -- (-2,-.5);
-% last message
-\draw (-3.1,-1) -- (-0.9,-1) node [near start, above] {\scalebox{0.6}{\hspace{50pt}$m' \in \cQ, t' \in \cT$}};
-% Poser
-\node (rect) at (0,0) [draw,thin, minimum width=1.8cm,minimum height=2.6cm] {Poser};
-\end{tikzpicture}\]
+\begin{columns}
+  \begin{column}{0.5\textwidth}
+    \begin{figure}[ht]
+    \[\begin{tikzpicture}[remember picture,overlay]
+      % generation
+      % messages
+      \node (rect) at (-2,0) [draw,thin, minimum width=1.8cm,minimum height=2.6cm] {Solver};
+      \draw (-1.1,1) -- (1.1,1) node [near start,above] {\scalebox{0.6}{$m \in \cQ$}};
+      \draw (-1.1,0.5) -- (1.1,0.5) node [near end,above] {\scalebox{0.6}{$t \in \cT$}};
+      % dots
+      \draw[decorate sep={0.3mm}{3mm},fill] (0,.3) -- (0,-.5);
+      % last message
+      \draw (-1.1,-1) -- (1.1,-1) node [near start, above] {\scalebox{0.6}{\hspace{50pt}$m' \in \cQ, t' \in \cT$}};
+      % Poser
+      \node (rect) at (2,0) [draw,thin, minimum width=1.8cm,minimum height=2.6cm] {Poser};
+    \end{tikzpicture}\]
+    \end{figure}
+    \vspace{40pt}
+  \end{column}
+  \begin{column}{0.41\textwidth}
+  \begin{itemize}
+    \item Set of messages $\cQ$
+    \item Hint - solution for $q \in \cQ$
+    \item Set of hint indices $\cH \subseteq \cQ$
+    \item Verification query solution for $q \in \cQ \setminus \cH$.
+    \item Number of hint and verification queries limited.
+%    \item Generalize breaking MACs and signature schemes
+  \end{itemize}
+  \end{column}
+\end{columns}
 
 \note{
   \begin{enumerate}
@@ -299,37 +364,20 @@ Is solving parallel repetition of problems substantially harder than a single in
 \end{frame}
 
 \begin{frame}[t]
-  \frametitle{Dynamic Puzzle Definition (Informal)}
-  \begin{itemize}
-    \item Given a set of indices $\cQ$
-    \item Hints : Solver can ask for solutions on any $q \in \cQ$
-    \item Verification: Solver solves a puzzle on $q \in \cQ$ for which it has not asked for a hint before.
-    \item Number of hint and verification queries limited.
-    \item Generalize breaking MACs and signature schemes
-    \item Introduced by Dodis et al. \cite{dodis2009security}
-  \end{itemize}
+  \frametitle{Interactive puzzle - commitment protocols}
+  \begin{figure}
+    \includegraphics[scale=0.43]{images/IntProtocol.pdf}
+  \end{figure}
 \end{frame}
 
 \begin{frame}[t]
-  \frametitle{Interactive Puzzles Example}
+  \frametitle{Hardness amplification results}
   \begin{itemize}
-    \item Binding property of the bit commitment protocols.
+    \item<1-3> Weakly verifiable puzzles - e.g. CAPTCHA \cite{canetti2005hardness}
+    \item<2-3> Dynamic weakly verifiable puzzles $+$ threshold functions e.g.~MAC \cite{dodis2009security}
+    \item<3> Interactive weakly verifiable puzzles $+$ monotone function e.g.~commitment protocols \cite{holenstein2011general}
   \end{itemize}
-  \note{
-    \begin{enumerate}
-    \item Bit commitment protocols
-    \end{enumerate}
-  }
-\end{frame}
-
-\begin{frame}
-  \frametitle{Previous works}
-  \begin{itemize}
-    \item Weakly verifiable puzzles \cite{canetti2005hardness}
-    \item Dynamic weakly verifiable puzzles and threshold functions \cite{dodis2009security}
-    \item Interactive puzzles and monotone function \cite{holenstein2011general}
-  \end{itemize}
-
+  \centering
   \note{
     \begin{enumerate}
     \item It is the only understandable result
@@ -342,38 +390,67 @@ Is solving parallel repetition of problems substantially harder than a single in
 \begin{frame}[t]
   \frametitle{Goal}
   \begin{itemize}
-    \item Define puzzles that generalize MAC, CAPTCHA, bit commitments.
-    \item Hardness amplification result for these puzzles.
+    \item Define a type of puzzles that generalize MAC, CAPTCHA, bit commitments.
+    \item Hardness amplification result for this type of puzzles.
   \end{itemize}
   \vspace{40pt}
   \begin{figure}
     \centering
     \begin{tikzpicture}[remember picture,overlay]
       % Weakly Verifiable box
-      \node (rect) at (-4,0) [draw,thin, minimum width=3cm,minimum height=2.6cm, text width = 3cm] {
-        Weakly Verifiable
+      \node (rect) at (-4,0) [draw,thin, minimum width=3cm,minimum height=2.6cm, text width = 3cm, align=center] {
+        Monotone functions
       };
       \node (plus) at (-2,0) {+};
-      \node (rect) at (0,0) [draw,thin, minimum width=3cm,minimum height=2.6cm, text width = 3cm] {
-        Dynamic
+      \node (rect) at (0,0) [draw,thin, minimum width=3cm,minimum height=2.6cm, text width = 3cm, align=center] {
+        Dynamic weakly verifiable puzzles
       };
       \node (plus) at (2,0) {+};
-      \node (rect) at (4,0) [draw,thin, minimum width=3cm,minimum height=2.6cm, text width = 3cm] {
-        Interactive
+      \node (rect3) at (4,0) [draw,thin, minimum width=3cm,minimum height=2.6cm, text width = 3cm, align=center] {
+        Interactive weakly verifiable puzzles
       };
-      %\draw (-3.1,1) -- (-0.9,1) node [near start,above] {\scalebox{0.6}{$m \in \cQ$}};
     \end{tikzpicture}
   \end{figure}
 \end{frame}
 
 \begin{frame}[t]
-  \frametitle{Hint queries}
+\frametitle{Reduction}
+\begin{itemize}
+  \item $A$ - solving a single puzzle is hard
+  \item $B$ - solving parallel repetition is hard
+    \begin{align*}
+      A \implies B
+    \end{align*}
+      \begin{align*}
+        \lnot B \implies \lnot A
+      \end{align*}
+  \item Given a good solver $C$ for parallel repetition
+  \item Reduce $C$ to a solver for single puzzle
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]
+\frametitle{Problems}
+% TODO maybe block diagram?
+\begin{itemize}
+  \item Fix a position for the input puzzle
+  \item Generate $n-1$ puzzles
+  \item Run $C$ multiple times
+  \item If the solution is correct output it
+  \item One has to run $C$ multiple times
+  \item Hint query may prevent block a solution that would be correct
+  \item Not possible to check correctness of the solution for the input puzzle
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]
+  \frametitle{Problem: conflicting hint queries}
   \begin{itemize}
     \item The solver asks hint queries.
     \item Hint queries can prevent verification queries from succeeding.
     \item Use hash function to partition query domain \cite{dodis2009security}.
     \item Can ask hints only on $\cQ \setminus \cQ_{\mathit{verification}}$.
-    \item Substantial success probability for partitioned domain
+    \item Substantial success probability for partitioned domain.
   \end{itemize}
   \begin{columns}
     \begin{column}{.4\textwidth}
@@ -396,13 +473,13 @@ Is solving parallel repetition of problems substantially harder than a single in
 \end{frame}
 
 \begin{frame}[t]
-  \frametitle{Weakly verifiable puzzles}
+  \frametitle{Problem: verifying the solution}
   \begin{columns}
     \begin{column}{.5\textwidth}
       \begin{itemize}
       \item Cannot check whether the solution is correct.
       \item For a special case where all puzzles have to be solved.
-      \item Look at remaining $n-1$ puzzles that are generated.
+      \item Look at the remaining $n-1$ puzzles that are generated.
       \end{itemize}
     \end{column}
     \begin{column}{.5\textwidth}
@@ -415,6 +492,8 @@ Is solving parallel repetition of problems substantially harder than a single in
     \node (rect) at (-2.8,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {1};
     \draw[decorate sep={0.3mm}{3mm}, fill] (-2.2, 0) -- (-0.6, 0);
     \node (rect) at (0,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {1};
+\draw [decorate,decoration={brace,amplitude=10pt,mirror,raise=4pt},yshift=0pt] (-4.3,-.2) -- (0.3,-.2) node at (-2,-1) {$\geq \delta^k$};
+\draw [decorate,decoration={brace,amplitude=10pt,raise=4pt},yshift=0pt] (-3.4,0.3) -- (0.3,0.3) node at (-1.7,1) {$< \delta^{k-1}$};
   \end{tikzpicture}\]
   \note {
     \begin{enumerate}
@@ -426,12 +505,14 @@ Is solving parallel repetition of problems substantially harder than a single in
 \note{Give intuition behind the result}
 
 \begin{frame} [t]
-  \frametitle{Results}
-      Let $C$ be a solver for parallel repetition of puzzles \\
+  \frametitle{Result}
+      Given a solver for parallel repetition of puzzles that satisfies\\
       \begin{align*}
-        \geq \underset{u \leftarrow \mu_\delta^k}{\Pr}[g(u) = 1] + \varepsilon,
+        \geq \delta^k + \epsilon \text{\hspace{50pt}} \geq \Pr[g(u_1, \dots, u_k) = 1] + \varepsilon,
       \end{align*}
-      then $D$ with high probability satisfies
+      where $\Pr[u_i = 1] = \delta$. \\
+      \vspace{25pt}
+      We devise a solver for a single puzzle that satisfies (almost surely)
       \begin{align*}
          \geq \frac{1}{16(h+v)} \Bigl(\delta + \frac{\epsilon}{6k}\Bigr).
       \end{align*}
