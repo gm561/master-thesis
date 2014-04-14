@@ -2,7 +2,7 @@
 %\documentclass[first,firstsupp,handout,lastsupp]{ETHclass}
 %\documentclass[first, handout,notes]{ETHclass}
 %\documentclass[first,firstsupp,handout,last]{ETHclass}
-\documentclass[first,firstsupp,notes, handout, last]{ETHclass}
+\documentclass[first,firstsupp, last]{ETHclass}
 %\documentclass[first,firstsupp]{ETHclass}
 
 % use sensible encoding
@@ -186,13 +186,12 @@ that I have been writing under the supervision of Prof. Holenstein and Dr. Kunzl
 \begin{frame}[t]
 \frametitle{Agenda}
 \begin{itemize}
-  \item \textcolor{gray} {Motivation}
-  \item Background
+  \item \textcolor{red} {Setting and Type of Problems}
     \begin{itemize}
-    \item Weakly Verifiable Puzzles
     \item Threshold and Monotone Functions
-    \item Dynamic Puzzles
-    \item Interactive Puzzles
+    \item Weakly Verifiable Puzzles
+    \item Dynamic Weakly Verifiable Puzzles
+    \item Interactive Weakly Verifiable Puzzles
     \end{itemize}
   \item Previous Works
   \item My Results
@@ -204,6 +203,7 @@ that I have been writing under the supervision of Prof. Holenstein and Dr. Kunzl
   \frametitle{Threshold and Monotone Functions}
   \begin{columns}
     \begin{column}{.4\textwidth}
+      \pause
       \hspace{3pt}Threshold function
       {\fontsize{7pt}{7pt}\selectfont{
       \begin{align*}
@@ -222,7 +222,7 @@ that I have been writing under the supervision of Prof. Holenstein and Dr. Kunzl
     \end{align*}}}
     \end{column}%
     \hfill%
-\onslide<1-2>
+\onslide<1-3>
 \begin{column}{.60\textwidth}
 \[\begin{tikzpicture}[remember picture,overlay]
 % right nodes
@@ -313,7 +313,7 @@ that I have been writing under the supervision of Prof. Holenstein and Dr. Kunzl
 % \end{frame}
 
 \begin{frame}[t]
-  \frametitle{Dynamic Puzzles Example}
+  \frametitle{Dynamic Weakly Verifiable Puzzles}
   \begin{itemize}
   \item Game-based security definition of MAC.
   \end{itemize}
@@ -396,16 +396,19 @@ that I have been writing under the supervision of Prof. Holenstein and Dr. Kunzl
 \begin{frame}[t]
 \frametitle{Reduction}
 \begin{itemize}
+  \pause
+  \item Given a good solver $C$ for parallel repetition
+  \pause
+  \item Reduce $C$ to a solver for single puzzle
+  \pause
   \item $A$ - solving a single puzzle is hard
   \item $B$ - solving parallel repetition is hard
-    \begin{align*}
-      A \implies B
-    \end{align*}
       \begin{align*}
         \lnot B \implies \lnot A
       \end{align*}
-  \item Given a good solver $C$ for parallel repetition
-  \item Reduce $C$ to a solver for single puzzle
+    \begin{align*}
+      A \implies B
+    \end{align*}
 \end{itemize}
 \end{frame}
 
@@ -424,15 +427,14 @@ that I have been writing under the supervision of Prof. Holenstein and Dr. Kunzl
 % \end{frame}
 
 \begin{frame}[t]
-  \frametitle{Problem: conflicting hint queries}
+  \frametitle{Conflicting hint queries}
   \begin{itemize}
-    \item<1-5> The solver $C$ can be run multiple times.
-    \item<2-5> Hint queries prevent verification queries from succeeding.
-    \item<3-5> Use hash function to partition query domain \cite{dodis2009security}.
-    \item<4-5> Can ask hints only on $\cQ \setminus \cQ_{\mathit{verification}}$.
-    \item<5> Substantial success probability for partitioned domain.
+    \item<1-4> The solver $C$ can be run multiple times.
+    \item<2-4> Hint queries prevent verification queries from succeeding.
+    \item<3-4> Use hash function to partition query domain \cite{dodis2009security}.
+    \item<4> Substantial success probability for partitioned domain.
   \end{itemize}
-  \onslide<3-5>
+  \onslide<3-4>
   \begin{columns}
     \begin{column}{.4\textwidth}
       \includegraphics[scale=0.08]{images/hashSets.pdf}
@@ -441,7 +443,7 @@ that I have been writing under the supervision of Prof. Holenstein and Dr. Kunzl
       \begin{align*}
         &\hash \leftarrow \cH \\
         &\hash : \cQ \rightarrow \{0,1,\dots, 2(h+v) - 1\} \\
-        &\cQ_{\mathit{verification}} := {q \in \cQ : hash(q) = 0}
+        &\cQ_{\mathit{verification}} := \{q \in \cQ : hash(q) = 0\}
       \end{align*}
     \end{column}
   \end{columns}
@@ -454,40 +456,47 @@ that I have been writing under the supervision of Prof. Holenstein and Dr. Kunzl
 \end{frame}
 
 \begin{frame}[t]
-  \frametitle{Problem: verifying the solution}
+  \frametitle{Verifying solutions}
   \begin{columns}
     \begin{column}{.5\textwidth}
       \begin{itemize}
-      \item<1-2> Cannot verify correctness of a solution for input puzzle.
-      \item<2> Possible for generated puzzles.
+      \item<1-4> Cannot verify correctness of a solution for input puzzle.
+      \item<2-4> Possible for generated puzzles.
+      \vspace{30pt}
+      \onslide<3-4>
+      \[\begin{tikzpicture}[remember picture,overlay]
+        \node (rect) at (-2,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {?};
+        \node (rect) at (-1.4,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {1};
+        \node (rect) at (-.8,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {1};
+        \draw[decorate sep={0.3mm}{3mm}, fill] (-.2, 0) -- (1.4, 0);
+        \node (rect) at (2,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {1};
+        \draw [decorate,decoration={brace,amplitude=10pt,mirror,raise=4pt},yshift=0pt] (-2.3,-.2) -- (2.3,-.2) node at (0,-1) {$\geq \delta^k$};
+        \draw [decorate,decoration={brace,amplitude=10pt,raise=4pt},yshift=0pt] (-1.4,0.3) -- (2.3,0.3) node at (.3,1) {$< \delta^{k-1}$};
+      \end{tikzpicture}\]
+      \vspace{13pt}
+      \item<4> Possible to generalize for monotone functions \cite{holenstein2011general}.
       \end{itemize}
     \end{column}
     \begin{column}{.5\textwidth}
       \includegraphics[scale=0.22]{images/AlgoBlock1.pdf}
     \end{column}
   \end{columns}
-  \onslide<2>
-  \[\begin{tikzpicture}[remember picture,overlay]
-    \node (rect) at (-4,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {?};
-    \node (rect) at (-3.4,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {1};
-    \node (rect) at (-2.8,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {1};
-    \draw[decorate sep={0.3mm}{3mm}, fill] (-2.2, 0) -- (-0.6, 0);
-    \node (rect) at (0,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {1};
-\draw [decorate,decoration={brace,amplitude=10pt,mirror,raise=4pt},yshift=0pt] (-4.3,-.2) -- (0.3,-.2) node at (-2,-1) {$\geq \delta^k$};
-\draw [decorate,decoration={brace,amplitude=10pt,raise=4pt},yshift=0pt] (-3.4,0.3) -- (0.3,0.3) node at (-1.7,1) {$< \delta^{k-1}$};
-  \end{tikzpicture}\]
 \end{frame}
 
 \begin{frame} [t]
   \frametitle{Result}
-      Given a solver for parallel repetition of puzzles that satisfies\\
+      Given a solver for parallel repetition of puzzles that satisfies
       \begin{align*}
-        \geq \delta^k + \epsilon \text{\hspace{20pt\pause}(} \geq \Pr[g(u_1, \dots, u_k) = 1] + \varepsilon \text{)},
+        \geq \delta^k + \epsilon,
+      \end{align*}
+      \pause
+      More generally using a monotone function
+      \begin{align*}
+        \geq \Pr[g(u_1, \dots, u_k) = 1] + \varepsilon
       \end{align*}
       where $\Pr[u_i = 1] = \delta$. \\
       \pause
-      \vspace{25pt}
-      We devise a solver for a single puzzle that satisfies (almost surely)
+      We devise a solver for a single puzzle that satisfies (with high probability)
       \begin{align*}
          \geq \frac{1}{16(h+v)} \Bigl(\delta + \frac{\epsilon}{6k}\Bigr).
       \end{align*}
