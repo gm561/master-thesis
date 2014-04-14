@@ -2,7 +2,7 @@
 %\documentclass[first,firstsupp,handout,lastsupp]{ETHclass}
 %\documentclass[first, handout,notes]{ETHclass}
 %\documentclass[first,firstsupp,handout,last]{ETHclass}
-\documentclass[first,firstsupp,last]{ETHclass}
+\documentclass[first,firstsupp,notes, handout, last]{ETHclass}
 %\documentclass[first,firstsupp]{ETHclass}
 
 % use sensible encoding
@@ -72,6 +72,11 @@
 
 \begin{frame}
 \maketitle
+\note{
+Let's get started. Thank you for coming today. My name is Grzegorz Makosa. I am a master student.
+This morning I would like to present some of the results of my master Thesis
+that I have been writing under the supervision of Prof. Holenstein and Dr. Kunzler.
+}
 \end{frame}
 \begin{frame}[t]
   \frametitle{Hardness Amplification}
@@ -365,7 +370,7 @@
 \begin{frame}[t]
   \frametitle{Goal}
   \begin{itemize}
-    \item Define a type of puzzles that generalize MAC, CAPTCHA, bit commitments.
+    \item Define puzzle that generalize MAC, CAPTCHA, bit commitments.
     \item Amplify hardness by parallel repetition.
   \end{itemize}
   \vspace{40pt}
@@ -422,7 +427,7 @@
   \frametitle{Problem: conflicting hint queries}
   \begin{itemize}
     \item<1-5> The solver $C$ can be run multiple times.
-    \item<2-5> Hint queries can prevent verification queries from succeeding.
+    \item<2-5> Hint queries prevent verification queries from succeeding.
     \item<3-5> Use hash function to partition query domain \cite{dodis2009security}.
     \item<4-5> Can ask hints only on $\cQ \setminus \cQ_{\mathit{verification}}$.
     \item<5> Substantial success probability for partitioned domain.
@@ -453,15 +458,15 @@
   \begin{columns}
     \begin{column}{.5\textwidth}
       \begin{itemize}
-      \item Cannot check whether the solution is correct.
-      \item For a special case where all puzzles have to be solved.
-      \item Look at the remaining $n-1$ puzzles that are generated.
+      \item<1-2> Cannot verify correctness of a solution for input puzzle.
+      \item<2> Possible for generated puzzles.
       \end{itemize}
     \end{column}
     \begin{column}{.5\textwidth}
       \includegraphics[scale=0.22]{images/AlgoBlock1.pdf}
     \end{column}
   \end{columns}
+  \onslide<2>
   \[\begin{tikzpicture}[remember picture,overlay]
     \node (rect) at (-4,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {?};
     \node (rect) at (-3.4,0) [draw,thin, minimum width=.6cm,minimum height=.6cm] {1};
@@ -471,21 +476,16 @@
 \draw [decorate,decoration={brace,amplitude=10pt,mirror,raise=4pt},yshift=0pt] (-4.3,-.2) -- (0.3,-.2) node at (-2,-1) {$\geq \delta^k$};
 \draw [decorate,decoration={brace,amplitude=10pt,raise=4pt},yshift=0pt] (-3.4,0.3) -- (0.3,0.3) node at (-1.7,1) {$< \delta^{k-1}$};
   \end{tikzpicture}\]
-  \note {
-    \begin{enumerate}
-    \item Give a very short overview of how you prove your theorem
-    \item Have to state the bounds that I get and say that it may not be optimal
-    \end{enumerate}
-  }
 \end{frame}
 
 \begin{frame} [t]
   \frametitle{Result}
       Given a solver for parallel repetition of puzzles that satisfies\\
       \begin{align*}
-        \geq \delta^k + \epsilon \text{\hspace{50pt}} \geq \Pr[g(u_1, \dots, u_k) = 1] + \varepsilon,
+        \geq \delta^k + \epsilon \text{\hspace{20pt\pause}(} \geq \Pr[g(u_1, \dots, u_k) = 1] + \varepsilon \text{)},
       \end{align*}
       where $\Pr[u_i = 1] = \delta$. \\
+      \pause
       \vspace{25pt}
       We devise a solver for a single puzzle that satisfies (almost surely)
       \begin{align*}
@@ -500,8 +500,9 @@
       \begin{align*}
          \geq \textcolor{orange}{\frac{1}{16(h+v)}} \Bigl(\delta + \frac{\epsilon}{6k}\Bigr).
       \end{align*}
-    \item Tried to improve it. \textcolor{orange}{\xmark}
-    \item Tried to show it is optimal. \textcolor{orange}{\xmark}
+      \pause
+    \item Improve it? \pause \textcolor{orange}{\xmark}
+    \item Is it optimal? \pause \textcolor{orange}{\xmark}
   \end{itemize}
 \end{frame}
 
